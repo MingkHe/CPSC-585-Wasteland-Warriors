@@ -1,0 +1,13 @@
+﻿Program.obj : error LNK2019: unresolved external symbol glfwInit referenced in function "public: void __cdecl Program::setupWindow(void)" (?setupWindow@Program@@QEAAXXZ)
+Program.obj : error LNK2019: unresolved external symbol glfwTerminate referenced in function "public: void __cdecl Program::setupWindow(void)" (?setupWindow@Program@@QEAAXXZ)
+Program.obj : error LNK2019: unresolved external symbol glfwSetErrorCallback referenced in function "public: void __cdecl Program::setupWindow(void)" (?setupWindow@Program@@QEAAXXZ)
+Program.obj : error LNK2019: unresolved external symbol glfwWindowHint referenced in function "public: void __cdecl Program::setupWindow(void)" (?setupWindow@Program@@QEAAXXZ)
+Program.obj : error LNK2019: unresolved external symbol glfwCreateWindow referenced in function "public: void __cdecl Program::setupWindow(void)" (?setupWindow@Program@@QEAAXXZ)
+Program.obj : error LNK2019: unresolved external symbol glfwWindowShouldClose referenced in function "public: void __cdecl Program::start(void)" (?start@Program@@QEAAXXZ)
+Program.obj : error LNK2019: unresolved external symbol glfwSetWindowShouldClose referenced in function "void __cdecl KeyCallback(struct GLFWwindow *,int,int,int,int)" (?KeyCallback@@YAXPEAUGLFWwindow@@HHHH@Z)
+Program.obj : error LNK2019: unresolved external symbol glfwPollEvents referenced in function "public: void __cdecl Program::start(void)" (?start@Program@@QEAAXXZ)
+Program.obj : error LNK2019: unresolved external symbol glfwSetKeyCallback referenced in function "public: void __cdecl Program::setupWindow(void)" (?setupWindow@Program@@QEAAXXZ)
+Program.obj : error LNK2019: unresolved external symbol glfwMakeContextCurrent referenced in function "public: void __cdecl Program::setupWindow(void)" (?setupWindow@Program@@QEAAXXZ)
+Program.obj : error LNK2019: unresolved external symbol glfwSwapBuffers referenced in function "public: void __cdecl Program::start(void)" (?start@Program@@QEAAXXZ)
+C:\Users\ming\Desktop\Game Development\RefactoredBoilerplate\RefactoredBoilerplate\..\middleware\glfw\lib\glfw3.lib : warning LNK4272: library machine type 'x86' conflicts with target machine type 'x64'
+C:\Users\ming\Desktop\Game Development\RefactoredBoilerplate\x64\Debug\RefactoredBoilerplate.exe : fatal error LNK1120: 11 unresolved externals

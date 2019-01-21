@@ -1,0 +1,23 @@
+We used the biolerplate code from our CPSC 453 as our basic render Engine. The code just simple render a triangle on the screen.
+We added all the necessary classes into our program but they are just stubbed implemented:
+
+Added Classes:
+
+SubSystem:
+UserInput
+AI_Interaction
+Physics_Controller
+Audio_Controller
+
+Entities:
+Entity
+Vehicle
+PlayerUnit
+EnemyUnit
+MapTerrain
+MapObstacle
+
+The full interaction and relationship among the classes listed above are explained in the Game Application Framework document.
+
+For milestone 1, our game program is able to run the main game loop and render a triangle in the middle of the screen for each frame.
+It can also receive the user input(just key WASD) from keyborad and print them out on the standard output.

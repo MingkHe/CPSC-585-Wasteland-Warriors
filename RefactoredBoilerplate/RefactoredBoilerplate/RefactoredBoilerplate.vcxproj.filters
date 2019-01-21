@@ -13,6 +13,12 @@
     <ClCompile Include="AI_Interaction.cpp" />
     <ClCompile Include="Physics_Controller.cpp" />
     <ClCompile Include="Audio_Controller.cpp" />
+    <ClCompile Include="EnemyUnit.cpp" />
+    <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="MapObstacle.cpp" />
+    <ClCompile Include="MapTerrain.cpp" />
+    <ClCompile Include="PlayerUnit.cpp" />
+    <ClCompile Include="Vehicle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Geometry.h" />
@@ -25,5 +31,14 @@
     <ClInclude Include="AI_Interaction.h" />
     <ClInclude Include="Physics_Controller.h" />
     <ClInclude Include="Audio_Controller.h" />
+    <ClInclude Include="EnemyUnit.h" />
+    <ClInclude Include="Entity.h" />
+    <ClInclude Include="MapObstacle.h" />
+    <ClInclude Include="MapTerrain.h" />
+    <ClInclude Include="PlayerUnit.h" />
+    <ClInclude Include="Vehicle.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="RefactoredBoilerplate.vcxproj.filters.txt" />
   </ItemGroup>
 </Project>

@@ -16,6 +16,8 @@
 
 #include "RenderingEngine.h"
 #include "Scene.h"
+#include "UserInput.h"
+#include "Gamestate.h"
 
 Program::Program() {
 	setupWindow();
@@ -28,13 +30,16 @@ Program::~Program() {
 }
 
 void Program::start() {
+
+	Gamestate gameState = Gamestate();
+
 	renderingEngine = new RenderingEngine();
 	scene = new Scene(renderingEngine);
 
 	//Main render loop
 	while (!glfwWindowShouldClose(window)) {
 		//User Input
-		//todo
+		UserInput(gameState);
 
 		//AI Interaction System
 		//todo

@@ -3,10 +3,10 @@ We added all the necessary classes into our program but they are just stubbed im
 
 Added Classes:
 
-GameState:
-GameState
+Gamestate:
+Gamestate
 
-SubSystem:
+Subsystem:
 UserInput
 AI_Interaction
 Physics_Controller

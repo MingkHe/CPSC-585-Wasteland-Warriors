@@ -64,6 +64,7 @@ void Program::start() {
 		//Render Engine
 		scene->displayScene();
 		glfwSwapBuffers(window);
+		glfwWaitEvents();
 		glfwPollEvents();
 	}
 
@@ -95,7 +96,7 @@ void Program::setupWindow() {
 	}
 
 	//Set the custom function that tracks key presses
-	glfwSetKeyCallback(window, KeyCallback);
+	glfwSetKeyCallback(window, UserInput::key);
 
 	//Bring the new window to the foreground (not strictly necessary but convenient)
 	glfwMakeContextCurrent(window);
@@ -128,9 +129,3 @@ void ErrorCallback(int error, const char* description) {
 	std::cout << description << std::endl;
 }
 
-void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-	//Key codes are often prefixed with GLFW_KEY_ and can be found on the GLFW website
-	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-		glfwSetWindowShouldClose(window, GL_TRUE);
-	}
-}

@@ -17,6 +17,7 @@
 #include "RenderingEngine.h"
 #include "Scene.h"
 #include "UserInput.h"
+#include "AI_Interaction.h"
 #include "Gamestate.h"
 
 Program::Program() {
@@ -32,17 +33,22 @@ Program::~Program() {
 void Program::start() {
 
 	Gamestate gameState = Gamestate();
+	
+	UserInput usrInput = UserInput();
+	AI_Interaction aiInteraction = AI_Interaction();
 
 	renderingEngine = new RenderingEngine();
 	scene = new Scene(renderingEngine);
 
+	//AI_Interaction aiInteraction = new AI_Interaction();
+
 	//Main render loop
 	while (!glfwWindowShouldClose(window)) {
 		//User Input
-		UserInput(gameState);
+		usrInput.Update(gameState);
 
 		//AI Interaction System
-		//todo
+		aiInteraction.Update(gameState);
 
 		//Physics Engine
 		//todo

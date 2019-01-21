@@ -8,6 +8,9 @@
     <ClCompile Include="RenderingEngine.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="ShaderTools.cpp" />
+    <ClCompile Include="Gamestate.cpp" />
+    <ClCompile Include="UserInput.cpp" />
+    <ClCompile Include="AI_Interaction.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Geometry.h" />
@@ -15,5 +18,8 @@
     <ClInclude Include="RenderingEngine.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="ShaderTools.h" />
+    <ClInclude Include="Gamestate.h" />
+    <ClInclude Include="UserInput.h" />
+    <ClInclude Include="AI_Interaction.h" />
   </ItemGroup>
 </Project>

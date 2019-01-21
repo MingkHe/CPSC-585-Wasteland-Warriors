@@ -33,6 +33,19 @@ void Program::start() {
 
 	//Main render loop
 	while (!glfwWindowShouldClose(window)) {
+		//User Input
+		//todo
+
+		//AI Interaction System
+		//todo
+
+		//Physics Engine
+		//todo
+
+		//Audio Engine
+		//todo
+
+		//Render Engine
 		scene->displayScene();
 		glfwSwapBuffers(window);
 		glfwPollEvents();

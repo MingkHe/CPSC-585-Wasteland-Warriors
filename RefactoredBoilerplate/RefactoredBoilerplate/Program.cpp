@@ -18,6 +18,8 @@
 #include "Scene.h"
 #include "UserInput.h"
 #include "AI_Interaction.h"
+#include "Physics_Controller.h"
+#include "Audio_Controller.h"
 #include "Gamestate.h"
 
 Program::Program() {
@@ -36,6 +38,9 @@ void Program::start() {
 	
 	UserInput usrInput = UserInput();
 	AI_Interaction aiInteraction = AI_Interaction();
+	Physics_Controller physicsCL = Physics_Controller();
+	Audio_Controller audioCL = Audio_Controller();
+	
 
 	renderingEngine = new RenderingEngine();
 	scene = new Scene(renderingEngine);
@@ -51,10 +56,10 @@ void Program::start() {
 		aiInteraction.Update(gameState);
 
 		//Physics Engine
-		//todo
+		physicsCL.Update(gameState);
 
 		//Audio Engine
-		//todo
+		audioCL.playSound(gameState);
 
 		//Render Engine
 		scene->displayScene();

@@ -11,6 +11,8 @@
     <ClCompile Include="Gamestate.cpp" />
     <ClCompile Include="UserInput.cpp" />
     <ClCompile Include="AI_Interaction.cpp" />
+    <ClCompile Include="Physics_Controller.cpp" />
+    <ClCompile Include="Audio_Controller.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Geometry.h" />
@@ -21,5 +23,7 @@
     <ClInclude Include="Gamestate.h" />
     <ClInclude Include="UserInput.h" />
     <ClInclude Include="AI_Interaction.h" />
+    <ClInclude Include="Physics_Controller.h" />
+    <ClInclude Include="Audio_Controller.h" />
   </ItemGroup>
 </Project>

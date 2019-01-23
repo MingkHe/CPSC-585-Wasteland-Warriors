@@ -1,6 +1,0 @@
-﻿  Audio_Controller.cpp
-  Physics_Controller.cpp
-  Program.cpp
-  Generating Code...
-LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
-  RefactoredBoilerplate.vcxproj -> C:\Users\ming\Documents\GitHub\CPSC-585-Wasteland-Warriors\RefactoredBoilerplate\Debug\RefactoredBoilerplate.exe

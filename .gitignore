@@ -1,1 +1,7 @@
-
+.vs/
+Debug/
+x64/
+RefactoredBoilerplate/Debug/
+RefactoredBoilerplate/Release/
+RefactoredBoilerplate/x64/
+RefactoredBoilerplate/RefactoredBoilerplate.vcxproj.user

@@ -5,17 +5,14 @@
 *      Author: John Hall
 */
 
-#include "Program.h"
-
-#include <iostream>
 #include <iostream>
 #include <string>
-#include <queue>
 
 //**Must include glad and GLFW in this order or it breaks**
 #include "glad/glad.h"
 #include <GLFW/glfw3.h>
 
+#include "Program.h"
 #include "RenderingEngine.h"
 #include "Scene.h"
 #include "UserInput.h"
@@ -37,6 +34,7 @@ Program::~Program() {
 
 void Program::start() {
 
+	//Initialization
 	Gamestate gameState = Gamestate();
 	
 	UserInput usrInput = UserInput();
@@ -112,8 +110,6 @@ void Program::setupWindow() {
 	QueryGLVersion();
 }
 
-
-
 void Program::QueryGLVersion() {
 	// query opengl version and renderer information
 	std::string version = reinterpret_cast<const char *>(glGetString(GL_VERSION));
@@ -129,4 +125,3 @@ void ErrorCallback(int error, const char* description) {
 	std::cout << "GLFW ERROR " << error << ":" << std::endl;
 	std::cout << description << std::endl;
 }
-

@@ -8,9 +8,6 @@
 
 class UserInput
 {
-private:
-
-public:
 	UserInput();
 	~UserInput();
 

@@ -7,6 +7,9 @@ public:
 	Gamestate();
 	~Gamestate();
 
+	double time;
+	double timeStep;
+
 	std::list<Entity> Entities;
 };
 

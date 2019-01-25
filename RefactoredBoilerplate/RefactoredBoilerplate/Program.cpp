@@ -36,6 +36,8 @@ void Program::start() {
 
 	//Initialization
 	Gamestate gameState = Gamestate();
+	gameState.time = 0.0;
+	gameState.timeStep = 1.0 / 60.0; //60 fps
 	
 	UserInput usrInput = UserInput();
 	AI_Interaction aiInteraction = AI_Interaction();
@@ -59,12 +61,15 @@ void Program::start() {
 
 		//Audio Engine
 		audioCL.playSound(gameState);
-
+		
 		//Render Engine
 		scene->displayScene();
 		glfwSwapBuffers(window);
 		glfwWaitEvents();
 		glfwPollEvents();
+
+		//Fixed Timestep
+		gameState.time += gameState.timeStep;
 	}
 
 }

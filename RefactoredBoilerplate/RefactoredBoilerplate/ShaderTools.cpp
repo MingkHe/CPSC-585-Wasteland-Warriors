@@ -9,6 +9,9 @@
 
 #include <iostream>
 #include <fstream>
+#include <set>
+#include <algorithm>
+#include <iterator>
 
 //**Must include glad and GLFW in this order or it breaks**
 #include "glad/glad.h"

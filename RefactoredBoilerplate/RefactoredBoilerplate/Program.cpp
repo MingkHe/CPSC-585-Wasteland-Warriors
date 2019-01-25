@@ -5,8 +5,6 @@
 *      Author: John Hall
 */
 
-#include "Program.h"
-
 #include <iostream>
 #include <string>
 
@@ -14,6 +12,7 @@
 #include "glad/glad.h"
 #include <GLFW/glfw3.h>
 
+#include "Program.h"
 #include "RenderingEngine.h"
 #include "Scene.h"
 #include "UserInput.h"
@@ -21,6 +20,7 @@
 #include "Physics_Controller.h"
 #include "Audio_Controller.h"
 #include "Gamestate.h"
+
 
 Program::Program() {
 	setupWindow();
@@ -34,6 +34,7 @@ Program::~Program() {
 
 void Program::start() {
 
+	//Initialization
 	Gamestate gameState = Gamestate();
 	
 	UserInput usrInput = UserInput();
@@ -41,14 +42,12 @@ void Program::start() {
 	Physics_Controller physicsCL = Physics_Controller();
 	Audio_Controller audioCL = Audio_Controller();
 	
-
 	renderingEngine = new RenderingEngine();
 	scene = new Scene(renderingEngine);
 
-	//AI_Interaction aiInteraction = new AI_Interaction();
-
 	//Main render loop
 	while (!glfwWindowShouldClose(window)) {
+
 		//User Input
 		usrInput.Update(gameState);
 
@@ -111,8 +110,6 @@ void Program::setupWindow() {
 	QueryGLVersion();
 }
 
-
-
 void Program::QueryGLVersion() {
 	// query opengl version and renderer information
 	std::string version = reinterpret_cast<const char *>(glGetString(GL_VERSION));
@@ -128,4 +125,3 @@ void ErrorCallback(int error, const char* description) {
 	std::cout << "GLFW ERROR " << error << ":" << std::endl;
 	std::cout << description << std::endl;
 }
-

@@ -2,6 +2,10 @@
 #include "Program.h"
 
 #include <iostream>
+#include <string>
+#include <queue>
+
+std::queue<std::string> UserInput::inputBuffer;
 
 UserInput::UserInput()
 {
@@ -14,6 +18,12 @@ UserInput::~UserInput()
 
 int UserInput::Update(Gamestate gameState)
 {
+	//Get input from buffer
+	if (UserInput::inputBuffer.size() > 0) {
+		std::cout << UserInput::inputBuffer.front() << "\n";
+		UserInput::inputBuffer.pop();
+	}
+	//Handle input
 	//Update state based on menu
 	return 0;
 }
@@ -34,41 +44,55 @@ void UserInput::key(GLFWwindow* window, int key, int scancode, int action, int m
 		switch (key) {
 		
 			//WASD
-		case GLFW_KEY_W: std::cout << 'W';
+		case GLFW_KEY_W:
+			UserInput::inputBuffer.push("W");
 			break;
-		case GLFW_KEY_A: std::cout << 'A';
+		case GLFW_KEY_A:
+			UserInput::inputBuffer.push("A");
 			break;
-		case GLFW_KEY_S: std::cout << 'S';
+		case GLFW_KEY_S:
+			UserInput::inputBuffer.push("S");
 			break;
-		case GLFW_KEY_D: std::cout << 'D';
+		case GLFW_KEY_D:
+			UserInput::inputBuffer.push("D");
 			break;
 
 			//Arrows
-		case GLFW_KEY_RIGHT: std::cout << "RIGHT";
+		case GLFW_KEY_RIGHT:
+			UserInput::inputBuffer.push("RIGHT");
 			break;
-		case GLFW_KEY_LEFT: std::cout << "LEFT";
+		case GLFW_KEY_LEFT:
+			UserInput::inputBuffer.push("LEFT");
 			break;
-		case GLFW_KEY_DOWN: std::cout << "DOWN";
+		case GLFW_KEY_DOWN:
+			UserInput::inputBuffer.push("DOWN");
 			break;
-		case GLFW_KEY_UP: std::cout << "UP";
+		case GLFW_KEY_UP:
+			UserInput::inputBuffer.push("UP");
 			break;
 
 			//Controls
-		case GLFW_KEY_SPACE: std::cout << "SPACE";
+		case GLFW_KEY_SPACE:
+			UserInput::inputBuffer.push("SPACE");
 			break;
-		case GLFW_KEY_ESCAPE: std::cout << "ESCAPE";
+		case GLFW_KEY_ESCAPE:
+			UserInput::inputBuffer.push("ESCAPE");
 			break;
-		case GLFW_KEY_ENTER: std::cout << "ENTER";
+		case GLFW_KEY_ENTER:
+			UserInput::inputBuffer.push("ENTER");
 			break;
-		case GLFW_KEY_LEFT_SHIFT: std::cout << "LSHIFT";
+		case GLFW_KEY_LEFT_SHIFT:
+			UserInput::inputBuffer.push("LSHIFT");
 			break;
-		case GLFW_KEY_RIGHT_SHIFT: std::cout << "RSHIFT";
+		case GLFW_KEY_RIGHT_SHIFT:
+			UserInput::inputBuffer.push("RSHIFT");
 			break;
 		}
 	break;
 
 	case GLFW_REPEAT:
 		break;
+
 	case GLFW_RELEASE:
 		break;
 	}

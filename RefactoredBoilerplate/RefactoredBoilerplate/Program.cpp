@@ -8,7 +8,9 @@
 #include "Program.h"
 
 #include <iostream>
+#include <iostream>
 #include <string>
+#include <queue>
 
 //**Must include glad and GLFW in this order or it breaks**
 #include "glad/glad.h"
@@ -21,6 +23,7 @@
 #include "Physics_Controller.h"
 #include "Audio_Controller.h"
 #include "Gamestate.h"
+
 
 Program::Program() {
 	setupWindow();
@@ -41,14 +44,12 @@ void Program::start() {
 	Physics_Controller physicsCL = Physics_Controller();
 	Audio_Controller audioCL = Audio_Controller();
 	
-
 	renderingEngine = new RenderingEngine();
 	scene = new Scene(renderingEngine);
 
-	//AI_Interaction aiInteraction = new AI_Interaction();
-
 	//Main render loop
 	while (!glfwWindowShouldClose(window)) {
+
 		//User Input
 		usrInput.Update(gameState);
 

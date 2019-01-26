@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{8516B0C0-F488-4F9A-AFCB-5C7CBDBA3983}</ProjectGuid>
-    <RootNamespace>RefactoredBoilerplate</RootNamespace>
+    <RootNamespace>Wasteland_Warrior</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -171,7 +171,7 @@
     <ClInclude Include="Vehicle.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="RefactoredBoilerplate.vcxproj.filters.txt" />
+    <Text Include="Wasteland_Warrior.vcxproj.filters.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

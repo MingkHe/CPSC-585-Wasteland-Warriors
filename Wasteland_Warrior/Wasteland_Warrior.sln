@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2026
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RefactoredBoilerplate", "RefactoredBoilerplate\RefactoredBoilerplate.vcxproj", "{8516B0C0-F488-4F9A-AFCB-5C7CBDBA3983}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Wasteland_Warrior", "Wasteland_Warrior\Wasteland_Warrior.vcxproj", "{8516B0C0-F488-4F9A-AFCB-5C7CBDBA3983}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

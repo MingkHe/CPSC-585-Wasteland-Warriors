@@ -39,6 +39,6 @@
     <ClInclude Include="Vehicle.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="RefactoredBoilerplate.vcxproj.filters.txt" />
+    <Text Include="Wasteland_Warrior.vcxproj.filters.txt" />
   </ItemGroup>
 </Project>

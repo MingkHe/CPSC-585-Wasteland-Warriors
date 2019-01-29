@@ -41,20 +41,78 @@ Scene::Scene(RenderingEngine* renderer) : renderer(renderer) {
 
 	//Add the triangle to the scene objects
 	objects.push_back(triangle);*/
-	Geometry box;
-	box.verts.push_back(glm::vec3(0.25f, 0.25f, 0.25f));
+	Geometry box, ground;
+	ground.verts.push_back(glm::vec3(-25.f, -1.f, -25.f));
+	ground.verts.push_back(glm::vec3(25.f, -1.f, -25.f));
+	ground.verts.push_back(glm::vec3(-25.f, -1.f, 25.f));
+	ground.verts.push_back(glm::vec3(25.f, -1.f, -25.f));
+	ground.verts.push_back(glm::vec3(-25.f, -1.f, 25.f));
+	ground.verts.push_back(glm::vec3(25.f, -1.f, 25.f));
+	for (int i = 0; i < 6; i++) {
+		ground.colors.push_back(glm::vec3(0.5f, 0.5f, 0.5f));
+	}
+	ground.drawMode = GL_TRIANGLES;
+	RenderingEngine::assignBuffers(ground);
+	RenderingEngine::setBufferData(ground);
+	objects.push_back(ground);
+
+	/*box.verts.push_back(glm::vec3(0.25f, 0.25f, 0.25f));
 	box.verts.push_back(glm::vec3(-0.25f, 0.25f, 0.25f));
 	box.verts.push_back(glm::vec3(0.25f, -0.25f, 0.25f));
 	box.verts.push_back(glm::vec3(-0.25f, -0.25f, 0.25f));
+
 	box.verts.push_back(glm::vec3(0.25f, 0.25f, -0.25f));
 	box.verts.push_back(glm::vec3(-0.25f, 0.25f, -0.25f));
 	box.verts.push_back(glm::vec3(0.25f, -0.25f, -0.25f));
 	box.verts.push_back(glm::vec3(-0.25f, -0.25f, -0.25f));
+	int index[36];*/
 
-	for (int i = 0; i < 8; i++) {
+	box.verts.push_back(glm::vec3(0.25f, 0.25f, 0.25f));//front
+	box.verts.push_back(glm::vec3(-0.25f, 0.25f, 0.25f));
+	box.verts.push_back(glm::vec3(0.25f, -0.25f, 0.25f));
+	box.verts.push_back(glm::vec3(-0.25f, 0.25f, 0.25f));
+	box.verts.push_back(glm::vec3(0.25f, -0.25f, 0.25f));
+	box.verts.push_back(glm::vec3(-0.25f, -0.25f, 0.25f));
+
+	box.verts.push_back(glm::vec3(0.25f, 0.25f, -0.25f));//back
+	box.verts.push_back(glm::vec3(-0.25f, 0.25f, -0.25f));
+	box.verts.push_back(glm::vec3(0.25f, -0.25f, -0.25f));
+	box.verts.push_back(glm::vec3(-0.25f, 0.25f, -0.25f));
+	box.verts.push_back(glm::vec3(0.25f, -0.25f, -0.25f));
+	box.verts.push_back(glm::vec3(-0.25f, -0.25f, -0.25f));
+
+	box.verts.push_back(glm::vec3(0.25f, 0.25f, 0.25f));//left
+	box.verts.push_back(glm::vec3(0.25f, -0.25f, 0.25f));
+	box.verts.push_back(glm::vec3(0.25f, 0.25f, -0.25f));
+	box.verts.push_back(glm::vec3(0.25f, -0.25f, 0.25f));
+	box.verts.push_back(glm::vec3(0.25f, 0.25f, -0.25f));
+	box.verts.push_back(glm::vec3(0.25f, -0.25f, -0.25f));
+
+	box.verts.push_back(glm::vec3(-0.25f, 0.25f, 0.25f));//right
+	box.verts.push_back(glm::vec3(-0.25f, -0.25f, 0.25f));
+	box.verts.push_back(glm::vec3(-0.25f, 0.25f, -0.25f));
+	box.verts.push_back(glm::vec3(-0.25f, -0.25f, 0.25f));
+	box.verts.push_back(glm::vec3(-0.25f, 0.25f, -0.25f));
+	box.verts.push_back(glm::vec3(-0.25f, -0.25f, -0.25f));
+
+	box.verts.push_back(glm::vec3(0.25f, 0.25f, 0.25f));//top
+	box.verts.push_back(glm::vec3(-0.25f, 0.25f, 0.25f));
+	box.verts.push_back(glm::vec3(0.25f, 0.25f, -0.25f));
+	box.verts.push_back(glm::vec3(-0.25f, 0.25f, 0.25f));
+	box.verts.push_back(glm::vec3(0.25f, 0.25f, -0.25f));
+	box.verts.push_back(glm::vec3(-0.25f, 0.25f, -0.25f));
+
+	box.verts.push_back(glm::vec3(0.25f, -0.25f, 0.25f));//bottom
+	box.verts.push_back(glm::vec3(-0.25f, -0.25f, 0.25f));
+	box.verts.push_back(glm::vec3(0.25f, -0.25f, -0.25f));
+	box.verts.push_back(glm::vec3(-0.25f, -0.25f, 0.25f));
+	box.verts.push_back(glm::vec3(0.25f, -0.25f, -0.25f));
+	box.verts.push_back(glm::vec3(-0.25f, -0.25f, -0.25f));
+
+	for (int i = 0; i < box.verts.size(); i++) {
 		box.colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
 	}
-
+	box.drawMode = GL_TRIANGLES;
 	RenderingEngine::assignBuffers(box);
 	RenderingEngine::setBufferData(box);
 	objects.push_back(box);

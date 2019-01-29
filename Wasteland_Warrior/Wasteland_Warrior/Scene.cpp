@@ -20,7 +20,7 @@
 Scene::Scene(RenderingEngine* renderer) : renderer(renderer) {
 	//Create a single triangle
 	//Additional triangles can be created by pushing groups of three more vertices into the verts vector
-	Geometry triangle;
+	/*Geometry triangle;
 	triangle.verts.push_back(glm::vec3(-0.6f, -0.4f, 1.0f));
 	triangle.verts.push_back(glm::vec3(0.0f, 0.6f, 1.0f));
 	triangle.verts.push_back(glm::vec3(0.6f, -0.4f, 1.0f));
@@ -40,7 +40,24 @@ Scene::Scene(RenderingEngine* renderer) : renderer(renderer) {
 	RenderingEngine::setBufferData(triangle);
 
 	//Add the triangle to the scene objects
-	objects.push_back(triangle);
+	objects.push_back(triangle);*/
+	Geometry box;
+	box.verts.push_back(glm::vec3(0.25f, 0.25f, 0.25f));
+	box.verts.push_back(glm::vec3(-0.25f, 0.25f, 0.25f));
+	box.verts.push_back(glm::vec3(0.25f, -0.25f, 0.25f));
+	box.verts.push_back(glm::vec3(-0.25f, -0.25f, 0.25f));
+	box.verts.push_back(glm::vec3(0.25f, 0.25f, -0.25f));
+	box.verts.push_back(glm::vec3(-0.25f, 0.25f, -0.25f));
+	box.verts.push_back(glm::vec3(0.25f, -0.25f, -0.25f));
+	box.verts.push_back(glm::vec3(-0.25f, -0.25f, -0.25f));
+
+	for (int i = 0; i < 8; i++) {
+		box.colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
+	}
+
+	RenderingEngine::assignBuffers(box);
+	RenderingEngine::setBufferData(box);
+	objects.push_back(box);
 }
 
 Scene::~Scene() {

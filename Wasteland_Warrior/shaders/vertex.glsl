@@ -11,16 +11,24 @@
 layout(location = 0) in vec3 VertexPosition;
 layout(location = 1) in vec3 VertexColour;
 layout(location = 2) in vec3 Normal;
-layout(location = 3) in unsigned int Index;
 
 // output to be interpolated between vertices and passed to the fragment stage
+uniform mat4 modelViewProjection;
+uniform vec3 light;
+uniform vec3 cameraPos;
 out vec3 Colour;
+
+//out vec3 normal;
+out vec3 light_Vec;
+out vec3 camera_Vec;
 
 void main()
 {
     // assign vertex position without modification
-    gl_Position = vec4(VertexPosition, 1.0);
+    gl_Position = modelViewProjection*vec4(VertexPosition, 1.0);
 
     // assign output colour to be interpolated
     Colour = VertexColour;
+	light_Vec = light - VertexPosition;
+	camera_Vec = cameraPos - VertexPosition;
 }

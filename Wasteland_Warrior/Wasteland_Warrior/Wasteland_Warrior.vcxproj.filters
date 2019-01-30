@@ -19,6 +19,7 @@
     <ClCompile Include="MapTerrain.cpp" />
     <ClCompile Include="PlayerUnit.cpp" />
     <ClCompile Include="Vehicle.cpp" />
+    <ClCompile Include="Camera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Geometry.h" />
@@ -37,8 +38,14 @@
     <ClInclude Include="MapTerrain.h" />
     <ClInclude Include="PlayerUnit.h" />
     <ClInclude Include="Vehicle.h" />
+    <ClInclude Include="Camera.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Wasteland_Warrior.vcxproj.filters.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\shaders\fragment.glsl" />
+    <None Include="..\shaders\vertex.glsl" />
+    <None Include="..\shaders\geometry.glsl" />
   </ItemGroup>
 </Project>

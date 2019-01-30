@@ -4,8 +4,9 @@
 *  Created on: Sep 10, 2018
 *      Author: John Hall
 */
-
+#define PI_F 3.14159265359f
 #include "RenderingEngine.h"
+#include "Camera.h"
 
 #include <iostream>
 
@@ -28,6 +29,19 @@ void RenderingEngine::RenderScene(const std::vector<Geometry>& objects) {
 	//Clears the screen to a dark grey background
 	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
+
+	//sets uniforms
+	GLint cameraGL = glGetUniformLocation(shaderProgram, "cameraPos");
+	GLint lightGL = glGetUniformLocation(shaderProgram, "light");
+	Camera cam = Camera(1.f);
+	glm::mat4 perspectiveMatrix = glm::perspective(PI_F*.4f, 512.f / 512.f, .1f, 50.f);
+	glm::vec3 light = glm::vec3(0.f, 2.f, 0.f);
+	glUseProgram(shaderProgram);
+	glUniform3fv(cameraGL, 1, &(cam.pos.x));
+	glUniform3fv(lightGL, 1, &(light.x));
+	glm::mat4 modelViewProjection = perspectiveMatrix * cam.viewMatrix();
+	GLint uniformLocation = glGetUniformLocation(shaderProgram, "modelViewProjection");
+	glUniformMatrix4fv(uniformLocation, 1, false, glm::value_ptr(modelViewProjection));
 
 	// bind our shader program and the vertex array object containing our
 	// scene geometry, then tell OpenGL to draw our geometry

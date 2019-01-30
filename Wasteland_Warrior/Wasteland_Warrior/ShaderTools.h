@@ -23,6 +23,7 @@ namespace ShaderTools {
 
 	// creates and returns a program object linked from vertex and fragment shaders
 	GLuint LinkProgram(GLuint vertexShader, GLuint fragmentShader);
+	GLuint LinkProgram(GLuint vertexShader, GLuint fragmentShader, GLint geoShader);
 
 	GLuint InitializeShaders();
 }

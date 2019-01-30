@@ -89,21 +89,51 @@ GLuint ShaderTools::LinkProgram(GLuint vertexShader, GLuint fragmentShader) {
 	return programObject;
 }
 
+GLuint ShaderTools::LinkProgram(GLuint vertexShader, GLuint fragmentShader, GLint geoShader) {
+	// allocate program object name
+	GLuint programObject = glCreateProgram();
+
+	// attach provided shader objects to this program
+	if (vertexShader)   glAttachShader(programObject, vertexShader);
+	if (fragmentShader) glAttachShader(programObject, fragmentShader);
+	if (geoShader) glAttachShader(programObject, geoShader);
+
+	// try linking the program with given attachments
+	glLinkProgram(programObject);
+
+	// retrieve link status
+	GLint status;
+	glGetProgramiv(programObject, GL_LINK_STATUS, &status);
+	if (status == GL_FALSE) {
+		GLint length;
+		glGetProgramiv(programObject, GL_INFO_LOG_LENGTH, &length);
+		std::string info(length, ' ');
+		glGetProgramInfoLog(programObject, info.length(), &length, &info[0]);
+		std::cout << "ERROR linking shader program:" << std::endl;
+		std::cout << info << std::endl;
+	}
+
+	return programObject;
+}
+
 GLuint ShaderTools::InitializeShaders() {
 	// load shader source from files
 	std::string vertexSource = LoadSource("../shaders/vertex.glsl");
 	std::string fragmentSource = LoadSource("../shaders/fragment.glsl");
+	//std::string geoSource = LoadSource("../shaders/geometry.glsl");
 	if (vertexSource.empty() || fragmentSource.empty()) return false;
 
 	// compile shader source into shader objects
 	GLuint vertex = CompileShader(GL_VERTEX_SHADER, vertexSource);
 	GLuint fragment = CompileShader(GL_FRAGMENT_SHADER, fragmentSource);
+	//GLuint geo = CompileShader(GL_VERTEX_SHADER, geoSource);
 
 	// link shader program
 	GLuint program = LinkProgram(vertex, fragment);
 
 	glDeleteShader(vertex);
 	glDeleteShader(fragment);
+	//glDeleteShader(geo);
 
 	// check for OpenGL errors and return false if error occurred
 	return program;

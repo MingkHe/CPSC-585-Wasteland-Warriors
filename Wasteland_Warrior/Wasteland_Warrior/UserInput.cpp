@@ -18,6 +18,9 @@ UserInput::~UserInput()
 
 int UserInput::Update(Gamestate gameState)
 {
+	//Gamepad input
+	gamepad(glfwJoystickPresent(GLFW_JOYSTICK_1));
+
 	//Get input from buffer
 	if (UserInput::inputBuffer.size() > 0) {
 		std::cout << UserInput::inputBuffer.front() << "\n";
@@ -95,5 +98,20 @@ void UserInput::key(GLFWwindow* window, int key, int scancode, int action, int m
 
 	case GLFW_RELEASE:
 		break;
+	}
+}
+
+void UserInput::gamepad(int controller){
+
+	//Controller 1
+	if (controller == 1) {
+
+		//Gamepad joystick and triggers 
+		int axesCount;
+		const float *axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &axesCount);
+
+		// Gamepad buttons
+		int buttonCount;
+		const unsigned char *buttons = glfwGetJoystickButtons(GLFW_JOYSTICK_1, &buttonCount);
 	}
 }

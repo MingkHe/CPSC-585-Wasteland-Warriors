@@ -44,7 +44,7 @@ void Program::start() {
 	Physics_Controller physicsCL = Physics_Controller();
 	Audio_Controller audioCL = Audio_Controller();
 	
-	renderingEngine = new RenderingEngine();
+	renderingEngine = new RenderingEngine(&gameState);
 	scene = new Scene(renderingEngine);
 
 	//Main render loop
@@ -65,9 +65,9 @@ void Program::start() {
 		//Render Engine
 		scene->displayScene();
 		glfwSwapBuffers(window);
-		glfwWaitEvents();
+		//glfwWaitEvents();
 		glfwPollEvents();
-
+		gameState.camera.rotateHorizontal(0.01f);
 		//Fixed Timestep
 		gameState.time += gameState.timeStep;
 	}

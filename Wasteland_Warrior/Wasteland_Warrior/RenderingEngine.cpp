@@ -6,15 +6,15 @@
 */
 #define PI_F 3.14159265359f
 #include "RenderingEngine.h"
-#include "Camera.h"
 
 #include <iostream>
 
 //included here because it just contains some global functions
 #include "ShaderTools.h"
 
-RenderingEngine::RenderingEngine() {
+RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	shaderProgram = ShaderTools::InitializeShaders();
+	game_state = gameState;
 	if (shaderProgram == 0) {
 		std::cout << "Program could not initialize shaders, TERMINATING" << std::endl;
 		return;
@@ -33,13 +33,11 @@ void RenderingEngine::RenderScene(const std::vector<Geometry>& objects) {
 	//sets uniforms
 	GLint cameraGL = glGetUniformLocation(shaderProgram, "cameraPos");
 	GLint lightGL = glGetUniformLocation(shaderProgram, "light");
-	Camera cam = Camera(1.f);
 	glm::mat4 perspectiveMatrix = glm::perspective(PI_F*.4f, 512.f / 512.f, .1f, 50.f);
-	glm::vec3 light = glm::vec3(0.f, 2.f, 0.f);
 	glUseProgram(shaderProgram);
-	glUniform3fv(cameraGL, 1, &(cam.pos.x));
-	glUniform3fv(lightGL, 1, &(light.x));
-	glm::mat4 modelViewProjection = perspectiveMatrix * cam.viewMatrix();
+	glUniform3fv(cameraGL, 1, &(game_state->camera.pos.x));
+	glUniform3fv(lightGL, 1, &(game_state->light.x));
+	glm::mat4 modelViewProjection = perspectiveMatrix * game_state->camera.viewMatrix();
 	GLint uniformLocation = glGetUniformLocation(shaderProgram, "modelViewProjection");
 	glUniformMatrix4fv(uniformLocation, 1, false, glm::value_ptr(modelViewProjection));
 
@@ -74,10 +72,10 @@ void RenderingEngine::assignBuffers(Geometry& geometry) {
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 	glEnableVertexAttribArray(0);
 
-	/*glGenBuffers(1, &geometry.normalBuffer);
+	glGenBuffers(1, &geometry.normalBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, geometry.normalBuffer);
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-	glEnableVertexAttribArray(2);*/
+	glEnableVertexAttribArray(2);
 
 	glGenBuffers(1, &geometry.colorBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, geometry.colorBuffer);
@@ -99,8 +97,8 @@ void RenderingEngine::setBufferData(Geometry& geometry) {
 	glBindBuffer(GL_ARRAY_BUFFER, geometry.vertexBuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * geometry.verts.size(), geometry.verts.data(), GL_STATIC_DRAW);
 
-	/*glBindBuffer(GL_ARRAY_BUFFER, geometry.normalBuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * geometry.normals.size(), geometry.normals.data(), GL_STATIC_DRAW);*/
+	glBindBuffer(GL_ARRAY_BUFFER, geometry.normalBuffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * geometry.normals.size(), geometry.normals.data(), GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ARRAY_BUFFER, geometry.colorBuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * geometry.colors.size(), geometry.colors.data(), GL_STATIC_DRAW);

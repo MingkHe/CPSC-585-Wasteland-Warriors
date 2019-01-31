@@ -50,6 +50,7 @@ Scene::Scene(RenderingEngine* renderer) : renderer(renderer) {
 	ground.verts.push_back(glm::vec3(25.f, -1.f, 25.f));
 	for (int i = 0; i < 6; i++) {
 		ground.colors.push_back(glm::vec3(0.5f, 0.5f, 0.5f));
+		ground.normals.push_back(glm::vec3(0.f, 1.f, 0.f));
 	}
 	ground.drawMode = GL_TRIANGLES;
 	RenderingEngine::assignBuffers(ground);
@@ -73,6 +74,9 @@ Scene::Scene(RenderingEngine* renderer) : renderer(renderer) {
 	box.verts.push_back(glm::vec3(-0.25f, 0.25f, 0.25f));
 	box.verts.push_back(glm::vec3(0.25f, -0.25f, 0.25f));
 	box.verts.push_back(glm::vec3(-0.25f, -0.25f, 0.25f));
+	for (int i = 0; i < 6; i++) {
+		box.normals.push_back(glm::vec3(1.f, 0.f, 0.f));
+	}
 
 	box.verts.push_back(glm::vec3(0.25f, 0.25f, -0.25f));//back
 	box.verts.push_back(glm::vec3(-0.25f, 0.25f, -0.25f));
@@ -80,6 +84,9 @@ Scene::Scene(RenderingEngine* renderer) : renderer(renderer) {
 	box.verts.push_back(glm::vec3(-0.25f, 0.25f, -0.25f));
 	box.verts.push_back(glm::vec3(0.25f, -0.25f, -0.25f));
 	box.verts.push_back(glm::vec3(-0.25f, -0.25f, -0.25f));
+	for (int i = 0; i < 6; i++) {
+		box.normals.push_back(glm::vec3(-1.f, 0.f, 0.f));
+	}
 
 	box.verts.push_back(glm::vec3(0.25f, 0.25f, 0.25f));//left
 	box.verts.push_back(glm::vec3(0.25f, -0.25f, 0.25f));
@@ -87,6 +94,9 @@ Scene::Scene(RenderingEngine* renderer) : renderer(renderer) {
 	box.verts.push_back(glm::vec3(0.25f, -0.25f, 0.25f));
 	box.verts.push_back(glm::vec3(0.25f, 0.25f, -0.25f));
 	box.verts.push_back(glm::vec3(0.25f, -0.25f, -0.25f));
+	for (int i = 0; i < 6; i++) {
+		box.normals.push_back(glm::vec3(0.f, 0.f, -1.f));
+	}
 
 	box.verts.push_back(glm::vec3(-0.25f, 0.25f, 0.25f));//right
 	box.verts.push_back(glm::vec3(-0.25f, -0.25f, 0.25f));
@@ -94,6 +104,9 @@ Scene::Scene(RenderingEngine* renderer) : renderer(renderer) {
 	box.verts.push_back(glm::vec3(-0.25f, -0.25f, 0.25f));
 	box.verts.push_back(glm::vec3(-0.25f, 0.25f, -0.25f));
 	box.verts.push_back(glm::vec3(-0.25f, -0.25f, -0.25f));
+	for (int i = 0; i < 6; i++) {
+		box.normals.push_back(glm::vec3(0.f, 0.f, 1.f));
+	}
 
 	box.verts.push_back(glm::vec3(0.25f, 0.25f, 0.25f));//top
 	box.verts.push_back(glm::vec3(-0.25f, 0.25f, 0.25f));
@@ -101,6 +114,9 @@ Scene::Scene(RenderingEngine* renderer) : renderer(renderer) {
 	box.verts.push_back(glm::vec3(-0.25f, 0.25f, 0.25f));
 	box.verts.push_back(glm::vec3(0.25f, 0.25f, -0.25f));
 	box.verts.push_back(glm::vec3(-0.25f, 0.25f, -0.25f));
+	for (int i = 0; i < 6; i++) {
+		box.normals.push_back(glm::vec3(0.f, 1.f, 0.f));
+	}
 
 	box.verts.push_back(glm::vec3(0.25f, -0.25f, 0.25f));//bottom
 	box.verts.push_back(glm::vec3(-0.25f, -0.25f, 0.25f));
@@ -108,6 +124,9 @@ Scene::Scene(RenderingEngine* renderer) : renderer(renderer) {
 	box.verts.push_back(glm::vec3(-0.25f, -0.25f, 0.25f));
 	box.verts.push_back(glm::vec3(0.25f, -0.25f, -0.25f));
 	box.verts.push_back(glm::vec3(-0.25f, -0.25f, -0.25f));
+	for (int i = 0; i < 6; i++) {
+		box.normals.push_back(glm::vec3(0.f, -1.f, 0.f));
+	}
 
 	for (int i = 0; i < box.verts.size(); i++) {
 		box.colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));

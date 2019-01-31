@@ -17,6 +17,7 @@ uniform mat4 modelViewProjection;
 uniform vec3 light;
 uniform vec3 cameraPos;
 out vec3 Colour;
+out vec3 normal;
 
 //out vec3 normal;
 out vec3 light_Vec;
@@ -31,4 +32,5 @@ void main()
     Colour = VertexColour;
 	light_Vec = light - VertexPosition;
 	camera_Vec = cameraPos - VertexPosition;
+	normal = normalize(Normal);
 }

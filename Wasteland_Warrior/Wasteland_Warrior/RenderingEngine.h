@@ -13,6 +13,7 @@
 #include <GLFW/glfw3.h>
 
 #include "Geometry.h"
+#include "Gamestate.h"
 
 //Forward declaration of classes
 //(note this is necessary because these are pointers and it allows the #include to appear in the .cpp file)
@@ -20,8 +21,9 @@ struct GLFWwindow;
 
 class RenderingEngine {
 public:
-	RenderingEngine();
+	RenderingEngine(Gamestate *gameState);
 	virtual ~RenderingEngine();
+	Gamestate *game_state;
 
 	//Renders each object
 	void RenderScene(const std::vector<Geometry>& objects);

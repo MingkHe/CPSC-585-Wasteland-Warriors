@@ -18,10 +18,8 @@ uniform vec3 light;
 uniform vec3 cameraPos;
 out vec3 Colour;
 out vec3 normal;
-
-//out vec3 normal;
-out vec3 light_Vec;
-out vec3 camera_Vec;
+out vec3 lightVec;
+out vec3 cameraVec;
 
 void main()
 {
@@ -30,7 +28,7 @@ void main()
 
     // assign output colour to be interpolated
     Colour = VertexColour;
-	light_Vec = light - VertexPosition;
-	camera_Vec = cameraPos - VertexPosition;
-	normal = normalize(Normal);
+	lightVec = light - VertexPosition;
+	cameraVec = cameraPos - VertexPosition;
+	normal = (modelViewProjection*vec4(Normal, 1.0)).xyz;
 }

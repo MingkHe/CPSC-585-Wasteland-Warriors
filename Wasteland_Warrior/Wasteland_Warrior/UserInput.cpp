@@ -116,17 +116,34 @@ void UserInput::gamepad(int controller) {
 		int axesCount;
 		const float *axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &axesCount);
 
+		//Joysticks
 		leftStickX = axes[0];
 		leftStickY = axes[1];
 		rightStickX = axes[2];
 		rightStickY = axes[3];
 
+		//Triggers
 		leftTrigger = axes[4];
 		rightTrigger = axes[5];
 
-		//joystick buttons
+		//Gamepad buttons
 		int buttonCount;
 		const unsigned char *buttons = glfwGetJoystickButtons(GLFW_JOYSTICK_1, &buttonCount);
+
+		if (GLFW_PRESS == buttons[0]) { UserInput::inputBuffer.push("S"); };//A
+		if (GLFW_PRESS == buttons[1]) { UserInput::inputBuffer.push("D"); };//B
+		if (GLFW_PRESS == buttons[2]) { UserInput::inputBuffer.push("A"); };//X
+		if (GLFW_PRESS == buttons[3]) { UserInput::inputBuffer.push("W"); };//Y
+		if (GLFW_PRESS == buttons[4]) { UserInput::inputBuffer.push("LSHIFT"); };//LB
+		if (GLFW_PRESS == buttons[5]) { UserInput::inputBuffer.push("RSHIFT"); };//RB
+		if (GLFW_PRESS == buttons[6]) { UserInput::inputBuffer.push(""); };//left option
+		if (GLFW_PRESS == buttons[7]) { UserInput::inputBuffer.push(""); };//right option
+		if (GLFW_PRESS == buttons[8]) { UserInput::inputBuffer.push(""); };//left joy
+		if (GLFW_PRESS == buttons[9]) { UserInput::inputBuffer.push(""); };//right joy
+		if (GLFW_PRESS == buttons[10]) { UserInput::inputBuffer.push("UP"); };//up
+		if (GLFW_PRESS == buttons[11]) { UserInput::inputBuffer.push("RIGHT"); };//right
+		if (GLFW_PRESS == buttons[12]) { UserInput::inputBuffer.push("DOWN"); };//down
+		if (GLFW_PRESS == buttons[13]) { UserInput::inputBuffer.push("LEFT"); };//left
 
 	}
 }

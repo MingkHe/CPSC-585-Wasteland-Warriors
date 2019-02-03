@@ -9,11 +9,22 @@
 class UserInput
 {
 public:
+	//Joysticks
+	float leftStickX;
+	float leftStickY;
+	float rightStickX;
+	float rightStickY;
+
+	//Triggers
+	float leftTrigger;
+	float rightTrigger;
+		
 	UserInput();
 	~UserInput();
 
 	static std::queue<std::string> inputBuffer;
 
-	int Update(Gamestate gameState);
+	void Update(Gamestate gameState);
 	static void key(GLFWwindow * window, int key, int scancode, int action, int mods);
+	void gamepad(int joystick);
 };

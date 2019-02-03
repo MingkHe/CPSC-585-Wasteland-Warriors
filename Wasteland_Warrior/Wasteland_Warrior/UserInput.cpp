@@ -16,16 +16,25 @@ UserInput::~UserInput()
 {
 }
 
-int UserInput::Update(Gamestate gameState)
+void UserInput::Update(Gamestate gameState)
 {
+	//Gamepad input
+	leftStickX = 0.0;
+	leftStickY = 0.0;
+	rightStickX = 0.0;
+	rightStickY = 0.0;
+	leftTrigger = 0.0;
+	rightTrigger = 0.0;
+	gamepad(glfwJoystickPresent(GLFW_JOYSTICK_1));
+
 	//Get input from buffer
 	if (UserInput::inputBuffer.size() > 0) {
-		std::cout << UserInput::inputBuffer.front() << "\n";
+		gameState.button = UserInput::inputBuffer.front();
 		UserInput::inputBuffer.pop();
 	}
-	//Handle input
-	//Update state based on menu
-	return 0;
+
+	//Update state
+	gameState.state = "inGame";
 }
 
 // Callback for key presses
@@ -36,13 +45,13 @@ void UserInput::key(GLFWwindow* window, int key, int scancode, int action, int m
 		//This closes game. We may want to add aditional functionality to the escape key.
 		glfwSetWindowShouldClose(window, GL_TRUE);
 	}
-	
+
 	switch (action) {
 
 	case GLFW_PRESS:
 
 		switch (key) {
-		
+
 			//WASD
 		case GLFW_KEY_W:
 			UserInput::inputBuffer.push("W");
@@ -88,12 +97,36 @@ void UserInput::key(GLFWwindow* window, int key, int scancode, int action, int m
 			UserInput::inputBuffer.push("RSHIFT");
 			break;
 		}
-	break;
+		break;
 
 	case GLFW_REPEAT:
 		break;
 
 	case GLFW_RELEASE:
 		break;
+	}
+}
+
+void UserInput::gamepad(int controller) {
+
+	//Controller 1
+	if (controller == 1) {
+
+		//Gamepad joystick and triggers 
+		int axesCount;
+		const float *axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &axesCount);
+
+		leftStickX = axes[0];
+		leftStickY = axes[1];
+		rightStickX = axes[2];
+		rightStickY = axes[3];
+
+		leftTrigger = axes[4];
+		rightTrigger = axes[5];
+
+		//joystick buttons
+		int buttonCount;
+		const unsigned char *buttons = glfwGetJoystickButtons(GLFW_JOYSTICK_1, &buttonCount);
+
 	}
 }

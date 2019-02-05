@@ -21,6 +21,9 @@
 #include "Audio_Controller.h"
 #include "Gamestate.h"
 
+#include <SDL_mixer.h>
+#include <SDL.h>
+
 
 Program::Program() {
 	setupWindow();
@@ -47,8 +50,41 @@ void Program::start() {
 	renderingEngine = new RenderingEngine(&gameState);
 	scene = new Scene(renderingEngine);
 
+	//testing audio
+	SDL_Init(SDL_INIT_AUDIO);
+
+	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
+		printf(Mix_GetError());
+
+	Mix_Music* bgm = Mix_LoadMUS("Music/bgm.mp3");
+
+	if (bgm == nullptr) {
+		printf(Mix_GetError());
+	}
+	//Mix_Chunk* soundEff;
+
+	
+
+	printf(Mix_GetError());
+
+
 	//Main render loop
 	while (!glfwWindowShouldClose(window)) {
+
+		if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS) {
+			printf("P");
+			if(!Mix_PlayingMusic())
+				Mix_PlayMusic(bgm, -1);
+			else if (Mix_PausedMusic())
+				Mix_ResumeMusic();
+			else
+				Mix_PausedMusic();
+		}
+
+		if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS) {
+			printf("Halt");
+			Mix_HaltMusic();
+		}
 
 		//User Input
 		usrInput.Update(gameState);

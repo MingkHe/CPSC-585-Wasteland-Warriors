@@ -152,6 +152,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MapObstacle.cpp" />
     <ClCompile Include="MapTerrain.cpp" />
+    <ClCompile Include="MusicPool.cpp" />
     <ClCompile Include="Physics_Controller.cpp" />
     <ClCompile Include="PlayerUnit.cpp" />
     <ClCompile Include="Program.cpp" />
@@ -172,6 +173,7 @@
     <ClInclude Include="AI_Interaction.h" />
     <ClInclude Include="MapObstacle.h" />
     <ClInclude Include="MapTerrain.h" />
+    <ClInclude Include="MusicPool.h" />
     <ClInclude Include="Physics_Controller.h" />
     <ClInclude Include="PlayerUnit.h" />
     <ClInclude Include="Program.h" />

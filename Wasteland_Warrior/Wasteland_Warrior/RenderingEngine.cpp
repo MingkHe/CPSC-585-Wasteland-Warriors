@@ -28,15 +28,19 @@ RenderingEngine::~RenderingEngine() {
 void RenderingEngine::RenderScene(const std::vector<Geometry>& objects) {
 	//Clears the screen to a dark grey background
 	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
 
 	//sets uniforms
 	GLint cameraGL = glGetUniformLocation(shaderProgram, "cameraPos");
 	GLint lightGL = glGetUniformLocation(shaderProgram, "light");
+	GLint shadeGL = glGetUniformLocation(shaderProgram, "shade");
 	glm::mat4 perspectiveMatrix = glm::perspective(PI_F*.4f, 512.f / 512.f, .1f, 50.f);
 	glUseProgram(shaderProgram);
 	glUniform3fv(cameraGL, 1, &(game_state->camera.pos.x));
 	glUniform3fv(lightGL, 1, &(game_state->light.x));
+	glUniform1i(shadeGL, game_state->shading_model);
 	glm::mat4 modelViewProjection = perspectiveMatrix * game_state->camera.viewMatrix();
 	GLint uniformLocation = glGetUniformLocation(shaderProgram, "modelViewProjection");
 	glUniformMatrix4fv(uniformLocation, 1, false, glm::value_ptr(modelViewProjection));

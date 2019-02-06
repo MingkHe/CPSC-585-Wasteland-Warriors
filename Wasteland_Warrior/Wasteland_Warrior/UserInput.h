@@ -24,7 +24,7 @@ public:
 
 	static std::queue<std::string> inputBuffer;
 
-	void Update(Gamestate gameState);
+	void Update(Gamestate* gameState);
 	static void key(GLFWwindow * window, int key, int scancode, int action, int mods);
 	void gamepad(int joystick);
 };

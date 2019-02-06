@@ -16,7 +16,7 @@ UserInput::~UserInput()
 {
 }
 
-void UserInput::Update(Gamestate gameState)
+void UserInput::Update(Gamestate* gameState)
 {
 	//Gamepad input
 	leftStickX = 0.0;
@@ -29,12 +29,12 @@ void UserInput::Update(Gamestate gameState)
 
 	//Get input from buffer
 	if (UserInput::inputBuffer.size() > 0) {
-		gameState.button = UserInput::inputBuffer.front();
+		gameState->button = UserInput::inputBuffer.front();
 		UserInput::inputBuffer.pop();
 	}
 
 	//Update state
-	gameState.state = "inGame";
+	gameState->state = "inGame";
 }
 
 // Callback for key presses

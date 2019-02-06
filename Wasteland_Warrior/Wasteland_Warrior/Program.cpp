@@ -38,9 +38,13 @@ Program::~Program() {
 void Program::start() {
 
 	//Initialization
-	Gamestate gameState = Gamestate();
-	gameState.time = 0.0;
-	gameState.timeStep = 1.0 / 60.0; //60 fps
+	Gamestate* gameState = new Gamestate();
+	gameState->time = 0.0;
+	gameState->timeStep = 1.0 / 60.0; //60 fps
+	gameState->button = "";
+	
+
+	
 
 	SDL_Init(SDL_INIT_AUDIO);
 	
@@ -49,14 +53,14 @@ void Program::start() {
 	Physics_Controller physicsCL = Physics_Controller();
 	Audio_Controller audioCL = Audio_Controller();
 	
-	renderingEngine = new RenderingEngine(&gameState);
+	renderingEngine = new RenderingEngine(gameState);
 	scene = new Scene(renderingEngine);
 
 	//Main render loop
 	while (!glfwWindowShouldClose(window)) {
 
 		//testing sound code, will be reomoved
-		audioCL.playMusic();
+		//audioCL.playMusic();
 
 		/* glfw key invalid error key 0 ?
 		if (glfwGetKey(window, GLFW_KEY_P == GLFW_PRESS)){
@@ -68,10 +72,10 @@ void Program::start() {
 		usrInput.Update(gameState);
 
 		//AI Interaction System
-		aiInteraction.Update(gameState);
+		//aiInteraction.Update(gameState);
 
 		//Physics Engine
-		physicsCL.Update(gameState);
+		//physicsCL.Update(gameState);
 
 		//Audio Engine
 		audioCL.playSound(gameState);
@@ -81,9 +85,9 @@ void Program::start() {
 		glfwSwapBuffers(window);
 		//glfwWaitEvents();
 		glfwPollEvents();
-		gameState.camera.rotateHorizontal(0.01f);
+		gameState->camera.rotateHorizontal(0.01f);
 		//Fixed Timestep
-		gameState.time += gameState.timeStep;
+		gameState->time += gameState->timeStep;
 	}
 
 }

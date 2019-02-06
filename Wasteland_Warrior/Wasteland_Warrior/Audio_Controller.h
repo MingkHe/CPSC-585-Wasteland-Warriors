@@ -13,7 +13,7 @@ public:
 	Audio_Controller();
 	~Audio_Controller();
 
-	int playSound(Gamestate gameState);
+	int playSound(Gamestate* gameState);
 
 	void playMusic();
 	void pauseMusic();

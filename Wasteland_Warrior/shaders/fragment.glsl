@@ -11,6 +11,8 @@ in vec3 Colour;
 //in vec2 texCoord;
 //uniform sampler2DRect image;
 
+uniform int shade;
+
 in vec3 normal;
 in vec3 lightVec;
 in vec3 cameraVec;
@@ -29,7 +31,18 @@ void main(void) {
 	float shading = max(dot(normal, normLightVec), 0)//*5.f/pow(length(lightVec), 2.f)			//diffuse
 	+ pow(max(0.f, dot(reflection, normalize(cameraVec))), 10)*5.f//pow(length(lightVec), 2.f)	//specular
 	+ .1f;																						//ambient
-	
-	FragmentColour *= shading;
-	FragmentColour.w = 1.f;
+	if(shade == 0) {
+		FragmentColour *= shading;
+	}
+	if(shade == 1) {
+		if(shading > .95f) {
+			FragmentColour *= 1.f;
+		} else if(shading > .6f) {
+			FragmentColour *= .8f;
+		} else if(shading > .4f) {
+			FragmentColour *= .8f;
+		} else {
+			FragmentColour *= .5f;
+		}
+	}
 }

@@ -9,16 +9,6 @@
 class UserInput
 {
 public:
-	//Joysticks
-	float leftStickX;
-	float leftStickY;
-	float rightStickX;
-	float rightStickY;
-
-	//Triggers
-	float leftTrigger;
-	float rightTrigger;
-		
 	UserInput();
 	~UserInput();
 
@@ -26,5 +16,5 @@ public:
 
 	void Update(Gamestate* gameState);
 	static void key(GLFWwindow * window, int key, int scancode, int action, int mods);
-	void gamepad(int joystick);
+	void gamepad(int joystick, Gamestate* gameState);
 };

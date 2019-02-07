@@ -19,13 +19,13 @@ UserInput::~UserInput()
 void UserInput::Update(Gamestate* gameState)
 {
 	//Gamepad input
-	leftStickX = 0.0;
-	leftStickY = 0.0;
-	rightStickX = 0.0;
-	rightStickY = 0.0;
-	leftTrigger = 0.0;
-	rightTrigger = 0.0;
-	gamepad(glfwJoystickPresent(GLFW_JOYSTICK_1));
+	gameState->leftStickX = 0.0;
+	gameState->leftStickY = 0.0;
+	gameState->rightStickX = 0.0;
+	gameState->rightStickY = 0.0;
+	gameState->leftTrigger = 0.0;
+	gameState->rightTrigger = 0.0;
+	gamepad(glfwJoystickPresent(GLFW_JOYSTICK_1), gameState);
 
 	//Get input from buffer
 	if (UserInput::inputBuffer.size() > 0) {
@@ -34,7 +34,12 @@ void UserInput::Update(Gamestate* gameState)
 	}
 
 	//Update state
-	gameState->state = "inGame";
+	gameState->UIMode = "InGame";
+
+	//Update camera
+	float cameraSensitivity = 0.01;
+	gameState->camera.rotateHorizontal(gameState->leftStickX * cameraSensitivity);
+	gameState->camera.rotateVertical(gameState->leftStickY * cameraSensitivity);
 }
 
 // Callback for key presses
@@ -107,7 +112,7 @@ void UserInput::key(GLFWwindow* window, int key, int scancode, int action, int m
 	}
 }
 
-void UserInput::gamepad(int controller) {
+void UserInput::gamepad(int controller, Gamestate* gameState) {
 
 	//Controller 1
 	if (controller == 1) {
@@ -117,29 +122,29 @@ void UserInput::gamepad(int controller) {
 		const float *axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &axesCount);
 
 		//Joysticks
-		leftStickX = axes[0];
-		leftStickY = axes[1];
-		rightStickX = axes[2];
-		rightStickY = axes[3];
+		gameState->leftStickX = axes[0];
+		gameState->leftStickY = axes[1];
+		gameState->rightStickX = axes[2];
+		gameState->rightStickY = axes[3];
 
 		//Triggers
-		leftTrigger = axes[4];
-		rightTrigger = axes[5];
+		gameState->leftTrigger = axes[4];
+		gameState->rightTrigger = axes[5];
 
 		//Gamepad buttons
 		int buttonCount;
 		const unsigned char *buttons = glfwGetJoystickButtons(GLFW_JOYSTICK_1, &buttonCount);
 
-		if (GLFW_PRESS == buttons[0]) { UserInput::inputBuffer.push("S"); };//A
-		if (GLFW_PRESS == buttons[1]) { UserInput::inputBuffer.push("D"); };//B
-		if (GLFW_PRESS == buttons[2]) { UserInput::inputBuffer.push("A"); };//X
-		if (GLFW_PRESS == buttons[3]) { UserInput::inputBuffer.push("W"); };//Y
-		if (GLFW_PRESS == buttons[4]) { UserInput::inputBuffer.push("LSHIFT"); };//LB
-		if (GLFW_PRESS == buttons[5]) { UserInput::inputBuffer.push("RSHIFT"); };//RB
-		if (GLFW_PRESS == buttons[6]) { UserInput::inputBuffer.push(""); };//left option
-		if (GLFW_PRESS == buttons[7]) { UserInput::inputBuffer.push(""); };//right option
-		if (GLFW_PRESS == buttons[8]) { UserInput::inputBuffer.push(""); };//left joy
-		if (GLFW_PRESS == buttons[9]) { UserInput::inputBuffer.push(""); };//right joy
+		if (GLFW_PRESS == buttons[0]) { UserInput::inputBuffer.push("A"); };//A
+		if (GLFW_PRESS == buttons[1]) { UserInput::inputBuffer.push("B"); };//B
+		if (GLFW_PRESS == buttons[2]) { UserInput::inputBuffer.push("X"); };//X
+		if (GLFW_PRESS == buttons[3]) { UserInput::inputBuffer.push("Y"); };//Y
+		if (GLFW_PRESS == buttons[4]) { UserInput::inputBuffer.push("LB"); };//LB
+		if (GLFW_PRESS == buttons[5]) { UserInput::inputBuffer.push("RB"); };//RB
+		if (GLFW_PRESS == buttons[6]) { UserInput::inputBuffer.push("LO"); };//left option
+		if (GLFW_PRESS == buttons[7]) { UserInput::inputBuffer.push("RO"); };//right option
+		if (GLFW_PRESS == buttons[8]) { UserInput::inputBuffer.push("LS"); };//left joy
+		if (GLFW_PRESS == buttons[9]) { UserInput::inputBuffer.push("RS"); };//right joy
 		if (GLFW_PRESS == buttons[10]) { UserInput::inputBuffer.push("UP"); };//up
 		if (GLFW_PRESS == buttons[11]) { UserInput::inputBuffer.push("RIGHT"); };//right
 		if (GLFW_PRESS == buttons[12]) { UserInput::inputBuffer.push("DOWN"); };//down

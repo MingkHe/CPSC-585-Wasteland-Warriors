@@ -42,9 +42,7 @@ void Program::start() {
 	gameState->time = 0.0;
 	gameState->timeStep = 1.0 / 60.0; //60 fps
 	gameState->button = "";
-	
-
-	
+	gameState->UIMode = "StartMenu";
 
 	SDL_Init(SDL_INIT_AUDIO);
 	
@@ -85,7 +83,7 @@ void Program::start() {
 		glfwSwapBuffers(window);
 		//glfwWaitEvents();
 		glfwPollEvents();
-		gameState->camera.rotateHorizontal(0.01f);
+
 		//Fixed Timestep
 		gameState->time += gameState->timeStep;
 	}

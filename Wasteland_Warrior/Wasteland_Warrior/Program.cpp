@@ -115,8 +115,9 @@ void Program::setupWindow() {
 		return;
 	}
 
-	//Set the custom function that tracks key presses
+	//Input Callbacks
 	glfwSetKeyCallback(window, UserInput::key);
+	glfwSetCursorPosCallback(window, UserInput::cursor);
 
 	//Bring the new window to the foreground (not strictly necessary but convenient)
 	glfwMakeContextCurrent(window);

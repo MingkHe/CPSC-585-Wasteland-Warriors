@@ -7,6 +7,9 @@
 
 std::queue<std::string> UserInput::inputBuffer;
 
+float UserInput::MouseXpos;
+float UserInput::MouseYpos;
+
 UserInput::UserInput()
 {
 }
@@ -32,30 +35,40 @@ void UserInput::Update(Gamestate* gameState)
 		gameState->button = UserInput::inputBuffer.front();
 		UserInput::inputBuffer.pop();
 	}
+	else {
+		gameState->button = "";
+	}
 
 	//Update state
 	gameState->UIMode = "InGame";
 
 	//Update camera
-	float cameraSensitivity = 0.01;
 	gameState->camera.rotateHorizontal(gameState->leftStickX * cameraSensitivity);
 	gameState->camera.rotateVertical(gameState->leftStickY * cameraSensitivity);
+
+	if (UserInput::MouseXpos != oldMouseXpos) {
+		gameState->camera.rotateHorizontal((oldMouseXpos - UserInput::MouseXpos) * cameraSensitivity);
+		oldMouseXpos = UserInput::MouseXpos;
+	}
+	if (UserInput::MouseYpos != oldMouseYpos) {
+		gameState->camera.rotateVertical((oldMouseYpos - UserInput::MouseYpos) * cameraSensitivity);
+		oldMouseYpos = UserInput::MouseYpos;
+	}
 }
 
 // Callback for key presses
 void UserInput::key(GLFWwindow* window, int key, int scancode, int action, int mods) {
-	//Key codes are often prefixed with GLFW_KEY_ and can be found on the GLFW website
-	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-
-		//This closes game. We may want to add aditional functionality to the escape key.
-		glfwSetWindowShouldClose(window, GL_TRUE);
-	}
 
 	switch (action) {
 
 	case GLFW_PRESS:
 
 		switch (key) {
+
+			//Escape
+		case GLFW_KEY_ESCAPE:
+			glfwSetWindowShouldClose(window, GL_TRUE);
+			break;
 
 			//WASD
 		case GLFW_KEY_W:
@@ -89,9 +102,6 @@ void UserInput::key(GLFWwindow* window, int key, int scancode, int action, int m
 		case GLFW_KEY_SPACE:
 			UserInput::inputBuffer.push("SPACE");
 			break;
-		case GLFW_KEY_ESCAPE:
-			UserInput::inputBuffer.push("ESCAPE");
-			break;
 		case GLFW_KEY_ENTER:
 			UserInput::inputBuffer.push("ENTER");
 			break;
@@ -104,12 +114,18 @@ void UserInput::key(GLFWwindow* window, int key, int scancode, int action, int m
 		}
 		break;
 
-	case GLFW_REPEAT:
-		break;
+	//case GLFW_REPEAT:
+		//break;
 
-	case GLFW_RELEASE:
-		break;
+	//case GLFW_RELEASE:
+		//break;
 	}
+}
+
+void UserInput::cursor(GLFWwindow* window, double xpos, double ypos)
+{
+	UserInput::MouseXpos = xpos;
+	UserInput::MouseYpos = ypos;
 }
 
 void UserInput::gamepad(int controller, Gamestate* gameState) {
@@ -135,20 +151,48 @@ void UserInput::gamepad(int controller, Gamestate* gameState) {
 		int buttonCount;
 		const unsigned char *buttons = glfwGetJoystickButtons(GLFW_JOYSTICK_1, &buttonCount);
 
-		if (GLFW_PRESS == buttons[0]) { UserInput::inputBuffer.push("A"); };//A
-		if (GLFW_PRESS == buttons[1]) { UserInput::inputBuffer.push("B"); };//B
-		if (GLFW_PRESS == buttons[2]) { UserInput::inputBuffer.push("X"); };//X
-		if (GLFW_PRESS == buttons[3]) { UserInput::inputBuffer.push("Y"); };//Y
-		if (GLFW_PRESS == buttons[4]) { UserInput::inputBuffer.push("LB"); };//LB
-		if (GLFW_PRESS == buttons[5]) { UserInput::inputBuffer.push("RB"); };//RB
-		if (GLFW_PRESS == buttons[6]) { UserInput::inputBuffer.push("LO"); };//left option
-		if (GLFW_PRESS == buttons[7]) { UserInput::inputBuffer.push("RO"); };//right option
-		if (GLFW_PRESS == buttons[8]) { UserInput::inputBuffer.push("LS"); };//left joy
-		if (GLFW_PRESS == buttons[9]) { UserInput::inputBuffer.push("RS"); };//right joy
-		if (GLFW_PRESS == buttons[10]) { UserInput::inputBuffer.push("UP"); };//up
-		if (GLFW_PRESS == buttons[11]) { UserInput::inputBuffer.push("RIGHT"); };//right
-		if (GLFW_PRESS == buttons[12]) { UserInput::inputBuffer.push("DOWN"); };//down
-		if (GLFW_PRESS == buttons[13]) { UserInput::inputBuffer.push("LEFT"); };//left
+		if (GLFW_PRESS == buttons[0]) { 
+			UserInput::inputBuffer.push("A"); 
+		};
+		if (GLFW_PRESS == buttons[1]) { 
+			UserInput::inputBuffer.push("B"); 
+		};
+		if (GLFW_PRESS == buttons[2]) {
+			UserInput::inputBuffer.push("X"); 
+		};
+		if (GLFW_PRESS == buttons[3]) { 
+			UserInput::inputBuffer.push("Y"); 
+		};
+		if (GLFW_PRESS == buttons[4]) { 
+			UserInput::inputBuffer.push("LB"); 
+		};
+		if (GLFW_PRESS == buttons[5]) { 
+			UserInput::inputBuffer.push("RB"); 
+		};
+		if (GLFW_PRESS == buttons[6]) { 
+			UserInput::inputBuffer.push("LO"); 
+		};
+		if (GLFW_PRESS == buttons[7]) { 
+			UserInput::inputBuffer.push("RO");
+		};
+		if (GLFW_PRESS == buttons[8]) { 
+			UserInput::inputBuffer.push("LS");
+		};
+		if (GLFW_PRESS == buttons[9]) { 
+			UserInput::inputBuffer.push("RS");
+		};
+		if (GLFW_PRESS == buttons[10]) { 
+			UserInput::inputBuffer.push("UP");
+		};
+		if (GLFW_PRESS == buttons[11]) { 
+			UserInput::inputBuffer.push("RIGHT");
+		};
+		if (GLFW_PRESS == buttons[12]) { 
+			UserInput::inputBuffer.push("DOWN");
+		};
+		if (GLFW_PRESS == buttons[13]) { 
+			UserInput::inputBuffer.push("LEFT");
+		};
 
 	}
 }

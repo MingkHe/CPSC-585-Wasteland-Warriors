@@ -39,9 +39,9 @@
 
 #include "PxPhysicsAPI.h"
 
-#include "../snippetcommon/SnippetPrint.h"
-#include "../snippetcommon/SnippetPVD.h"
-#include "../snippetutils/SnippetUtils.h"
+#include "../snippetFiles/snippetcommon/SnippetPrint.h"
+#include "../snippetFiles/snippetcommon/SnippetPVD.h"
+#include "../snippetFiles/snippetutils/SnippetUtils.h"
 
 
 using namespace physx;

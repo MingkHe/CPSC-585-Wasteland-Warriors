@@ -85,7 +85,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\middleware\SDL2_mixer-2.0.4\include;$(ProjectDir)..\middleware\SDL2-2.0.9\include;$(ProjectDir)..\middleware\glfw\include;$(ProjectDir)..\middleware\glad\include;$(ProjectDir)..\middleware\glm-0.9.8.2;$(ProjectDir)..\middleware;$(ProjectDir)..\include;$(ProjectDir)..\include\common;$(ProjectDir)..\include\geometry;$(ProjectDir)..\include\geomutils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\middleware\SDL2_mixer-2.0.4\include;$(ProjectDir)..\middleware\SDL2-2.0.9\include;$(ProjectDir)..\middleware\glfw\include;$(ProjectDir)..\middleware\glad\include;$(ProjectDir)..\middleware\glm-0.9.8.2;$(ProjectDir)..\middleware;$(ProjectDir)..\include;$(ProjectDir)..\include\common;$(ProjectDir)..\include\geometry;$(ProjectDir)..\include\geomutils;$(ProjectDir)..\glut-3.7.6-bin;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/NODEFAULTLIB:library %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
@@ -163,6 +163,7 @@
     <ClCompile Include="ShaderTools.cpp" />
     <ClCompile Include="AI_Interaction.cpp" />
     <ClCompile Include="SnippetHelloWorld.cpp" />
+    <ClCompile Include="SnippetHelloWorldRender.cpp" />
     <ClCompile Include="UserInput.cpp" />
     <ClCompile Include="Vehicle.cpp" />
   </ItemGroup>

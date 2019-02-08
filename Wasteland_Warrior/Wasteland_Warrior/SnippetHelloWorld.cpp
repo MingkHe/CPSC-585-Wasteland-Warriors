@@ -33,14 +33,15 @@
 // It creates a number of box stacks on a plane, and if rendering, allows the
 // user to create new stacks and fire a ball from the camera position
 // ****************************************************************************
+#define RENDER_SNIPPET 1
 
 #include <ctype.h>
 
 #include "PxPhysicsAPI.h"
 
-//#include "../snippetcommon/SnippetPrint.h"
+#include "../snippetcommon/SnippetPrint.h"
 #include "../snippetcommon/SnippetPVD.h"
-//#include "../snippetutils/SnippetUtils.h"
+#include "../snippetutils/SnippetUtils.h"
 
 
 using namespace physx;

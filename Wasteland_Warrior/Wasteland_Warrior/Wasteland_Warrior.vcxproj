@@ -28,26 +28,26 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -85,11 +85,13 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\middleware\SDL2_mixer-2.0.4\include;$(ProjectDir)..\middleware\SDL2-2.0.9\include;$(ProjectDir)..\middleware\glfw\include;$(ProjectDir)..\middleware\glad\include;$(ProjectDir)..\middleware\glm-0.9.8.2;$(ProjectDir)..\middleware;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\middleware\SDL2_mixer-2.0.4\include;$(ProjectDir)..\middleware\SDL2-2.0.9\include;$(ProjectDir)..\middleware\glfw\include;$(ProjectDir)..\middleware\glad\include;$(ProjectDir)..\middleware\glm-0.9.8.2;$(ProjectDir)..\middleware;$(ProjectDir)..\include;$(ProjectDir)..\include\common;$(ProjectDir)..\include\geometry;$(ProjectDir)..\include\geomutils;$(ProjectDir)..\middleware\glut-3.7.6-bin;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/NODEFAULTLIB:library %(AdditionalOptions)</AdditionalOptions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(ProjectDir)..\middleware\SDL2_mixer-2.0.4\lib\x86;$(ProjectDir)..\middleware\SDL2-2.0.9\lib\x86;$(ProjectDir)..\middleware\glfw\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;glfw3.lib;SDL2_mixer.lib;SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\middleware\SDL2_mixer-2.0.4\lib\x86;$(ProjectDir)..\middleware\SDL2-2.0.9\lib\x86;$(ProjectDir)..\middleware\glfw\lib;$(ProjectDir)..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;SDL2_mixer.lib;SDL2.lib;SDL2main.lib;%(AdditionalDependencies);$(ProjectDir)..\lib\PhysXExtensions_static_32.lib;$(ProjectDir)..\lib\PhysXCharacterKinematic_static_32.lib;$(ProjectDir)..\lib\PhysXCooking_32.lib;$(ProjectDir)..\lib\PhysXVehicle_static_32.lib;$(ProjectDir)..\lib\PhysXPvdSDK_static_32.lib;$(ProjectDir)..\lib\SnippetUtils_static_32.lib;$(ProjectDir)..\lib\SnippetRender_static_32.lib;$(ProjectDir)..\lib\PhysX_32.lib;$(ProjectDir)..\lib\FastXml_static_32.lib;$(ProjectDir)..\lib\PhysXCommon_32.lib;$(ProjectDir)..\lib\PhysXFoundation_32.lib;$(ProjectDir)..\middleware\glut-3.7.6-bin\glut32.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -160,6 +162,8 @@
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="ShaderTools.cpp" />
     <ClCompile Include="AI_Interaction.cpp" />
+    <ClCompile Include="SnippetHelloWorld.cpp" />
+    <ClCompile Include="SnippetHelloWorldRender.cpp" />
     <ClCompile Include="UserInput.cpp" />
     <ClCompile Include="Vehicle.cpp" />
   </ItemGroup>

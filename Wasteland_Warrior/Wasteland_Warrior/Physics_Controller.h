@@ -5,8 +5,14 @@ class Physics_Controller
 private:
 
 public:
-	Physics_Controller();
+	Physics_Controller(Gamestate* newGameState);
 	~Physics_Controller();
 
-	int Update(Gamestate gameState);
+	void initPhysics(bool interactive);
+	void stepPhysics(bool interactive);
+	void cleanupPhysics(bool interactive);
+
+	int Update();
+
+	Gamestate* gameState;
 };

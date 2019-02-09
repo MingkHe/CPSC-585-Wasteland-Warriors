@@ -36,7 +36,6 @@ Program::~Program() {
 }
 
 void Program::start() {
-
 	//Initialization
 	Gamestate* gameState = new Gamestate();
 	gameState->time = 0.0;
@@ -48,11 +47,12 @@ void Program::start() {
 	
 	UserInput usrInput = UserInput();
 	AI_Interaction aiInteraction = AI_Interaction();
-	Physics_Controller physicsCL = Physics_Controller();
+	Physics_Controller physicsCL = Physics_Controller(gameState);
 	Audio_Controller audioCL = Audio_Controller();
 	
 	renderingEngine = new RenderingEngine(gameState);
 	scene = new Scene(renderingEngine);
+	gameState->scene = scene;
 
 	//Main render loop
 	while (!glfwWindowShouldClose(window)) {
@@ -73,7 +73,8 @@ void Program::start() {
 		//aiInteraction.Update(gameState);
 
 		//Physics Engine
-		//physicsCL.Update(gameState);
+		physicsCL.Update();
+		std::cout << "Box position:  X:" << gameState->cubeLocation.x << "  Y:" << gameState->cubeLocation.y << "  Z:" << gameState->cubeLocation.z << std::endl; //Test statement, delete it if you want
 
 		//Audio Engine
 		audioCL.playSound(gameState);

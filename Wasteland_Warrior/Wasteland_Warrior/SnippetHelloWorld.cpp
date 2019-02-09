@@ -1,41 +1,3 @@
-//
-// Redistribution and use in source and binary forms, with or without
-// modification, are permitted provided that the following conditions
-// are met:
-//  * Redistributions of source code must retain the above copyright
-//    notice, this list of conditions and the following disclaimer.
-//  * Redistributions in binary form must reproduce the above copyright
-//    notice, this list of conditions and the following disclaimer in the
-//    documentation and/or other materials provided with the distribution.
-//  * Neither the name of NVIDIA CORPORATION nor the names of its
-//    contributors may be used to endorse or promote products derived
-//    from this software without specific prior written permission.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS ``AS IS'' AND ANY
-// EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-// PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-// CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
-// OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-// Copyright (c) 2008-2019 NVIDIA Corporation. All rights reserved.
-// Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
-// Copyright (c) 2001-2004 NovodeX AG. All rights reserved.  
-
-// ****************************************************************************
-// This snippet illustrates simple use of physx
-//
-// It creates a number of box stacks on a plane, and if rendering, allows the
-// user to create new stacks and fire a ball from the camera position
-// ****************************************************************************
-#define RENDER_SNIPPET 1
-
-
 #include <ctype.h>
 
 #include "PxPhysicsAPI.h"
@@ -44,6 +6,8 @@
 #include "../snippetFiles/snippetcommon/SnippetPVD.h"
 #include "../snippetFiles/snippetutils/SnippetUtils.h"
 
+#include <PxScene.h>
+#include <iostream>
 
 using namespace physx;
 
@@ -71,22 +35,6 @@ PxRigidDynamic* createDynamic(const PxTransform& t, const PxGeometry& geometry, 
 	return dynamic;
 }
 
-void createStack(const PxTransform& t, PxU32 size, PxReal halfExtent)
-{
-	PxShape* shape = gPhysics->createShape(PxBoxGeometry(halfExtent, halfExtent, halfExtent), *gMaterial);
-	for(PxU32 i=0; i<size;i++)
-	{
-		for(PxU32 j=0;j<size-i;j++)
-		{
-			PxTransform localTm(PxVec3(PxReal(j*2) - PxReal(size-i), PxReal(i*2+1), 0) * halfExtent);
-			PxRigidDynamic* body = gPhysics->createRigidDynamic(t.transform(localTm));
-			body->attachShape(*shape);
-			PxRigidBodyExt::updateMassAndInertia(*body, 10.0f);
-			gScene->addActor(*body);
-		}
-	}
-	shape->release();
-}
 
 void initPhysics(bool interactive)
 {
@@ -117,20 +65,49 @@ void initPhysics(bool interactive)
 	PxRigidStatic* groundPlane = PxCreatePlane(*gPhysics, PxPlane(0,1,0,0), *gMaterial);
 	gScene->addActor(*groundPlane);
 
-	for(PxU32 i=0;i<5;i++)
-		createStack(PxTransform(PxVec3(0,0,stackZ-=10.0f)), 10, 2.0f);
+
+
+	PxReal halfExtent = 2.0f;
+	PxU32 size = 10;
+	const PxTransform& t = PxTransform(PxVec3(0, 0, 0));
+
+	PxShape* shape = gPhysics->createShape(PxBoxGeometry(halfExtent, halfExtent, halfExtent), *gMaterial);
+
+	PxTransform localTm(PxVec3(2, 10, 0) * halfExtent);
+	PxRigidDynamic* body = gPhysics->createRigidDynamic(t.transform(localTm));
+	body->attachShape(*shape);
+	PxRigidBodyExt::updateMassAndInertia(*body, 10.0f);
+	gScene->addActor(*body);
+
+	shape->release();
+	
+
 
 	if(!interactive)
 		createDynamic(PxTransform(PxVec3(0,40,100)), PxSphereGeometry(10), PxVec3(0,-50,-100));
 }
+
 
 void stepPhysics(bool interactive)
 {
 	PX_UNUSED(interactive);
 	gScene->simulate(1.0f/60.0f);
 	gScene->fetchResults(true);
+
+	PxU32 numOfRidg = gScene->getNbActors(PxActorTypeFlag::eRIGID_DYNAMIC);
+
+	PxActor *userBuffer[50];
+
+	PxU32 numOfRidgActors = gScene->getActors(PxActorTypeFlag::eRIGID_DYNAMIC, userBuffer, numOfRidg, 0);
+	PxActor *box = userBuffer[0];
+	PxBounds3 bBox = box->getWorldBounds();
+	PxVec3 xyzBox = bBox.getCenter();
+
+	std::cout << "Number of onbjects:" << numOfRidgActors << std::endl;
+	std::cout << "Box position:  X:" << xyzBox.x << "  Y:" << xyzBox.y << "  Z:" << xyzBox.z << std::endl;
 }
 	
+
 void cleanupPhysics(bool interactive)
 {
 	PX_UNUSED(interactive);
@@ -150,7 +127,6 @@ void keyPress(unsigned char key, const PxTransform& camera)
 {
 	switch(toupper(key))
 	{
-	case 'B':	createStack(PxTransform(PxVec3(0,0,stackZ-=10.0f)), 10, 2.0f);						break;
 	case ' ':	createDynamic(camera, PxSphereGeometry(3.0f), camera.rotate(PxVec3(0,0,-1))*200);	break;
 	}
 }
@@ -161,9 +137,8 @@ int snippetMain(int, const char*const*)
 	extern void renderLoop();
 	renderLoop();
 #else
-	static const PxU32 frameCount = 100;
 	initPhysics(false);
-	for(PxU32 i=0; i<frameCount; i++)
+	while(true)
 		stepPhysics(false);
 	cleanupPhysics(false);
 #endif

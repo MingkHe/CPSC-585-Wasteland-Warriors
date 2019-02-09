@@ -21,6 +21,8 @@
     <ClCompile Include="Vehicle.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="MusicPool.cpp" />
+    <ClCompile Include="SnippetHelloWorldRender.cpp" />
+    <ClCompile Include="SnippetHelloWorld.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Geometry.h" />

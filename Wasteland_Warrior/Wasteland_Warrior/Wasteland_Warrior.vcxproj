@@ -162,6 +162,8 @@
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="ShaderTools.cpp" />
     <ClCompile Include="AI_Interaction.cpp" />
+    <ClCompile Include="SnippetHelloWorld.cpp" />
+    <ClCompile Include="SnippetHelloWorldRender.cpp" />
     <ClCompile Include="UserInput.cpp" />
     <ClCompile Include="Vehicle.cpp" />
   </ItemGroup>

@@ -42,16 +42,22 @@ Scene::Scene(RenderingEngine* renderer) : renderer(renderer) {
 	//Add the triangle to the scene objects
 	objects.push_back(triangle);*/
 	Geometry box, ground;
-	ground.verts.push_back(glm::vec3(-25.f, -1.f, -25.f));
-	ground.verts.push_back(glm::vec3(25.f, -1.f, -25.f));
-	ground.verts.push_back(glm::vec3(-25.f, -1.f, 25.f));
-	ground.verts.push_back(glm::vec3(25.f, -1.f, -25.f));
-	ground.verts.push_back(glm::vec3(-25.f, -1.f, 25.f));
-	ground.verts.push_back(glm::vec3(25.f, -1.f, 25.f));
+	ground.verts.push_back(glm::vec3(-25.f, 0.f, -25.f));
+	ground.verts.push_back(glm::vec3(25.f, 0.f, -25.f));
+	ground.verts.push_back(glm::vec3(-25.f, 0.f, 25.f));
+	ground.verts.push_back(glm::vec3(25.f, 0.f, -25.f));
+	ground.verts.push_back(glm::vec3(-25.f, 0.f, 25.f));
+	ground.verts.push_back(glm::vec3(25.f, 0.f, 25.f));
 	for (int i = 0; i < 6; i++) {
 		ground.colors.push_back(glm::vec3(0.5f, 0.5f, 0.5f));
 		ground.normals.push_back(glm::vec3(0.f, 1.f, 0.f));
 	}
+	ground.transform = glm::mat4(
+		1.f, 0.f, 0.f, 0.f,
+		0.f, 1.f, 0.f, 0.f,
+		0.f, 0.f, 1.f, 0.f,
+		0.f, 1.f, 0.f, 1.f
+	);
 	ground.drawMode = GL_TRIANGLES;
 	RenderingEngine::assignBuffers(ground);
 	RenderingEngine::setBufferData(ground);
@@ -132,9 +138,9 @@ Scene::Scene(RenderingEngine* renderer) : renderer(renderer) {
 		box.colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
 	}
 	box.transform = glm::mat4(
-		1.f, 0.f, 0.f, 0.f,
-		0.f, 1.f, 0.f, 0.f,
-		0.f, 0.f, 1.f, 0.f,
+		4.f, 0.f, 0.f, 0.f,
+		0.f, 4.f, 0.f, 0.f,
+		0.f, 0.f, 4.f, 0.f,
 		1.f, 0.f, 0.f, 1.f
 	);
 	box.drawMode = GL_TRIANGLES;

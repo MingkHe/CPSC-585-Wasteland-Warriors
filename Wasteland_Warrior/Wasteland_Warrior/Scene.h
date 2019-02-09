@@ -24,7 +24,6 @@ public:
 	//Send geometry to the renderer
 	void displayScene();
 
-private:
 	RenderingEngine * renderer;
 
 	//list of objects in the scene

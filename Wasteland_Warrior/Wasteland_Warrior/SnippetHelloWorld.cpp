@@ -133,20 +133,16 @@ void stepPhysics(bool interactive)
 	gScene->fetchResults(true);
 
 	PxU32 numOfRidg = gScene->getNbActors(PxActorTypeFlag::eRIGID_DYNAMIC);
-	
-	PxActor **userBuffer;
+
+	PxActor *userBuffer[50];
 
 	PxU32 numOfRidgActors = gScene->getActors(PxActorTypeFlag::eRIGID_DYNAMIC, userBuffer, numOfRidg, 0);
 	PxActor *box = userBuffer[0];
 	PxBounds3 bBox = box->getWorldBounds();
-	PxVec3 xyzBox = bBox.getCenter;
+	PxVec3 xyzBox = bBox.getCenter();
 
-	std::cout << "Box position:  X:" << numOfRidgActors << "  Y:" << numOfRidgActors << "  Z:" << numOfRidgActors << std::endl;
-
-	//NxMat34 pose = dynamicActor->getGlobalPose();
-
-	//PxActor *actorsArray;
-	//gScene->getActors;
+	std::cout << "Number of onbjects:" << numOfRidgActors << std::endl;
+	std::cout << "Box position:  X:" << xyzBox.x << "  Y:" << xyzBox.y << "  Z:" << xyzBox.z << std::endl;
 }
 	
 

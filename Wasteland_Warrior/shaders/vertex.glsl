@@ -16,6 +16,7 @@ layout(location = 2) in vec3 Normal;
 uniform mat4 modelViewProjection;
 uniform vec3 light;
 uniform vec3 cameraPos;
+uniform mat4 transform;
 out vec3 Colour;
 out vec3 normal;
 out vec3 lightVec;
@@ -24,7 +25,7 @@ out vec3 cameraVec;
 void main()
 {
     // assign vertex position without modification
-    gl_Position = modelViewProjection*vec4(VertexPosition, 1.0);
+    gl_Position = modelViewProjection*transform*vec4(VertexPosition, 1.0);
 
     // assign output colour to be interpolated
     Colour = VertexColour;

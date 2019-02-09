@@ -131,6 +131,12 @@ Scene::Scene(RenderingEngine* renderer) : renderer(renderer) {
 	for (int i = 0; i < box.verts.size(); i++) {
 		box.colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
 	}
+	box.transform = glm::mat4(
+		1.f, 0.f, 0.f, 0.f,
+		0.f, 1.f, 0.f, 0.f,
+		0.f, 0.f, 1.f, 0.f,
+		1.f, 0.f, 0.f, 1.f
+	);
 	box.drawMode = GL_TRIANGLES;
 	RenderingEngine::assignBuffers(box);
 	RenderingEngine::setBufferData(box);

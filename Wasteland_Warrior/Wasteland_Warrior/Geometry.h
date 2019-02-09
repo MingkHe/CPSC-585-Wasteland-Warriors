@@ -28,6 +28,9 @@ public:
 	std::vector<glm::vec3> colors;
 	std::vector<glm::vec2> uvs;
 
+	glm::mat4 transform;
+	glm::vec3 center;
+
 	//Pointers to the vao and vbos associated with the geometry
 	GLuint vao;
 	GLuint vertexBuffer;

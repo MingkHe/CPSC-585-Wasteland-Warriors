@@ -6,7 +6,7 @@
 */
 #include "Program.h"
 
-int runMode = 0;		//runMode 0 executes our rendering scene,  runMode 1 executes the snippetHelloWorld scene
+int runMode = 1;		//runMode 0 executes our rendering scene,  runMode 1 executes the snippetHelloWorld scene
 
 extern int snippetMain(int, const char*const*);
 

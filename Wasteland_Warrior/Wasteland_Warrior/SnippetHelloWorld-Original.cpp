@@ -44,8 +44,6 @@
 #include "../snippetFiles/snippetcommon/SnippetPVD.h"
 #include "../snippetFiles/snippetutils/SnippetUtils.h"
 
-#include <PxScene.h>
-#include <iostream>
 
 using namespace physx;
 
@@ -73,6 +71,22 @@ PxRigidDynamic* createDynamic(const PxTransform& t, const PxGeometry& geometry, 
 	return dynamic;
 }
 
+void createStack(const PxTransform& t, PxU32 size, PxReal halfExtent)
+{
+	PxShape* shape = gPhysics->createShape(PxBoxGeometry(halfExtent, halfExtent, halfExtent), *gMaterial);
+	for(PxU32 i=0; i<size;i++)
+	{
+		for(PxU32 j=0;j<size-i;j++)
+		{
+			PxTransform localTm(PxVec3(PxReal(j*2) - PxReal(size-i), PxReal(i*2+1), 0) * halfExtent);
+			PxRigidDynamic* body = gPhysics->createRigidDynamic(t.transform(localTm));
+			body->attachShape(*shape);
+			PxRigidBodyExt::updateMassAndInertia(*body, 10.0f);
+			gScene->addActor(*body);
+		}
+	}
+	shape->release();
+}
 
 void initPhysics(bool interactive)
 {
@@ -103,53 +117,20 @@ void initPhysics(bool interactive)
 	PxRigidStatic* groundPlane = PxCreatePlane(*gPhysics, PxPlane(0,1,0,0), *gMaterial);
 	gScene->addActor(*groundPlane);
 
-
-
-	PxReal halfExtent = 2.0f;
-	PxU32 size = 10;
-	const PxTransform& t = PxTransform(PxVec3(0, 0, 0));
-
-	PxShape* shape = gPhysics->createShape(PxBoxGeometry(halfExtent, halfExtent, halfExtent), *gMaterial);
-
-	PxTransform localTm(PxVec3(2, 10, 0) * halfExtent);
-	PxRigidDynamic* body = gPhysics->createRigidDynamic(t.transform(localTm));
-	body->attachShape(*shape);
-	PxRigidBodyExt::updateMassAndInertia(*body, 10.0f);
-	gScene->addActor(*body);
-
-	shape->release();
-	
-
+	for(PxU32 i=0;i<5;i++)
+		createStack(PxTransform(PxVec3(0,0,stackZ-=10.0f)), 10, 2.0f);
 
 	if(!interactive)
 		createDynamic(PxTransform(PxVec3(0,40,100)), PxSphereGeometry(10), PxVec3(0,-50,-100));
 }
-
 
 void stepPhysics(bool interactive)
 {
 	PX_UNUSED(interactive);
 	gScene->simulate(1.0f/60.0f);
 	gScene->fetchResults(true);
-
-	PxU32 numOfRidg = gScene->getNbActors(PxActorTypeFlag::eRIGID_DYNAMIC);
-	
-	PxActor **userBuffer;
-
-	PxU32 numOfRidgActors = gScene->getActors(PxActorTypeFlag::eRIGID_DYNAMIC, userBuffer, numOfRidg, 0);
-	PxActor *box = userBuffer[0];
-	PxBounds3 bBox = box->getWorldBounds();
-	PxVec3 xyzBox = bBox.getCenter;
-
-	std::cout << "Box position:  X:" << numOfRidgActors << "  Y:" << numOfRidgActors << "  Z:" << numOfRidgActors << std::endl;
-
-	//NxMat34 pose = dynamicActor->getGlobalPose();
-
-	//PxActor *actorsArray;
-	//gScene->getActors;
 }
 	
-
 void cleanupPhysics(bool interactive)
 {
 	PX_UNUSED(interactive);
@@ -169,6 +150,7 @@ void keyPress(unsigned char key, const PxTransform& camera)
 {
 	switch(toupper(key))
 	{
+	case 'B':	createStack(PxTransform(PxVec3(0,0,stackZ-=10.0f)), 10, 2.0f);						break;
 	case ' ':	createDynamic(camera, PxSphereGeometry(3.0f), camera.rotate(PxVec3(0,0,-1))*200);	break;
 	}
 }

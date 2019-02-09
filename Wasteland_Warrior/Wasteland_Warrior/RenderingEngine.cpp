@@ -36,6 +36,7 @@ void RenderingEngine::RenderScene(const std::vector<Geometry>& objects) {
 	GLint cameraGL = glGetUniformLocation(shaderProgram, "cameraPos");
 	GLint lightGL = glGetUniformLocation(shaderProgram, "light");
 	GLint shadeGL = glGetUniformLocation(shaderProgram, "shade");
+	GLint transformGL = glGetUniformLocation(shaderProgram, "transform");
 	glm::mat4 perspectiveMatrix = glm::perspective(PI_F*.4f, 512.f / 512.f, .1f, 50.f);
 	glUseProgram(shaderProgram);
 	glUniform3fv(cameraGL, 1, &(game_state->camera.pos.x));
@@ -50,6 +51,8 @@ void RenderingEngine::RenderScene(const std::vector<Geometry>& objects) {
 	glUseProgram(shaderProgram);
 
 	for (const Geometry& g : objects) {
+		glUseProgram(shaderProgram);
+		glUniformMatrix4fv(transformGL, 1, false, &(g.transform[0][0]));
 		glBindVertexArray(g.vao);
 		glDrawArrays(g.drawMode, 0, g.verts.size());
 

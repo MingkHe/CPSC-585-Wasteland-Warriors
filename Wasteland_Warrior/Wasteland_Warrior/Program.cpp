@@ -76,6 +76,7 @@ void Program::start() {
 		physicsCL.Update();
 		//std::cout << "Box position:  X:" << gameState->cubeLocation.x << "  Y:" << gameState->cubeLocation.y << "  Z:" << gameState->cubeLocation.z << std::endl; //Test statement, delete it if you want
 
+
 		//Audio Engine
 		audioCL.playSound(gameState);
 		

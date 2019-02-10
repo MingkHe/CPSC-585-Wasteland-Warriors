@@ -1,11 +1,10 @@
-#include "Physics_Controller.h"
-
 #include <ctype.h>
 
 #include "PxPhysicsAPI.h"
 
-#include "SnippetPVD.h"
-
+#include "../snippetFiles/snippetcommon/SnippetPrint.h"
+#include "../snippetFiles/snippetcommon/SnippetPVD.h"
+#include "../snippetFiles/snippetutils/SnippetUtils.h"
 
 #include <PxScene.h>
 #include <iostream>
@@ -16,58 +15,46 @@ PxDefaultAllocator		gAllocator;
 PxDefaultErrorCallback	gErrorCallback;
 
 PxFoundation*			gFoundation = NULL;
-PxPhysics*				gPhysics = NULL;
+PxPhysics*				gPhysics	= NULL;
 
 PxDefaultCpuDispatcher*	gDispatcher = NULL;
-PxScene*				gScene = NULL;
+PxScene*				gScene		= NULL;
 
-PxMaterial*				gMaterial = NULL;
+PxMaterial*				gMaterial	= NULL;
 
-PxPvd*                  gPvd = NULL;
+PxPvd*                  gPvd        = NULL;
 
 PxReal stackZ = 10.0f;
 
-
-
-Physics_Controller::Physics_Controller(Gamestate* newGameState)
+PxRigidDynamic* createDynamic(const PxTransform& t, const PxGeometry& geometry, const PxVec3& velocity=PxVec3(0))
 {
-	gameState = newGameState;
-	initPhysics(false);
-}
-
-Physics_Controller::~Physics_Controller()
-{
-	cleanupPhysics(false);
-}
-
-int Physics_Controller::Update()
-{
-	std::cout << "Updateing Physics\n" << std::endl;
-	stepPhysics(false);
-	return 0;
+	PxRigidDynamic* dynamic = PxCreateDynamic(*gPhysics, t, geometry, *gMaterial, 10.0f);
+	dynamic->setAngularDamping(0.5f);
+	dynamic->setLinearVelocity(velocity);
+	gScene->addActor(*dynamic);
+	return dynamic;
 }
 
 
-
-void Physics_Controller::initPhysics(bool interactive)
+void initPhysics(bool interactive)
 {
 	gFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, gAllocator, gErrorCallback);
 
 	gPvd = PxCreatePvd(*gFoundation);
 	PxPvdTransport* transport = PxDefaultPvdSocketTransportCreate(PVD_HOST, 5425, 10);
-	gPvd->connect(*transport, PxPvdInstrumentationFlag::eALL);
+	gPvd->connect(*transport,PxPvdInstrumentationFlag::eALL);
 
-	gPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *gFoundation, PxTolerancesScale(), true, gPvd);
+	gPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *gFoundation, PxTolerancesScale(),true,gPvd);
 
 	PxSceneDesc sceneDesc(gPhysics->getTolerancesScale());
 	sceneDesc.gravity = PxVec3(0.0f, -9.81f, 0.0f);
 	gDispatcher = PxDefaultCpuDispatcherCreate(2);
-	sceneDesc.cpuDispatcher = gDispatcher;
-	sceneDesc.filterShader = PxDefaultSimulationFilterShader;
+	sceneDesc.cpuDispatcher	= gDispatcher;
+	sceneDesc.filterShader	= PxDefaultSimulationFilterShader;
 	gScene = gPhysics->createScene(sceneDesc);
 
 	PxPvdSceneClient* pvdClient = gScene->getScenePvdClient();
-	if (pvdClient)
+	if(pvdClient)
 	{
 		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONSTRAINTS, true);
 		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
@@ -75,7 +62,7 @@ void Physics_Controller::initPhysics(bool interactive)
 	}
 	gMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.6f);
 
-	PxRigidStatic* groundPlane = PxCreatePlane(*gPhysics, PxPlane(0, 1, 0, 0), *gMaterial);
+	PxRigidStatic* groundPlane = PxCreatePlane(*gPhysics, PxPlane(0,1,0,0), *gMaterial);
 	gScene->addActor(*groundPlane);
 
 
@@ -93,13 +80,18 @@ void Physics_Controller::initPhysics(bool interactive)
 	gScene->addActor(*body);
 
 	shape->release();
+	
+
+
+	if(!interactive)
+		createDynamic(PxTransform(PxVec3(0,40,100)), PxSphereGeometry(10), PxVec3(0,-50,-100));
 }
 
 
-void Physics_Controller::stepPhysics(bool interactive)
+void stepPhysics(bool interactive)
 {
 	PX_UNUSED(interactive);
-	gScene->simulate(gameState->timeStep);
+	gScene->simulate(1.0f/60.0f);
 	gScene->fetchResults(true);
 
 	PxU32 numOfRidg = gScene->getNbActors(PxActorTypeFlag::eRIGID_DYNAMIC);
@@ -111,25 +103,45 @@ void Physics_Controller::stepPhysics(bool interactive)
 	PxBounds3 bBox = box->getWorldBounds();
 	PxVec3 xyzBox = bBox.getCenter();
 
-	//std::cout << "Box position:  X:" << xyzBox.x << "  Y:" << xyzBox.y << "  Z:" << xyzBox.z << std::endl;
-	//glm::vec3(xyzBox.x, xyzBox.y, xyzBox.z);
-	gameState->scene->objects[1].transform[3][0] = xyzBox.x;
-	gameState->scene->objects[1].transform[3][1] = xyzBox.y;
-	gameState->scene->objects[1].transform[3][2] = xyzBox.z;
+	std::cout << "Number of onbjects:" << numOfRidgActors << std::endl;
+	std::cout << "Box position:  X:" << xyzBox.x << "  Y:" << xyzBox.y << "  Z:" << xyzBox.z << std::endl;
 }
+	
 
-
-void Physics_Controller::cleanupPhysics(bool interactive)
+void cleanupPhysics(bool interactive)
 {
 	PX_UNUSED(interactive);
 	gScene->release();
 	gDispatcher->release();
-	gPhysics->release();
+	gPhysics->release();	
 	PxPvdTransport* transport = gPvd->getTransport();
 	gPvd->release();
 	transport->release();
-
+	
 	gFoundation->release();
-
+	
 	printf("SnippetHelloWorld done.\n");
+}
+
+void keyPress(unsigned char key, const PxTransform& camera)
+{
+	switch(toupper(key))
+	{
+	case ' ':	createDynamic(camera, PxSphereGeometry(3.0f), camera.rotate(PxVec3(0,0,-1))*200);	break;
+	}
+}
+
+int snippetMain(int, const char*const*)
+{
+#ifdef RENDER_SNIPPET
+	extern void renderLoop();
+	renderLoop();
+#else
+	initPhysics(false);
+	while(true)
+		stepPhysics(false);
+	cleanupPhysics(false);
+#endif
+
+	return 0;
 }

@@ -41,6 +41,7 @@ Scene::Scene(RenderingEngine* renderer) : renderer(renderer) {
 
 	//Add the triangle to the scene objects
 	objects.push_back(triangle);*/
+
 	Geometry box, ground;
 	ground.verts.push_back(glm::vec3(-25.f, 0.f, -25.f));
 	ground.verts.push_back(glm::vec3(25.f, 0.f, -25.f));

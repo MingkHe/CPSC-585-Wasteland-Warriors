@@ -21,8 +21,6 @@
     <ClCompile Include="Vehicle.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="MusicPool.cpp" />
-    <ClCompile Include="SnippetHelloWorld.cpp" />
-    <ClCompile Include="SnippetHelloWorldRender.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Geometry.h" />
@@ -43,6 +41,7 @@
     <ClInclude Include="Vehicle.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="MusicPool.h" />
+    <ClInclude Include="SnippetPVD.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Wasteland_Warrior.vcxproj.filters.txt" />

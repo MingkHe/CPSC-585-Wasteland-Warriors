@@ -4,9 +4,8 @@
 
 #include "PxPhysicsAPI.h"
 
-#include "../snippetFiles/snippetcommon/SnippetPrint.h"
-#include "../snippetFiles/snippetcommon/SnippetPVD.h"
-#include "../snippetFiles/snippetutils/SnippetUtils.h"
+#include "SnippetPVD.h"
+
 
 #include <PxScene.h>
 #include <iostream>
@@ -113,7 +112,8 @@ void Physics_Controller::stepPhysics(bool interactive)
 	PxVec3 xyzBox = bBox.getCenter();
 
 	//std::cout << "Box position:  X:" << xyzBox.x << "  Y:" << xyzBox.y << "  Z:" << xyzBox.z << std::endl;
-	gameState->scene->objects[1].transform[3][0] = xyzBox.x;//glm::vec3(xyzBox.x, xyzBox.y, xyzBox.z);
+	//glm::vec3(xyzBox.x, xyzBox.y, xyzBox.z);
+	gameState->scene->objects[1].transform[3][0] = xyzBox.x;
 	gameState->scene->objects[1].transform[3][1] = xyzBox.y;
 	gameState->scene->objects[1].transform[3][2] = xyzBox.z;
 }

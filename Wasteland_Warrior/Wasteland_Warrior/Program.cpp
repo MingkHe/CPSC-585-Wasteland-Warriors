@@ -74,7 +74,8 @@ void Program::start() {
 
 		//Physics Engine
 		physicsCL.Update();
-		std::cout << "Box position:  X:" << gameState->cubeLocation.x << "  Y:" << gameState->cubeLocation.y << "  Z:" << gameState->cubeLocation.z << std::endl; //Test statement, delete it if you want
+		//std::cout << "Box position:  X:" << gameState->cubeLocation.x << "  Y:" << gameState->cubeLocation.y << "  Z:" << gameState->cubeLocation.z << std::endl; //Test statement, delete it if you want
+
 
 		//Audio Engine
 		audioCL.playSound(gameState);
@@ -107,8 +108,8 @@ void Program::setupWindow() {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	int width = 512;
-	int height = 512;
+	int width = 1280;
+	int height = 960;
 	window = glfwCreateWindow(width, height, "Wasteland Warrior", 0, 0);
 	if (!window) {
 		std::cout << "Program failed to create GLFW window, TERMINATING" << std::endl;

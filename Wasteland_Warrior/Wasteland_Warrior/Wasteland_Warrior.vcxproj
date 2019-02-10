@@ -162,8 +162,6 @@
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="ShaderTools.cpp" />
     <ClCompile Include="AI_Interaction.cpp" />
-    <ClCompile Include="SnippetHelloWorld.cpp" />
-    <ClCompile Include="SnippetHelloWorldRender.cpp" />
     <ClCompile Include="UserInput.cpp" />
     <ClCompile Include="Vehicle.cpp" />
   </ItemGroup>
@@ -184,6 +182,7 @@
     <ClInclude Include="RenderingEngine.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="ShaderTools.h" />
+    <ClInclude Include="SnippetPVD.h" />
     <ClInclude Include="UserInput.h" />
     <ClInclude Include="Vehicle.h" />
   </ItemGroup>

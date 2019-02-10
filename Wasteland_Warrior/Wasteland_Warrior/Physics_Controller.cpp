@@ -4,9 +4,7 @@
 
 #include "PxPhysicsAPI.h"
 
-#include "../snippetFiles/snippetcommon/SnippetPrint.h"
-#include "../snippetFiles/snippetcommon/SnippetPVD.h"
-#include "../snippetFiles/snippetutils/SnippetUtils.h"
+#include "SnippetPVD.h"
 
 #include <PxScene.h>
 #include <iostream>

@@ -20,6 +20,10 @@
 #include "Physics_Controller.h"
 #include "Audio_Controller.h"
 #include "Gamestate.h"
+#include "Entity.h"
+#include "Vehicle.h"
+#include "PlayerUnit.h"
+#include "EnemyUnit.h"
 
 #include <SDL_mixer.h>
 #include <SDL.h>
@@ -53,6 +57,15 @@ void Program::start() {
 	renderingEngine = new RenderingEngine(gameState);
 	scene = new Scene(renderingEngine);
 	gameState->scene = scene;
+
+	//Create Entities
+	PlayerUnit mainCar = PlayerUnit();
+	EnemyUnit Enemy1 = EnemyUnit();
+	EnemyUnit Enemy2 = EnemyUnit();
+
+	gameState->Entities.push_back(mainCar);
+	gameState->Entities.push_back(Enemy1);
+	gameState->Entities.push_back(Enemy2);
 
 	//Main render loop
 	while (!glfwWindowShouldClose(window)) {

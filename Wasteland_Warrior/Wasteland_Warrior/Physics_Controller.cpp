@@ -181,6 +181,7 @@ VehicleDesc initPlayerVehiclePhysicsDesc()
 
 void startAccelerateForwardsMode()
 {
+
 	if (gMimicKeyInputs)
 	{
 		gVehicleInputData.setDigitalAccel(true);
@@ -374,7 +375,7 @@ void userDriveInput() {
 		startAccelerateReverseMode();
 		driveMode = 2;
 	}
-	if (GetKeyState('H') & 0x8000)
+	if (GetKeyState('F') & 0x8000)
 	{
 		if (GetKeyState('B') & 0x8000) {
 			startHandbrakeTurnRightMode();
@@ -385,7 +386,7 @@ void userDriveInput() {
 			driveMode = 3;
 		}
 	}
-	if (GetKeyState('F') & 0x8000)
+	if (GetKeyState('H') & 0x8000)
 	{
 		if (GetKeyState('B') & 0x8000) {
 			driveMode = 6;

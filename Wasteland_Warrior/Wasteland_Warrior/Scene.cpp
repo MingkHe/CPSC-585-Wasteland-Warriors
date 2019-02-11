@@ -18,38 +18,12 @@
 #include <GLFW/glfw3.h>
 
 Scene::Scene(RenderingEngine* renderer) : renderer(renderer) {
-	//Create a single triangle
-	//Additional triangles can be created by pushing groups of three more vertices into the verts vector
-	/*Geometry triangle;
-	triangle.verts.push_back(glm::vec3(-0.6f, -0.4f, 1.0f));
-	triangle.verts.push_back(glm::vec3(0.0f, 0.6f, 1.0f));
-	triangle.verts.push_back(glm::vec3(0.6f, -0.4f, 1.0f));
-
-	//Colors are stored per vertex in the order of the vertices
-	triangle.colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
-	triangle.colors.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
-	triangle.colors.push_back(glm::vec3(0.0f, 0.0f, 1.0f));
-
-	triangle.drawMode = GL_TRIANGLES;
-
-	//Construct vao and vbos for the triangle
-	RenderingEngine::assignBuffers(triangle);
-
-	//Send the triangle data to the GPU
-	//Must be done every time the triangle is modified in any way, ex. verts, colors, normals, uvs, etc.
-	RenderingEngine::setBufferData(triangle);
-
-	//Add the triangle to the scene objects
-	objects.push_back(triangle);*/
-
-	Geometry box, ground;
-	ground.verts.push_back(glm::vec3(-25.f, 0.f, -25.f));
-	ground.verts.push_back(glm::vec3(25.f, 0.f, -25.f));
-	ground.verts.push_back(glm::vec3(-25.f, 0.f, 25.f));
-	ground.verts.push_back(glm::vec3(25.f, 0.f, -25.f));
-	ground.verts.push_back(glm::vec3(-25.f, 0.f, 25.f));
-	ground.verts.push_back(glm::vec3(25.f, 0.f, 25.f));
-	for (int i = 0; i < 6; i++) {
+	Geometry ground;
+	ground.verts.push_back(glm::vec3(-25000.f, 0.f, -25000.f));
+	ground.verts.push_back(glm::vec3(25000.f, 0.f, -25000.f));
+	ground.verts.push_back(glm::vec3(-25000.f, 0.f, 25000.f));
+	ground.verts.push_back(glm::vec3(25000.f, 0.f, 25000.f));
+	for (int i = 0; i < 4; i++) {
 		ground.colors.push_back(glm::vec3(0.5f, 0.5f, 0.5f));
 		ground.normals.push_back(glm::vec3(0.f, 1.f, 0.f));
 	}
@@ -59,26 +33,22 @@ Scene::Scene(RenderingEngine* renderer) : renderer(renderer) {
 		0.f, 0.f, 1.f, 0.f,
 		0.f, 1.f, 0.f, 1.f
 	);
-	ground.drawMode = GL_TRIANGLES;
+	ground.drawMode = GL_TRIANGLE_STRIP;
 	RenderingEngine::assignBuffers(ground);
 	RenderingEngine::setBufferData(ground);
 	objects.push_back(ground);
 
-	/*box.verts.push_back(glm::vec3(0.25f, 0.25f, 0.25f));
-	box.verts.push_back(glm::vec3(-0.25f, 0.25f, 0.25f));
-	box.verts.push_back(glm::vec3(0.25f, -0.25f, 0.25f));
-	box.verts.push_back(glm::vec3(-0.25f, -0.25f, 0.25f));
 
-	box.verts.push_back(glm::vec3(0.25f, 0.25f, -0.25f));
-	box.verts.push_back(glm::vec3(-0.25f, 0.25f, -0.25f));
-	box.verts.push_back(glm::vec3(0.25f, -0.25f, -0.25f));
-	box.verts.push_back(glm::vec3(-0.25f, -0.25f, -0.25f));
-	int index[36];*/
+	generateRectPrism(0.5, 0.25, 0.2);
+}
 
-	float carL = 0.25; // Actually is width
-	float carW = 0.5; //Actually is length
-	float carH = 0.2;
-	
+
+void Scene::generateRectPrism(float length, float width, float height) {
+	Geometry box;
+	float carL = width; // Actually is width
+	float carW = length; //Actually is length
+	float carH = height;
+
 
 	//Front Side
 	box.verts.push_back({ carL, carH, carW });
@@ -150,6 +120,7 @@ Scene::Scene(RenderingEngine* renderer) : renderer(renderer) {
 	RenderingEngine::setBufferData(box);
 	objects.push_back(box);
 }
+
 
 Scene::~Scene() {
 

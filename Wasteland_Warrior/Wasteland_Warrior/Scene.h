@@ -23,11 +23,16 @@ public:
 
 	//Send geometry to the renderer
 	void displayScene();
+	
 
 	RenderingEngine * renderer;
 
 	//list of objects in the scene
 	std::vector<Geometry> objects;
+
+private:
+	void generateRectPrism(float length, float width, float height);
 };
+
 
 #endif /* SCENE_H_ */

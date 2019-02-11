@@ -75,63 +75,64 @@ Scene::Scene(RenderingEngine* renderer) : renderer(renderer) {
 	box.verts.push_back(glm::vec3(-0.25f, -0.25f, -0.25f));
 	int index[36];*/
 
-	box.verts.push_back(glm::vec3(0.25f, 0.25f, 0.25f));//front
-	box.verts.push_back(glm::vec3(-0.25f, 0.25f, 0.25f));
-	box.verts.push_back(glm::vec3(0.25f, -0.25f, 0.25f));
-	box.verts.push_back(glm::vec3(-0.25f, 0.25f, 0.25f));
-	box.verts.push_back(glm::vec3(0.25f, -0.25f, 0.25f));
-	box.verts.push_back(glm::vec3(-0.25f, -0.25f, 0.25f));
-	for (int i = 0; i < 6; i++) {
+	float carL = 0.25; // Actually is width
+	float carW = 0.5; //Actually is length
+	float carH = 0.2;
+	
+
+	//Front Side
+	box.verts.push_back({ carL, carH, carW });
+	box.verts.push_back({ -carL, carH, carW });
+	box.verts.push_back({ carL, -carH, carW });
+	box.verts.push_back({ -carL, -carH, carW });
+	for (int i = 0; i < 4; i++) {
 		box.normals.push_back(glm::vec3(1.f, 0.f, 0.f));
 	}
 
-	box.verts.push_back(glm::vec3(0.25f, 0.25f, -0.25f));//back
-	box.verts.push_back(glm::vec3(-0.25f, 0.25f, -0.25f));
-	box.verts.push_back(glm::vec3(0.25f, -0.25f, -0.25f));
-	box.verts.push_back(glm::vec3(-0.25f, 0.25f, -0.25f));
-	box.verts.push_back(glm::vec3(0.25f, -0.25f, -0.25f));
-	box.verts.push_back(glm::vec3(-0.25f, -0.25f, -0.25f));
-	for (int i = 0; i < 6; i++) {
+	//Back
+	box.verts.push_back({ carL, carH, -carW });
+	box.verts.push_back({ -carL, carH, -carW });
+	box.verts.push_back({ carL, -carH, -carW });
+	box.verts.push_back({ -carL, -carH, -carW });
+	for (int i = 0; i < 4; i++) {
 		box.normals.push_back(glm::vec3(-1.f, 0.f, 0.f));
 	}
 
-	box.verts.push_back(glm::vec3(0.25f, 0.25f, 0.25f));//left
-	box.verts.push_back(glm::vec3(0.25f, -0.25f, 0.25f));
-	box.verts.push_back(glm::vec3(0.25f, 0.25f, -0.25f));
-	box.verts.push_back(glm::vec3(0.25f, -0.25f, 0.25f));
-	box.verts.push_back(glm::vec3(0.25f, 0.25f, -0.25f));
-	box.verts.push_back(glm::vec3(0.25f, -0.25f, -0.25f));
-	for (int i = 0; i < 6; i++) {
+	//Left
+	box.verts.push_back({ carL, carH, carW });
+	box.verts.push_back({ carL, -carH, carW });
+	box.verts.push_back({ carL, carH, -carW });
+	box.verts.push_back({ carL, -carH, -carW });
+	for (int i = 0; i < 4; i++) {
 		box.normals.push_back(glm::vec3(0.f, 0.f, -1.f));
 	}
 
-	box.verts.push_back(glm::vec3(-0.25f, 0.25f, 0.25f));//right
-	box.verts.push_back(glm::vec3(-0.25f, -0.25f, 0.25f));
-	box.verts.push_back(glm::vec3(-0.25f, 0.25f, -0.25f));
-	box.verts.push_back(glm::vec3(-0.25f, -0.25f, 0.25f));
-	box.verts.push_back(glm::vec3(-0.25f, 0.25f, -0.25f));
-	box.verts.push_back(glm::vec3(-0.25f, -0.25f, -0.25f));
-	for (int i = 0; i < 6; i++) {
+	//Right
+	box.verts.push_back({ -carL, carH, carW });
+	box.verts.push_back({ -carL, -carH, carW });
+	box.verts.push_back({ -carL, carH, -carW });
+	box.verts.push_back({ -carL, -carH, -carW });
+
+	for (int i = 0; i < 4; i++) {
 		box.normals.push_back(glm::vec3(0.f, 0.f, 1.f));
 	}
 
-	box.verts.push_back(glm::vec3(0.25f, 0.25f, 0.25f));//top
-	box.verts.push_back(glm::vec3(-0.25f, 0.25f, 0.25f));
-	box.verts.push_back(glm::vec3(0.25f, 0.25f, -0.25f));
-	box.verts.push_back(glm::vec3(-0.25f, 0.25f, 0.25f));
-	box.verts.push_back(glm::vec3(0.25f, 0.25f, -0.25f));
-	box.verts.push_back(glm::vec3(-0.25f, 0.25f, -0.25f));
-	for (int i = 0; i < 6; i++) {
+	//Top
+	box.verts.push_back({ carL, carH, carW });
+	box.verts.push_back({ -carL, carH, carW });
+	box.verts.push_back({ carL, carH, -carW });
+	box.verts.push_back({ -carL, carH, -carW });
+	for (int i = 0; i < 4; i++) {
 		box.normals.push_back(glm::vec3(0.f, 1.f, 0.f));
 	}
 
-	box.verts.push_back(glm::vec3(0.25f, -0.25f, 0.25f));//bottom
-	box.verts.push_back(glm::vec3(-0.25f, -0.25f, 0.25f));
-	box.verts.push_back(glm::vec3(0.25f, -0.25f, -0.25f));
-	box.verts.push_back(glm::vec3(-0.25f, -0.25f, 0.25f));
-	box.verts.push_back(glm::vec3(0.25f, -0.25f, -0.25f));
-	box.verts.push_back(glm::vec3(-0.25f, -0.25f, -0.25f));
-	for (int i = 0; i < 6; i++) {
+	//Bottom
+	box.verts.push_back({ carL, -carH, carW });
+	box.verts.push_back({ -carL, -carH, carW });
+	box.verts.push_back({ carL, -carH, -carW });
+	box.verts.push_back({ -carL, -carH, -carW });
+
+	for (int i = 0; i < 4; i++) {
 		box.normals.push_back(glm::vec3(0.f, -1.f, 0.f));
 	}
 
@@ -144,7 +145,7 @@ Scene::Scene(RenderingEngine* renderer) : renderer(renderer) {
 		0.f, 0.f, 4.f, 0.f,
 		1.f, 0.f, 0.f, 1.f
 	);
-	box.drawMode = GL_TRIANGLES;
+	box.drawMode = GL_TRIANGLE_STRIP;
 	RenderingEngine::assignBuffers(box);
 	RenderingEngine::setBufferData(box);
 	objects.push_back(box);

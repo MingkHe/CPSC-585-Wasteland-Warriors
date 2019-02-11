@@ -12,7 +12,7 @@ public:
 	void stepPhysics(bool interactive);
 	void cleanupPhysics(bool interactive);
 
-	int Update();
+	void Update();
 
 	Gamestate* gameState;
 };

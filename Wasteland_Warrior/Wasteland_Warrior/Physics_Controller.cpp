@@ -58,14 +58,13 @@ Physics_Controller::~Physics_Controller()
 	cleanupPhysics(false);
 }
 
-int Physics_Controller::Update()
+void Physics_Controller::Update()
 {
 	//std::cout << "Updating Physics\n" << std::endl;
 	stepPhysics(false);
-	return 0;
 }
 
-/*PxF32 gSteerVsForwardSpeedData[2*8]=
+PxF32 gSteerVsForwardSpeedData[2*8]=
 {
 	0.0f,		0.75f,
 	5.0f,		0.75f,
@@ -75,9 +74,9 @@ int Physics_Controller::Update()
 	PX_MAX_F32, PX_MAX_F32,
 	PX_MAX_F32, PX_MAX_F32,
 	PX_MAX_F32, PX_MAX_F32
-};*/
+};
 
-PxF32 gSteerVsForwardSpeedData[2 * 8] =
+/*PxF32 gSteerVsForwardSpeedData[2 * 8] =
 {
 	0.1*PX_MAX_F32,		0.8f,
 	0.2*PX_MAX_F32,		0.7f,
@@ -87,7 +86,7 @@ PxF32 gSteerVsForwardSpeedData[2 * 8] =
 	0.6*PX_MAX_F32,		0.3f,
 	0.7*PX_MAX_F32,		0.2f,
 	0.8*PX_MAX_F32,		0.1f
-};
+};*/
 
 
 PxFixedSizeLookupTable<8> gSteerVsForwardSpeedTable(gSteerVsForwardSpeedData, 4);
@@ -135,21 +134,21 @@ bool					gVehicleOrderComplete = false;
 bool					gMimicKeyInputs = false;
 int                     driveMode = 0;
 
-VehicleDesc initVehicleDesc()
+VehicleDesc initPlayerVehiclePhysicsDesc()
 {
 	//Set up the chassis mass, dimensions, moment of inertia, and center of mass offset.
 	//The moment of inertia is just the moment of inertia of a cuboid but modified for easier steering.
 	//Center of mass offset is 0.65m above the base of the chassis and 0.25m towards the front.
 	const PxF32 chassisMass = 1500.0f;
 	const PxVec3 chassisDims(2.5f, 2.0f, 5.0f);
-	/*const PxVec3 chassisMOI
+	const PxVec3 chassisMOI
 		((chassisDims.y*chassisDims.y + chassisDims.z*chassisDims.z)*chassisMass/12.0f,
 		 (chassisDims.x*chassisDims.x + chassisDims.z*chassisDims.z)*0.8f*chassisMass/12.0f,
-		 (chassisDims.x*chassisDims.x + chassisDims.y*chassisDims.y)*chassisMass/12.0f);*/
-	const PxVec3 chassisMOI
+		 (chassisDims.x*chassisDims.x + chassisDims.y*chassisDims.y)*chassisMass/12.0f);
+	/*const PxVec3 chassisMOI
 	((chassisDims.y*chassisDims.y + chassisDims.z*chassisDims.z)*chassisMass,
 		(chassisDims.x*chassisDims.x + chassisDims.z*chassisDims.z)*0.8f*chassisMass,
-		(chassisDims.x*chassisDims.x + chassisDims.y*chassisDims.y)*chassisMass);
+		(chassisDims.x*chassisDims.x + chassisDims.y*chassisDims.y)*chassisMass);*/
 	const PxVec3 chassisCMOffset(0.0f, -chassisDims.y*0.5f + 0.65f, 0.25f);
 
 	//Set up the wheel mass, radius, width, moment of inertia, and number of wheels.
@@ -341,7 +340,7 @@ void Physics_Controller::initPhysics(bool interactive)
 	gScene->addActor(*gGroundPlane);
 
 	//Create a vehicle that will drive on the plane.
-	VehicleDesc vehicleDesc = initVehicleDesc();
+	VehicleDesc vehicleDesc = initPlayerVehiclePhysicsDesc();
 	gVehicle4W = createVehicle4W(vehicleDesc, gPhysics, gCooking);
 	PxTransform startTransform(PxVec3(0, (vehicleDesc.chassisDims.y*0.5f + vehicleDesc.wheelRadius + 1.0f), 0), PxQuat(PxIdentity));
 	gVehicle4W->getRigidDynamicActor()->setGlobalPose(startTransform);
@@ -454,26 +453,37 @@ void Physics_Controller::stepPhysics(bool interactive)
 	PxU32 numOfRidgActors = gScene->getActors(PxActorTypeFlag::eRIGID_DYNAMIC, userBuffer, numOfRidg, 0);
 	PxActor *box = userBuffer[0];
 	//If we had a PxRigidActor 
-	/*
-	PxTransform orientation = rigidActor.getGlobalPose();		//   https://docs.nvidia.com/gameworks/content/gameworkslibrary/physx/apireference/files/classPxRigidActor.html
+	PxRigidActor *rigidActor = box->is<PxRigidActor>();
+	
+	PxTransform orientation = rigidActor->getGlobalPose();		//   https://docs.nvidia.com/gameworks/content/gameworkslibrary/physx/apireference/files/classPxRigidActor.html
 	PxVec3 location = orientation.p;								//	https://docs.nvidia.com/gameworks/content/gameworkslibrary/physx/apireference/files/classPxTransform.html
 	PxQuat rotation = orientation.q;			
 	
 	PxVec3 xRotation = rotation.getBasisVector0();
 	PxVec3 yRotation = rotation.getBasisVector1();
 	PxVec3 zRotation = rotation.getBasisVector2();
-	*/
 
 
-	PxBounds3 bBox = box->getWorldBounds();
-	PxVec3 xyzBox = bBox.getCenter();
+	//FIX THIS LATER!
+	gameState->scene->objects[1].transform[3][0] = location.x;
+	gameState->scene->objects[1].transform[3][1] = location.y;
+	gameState->scene->objects[1].transform[3][2] = location.z;
 
+	std::cout << "Box position:  X:" << yRotation.x << "  Y:" << yRotation.y << "  Z:" << yRotation.z << std::endl; //Test statement, delete it if you want
 
-	//std::cout << "Box position:  X:" << xyzBox.x << "  Y:" << xyzBox.y << "  Z:" << xyzBox.z << std::endl;
-	//glm::vec3(xyzBox.x, xyzBox.y, xyzBox.z);
-	gameState->scene->objects[1].transform[3][0] = xyzBox.x;
-	gameState->scene->objects[1].transform[3][1] = xyzBox.y;
-	gameState->scene->objects[1].transform[3][2] = xyzBox.z;
+	
+	gameState->scene->objects[1].transform[0][0] = xRotation.x;
+	gameState->scene->objects[1].transform[0][1] = xRotation.y;
+	gameState->scene->objects[1].transform[0][2] = xRotation.z;
+
+	gameState->scene->objects[1].transform[2][0] = zRotation.x;
+	gameState->scene->objects[1].transform[2][1] = zRotation.y;
+	gameState->scene->objects[1].transform[2][2] = zRotation.z;
+	
+	gameState->scene->objects[1].transform[1][0] = yRotation.x;
+	gameState->scene->objects[1].transform[1][1] = yRotation.y;
+	gameState->scene->objects[1].transform[1][2] = yRotation.z;
+	
 }
 
 

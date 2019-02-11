@@ -84,6 +84,27 @@ void UserInput::key(GLFWwindow* window, int key, int scancode, int action, int m
 			UserInput::inputBuffer.push("D");
 			break;
 
+			//WASD
+		case GLFW_KEY_T:
+			UserInput::inputBuffer.push("T");
+			break;
+		case GLFW_KEY_F:
+			UserInput::inputBuffer.push("F");
+			break;
+		case GLFW_KEY_G:
+			UserInput::inputBuffer.push("G");
+			break;
+		case GLFW_KEY_H:
+			UserInput::inputBuffer.push("H");
+			break;
+
+		case GLFW_KEY_M:
+			UserInput::inputBuffer.push("M");
+			break;
+		case GLFW_KEY_N:
+			UserInput::inputBuffer.push("N");
+			break;
+
 			//Arrows
 		case GLFW_KEY_RIGHT:
 			UserInput::inputBuffer.push("RIGHT");

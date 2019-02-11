@@ -11,6 +11,8 @@ Audio_Controller::Audio_Controller()
 		printf("Mixer initialization error: %s\n",Mix_GetError());
 
 	myMusics = new MusicPool();
+	pauseMusicBool = false;
+	haltMusicBool = true;
 }
 
 
@@ -26,20 +28,24 @@ int Audio_Controller::playSound(Gamestate* gameState)
 
 	printf("Button: %s\n",input.c_str());
 
-	if (input == "W")
+	if ((input == "M") && (haltMusicBool))
 	{ 
+		haltMusicBool = false;
 		playMusic();
 	}
-	else if (input == "A")
+	else if ((input == "N") && (pauseMusicBool == false))
 	{
+		pauseMusicBool = true;
 		pauseMusic();
 	}
-	else if (input == "S")
+	else if ((input == "N") && (pauseMusicBool))
 	{
+		pauseMusicBool = false;
 		resumeMusic();
 	}
-	else if (input == "D") 
+	else if ((input == "M") && (haltMusicBool == false))
 	{
+		haltMusicBool = true;
 		haltMusic();
 	}
 	return 0;

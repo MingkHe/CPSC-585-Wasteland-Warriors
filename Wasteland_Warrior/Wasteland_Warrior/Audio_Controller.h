@@ -9,6 +9,9 @@ private:
 	Mix_Music* bgm;
 	MusicPool* myMusics;
 
+	bool pauseMusicBool;
+	bool haltMusicBool;
+
 public:
 	Audio_Controller();
 	~Audio_Controller();

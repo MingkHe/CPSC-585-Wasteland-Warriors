@@ -356,7 +356,7 @@ void Physics_Controller::initPhysics(bool interactive)
 	startBrakeMode();
 }
 
-void userDriveInput() {
+void userDriveInput(std::string userInput) {
 	releaseAllControls();
 
 	if (driveMode == 2)
@@ -364,20 +364,20 @@ void userDriveInput() {
 		gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
 	}
 
-	if (GetKeyState('T') & 0x8000/*Check if high-order bit is set (1 << 15)*/)
+	if (GetKeyState('W') & 0x8000/*Check if high-order bit is set (1 << 15)*/)
 	{
 		startAccelerateForwardsMode();
 		driveMode = 1;
 	}
 
-	else if (GetKeyState('G') & 0x8000)
+	else if (GetKeyState('S') & 0x8000)
 	{
 		startAccelerateReverseMode();
 		driveMode = 2;
 	}
-	if (GetKeyState('F') & 0x8000)
+	if (GetKeyState('A') & 0x8000)
 	{
-		if (GetKeyState('B') & 0x8000) {
+		if (GetKeyState('C') & 0x8000) {
 			startHandbrakeTurnRightMode();
 			driveMode = 4;
 		}
@@ -386,9 +386,9 @@ void userDriveInput() {
 			driveMode = 3;
 		}
 	}
-	if (GetKeyState('H') & 0x8000)
+	if (GetKeyState('D') & 0x8000)
 	{
-		if (GetKeyState('B') & 0x8000) {
+		if (GetKeyState('C') & 0x8000) {
 			driveMode = 6;
 			startHandbrakeTurnLeftMode();
 		}
@@ -398,7 +398,7 @@ void userDriveInput() {
 		}
 	}
 
-	if (GetKeyState('B') & 0x8000) {
+	if (GetKeyState('C') & 0x8000) {
 		startBrakeMode();
 		driveMode = 7;
 	}
@@ -416,7 +416,7 @@ void Physics_Controller::stepPhysics(bool interactive)
 	PX_UNUSED(interactive);
 	const PxF32 timestep = 1.0f / 60.0f;
 
-	userDriveInput();
+	userDriveInput(gameState->button);
 	//Update the control inputs for the vehicle.
 	if (gMimicKeyInputs)
 	{

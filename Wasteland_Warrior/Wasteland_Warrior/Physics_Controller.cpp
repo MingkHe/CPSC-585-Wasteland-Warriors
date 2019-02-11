@@ -44,6 +44,11 @@ PxRigidStatic*			gGroundPlane = NULL;
 PxVehicleDrive4W*		gVehicle4W = NULL;
 
 bool					gIsVehicleInAir = true;
+std::string				steerDirection = "straight";
+bool					brakeCar = false;
+int                     currentGear = 1;
+bool					changeToReverseGear = false;
+bool					changeToForwardGear = false;
 
 
 
@@ -64,7 +69,7 @@ void Physics_Controller::Update()
 	stepPhysics(false);
 }
 
-PxF32 gSteerVsForwardSpeedData[2*8]=
+/*PxF32 gSteerVsForwardSpeedData[2*8]=
 {
 	0.0f,		0.75f,
 	5.0f,		0.75f,
@@ -74,9 +79,9 @@ PxF32 gSteerVsForwardSpeedData[2*8]=
 	PX_MAX_F32, PX_MAX_F32,
 	PX_MAX_F32, PX_MAX_F32,
 	PX_MAX_F32, PX_MAX_F32
-};
+};*/
 
-/*PxF32 gSteerVsForwardSpeedData[2 * 8] =
+PxF32 gSteerVsForwardSpeedData[2 * 8] =
 {
 	0.1*PX_MAX_F32,		0.8f,
 	0.2*PX_MAX_F32,		0.7f,
@@ -86,7 +91,7 @@ PxF32 gSteerVsForwardSpeedData[2*8]=
 	0.6*PX_MAX_F32,		0.3f,
 	0.7*PX_MAX_F32,		0.2f,
 	0.8*PX_MAX_F32,		0.1f
-};*/
+};
 
 
 PxFixedSizeLookupTable<8> gSteerVsForwardSpeedTable(gSteerVsForwardSpeedData, 4);
@@ -132,7 +137,6 @@ PxVehicleDrive4WRawInputData gVehicleInputData;
 PxU32					gVehicleOrderProgress = 0;
 bool					gVehicleOrderComplete = false;
 bool					gMimicKeyInputs = false;
-int                     driveMode = 0;
 
 VehicleDesc initPlayerVehiclePhysicsDesc()
 {
@@ -222,12 +226,12 @@ void startTurnHardLeftMode()
 {
 	if (gMimicKeyInputs)
 	{
-		//gVehicleInputData.setDigitalAccel(true);
+		gVehicleInputData.setDigitalAccel(true);
 		gVehicleInputData.setDigitalSteerLeft(true);
 	}
 	else
 	{
-		//gVehicleInputData.setAnalogAccel(true);
+		gVehicleInputData.setAnalogAccel(true);
 		gVehicleInputData.setAnalogSteer(-1.0f);
 	}
 }
@@ -236,12 +240,12 @@ void startTurnHardRightMode()
 {
 	if (gMimicKeyInputs)
 	{
-		//gVehicleInputData.setDigitalAccel(true);
+		gVehicleInputData.setDigitalAccel(true);
 		gVehicleInputData.setDigitalSteerRight(true);
 	}
 	else
 	{
-		//gVehicleInputData.setAnalogAccel(1.0f);
+		gVehicleInputData.setAnalogAccel(1.0f);
 		gVehicleInputData.setAnalogSteer(1.0f);
 	}
 }
@@ -358,54 +362,98 @@ void Physics_Controller::initPhysics(bool interactive)
 
 void userDriveInput(std::string userInput) {
 	releaseAllControls();
+	steerDirection = "";
+	brakeCar = false;
+	//currentGear
+	//changeToForwardGear
+	//changeToReverseGear
 
-	if (driveMode == 2)
+	if (changeToForwardGear)
 	{
+		changeToForwardGear = false;
 		gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
 	}
 
-	if (GetKeyState('W') & 0x8000/*Check if high-order bit is set (1 << 15)*/)
+	if ((GetKeyState('W') & 0x8000) && !(GetKeyState('S') & 0x8000))/*Check if high-order bit is set (1 << 15)*/
 	{
-		startAccelerateForwardsMode();
-		driveMode = 1;
+		if (currentGear < 0) {
+			currentGear = 1;
+			changeToForwardGear = true;
+		}
+
+		if ((GetKeyState('A') & 0x8000) && !(GetKeyState('D') & 0x8000))
+		{
+			steerDirection = "left";
+			if (GetKeyState('C') & 0x8000) {
+				startHandbrakeTurnRightMode();
+				
+			}
+			else {
+				startTurnHardRightMode();
+				
+			}
+		}
+		else if ((GetKeyState('D') & 0x8000) && !(GetKeyState('A') & 0x8000))
+		{
+			steerDirection = "right";
+			if (GetKeyState('C') & 0x8000) {
+				
+				startHandbrakeTurnLeftMode();
+			}
+			else {
+				startTurnHardLeftMode();
+				
+			}
+		}
+		else
+			steerDirection = "straight";
+			startAccelerateForwardsMode();
 	}
 
-	else if (GetKeyState('S') & 0x8000)
+	else if ((GetKeyState('S') & 0x8000) && !(GetKeyState('W') & 0x8000))/*Check if high-order bit is set (1 << 15)*/
 	{
+		if (currentGear > 0) {
+			currentGear = -1;
+			changeToReverseGear = true;
+		}
+		if ((GetKeyState('A') & 0x8000) && !(GetKeyState('D') & 0x8000))
+		{
+			steerDirection = "left";
+			if (GetKeyState('C') & 0x8000) {
+				startHandbrakeTurnRightMode();
+
+			}
+			else {
+				startTurnHardRightMode();
+
+			}
+		}
+		else if ((GetKeyState('D') & 0x8000) && !(GetKeyState('A') & 0x8000))
+		{
+			steerDirection = "right";
+			if (GetKeyState('C') & 0x8000) {
+
+				startHandbrakeTurnLeftMode();
+			}
+			else {
+				startTurnHardLeftMode();
+
+			}
+		}
+		else
+			steerDirection = "straight";
 		startAccelerateReverseMode();
-		driveMode = 2;
-	}
-	if (GetKeyState('A') & 0x8000)
-	{
-		if (GetKeyState('C') & 0x8000) {
-			startHandbrakeTurnRightMode();
-			driveMode = 4;
-		}
-		else {
-			startTurnHardRightMode();
-			driveMode = 3;
-		}
-	}
-	if (GetKeyState('D') & 0x8000)
-	{
-		if (GetKeyState('C') & 0x8000) {
-			driveMode = 6;
-			startHandbrakeTurnLeftMode();
-		}
-		else {
-			startTurnHardLeftMode();
-			driveMode = 5;
-		}
 	}
 
-	if (GetKeyState('C') & 0x8000) {
+	if ((GetKeyState('C') & 0x8000) || ((GetKeyState('W') & 0x8000) && (GetKeyState('S') & 0x8000))) {
 		startBrakeMode();
-		driveMode = 7;
+		
 	}
 
 	//If the mode about to start is eDRIVE_MODE_ACCEL_REVERSE then switch to reverse gears.
-	if (driveMode == 2)
+	if (changeToReverseGear)
 	{
+		changeToReverseGear = false;
 		gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eREVERSE);
 	}
 

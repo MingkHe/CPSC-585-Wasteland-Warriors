@@ -5,6 +5,9 @@ using namespace std;
 using namespace glm;
 
 const float MAX_VERT = 0.99f;
+
+//const float MAX_RADIUS = 300.0f;
+//const float MIN_RADIUS = 5.0f;
 //const float RADIUS = 1.f;
 
 glm::mat4 Camera::viewMatrix() const {

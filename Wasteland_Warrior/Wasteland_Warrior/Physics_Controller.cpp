@@ -221,12 +221,12 @@ void startTurnHardLeftMode()
 {
 	if (gMimicKeyInputs)
 	{
-		gVehicleInputData.setDigitalAccel(true);
+		//gVehicleInputData.setDigitalAccel(true);
 		gVehicleInputData.setDigitalSteerLeft(true);
 	}
 	else
 	{
-		gVehicleInputData.setAnalogAccel(true);
+		//gVehicleInputData.setAnalogAccel(true);
 		gVehicleInputData.setAnalogSteer(-1.0f);
 	}
 }
@@ -235,12 +235,12 @@ void startTurnHardRightMode()
 {
 	if (gMimicKeyInputs)
 	{
-		gVehicleInputData.setDigitalAccel(true);
+		//gVehicleInputData.setDigitalAccel(true);
 		gVehicleInputData.setDigitalSteerRight(true);
 	}
 	else
 	{
-		gVehicleInputData.setAnalogAccel(1.0f);
+		//gVehicleInputData.setAnalogAccel(1.0f);
 		gVehicleInputData.setAnalogSteer(1.0f);
 	}
 }
@@ -476,14 +476,28 @@ void Physics_Controller::stepPhysics(bool interactive)
 	gameState->scene->objects[1].transform[0][1] = xRotation.y;
 	gameState->scene->objects[1].transform[0][2] = xRotation.z;
 
+	gameState->scene->objects[1].transform[1][0] = yRotation.x;
+	gameState->scene->objects[1].transform[1][1] = yRotation.y;
+	gameState->scene->objects[1].transform[1][2] = yRotation.z;
+
 	gameState->scene->objects[1].transform[2][0] = zRotation.x;
 	gameState->scene->objects[1].transform[2][1] = zRotation.y;
 	gameState->scene->objects[1].transform[2][2] = zRotation.z;
 	
-	gameState->scene->objects[1].transform[1][0] = yRotation.x;
-	gameState->scene->objects[1].transform[1][1] = yRotation.y;
-	gameState->scene->objects[1].transform[1][2] = yRotation.z;
-	
+
+
+	glm::mat4 transofrmationMatrix = 
+		glm::mat4{
+		{xRotation.x, yRotation.x, zRotation.x, 0.f},
+		{xRotation.y, yRotation.y, zRotation.y, 0.f},
+		{xRotation.z, yRotation.z, zRotation.z, 0.f},
+		{0.0f		, 0.0f		 , 0.0f		  , 1.0f}
+	};
+
+	gameState->camera.pos = glm::vec4(location.x, (location.y+3), (location.z+5), 1.0f)*transofrmationMatrix;
+	gameState->camera.dir = glm::vec4(0.0f, -5.0f, 0.0f, 0.0f)*transofrmationMatrix;
+	gameState->camera.right = glm::vec4(1.0f, 0.0f, 0.0f, 0.0f)*transofrmationMatrix;
+	gameState->camera.up = glm::cross(gameState->camera.dir, gameState->camera.right);
 }
 
 

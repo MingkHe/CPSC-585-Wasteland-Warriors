@@ -19,6 +19,13 @@ public:
 	float oldMouseXpos;
 	float oldMouseYpos;
 
+	//WASD
+	static bool W;
+	static bool A;
+	static bool S;
+	static bool D;
+	static bool SPACE;
+
 	float cameraSensitivity = 0.01;
 
 	void Update(Gamestate* gameState);

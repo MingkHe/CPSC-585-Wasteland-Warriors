@@ -13,6 +13,13 @@ public:
 	//Button input
 	std::string button;
 
+	//WASD
+	bool W;
+	bool A;
+	bool S;
+	bool D;
+	bool SPACE;
+
 	//Joysticks
 	float leftStickX;
 	float leftStickY;

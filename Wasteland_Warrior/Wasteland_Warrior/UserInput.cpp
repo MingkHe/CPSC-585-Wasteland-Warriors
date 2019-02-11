@@ -10,6 +10,13 @@ std::queue<std::string> UserInput::inputBuffer;
 float UserInput::MouseXpos;
 float UserInput::MouseYpos;
 
+//WASD
+bool UserInput::W;
+bool UserInput::A;
+bool UserInput::S;
+bool UserInput::D;
+bool UserInput::SPACE;
+
 UserInput::UserInput()
 {
 }
@@ -38,6 +45,39 @@ void UserInput::Update(Gamestate* gameState)
 	else {
 		gameState->button = "";
 	}
+
+	//WASD
+	if (UserInput::W == true) {
+		gameState->W = true;
+	}
+	else {
+		gameState->W = false;
+	}
+	if (UserInput::A == true) {
+		gameState->A = true;
+	}
+	else {
+		gameState->A = false;
+	}
+	if (UserInput::S == true) {
+		gameState->S = true;
+	}
+	else{
+		gameState->S = false;
+	}
+	if (UserInput::D == true) {
+		gameState->D = true;
+	}
+	else {
+		gameState->D = false;
+	}
+	if (UserInput::SPACE == true) {
+		gameState->SPACE = true;
+	}
+	else {
+		gameState->SPACE = false;
+	}
+
 
 	//Update state
 	gameState->UIMode = "InGame";
@@ -119,27 +159,49 @@ void UserInput::key(GLFWwindow* window, int key, int scancode, int action, int m
 
 	case GLFW_REPEAT:
 	{
-		//Car Controls
-	case GLFW_KEY_W:
-		UserInput::inputBuffer.push("W");
-		break;
-	case GLFW_KEY_A:
-		UserInput::inputBuffer.push("A");
-		break;
-	case GLFW_KEY_S:
-		UserInput::inputBuffer.push("S");
-		break;
-	case GLFW_KEY_D:
-		UserInput::inputBuffer.push("D");
-		break;
-	case GLFW_KEY_SPACE:
-		UserInput::inputBuffer.push("SPACE");
-		break;
+		switch (key) {
+			//Car Controls
+		case GLFW_KEY_W:
+			UserInput::W = true;
+			break;
+		case GLFW_KEY_A:
+			UserInput::A = true;
+			break;
+		case GLFW_KEY_S:
+			UserInput::S = true;
+			break;
+		case GLFW_KEY_D:
+			UserInput::D = true;
+			break;
+		case GLFW_KEY_SPACE:
+			UserInput::SPACE = true;
+			break;
+		}
 	}
 		break;
 
-	//case GLFW_RELEASE:
-		//break;
+	case GLFW_RELEASE:
+	{
+		switch (key) {
+			//Car Controls
+		case GLFW_KEY_W:
+			UserInput::W = false;
+			break;
+		case GLFW_KEY_A:
+			UserInput::A = false;
+			break;
+		case GLFW_KEY_S:
+			UserInput::S = false;
+			break;
+		case GLFW_KEY_D:
+			UserInput::D = false;
+			break;
+		case GLFW_KEY_SPACE:
+			UserInput::SPACE = false;
+			break;
+		}
+	}
+		break;
 	}
 }
 

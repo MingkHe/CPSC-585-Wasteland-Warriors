@@ -181,6 +181,7 @@ VehicleDesc initPlayerVehiclePhysicsDesc()
 
 void startAccelerateForwardsMode()
 {
+
 	if (gMimicKeyInputs)
 	{
 		gVehicleInputData.setDigitalAccel(true);
@@ -374,7 +375,7 @@ void userDriveInput() {
 		startAccelerateReverseMode();
 		driveMode = 2;
 	}
-	if (GetKeyState('H') & 0x8000)
+	if (GetKeyState('F') & 0x8000)
 	{
 		if (GetKeyState('B') & 0x8000) {
 			startHandbrakeTurnRightMode();
@@ -385,7 +386,7 @@ void userDriveInput() {
 			driveMode = 3;
 		}
 	}
-	if (GetKeyState('F') & 0x8000)
+	if (GetKeyState('H') & 0x8000)
 	{
 		if (GetKeyState('B') & 0x8000) {
 			driveMode = 6;
@@ -483,7 +484,9 @@ void Physics_Controller::stepPhysics(bool interactive)
 	gameState->scene->objects[1].transform[2][0] = zRotation.x;
 	gameState->scene->objects[1].transform[2][1] = zRotation.y;
 	gameState->scene->objects[1].transform[2][2] = zRotation.z;
-	
+
+
+	/*
 
 
 	glm::mat4 transofrmationMatrix = 
@@ -497,7 +500,7 @@ void Physics_Controller::stepPhysics(bool interactive)
 	gameState->camera.pos = glm::vec4(location.x, (location.y+3), (location.z+5), 1.0f)*transofrmationMatrix;
 	gameState->camera.dir = glm::vec4(0.0f, -5.0f, 0.0f, 0.0f)*transofrmationMatrix;
 	gameState->camera.right = glm::vec4(1.0f, 0.0f, 0.0f, 0.0f)*transofrmationMatrix;
-	gameState->camera.up = glm::cross(gameState->camera.dir, gameState->camera.right);
+	gameState->camera.up = glm::cross(gameState->camera.dir, gameState->camera.right);*/
 }
 
 

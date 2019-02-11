@@ -60,7 +60,7 @@ Physics_Controller::~Physics_Controller()
 
 int Physics_Controller::Update()
 {
-	std::cout << "Updating Physics\n" << std::endl;
+	//std::cout << "Updating Physics\n" << std::endl;
 	stepPhysics(false);
 	return 0;
 }
@@ -450,13 +450,14 @@ void Physics_Controller::stepPhysics(bool interactive)
 	PxU32 numOfRidg = gScene->getNbActors(PxActorTypeFlag::eRIGID_DYNAMIC);
 	PxActor *userBuffer[50];
 
-	std::cout << "Number of obj:" << numOfRidg;
+	//std::cout << "Number of obj:" << numOfRidg;
 	PxU32 numOfRidgActors = gScene->getActors(PxActorTypeFlag::eRIGID_DYNAMIC, userBuffer, numOfRidg, 0);
 	PxActor *box = userBuffer[0];
 	PxBounds3 bBox = box->getWorldBounds();
 	PxVec3 xyzBox = bBox.getCenter();
 
-	std::cout << "Box position:  X:" << xyzBox.x << "  Y:" << xyzBox.y << "  Z:" << xyzBox.z << std::endl;
+
+	//std::cout << "Box position:  X:" << xyzBox.x << "  Y:" << xyzBox.y << "  Z:" << xyzBox.z << std::endl;
 	//glm::vec3(xyzBox.x, xyzBox.y, xyzBox.z);
 	gameState->scene->objects[1].transform[3][0] = xyzBox.x;
 	gameState->scene->objects[1].transform[3][1] = xyzBox.y;

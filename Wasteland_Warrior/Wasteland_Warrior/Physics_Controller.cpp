@@ -69,7 +69,7 @@ void Physics_Controller::Update()
 	stepPhysics(false);
 }
 
-/*PxF32 gSteerVsForwardSpeedData[2*8]=
+PxF32 gSteerVsForwardSpeedData[2*8]=
 {
 	0.0f,		0.75f,
 	5.0f,		0.75f,
@@ -79,9 +79,9 @@ void Physics_Controller::Update()
 	PX_MAX_F32, PX_MAX_F32,
 	PX_MAX_F32, PX_MAX_F32,
 	PX_MAX_F32, PX_MAX_F32
-};*/
+};
 
-PxF32 gSteerVsForwardSpeedData[2 * 8] =
+/*PxF32 gSteerVsForwardSpeedData[2 * 8] =
 {
 	0.1*PX_MAX_F32,		0.8f,
 	0.2*PX_MAX_F32,		0.7f,
@@ -91,7 +91,7 @@ PxF32 gSteerVsForwardSpeedData[2 * 8] =
 	0.6*PX_MAX_F32,		0.3f,
 	0.7*PX_MAX_F32,		0.2f,
 	0.8*PX_MAX_F32,		0.1f
-};
+};*/
 
 
 PxFixedSizeLookupTable<8> gSteerVsForwardSpeedTable(gSteerVsForwardSpeedData, 4);
@@ -374,7 +374,7 @@ void userDriveInput(std::string userInput) {
 		gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
 	}
 
-	if ((GetKeyState('W') & 0x8000) && !(GetKeyState('S') & 0x8000))/*Check if high-order bit is set (1 << 15)*/
+	if ((GetKeyState('W') & 0x8000) && !(GetKeyState('S') & 0x8000) && !(GetKeyState('C') & 0x8000))/*Check if high-order bit is set (1 << 15)*/
 	{
 		if (currentGear < 0) {
 			currentGear = 1;
@@ -410,7 +410,7 @@ void userDriveInput(std::string userInput) {
 			startAccelerateForwardsMode();
 	}
 
-	else if ((GetKeyState('S') & 0x8000) && !(GetKeyState('W') & 0x8000))/*Check if high-order bit is set (1 << 15)*/
+	else if ((GetKeyState('S') & 0x8000) && !(GetKeyState('W') & 0x8000) && !(GetKeyState('C') & 0x8000))/*Check if high-order bit is set (1 << 15)*/
 	{
 		if (currentGear > 0) {
 			currentGear = -1;

@@ -8,7 +8,7 @@ The physics engine is also handling the movement of the car on the ground plane.
 of the red box and the ground plane.
 
 ### To Build and Run:
-To build, download or clone the Wasteland Warriro files from https://github.com/MingkHe/CPSC-585-Wasteland-Warriors/tree/Wasteland_Warrior
+To build, download or clone the Wasteland Warrior files from https://github.com/MingkHe/CPSC-585-Wasteland-Warriors/tree/Wasteland_Warrior
 then open the Wasteland Warrior solution file in Visual Studio 2017, found in the folder CPSC-585-Wasteland-Warriors\Wasteland_Warrior.
 Then build and run the program.
 

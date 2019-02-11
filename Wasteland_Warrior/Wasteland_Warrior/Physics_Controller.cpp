@@ -58,14 +58,13 @@ Physics_Controller::~Physics_Controller()
 	cleanupPhysics(false);
 }
 
-int Physics_Controller::Update()
+void Physics_Controller::Update()
 {
-	std::cout << "Updating Physics\n" << std::endl;
+	//std::cout << "Updating Physics\n" << std::endl;
 	stepPhysics(false);
-	return 0;
 }
 
-/*PxF32 gSteerVsForwardSpeedData[2*8]=
+PxF32 gSteerVsForwardSpeedData[2*8]=
 {
 	0.0f,		0.75f,
 	5.0f,		0.75f,
@@ -75,9 +74,9 @@ int Physics_Controller::Update()
 	PX_MAX_F32, PX_MAX_F32,
 	PX_MAX_F32, PX_MAX_F32,
 	PX_MAX_F32, PX_MAX_F32
-};*/
+};
 
-PxF32 gSteerVsForwardSpeedData[2 * 8] =
+/*PxF32 gSteerVsForwardSpeedData[2 * 8] =
 {
 	0.1*PX_MAX_F32,		0.8f,
 	0.2*PX_MAX_F32,		0.7f,
@@ -87,7 +86,7 @@ PxF32 gSteerVsForwardSpeedData[2 * 8] =
 	0.6*PX_MAX_F32,		0.3f,
 	0.7*PX_MAX_F32,		0.2f,
 	0.8*PX_MAX_F32,		0.1f
-};
+};*/
 
 
 PxFixedSizeLookupTable<8> gSteerVsForwardSpeedTable(gSteerVsForwardSpeedData, 4);
@@ -135,7 +134,7 @@ bool					gVehicleOrderComplete = false;
 bool					gMimicKeyInputs = false;
 int                     driveMode = 0;
 
-VehicleDesc initVehicleDesc()
+VehicleDesc initPlayerVehiclePhysicsDesc()
 {
 	//Set up the chassis mass, dimensions, moment of inertia, and center of mass offset.
 	//The moment of inertia is just the moment of inertia of a cuboid but modified for easier steering.
@@ -341,7 +340,7 @@ void Physics_Controller::initPhysics(bool interactive)
 	gScene->addActor(*gGroundPlane);
 
 	//Create a vehicle that will drive on the plane.
-	VehicleDesc vehicleDesc = initVehicleDesc();
+	VehicleDesc vehicleDesc = initPlayerVehiclePhysicsDesc();
 	gVehicle4W = createVehicle4W(vehicleDesc, gPhysics, gCooking);
 	PxTransform startTransform(PxVec3(0, (vehicleDesc.chassisDims.y*0.5f + vehicleDesc.wheelRadius + 1.0f), 0), PxQuat(PxIdentity));
 	gVehicle4W->getRigidDynamicActor()->setGlobalPose(startTransform);
@@ -450,13 +449,14 @@ void Physics_Controller::stepPhysics(bool interactive)
 	PxU32 numOfRidg = gScene->getNbActors(PxActorTypeFlag::eRIGID_DYNAMIC);
 	PxActor *userBuffer[50];
 
-	std::cout << "Number of obj:" << numOfRidg;
+	//std::cout << "Number of obj:" << numOfRidg;
 	PxU32 numOfRidgActors = gScene->getActors(PxActorTypeFlag::eRIGID_DYNAMIC, userBuffer, numOfRidg, 0);
 	PxActor *box = userBuffer[0];
 	PxBounds3 bBox = box->getWorldBounds();
 	PxVec3 xyzBox = bBox.getCenter();
 
-	std::cout << "Box position:  X:" << xyzBox.x << "  Y:" << xyzBox.y << "  Z:" << xyzBox.z << std::endl;
+
+	//std::cout << "Box position:  X:" << xyzBox.x << "  Y:" << xyzBox.y << "  Z:" << xyzBox.z << std::endl;
 	//glm::vec3(xyzBox.x, xyzBox.y, xyzBox.z);
 	gameState->scene->objects[1].transform[3][0] = xyzBox.x;
 	gameState->scene->objects[1].transform[3][1] = xyzBox.y;

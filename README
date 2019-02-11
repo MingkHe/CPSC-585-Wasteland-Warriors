@@ -1,28 +1,30 @@
-We used the biolerplate code from our CPSC 453 as our basic render controller. The code just simple render a triangle on the screen.
-We added all the necessary classes into our program but they are just stubbed implemented:
+--Wastland Warrior--
+Milestone #2
 
-Added Classes:
+For this milestone we have implemented each of the subsystems in our game. Our goal was to get each system to comunicate within in
+our framework. The input system is capturing input from the keyboard and controller. The audio system is able to start/stop and
+pause/play music files. The physics system is modelling collisions for ojects and to ground plane. The physics engine is also
+handling the movement of the car on the ground plane. The rendering system is handeling the lighting and shading of all the objects
+in the scene.
 
-Gamestate:
-Gamestate
+Build:
 
-Subsystem:
-UserInput
-AI_Interaction
-Physics_Controller
-Audio_Controller
+Run:
 
-Entities:
-Entity
-Vehicle
-PlayerUnit
-EnemyUnit
-MapTerrain
-MapObstacle
+Input: 
 
-The main game loop implementation is in the file Program.cpp line 51.
-
-The full interaction and relationship among the classes listed above are explained in the Game Application Framework document.
-
-For milestone 1, our game program is able to run the main game loop and render a triangle in the middle of the screen for each frame.
-It can also receive the user input(just key WASD) from keyborad and print them out on the standard output.
+	Driving:
+		W to go forward
+		S to Brake/Reverse
+		A/D for left and right
+		SPACE for Handbrake
+	
+	Camera:
+		Mouse to move camera
+	
+	Music:
+		M to start/stop
+		N to pause/resume
+		
+	ESCAPE to quit game
+	Mouse to control camera

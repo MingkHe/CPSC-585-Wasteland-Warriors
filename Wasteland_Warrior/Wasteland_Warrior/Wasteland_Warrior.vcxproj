@@ -148,9 +148,7 @@
     <ClCompile Include="..\include\snippetFiles\snippetvehiclecommon\SnippetVehicle4WRender.cpp" />
     <ClCompile Include="..\include\snippetFiles\snippetvehiclecommon\SnippetVehicleCreate.cpp" />
     <ClCompile Include="..\include\snippetFiles\snippetvehiclecommon\SnippetVehicleFilterShader.cpp" />
-    <ClCompile Include="..\include\snippetFiles\snippetvehiclecommon\SnippetVehicleNoDriveCreate.cpp" />
     <ClCompile Include="..\include\snippetFiles\snippetvehiclecommon\SnippetVehicleSceneQuery.cpp" />
-    <ClCompile Include="..\include\snippetFiles\snippetvehiclecommon\SnippetVehicleTankCreate.cpp" />
     <ClCompile Include="..\include\snippetFiles\snippetvehiclecommon\SnippetVehicleTireFriction.cpp" />
     <ClCompile Include="..\middleware\glad\src\glad.c" />
     <ClCompile Include="Audio_Controller.cpp" />

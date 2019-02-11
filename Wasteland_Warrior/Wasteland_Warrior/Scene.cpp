@@ -39,7 +39,7 @@ Scene::Scene(RenderingEngine* renderer) : renderer(renderer) {
 	objects.push_back(ground);
 
 
-	generateRectPrism(0.5, 0.25, 0.2);
+	generateRectPrism(5.0, 2.5, 2.0);
 }
 
 

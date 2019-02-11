@@ -370,7 +370,7 @@ void userDriveInput() {
 		driveMode = 1;
 	}
 
-	if (GetKeyState('G') & 0x8000)
+	else if (GetKeyState('G') & 0x8000)
 	{
 		startAccelerateReverseMode();
 		driveMode = 2;

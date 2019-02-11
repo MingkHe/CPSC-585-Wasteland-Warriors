@@ -4,15 +4,15 @@
 
 #include "PxPhysicsAPI.h"
 
-#include "vehicle/PxVehicleUtil.h"
-#include "snippetFiles/snippetvehiclecommon/SnippetVehicleSceneQuery.h"
-#include "snippetFiles/snippetvehiclecommon/SnippetVehicleFilterShader.h"
-#include "snippetFiles/snippetvehiclecommon/SnippetVehicleTireFriction.h"
-#include "snippetFiles/snippetvehiclecommon/SnippetVehicleCreate.h"
+#include "../include/vehicle/PxVehicleUtil.h"
+#include "../include/snippetFiles/snippetvehiclecommon/SnippetVehicleSceneQuery.h"
+#include "../include/snippetFiles/snippetvehiclecommon/SnippetVehicleFilterShader.h"
+#include "../include/snippetFiles/snippetvehiclecommon/SnippetVehicleTireFriction.h"
+#include "../include/snippetFiles/snippetvehiclecommon/SnippetVehicleCreate.h"
 
-#include "snippetFiles/snippetcommon/SnippetPrint.h"
-#include "snippetFiles/snippetcommon/SnippetPVD.h"
-#include "snippetFiles/snippetutils/SnippetUtils.h"
+#include "../include/snippetFiles/snippetcommon/SnippetPrint.h"
+#include "../include/snippetFiles/snippetcommon/SnippetPVD.h"
+#include "../include/snippetFiles/snippetutils/SnippetUtils.h"
 
 #include <PxScene.h>
 #include <iostream>
@@ -326,6 +326,7 @@ void Physics_Controller::initPhysics(bool interactive)
 	PxInitVehicleSDK(*gPhysics);
 	PxVehicleSetBasisVectors(PxVec3(0, 1, 0), PxVec3(0, 0, 1));
 	PxVehicleSetUpdateMode(PxVehicleUpdateMode::eVELOCITY_CHANGE);
+	
 
 	//Create the batched scene queries for the suspension raycasts.
 	gVehicleSceneQueryData = VehicleSceneQueryData::allocate(1, PX_MAX_NB_WHEELS, 1, 1, WheelSceneQueryPreFilterBlocking, NULL, gAllocator); //!!
@@ -352,7 +353,7 @@ void Physics_Controller::initPhysics(bool interactive)
 	gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
 	gVehicle4W->mDriveDynData.setUseAutoGears(true);
 
-	startBrakeMode();
+	startBrakeMode();*/
 }
 
 void userDriveInput() {

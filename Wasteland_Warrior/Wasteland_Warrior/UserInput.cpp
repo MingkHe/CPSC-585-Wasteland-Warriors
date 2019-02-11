@@ -106,6 +106,23 @@ void UserInput::key(GLFWwindow* window, int key, int scancode, int action, int m
 
 		switch (key) {
 
+			//Car Controls
+		case GLFW_KEY_W:
+			UserInput::WKey = true;
+			break;
+		case GLFW_KEY_A:
+			UserInput::AKey = true;
+			break;
+		case GLFW_KEY_S:
+			UserInput::SKey = true;
+			break;
+		case GLFW_KEY_D:
+			UserInput::DKey = true;
+			break;
+		case GLFW_KEY_SPACE:
+			UserInput::SPACEKey = true;
+			break;
+
 			//Escape
 		case GLFW_KEY_ESCAPE:
 			glfwSetWindowShouldClose(window, GL_TRUE);
@@ -159,24 +176,24 @@ void UserInput::key(GLFWwindow* window, int key, int scancode, int action, int m
 
 	case GLFW_REPEAT:
 	{
-		switch (key) {
-			//Car Controls
-		case GLFW_KEY_W:
-			UserInput::WKey = true;
-			break;
-		case GLFW_KEY_A:
-			UserInput::AKey = true;
-			break;
-		case GLFW_KEY_S:
-			UserInput::SKey = true;
-			break;
-		case GLFW_KEY_D:
-			UserInput::DKey = true;
-			break;
-		case GLFW_KEY_SPACE:
-			UserInput::SPACEKey = true;
-			break;
-		}
+		//switch (key) {
+		//	//Car Controls
+		//case GLFW_KEY_W:
+		//	UserInput::WKey = true;
+		//	break;
+		//case GLFW_KEY_A:
+		//	UserInput::AKey = true;
+		//	break;
+		//case GLFW_KEY_S:
+		//	UserInput::SKey = true;
+		//	break;
+		//case GLFW_KEY_D:
+		//	UserInput::DKey = true;
+		//	break;
+		//case GLFW_KEY_SPACE:
+		//	UserInput::SPACEKey = true;
+		//	break;
+		//}
 	}
 		break;
 

@@ -19,10 +19,10 @@
 
 Scene::Scene(RenderingEngine* renderer) : renderer(renderer) {
 	Geometry ground;
-	ground.verts.push_back(glm::vec3(-25000.f, 0.f, -25000.f));
-	ground.verts.push_back(glm::vec3(25000.f, 0.f, -25000.f));
-	ground.verts.push_back(glm::vec3(-25000.f, 0.f, 25000.f));
-	ground.verts.push_back(glm::vec3(25000.f, 0.f, 25000.f));
+	ground.verts.push_back(glm::vec3(-2500.f, 0.f, -2500.f));
+	ground.verts.push_back(glm::vec3(2500.f, 0.f, -2500.f));
+	ground.verts.push_back(glm::vec3(-2500.f, 0.f, 2500.f));
+	ground.verts.push_back(glm::vec3(2500.f, 0.f, 2500.f));
 	for (int i = 0; i < 4; i++) {
 		ground.colors.push_back(glm::vec3(0.5f, 0.5f, 0.5f));
 		ground.normals.push_back(glm::vec3(0.f, 1.f, 0.f));

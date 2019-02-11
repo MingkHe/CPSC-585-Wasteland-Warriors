@@ -453,6 +453,18 @@ void Physics_Controller::stepPhysics(bool interactive)
 	//std::cout << "Number of obj:" << numOfRidg;
 	PxU32 numOfRidgActors = gScene->getActors(PxActorTypeFlag::eRIGID_DYNAMIC, userBuffer, numOfRidg, 0);
 	PxActor *box = userBuffer[0];
+	//If we had a PxRigidActor 
+	/*
+	PxTransform orientation = rigidActor.getGlobalPose();		//   https://docs.nvidia.com/gameworks/content/gameworkslibrary/physx/apireference/files/classPxRigidActor.html
+	PxVec3 location = orientation.p;								//	https://docs.nvidia.com/gameworks/content/gameworkslibrary/physx/apireference/files/classPxTransform.html
+	PxQuat rotation = orientation.q;			
+	
+	PxVec3 xRotation = rotation.getBasisVector0();
+	PxVec3 yRotation = rotation.getBasisVector1();
+	PxVec3 zRotation = rotation.getBasisVector2();
+	*/
+
+
 	PxBounds3 bBox = box->getWorldBounds();
 	PxVec3 xyzBox = bBox.getCenter();
 

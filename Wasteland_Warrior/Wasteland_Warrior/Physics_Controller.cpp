@@ -69,29 +69,29 @@ void Physics_Controller::Update()
 	stepPhysics(false);
 }
 
-PxF32 gSteerVsForwardSpeedData[2*8]=
+/*PxF32 gSteerVsForwardSpeedData[2*8]=
 {
-	0.0f,		0.5f,
-	5.0f,		0.5f,
+	0.0f,		0.2f,
+	5.0f,		0.2f,
 	30.0f,		0.125f,
 	120.0f,		0.1f,
 	PX_MAX_F32, PX_MAX_F32,
 	PX_MAX_F32, PX_MAX_F32,
 	PX_MAX_F32, PX_MAX_F32,
 	PX_MAX_F32, PX_MAX_F32
-};
+};*/
 
-/*PxF32 gSteerVsForwardSpeedData[2 * 8] =
+PxF32 gSteerVsForwardSpeedData[2 * 8] =
 {
-	0.1*PX_MAX_F32,		0.8f,
-	0.2*PX_MAX_F32,		0.7f,
-	0.3*PX_MAX_F32,		0.6f,
-	0.4*PX_MAX_F32,		0.5f,
-	0.5*PX_MAX_F32,		0.4f,
-	0.6*PX_MAX_F32,		0.3f,
+	0.1*PX_MAX_F32,		0.5f,
+	0.2*PX_MAX_F32,		0.45f,
+	0.3*PX_MAX_F32,		0.4f,
+	0.4*PX_MAX_F32,		0.35f,
+	0.5*PX_MAX_F32,		0.3f,
+	0.6*PX_MAX_F32,		0.25f,
 	0.7*PX_MAX_F32,		0.2f,
 	0.8*PX_MAX_F32,		0.1f
-};*/
+};
 
 
 PxFixedSizeLookupTable<8> gSteerVsForwardSpeedTable(gSteerVsForwardSpeedData, 4);
@@ -143,11 +143,11 @@ VehicleDesc initPlayerVehiclePhysicsDesc()
 	//Set up the chassis mass, dimensions, moment of inertia, and center of mass offset.
 	//The moment of inertia is just the moment of inertia of a cuboid but modified for easier steering.
 	//Center of mass offset is 0.65m above the base of the chassis and 0.25m towards the front.
-	const PxF32 chassisMass = 1200.0f;
-	const PxVec3 chassisDims(2.5f, 2.0f, 5.0f);
+	const PxF32 chassisMass = 1500.0f;
+	const PxVec3 chassisDims(3.0f, 2.0f, 5.0f);
 	const PxVec3 chassisMOI
 		((chassisDims.y*chassisDims.y + chassisDims.z*chassisDims.z)*chassisMass/12.0f,
-		 (chassisDims.x*chassisDims.x + chassisDims.z*chassisDims.z)*0.5f*chassisMass/12.0f,
+		 (chassisDims.x*chassisDims.x + chassisDims.z*chassisDims.z)*0.6f*chassisMass/12.0f,
 		 (chassisDims.x*chassisDims.x + chassisDims.y*chassisDims.y)*chassisMass/12.0f);
 	/*const PxVec3 chassisMOI
 	((chassisDims.y*chassisDims.y + chassisDims.z*chassisDims.z)*chassisMass,
@@ -374,36 +374,36 @@ void userDriveInput(bool WKey, bool AKey, bool SKey, bool DKey, bool SPACEKey) {
 		gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
 	}
 
-	if ((GetKeyState('W') & 0x8000) && !(GetKeyState('S') & 0x8000) && !(GetKeyState('C') & 0x8000))/*Check if high-order bit is set (1 << 15)*/
+	if ((WKey) && !(SKey) && !(SPACEKey))/*Check if high-order bit is set (1 << 15)*/
 	{
 		if (currentGear < 0) {
 			currentGear = 1;
 			changeToForwardGear = true;
 		}
 
-		if ((GetKeyState('A') & 0x8000) && !(GetKeyState('D') & 0x8000))
+		if ((AKey) && !(DKey))
 		{
 			steerDirection = "left";
-			//if (GetKeyState('C') & 0x8000) {
-			//	startHandbrakeTurnRightMode();
+			if (SPACEKey) {
+				startHandbrakeTurnRightMode();
 				
-			//}
-			//else {
+			}
+			else {
 				startTurnHardRightMode();
 				
-			//}
+			}
 		}
-		else if ((GetKeyState('D') & 0x8000) && !(GetKeyState('A') & 0x8000))
+		else if ((DKey) && !(AKey))
 		{
 			steerDirection = "right";
-			//if (GetKeyState('C') & 0x8000) {
+			if (SPACEKey) {
 				
-				//startHandbrakeTurnLeftMode();
-			//}
-			//else {
+				startHandbrakeTurnLeftMode();
+			}
+			else {
 				startTurnHardLeftMode();
 				
-			//}
+			}
 		}
 		else {
 			steerDirection = "straight";
@@ -411,16 +411,16 @@ void userDriveInput(bool WKey, bool AKey, bool SKey, bool DKey, bool SPACEKey) {
 		}
 	}
 
-	else if ((GetKeyState('S') & 0x8000) && !(GetKeyState('W') & 0x8000) && !(GetKeyState('C') & 0x8000))/*Check if high-order bit is set (1 << 15)*/
+	else if ((SKey) && !(WKey) && !(SPACEKey))/*Check if high-order bit is set (1 << 15)*/
 	{
 		if (currentGear > 0) {
 			currentGear = -1;
 			changeToReverseGear = true;
 		}
-		if ((GetKeyState('A') & 0x8000) && !(GetKeyState('D') & 0x8000))
+		if ((AKey) && !(DKey))
 		{
 			steerDirection = "left";
-			if (GetKeyState('C') & 0x8000) {
+			if (SPACEKey) {
 				startHandbrakeTurnRightMode();
 
 			}
@@ -429,10 +429,10 @@ void userDriveInput(bool WKey, bool AKey, bool SKey, bool DKey, bool SPACEKey) {
 
 			}
 		}
-		else if ((GetKeyState('D') & 0x8000) && !(GetKeyState('A') & 0x8000))
+		else if ((DKey) && !(AKey))
 		{
 			steerDirection = "right";
-			if (GetKeyState('C') & 0x8000) {
+			if (SPACEKey) {
 
 				startHandbrakeTurnLeftMode();
 			}
@@ -447,7 +447,7 @@ void userDriveInput(bool WKey, bool AKey, bool SKey, bool DKey, bool SPACEKey) {
 		}
 	}
 
-	if ((GetKeyState('C') & 0x8000) || ((GetKeyState('W') & 0x8000) && (GetKeyState('S') & 0x8000))) {
+	if ((SPACEKey) || ((WKey) && (SKey))) {
 		startBrakeMode();
 		
 	}

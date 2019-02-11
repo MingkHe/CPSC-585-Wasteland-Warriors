@@ -17,7 +17,7 @@
 #include "Scene.h"
 #include "UserInput.h"
 #include "AI_Interaction.h"
-//#include "Physics_Controller.h"
+#include "Physics_Controller.h"
 #include "Audio_Controller.h"
 #include "Gamestate.h"
 #include "Entity.h"
@@ -51,7 +51,7 @@ void Program::start() {
 	
 	UserInput usrInput = UserInput();
 	AI_Interaction aiInteraction = AI_Interaction();
-	//Physics_Controller physicsCL = Physics_Controller(gameState);
+	Physics_Controller physicsCL = Physics_Controller(gameState);
 	Audio_Controller audioCL = Audio_Controller();
 	
 	renderingEngine = new RenderingEngine(gameState);
@@ -86,7 +86,7 @@ void Program::start() {
 		//aiInteraction.Update(gameState);
 
 		//Physics Engine
-		//physicsCL.Update();
+		physicsCL.Update();
 		//std::cout << "Box position:  X:" << gameState->cubeLocation.x << "  Y:" << gameState->cubeLocation.y << "  Z:" << gameState->cubeLocation.z << std::endl; //Test statement, delete it if you want
 
 

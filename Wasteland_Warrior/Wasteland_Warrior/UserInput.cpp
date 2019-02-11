@@ -54,6 +54,7 @@ void UserInput::Update(Gamestate* gameState)
 		gameState->camera.rotateVertical((oldMouseYpos - UserInput::MouseYpos) * cameraSensitivity);
 		oldMouseYpos = UserInput::MouseYpos;
 	}
+
 }
 
 // Callback for key presses
@@ -70,21 +71,6 @@ void UserInput::key(GLFWwindow* window, int key, int scancode, int action, int m
 			glfwSetWindowShouldClose(window, GL_TRUE);
 			break;
 
-			//WASD
-		case GLFW_KEY_W:
-			UserInput::inputBuffer.push("W");
-			break;
-		case GLFW_KEY_A:
-			UserInput::inputBuffer.push("A");
-			break;
-		case GLFW_KEY_S:
-			UserInput::inputBuffer.push("S");
-			break;
-		case GLFW_KEY_D:
-			UserInput::inputBuffer.push("D");
-			break;
-
-			//WASD
 		case GLFW_KEY_T:
 			UserInput::inputBuffer.push("T");
 			break;
@@ -97,7 +83,6 @@ void UserInput::key(GLFWwindow* window, int key, int scancode, int action, int m
 		case GLFW_KEY_H:
 			UserInput::inputBuffer.push("H");
 			break;
-
 		case GLFW_KEY_M:
 			UserInput::inputBuffer.push("M");
 			break;
@@ -120,9 +105,6 @@ void UserInput::key(GLFWwindow* window, int key, int scancode, int action, int m
 			break;
 
 			//Controls
-		case GLFW_KEY_SPACE:
-			UserInput::inputBuffer.push("SPACE");
-			break;
 		case GLFW_KEY_ENTER:
 			UserInput::inputBuffer.push("ENTER");
 			break;
@@ -135,8 +117,26 @@ void UserInput::key(GLFWwindow* window, int key, int scancode, int action, int m
 		}
 		break;
 
-	//case GLFW_REPEAT:
-		//break;
+	case GLFW_REPEAT:
+	{
+		//Car Controls
+	case GLFW_KEY_W:
+		UserInput::inputBuffer.push("W");
+		break;
+	case GLFW_KEY_A:
+		UserInput::inputBuffer.push("A");
+		break;
+	case GLFW_KEY_S:
+		UserInput::inputBuffer.push("S");
+		break;
+	case GLFW_KEY_D:
+		UserInput::inputBuffer.push("D");
+		break;
+	case GLFW_KEY_SPACE:
+		UserInput::inputBuffer.push("SPACE");
+		break;
+	}
+		break;
 
 	//case GLFW_RELEASE:
 		//break;

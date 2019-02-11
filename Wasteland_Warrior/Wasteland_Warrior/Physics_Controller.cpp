@@ -71,8 +71,8 @@ void Physics_Controller::Update()
 
 PxF32 gSteerVsForwardSpeedData[2*8]=
 {
-	0.0f,		0.75f,
-	5.0f,		0.75f,
+	0.0f,		0.5f,
+	5.0f,		0.5f,
 	30.0f,		0.125f,
 	120.0f,		0.1f,
 	PX_MAX_F32, PX_MAX_F32,
@@ -143,11 +143,11 @@ VehicleDesc initPlayerVehiclePhysicsDesc()
 	//Set up the chassis mass, dimensions, moment of inertia, and center of mass offset.
 	//The moment of inertia is just the moment of inertia of a cuboid but modified for easier steering.
 	//Center of mass offset is 0.65m above the base of the chassis and 0.25m towards the front.
-	const PxF32 chassisMass = 1500.0f;
+	const PxF32 chassisMass = 1200.0f;
 	const PxVec3 chassisDims(2.5f, 2.0f, 5.0f);
 	const PxVec3 chassisMOI
 		((chassisDims.y*chassisDims.y + chassisDims.z*chassisDims.z)*chassisMass/12.0f,
-		 (chassisDims.x*chassisDims.x + chassisDims.z*chassisDims.z)*0.8f*chassisMass/12.0f,
+		 (chassisDims.x*chassisDims.x + chassisDims.z*chassisDims.z)*0.5f*chassisMass/12.0f,
 		 (chassisDims.x*chassisDims.x + chassisDims.y*chassisDims.y)*chassisMass/12.0f);
 	/*const PxVec3 chassisMOI
 	((chassisDims.y*chassisDims.y + chassisDims.z*chassisDims.z)*chassisMass,
@@ -360,7 +360,7 @@ void Physics_Controller::initPhysics(bool interactive)
 	startBrakeMode();
 }
 
-void userDriveInput(std::string userInput) {
+void userDriveInput(bool WKey, bool AKey, bool SKey, bool DKey, bool SPACEKey) {
 	releaseAllControls();
 	steerDirection = "";
 	brakeCar = false;
@@ -384,30 +384,31 @@ void userDriveInput(std::string userInput) {
 		if ((GetKeyState('A') & 0x8000) && !(GetKeyState('D') & 0x8000))
 		{
 			steerDirection = "left";
-			if (GetKeyState('C') & 0x8000) {
-				startHandbrakeTurnRightMode();
+			//if (GetKeyState('C') & 0x8000) {
+			//	startHandbrakeTurnRightMode();
 				
-			}
-			else {
+			//}
+			//else {
 				startTurnHardRightMode();
 				
-			}
+			//}
 		}
 		else if ((GetKeyState('D') & 0x8000) && !(GetKeyState('A') & 0x8000))
 		{
 			steerDirection = "right";
-			if (GetKeyState('C') & 0x8000) {
+			//if (GetKeyState('C') & 0x8000) {
 				
-				startHandbrakeTurnLeftMode();
-			}
-			else {
+				//startHandbrakeTurnLeftMode();
+			//}
+			//else {
 				startTurnHardLeftMode();
 				
-			}
+			//}
 		}
-		else
+		else {
 			steerDirection = "straight";
 			startAccelerateForwardsMode();
+		}
 	}
 
 	else if ((GetKeyState('S') & 0x8000) && !(GetKeyState('W') & 0x8000) && !(GetKeyState('C') & 0x8000))/*Check if high-order bit is set (1 << 15)*/
@@ -440,9 +441,10 @@ void userDriveInput(std::string userInput) {
 
 			}
 		}
-		else
+		else {
 			steerDirection = "straight";
-		startAccelerateReverseMode();
+			startAccelerateReverseMode();
+		}
 	}
 
 	if ((GetKeyState('C') & 0x8000) || ((GetKeyState('W') & 0x8000) && (GetKeyState('S') & 0x8000))) {
@@ -464,7 +466,7 @@ void Physics_Controller::stepPhysics(bool interactive)
 	PX_UNUSED(interactive);
 	const PxF32 timestep = 1.0f / 60.0f;
 
-	userDriveInput(gameState->button);
+	userDriveInput(gameState->WKey, gameState->AKey, gameState->SKey, gameState->DKey, gameState->SPACEKey);
 	//Update the control inputs for the vehicle.
 	if (gMimicKeyInputs)
 	{

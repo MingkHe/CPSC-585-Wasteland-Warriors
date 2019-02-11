@@ -20,11 +20,11 @@ public:
 	float oldMouseYpos;
 
 	//WASD
-	static bool W;
-	static bool A;
-	static bool S;
-	static bool D;
-	static bool SPACE;
+	static bool WKey;
+	static bool AKey;
+	static bool SKey;
+	static bool DKey;
+	static bool SPACEKey;
 
 	float cameraSensitivity = 0.01;
 

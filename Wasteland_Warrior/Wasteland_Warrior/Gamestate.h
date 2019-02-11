@@ -14,11 +14,11 @@ public:
 	std::string button;
 
 	//WASD
-	bool W;
-	bool A;
-	bool S;
-	bool D;
-	bool SPACE;
+	bool WKey;
+	bool AKey;
+	bool SKey;
+	bool DKey;
+	bool SPACEKey;
 
 	//Joysticks
 	float leftStickX;

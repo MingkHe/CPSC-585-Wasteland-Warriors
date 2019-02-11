@@ -11,11 +11,11 @@ float UserInput::MouseXpos;
 float UserInput::MouseYpos;
 
 //WASD
-bool UserInput::W;
-bool UserInput::A;
-bool UserInput::S;
-bool UserInput::D;
-bool UserInput::SPACE;
+bool UserInput::WKey;
+bool UserInput::AKey;
+bool UserInput::SKey;
+bool UserInput::DKey;
+bool UserInput::SPACEKey;
 
 UserInput::UserInput()
 {
@@ -47,35 +47,35 @@ void UserInput::Update(Gamestate* gameState)
 	}
 
 	//WASD
-	if (UserInput::W == true) {
-		gameState->W = true;
+	if (UserInput::WKey == true) {
+		gameState->WKey = true;
 	}
 	else {
-		gameState->W = false;
+		gameState->WKey = false;
 	}
-	if (UserInput::A == true) {
-		gameState->A = true;
+	if (UserInput::AKey == true) {
+		gameState->AKey = true;
 	}
 	else {
-		gameState->A = false;
+		gameState->AKey = false;
 	}
-	if (UserInput::S == true) {
-		gameState->S = true;
+	if (UserInput::SKey == true) {
+		gameState->SKey = true;
 	}
 	else{
-		gameState->S = false;
+		gameState->SKey = false;
 	}
-	if (UserInput::D == true) {
-		gameState->D = true;
-	}
-	else {
-		gameState->D = false;
-	}
-	if (UserInput::SPACE == true) {
-		gameState->SPACE = true;
+	if (UserInput::DKey == true) {
+		gameState->DKey = true;
 	}
 	else {
-		gameState->SPACE = false;
+		gameState->DKey = false;
+	}
+	if (UserInput::SPACEKey == true) {
+		gameState->SPACEKey = true;
+	}
+	else {
+		gameState->SPACEKey = false;
 	}
 
 
@@ -162,19 +162,19 @@ void UserInput::key(GLFWwindow* window, int key, int scancode, int action, int m
 		switch (key) {
 			//Car Controls
 		case GLFW_KEY_W:
-			UserInput::W = true;
+			UserInput::WKey = true;
 			break;
 		case GLFW_KEY_A:
-			UserInput::A = true;
+			UserInput::AKey = true;
 			break;
 		case GLFW_KEY_S:
-			UserInput::S = true;
+			UserInput::SKey = true;
 			break;
 		case GLFW_KEY_D:
-			UserInput::D = true;
+			UserInput::DKey = true;
 			break;
 		case GLFW_KEY_SPACE:
-			UserInput::SPACE = true;
+			UserInput::SPACEKey = true;
 			break;
 		}
 	}
@@ -185,19 +185,19 @@ void UserInput::key(GLFWwindow* window, int key, int scancode, int action, int m
 		switch (key) {
 			//Car Controls
 		case GLFW_KEY_W:
-			UserInput::W = false;
+			UserInput::WKey = false;
 			break;
 		case GLFW_KEY_A:
-			UserInput::A = false;
+			UserInput::AKey = false;
 			break;
 		case GLFW_KEY_S:
-			UserInput::S = false;
+			UserInput::SKey = false;
 			break;
 		case GLFW_KEY_D:
-			UserInput::D = false;
+			UserInput::DKey = false;
 			break;
 		case GLFW_KEY_SPACE:
-			UserInput::SPACE = false;
+			UserInput::SPACEKey = false;
 			break;
 		}
 	}

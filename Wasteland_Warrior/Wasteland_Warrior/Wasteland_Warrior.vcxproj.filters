@@ -11,7 +11,6 @@
     <ClCompile Include="Gamestate.cpp" />
     <ClCompile Include="UserInput.cpp" />
     <ClCompile Include="AI_Interaction.cpp" />
-    <ClCompile Include="Physics_Controller.cpp" />
     <ClCompile Include="Audio_Controller.cpp" />
     <ClCompile Include="EnemyUnit.cpp" />
     <ClCompile Include="Entity.cpp" />
@@ -21,6 +20,13 @@
     <ClCompile Include="Vehicle.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="MusicPool.cpp" />
+    <ClCompile Include="Physics_Controller.cpp" />
+    <ClCompile Include="..\include\snippetFiles\snippetvehiclecommon\SnippetVehicleTireFriction.cpp" />
+    <ClCompile Include="..\include\snippetFiles\snippetvehiclecommon\SnippetVehicle4WCreate.cpp" />
+    <ClCompile Include="..\include\snippetFiles\snippetvehiclecommon\SnippetVehicle4WRender.cpp" />
+    <ClCompile Include="..\include\snippetFiles\snippetvehiclecommon\SnippetVehicleCreate.cpp" />
+    <ClCompile Include="..\include\snippetFiles\snippetvehiclecommon\SnippetVehicleFilterShader.cpp" />
+    <ClCompile Include="..\include\snippetFiles\snippetvehiclecommon\SnippetVehicleSceneQuery.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Geometry.h" />
@@ -31,7 +37,6 @@
     <ClInclude Include="Gamestate.h" />
     <ClInclude Include="UserInput.h" />
     <ClInclude Include="AI_Interaction.h" />
-    <ClInclude Include="Physics_Controller.h" />
     <ClInclude Include="Audio_Controller.h" />
     <ClInclude Include="EnemyUnit.h" />
     <ClInclude Include="Entity.h" />
@@ -42,6 +47,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="MusicPool.h" />
     <ClInclude Include="SnippetPVD.h" />
+    <ClInclude Include="Physics_Controller.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Wasteland_Warrior.vcxproj.filters.txt" />
@@ -50,5 +56,18 @@
     <None Include="..\shaders\fragment.glsl" />
     <None Include="..\shaders\vertex.glsl" />
     <None Include="..\shaders\geometry.glsl" />
+    <None Include="libvorbisfile-3.dll" />
+    <None Include="libFLAC-8.dll" />
+    <None Include="libmodplug-1.dll" />
+    <None Include="libmpg123-0.dll" />
+    <None Include="libogg-0.dll" />
+    <None Include="libopus-0.dll" />
+    <None Include="libopusfile-0.dll" />
+    <None Include="libvorbis-0.dll" />
+    <None Include="SDL2.dll" />
+    <None Include="SDL2_mixer.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="bgm.mp3" />
   </ItemGroup>
 </Project>

@@ -28,7 +28,6 @@
 #include <SDL_mixer.h>
 #include <SDL.h>
 
-
 Program::Program() {
 	setupWindow();
 }

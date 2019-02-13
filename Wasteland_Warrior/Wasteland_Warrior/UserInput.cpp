@@ -10,6 +10,13 @@ std::queue<std::string> UserInput::inputBuffer;
 float UserInput::MouseXpos;
 float UserInput::MouseYpos;
 
+//WASD
+bool UserInput::WKey;
+bool UserInput::AKey;
+bool UserInput::SKey;
+bool UserInput::DKey;
+bool UserInput::SPACEKey;
+
 UserInput::UserInput()
 {
 }
@@ -39,6 +46,39 @@ void UserInput::Update(Gamestate* gameState)
 		gameState->button = "";
 	}
 
+	//WASD
+	if (UserInput::WKey == true) {
+		gameState->WKey = true;
+	}
+	else {
+		gameState->WKey = false;
+	}
+	if (UserInput::AKey == true) {
+		gameState->AKey = true;
+	}
+	else {
+		gameState->AKey = false;
+	}
+	if (UserInput::SKey == true) {
+		gameState->SKey = true;
+	}
+	else{
+		gameState->SKey = false;
+	}
+	if (UserInput::DKey == true) {
+		gameState->DKey = true;
+	}
+	else {
+		gameState->DKey = false;
+	}
+	if (UserInput::SPACEKey == true) {
+		gameState->SPACEKey = true;
+	}
+	else {
+		gameState->SPACEKey = false;
+	}
+
+
 	//Update state
 	gameState->UIMode = "InGame";
 
@@ -54,6 +94,7 @@ void UserInput::Update(Gamestate* gameState)
 		gameState->camera.rotateVertical((oldMouseYpos - UserInput::MouseYpos) * cameraSensitivity);
 		oldMouseYpos = UserInput::MouseYpos;
 	}
+
 }
 
 // Callback for key presses
@@ -65,23 +106,45 @@ void UserInput::key(GLFWwindow* window, int key, int scancode, int action, int m
 
 		switch (key) {
 
+			//Car Controls
+		case GLFW_KEY_W:
+			UserInput::WKey = true;
+			break;
+		case GLFW_KEY_A:
+			UserInput::AKey = true;
+			break;
+		case GLFW_KEY_S:
+			UserInput::SKey = true;
+			break;
+		case GLFW_KEY_D:
+			UserInput::DKey = true;
+			break;
+		case GLFW_KEY_SPACE:
+			UserInput::SPACEKey = true;
+			break;
+
 			//Escape
 		case GLFW_KEY_ESCAPE:
 			glfwSetWindowShouldClose(window, GL_TRUE);
 			break;
 
-			//WASD
-		case GLFW_KEY_W:
-			UserInput::inputBuffer.push("W");
+		case GLFW_KEY_T:
+			UserInput::inputBuffer.push("T");
 			break;
-		case GLFW_KEY_A:
-			UserInput::inputBuffer.push("A");
+		case GLFW_KEY_F:
+			UserInput::inputBuffer.push("F");
 			break;
-		case GLFW_KEY_S:
-			UserInput::inputBuffer.push("S");
+		case GLFW_KEY_G:
+			UserInput::inputBuffer.push("G");
 			break;
-		case GLFW_KEY_D:
-			UserInput::inputBuffer.push("D");
+		case GLFW_KEY_H:
+			UserInput::inputBuffer.push("H");
+			break;
+		case GLFW_KEY_M:
+			UserInput::inputBuffer.push("M");
+			break;
+		case GLFW_KEY_N:
+			UserInput::inputBuffer.push("N");
 			break;
 
 			//Arrows
@@ -99,9 +162,6 @@ void UserInput::key(GLFWwindow* window, int key, int scancode, int action, int m
 			break;
 
 			//Controls
-		case GLFW_KEY_SPACE:
-			UserInput::inputBuffer.push("SPACE");
-			break;
 		case GLFW_KEY_ENTER:
 			UserInput::inputBuffer.push("ENTER");
 			break;
@@ -114,11 +174,51 @@ void UserInput::key(GLFWwindow* window, int key, int scancode, int action, int m
 		}
 		break;
 
-	//case GLFW_REPEAT:
-		//break;
+	case GLFW_REPEAT:
+	{
+		//switch (key) {
+		//	//Car Controls
+		//case GLFW_KEY_W:
+		//	UserInput::WKey = true;
+		//	break;
+		//case GLFW_KEY_A:
+		//	UserInput::AKey = true;
+		//	break;
+		//case GLFW_KEY_S:
+		//	UserInput::SKey = true;
+		//	break;
+		//case GLFW_KEY_D:
+		//	UserInput::DKey = true;
+		//	break;
+		//case GLFW_KEY_SPACE:
+		//	UserInput::SPACEKey = true;
+		//	break;
+		//}
+	}
+		break;
 
-	//case GLFW_RELEASE:
-		//break;
+	case GLFW_RELEASE:
+	{
+		switch (key) {
+			//Car Controls
+		case GLFW_KEY_W:
+			UserInput::WKey = false;
+			break;
+		case GLFW_KEY_A:
+			UserInput::AKey = false;
+			break;
+		case GLFW_KEY_S:
+			UserInput::SKey = false;
+			break;
+		case GLFW_KEY_D:
+			UserInput::DKey = false;
+			break;
+		case GLFW_KEY_SPACE:
+			UserInput::SPACEKey = false;
+			break;
+		}
+	}
+		break;
 	}
 }
 

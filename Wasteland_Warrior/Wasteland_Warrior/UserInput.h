@@ -19,6 +19,13 @@ public:
 	float oldMouseXpos;
 	float oldMouseYpos;
 
+	//WASD
+	static bool WKey;
+	static bool AKey;
+	static bool SKey;
+	static bool DKey;
+	static bool SPACEKey;
+
 	float cameraSensitivity = 0.01;
 
 	void Update(Gamestate* gameState);

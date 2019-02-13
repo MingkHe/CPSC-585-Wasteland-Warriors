@@ -31,18 +31,22 @@ int Audio_Controller::playSound(Gamestate* gameState)
 
 	if (input == "W")
 	{ 
+		haltMusicBool = false;
 		playMusic();
 	}
-	else if (input == "A")
+	else if ((input == "N") && (pauseMusicBool == false))
 	{
+		pauseMusicBool = true;
 		pauseMusic();
 	}
-	else if (input == "S")
+	else if ((input == "N") && (pauseMusicBool))
 	{
+		pauseMusicBool = false;
 		resumeMusic();
 	}
-	else if (input == "D") 
+	else if ((input == "M") && (haltMusicBool == false))
 	{
+		haltMusicBool = true;
 		haltMusic();
 	}
 	else if (input == "LSHIFT")

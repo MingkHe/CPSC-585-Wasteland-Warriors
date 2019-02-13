@@ -24,5 +24,10 @@ Mix_Music* MusicPool::getMusic(std::string fileName)
 
 		return myMusic[path];
 	}
+
 	return 0;
+}
+
+int MusicPool::getPoolSize() {
+	return myMusic.size();
 }

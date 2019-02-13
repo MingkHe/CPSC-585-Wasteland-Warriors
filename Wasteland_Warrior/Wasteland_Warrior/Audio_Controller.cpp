@@ -29,24 +29,18 @@ int Audio_Controller::playSound(Gamestate* gameState)
 
 	printf("Pool Size: %d\n", myMusics->getPoolSize());
 
-	if (input == "W")
+	if (input == "N")
 	{ 
-		haltMusicBool = false;
-		playMusic();
+		if (!Mix_PlayingMusic())
+			playMusic();
+		else if (Mix_PausedMusic() != 0)
+			resumeMusic();
+		else
+			pauseMusic();
 	}
-	else if ((input == "N") && (pauseMusicBool == false))
+
+	else if (input == "M")
 	{
-		pauseMusicBool = true;
-		pauseMusic();
-	}
-	else if ((input == "N") && (pauseMusicBool))
-	{
-		pauseMusicBool = false;
-		resumeMusic();
-	}
-	else if ((input == "M") && (haltMusicBool == false))
-	{
-		haltMusicBool = true;
 		haltMusic();
 	}
 	else if (input == "LSHIFT")

@@ -10,9 +10,6 @@ private:
 	MusicPool* myMusics;
 	std::string currentMusic;
 
-	bool pauseMusicBool;
-	bool haltMusicBool;
-
 public:
 	Audio_Controller();
 	~Audio_Controller();

@@ -12,4 +12,5 @@ public:
 	~MusicPool();
 
 	Mix_Music* getMusic(std::string fileName);
+	int getPoolSize();
 };

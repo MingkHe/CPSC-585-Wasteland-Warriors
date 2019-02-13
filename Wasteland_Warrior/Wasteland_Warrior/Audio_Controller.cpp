@@ -1,7 +1,5 @@
 #include "Audio_Controller.h"
 
-
-
 Audio_Controller::Audio_Controller()
 {
 	//testing audio
@@ -11,6 +9,7 @@ Audio_Controller::Audio_Controller()
 		printf("Mixer initialization error: %s\n",Mix_GetError());
 
 	myMusics = new MusicPool();
+	currentMusic = "bgm.mp3";
 }
 
 
@@ -25,6 +24,10 @@ int Audio_Controller::playSound(Gamestate* gameState)
 	std::string input = gameState->button;
 
 	printf("Button: %s\n",input.c_str());
+
+	printf("Music: %s\n",currentMusic.c_str());
+
+	printf("Pool Size: %d\n", myMusics->getPoolSize());
 
 	if (input == "W")
 	{ 
@@ -42,13 +45,17 @@ int Audio_Controller::playSound(Gamestate* gameState)
 	{
 		haltMusic();
 	}
+	else if (input == "LSHIFT")
+	{
+		switchMusic();
+	}
 	return 0;
 }
 
 void Audio_Controller::playMusic()
 {
 	if (!Mix_PlayingMusic())
-		Mix_PlayMusic(myMusics->getMusic("bgm.mp3"), -1);
+		Mix_PlayMusic(myMusics->getMusic(currentMusic), -1);
 }
 
 void Audio_Controller::pauseMusic()
@@ -66,4 +73,15 @@ void Audio_Controller::resumeMusic()
 void Audio_Controller::haltMusic()
 {
 	Mix_HaltMusic();
+	//Mix_RewindMusic(); Rewind music to beginning
+}
+
+void Audio_Controller::switchMusic()
+{
+	if (currentMusic == "bgm.mp3")
+		currentMusic = "bgm2.mp3";
+	else
+		currentMusic = "bgm.mp3";
+
+	Mix_PlayMusic(myMusics->getMusic(currentMusic), -1);
 }

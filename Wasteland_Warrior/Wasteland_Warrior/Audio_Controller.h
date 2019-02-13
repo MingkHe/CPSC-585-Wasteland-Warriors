@@ -8,6 +8,7 @@ class Audio_Controller
 private:
 	Mix_Music* bgm;
 	MusicPool* myMusics;
+	std::string currentMusic;
 
 public:
 	Audio_Controller();
@@ -19,4 +20,5 @@ public:
 	void pauseMusic();
 	void resumeMusic();
 	void haltMusic();
+	void switchMusic();
 };

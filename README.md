@@ -28,7 +28,8 @@ be compiled using only the x86 Debug mode.
         Mouse to move camera
 
     Music:
-        M to start/end music
-        N to pause/resume music
+        N to start/pause/resume music
+        M to stop music
+        Left Shift to switch music
 
     ESCAPE to quit game

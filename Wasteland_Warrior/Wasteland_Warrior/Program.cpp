@@ -19,6 +19,7 @@
 #include "AI_Interaction.h"
 #include "Physics_Controller.h"
 #include "Audio_Controller.h"
+#include "UI_Controller.h"
 #include "Gamestate.h"
 #include "Entity.h"
 #include "Vehicle.h"
@@ -27,6 +28,11 @@
 
 #include <SDL_mixer.h>
 #include <SDL.h>
+
+/*****--- Old camera code. Delete this and handle camera in rendering. ---*****/
+float oldMouseXpos;
+float oldMouseYpos;
+/**********/
 
 Program::Program() {
 	setupWindow();
@@ -44,7 +50,8 @@ void Program::start() {
 	gameState->time = 0.0;
 	gameState->timeStep = 1.0 / 60.0; //60 fps
 	gameState->button = "";
-	gameState->UIMode = "StartMenu";
+	//gameState->UIMode = "Start";
+	gameState->UIMode = "Game";
 
 	SDL_Init(SDL_INIT_AUDIO);
 	
@@ -52,19 +59,21 @@ void Program::start() {
 	AI_Interaction aiInteraction = AI_Interaction();
 	Physics_Controller physicsCL = Physics_Controller(gameState);
 	Audio_Controller audioCL = Audio_Controller();
+	UI_Controller UICL = UI_Controller();
 	
 	renderingEngine = new RenderingEngine(gameState);
 	scene = new Scene(renderingEngine);
 	gameState->scene = scene;
 
-	//Create Entities
-	PlayerUnit mainCar = PlayerUnit();
-	EnemyUnit Enemy1 = EnemyUnit();
-	EnemyUnit Enemy2 = EnemyUnit();
+	//Create Entities Example
 
-	gameState->Entities.push_back(mainCar);
-	gameState->Entities.push_back(Enemy1);
-	gameState->Entities.push_back(Enemy2);
+	//PlayerUnit mainCar = PlayerUnit();
+	//EnemyUnit Enemy1 = EnemyUnit();
+	//EnemyUnit Enemy2 = EnemyUnit();
+
+	//gameState->Entities.push_back(mainCar);
+	//gameState->Entities.push_back(Enemy1);
+	//gameState->Entities.push_back(Enemy2);
 
 	//Main render loop
 	while (!glfwWindowShouldClose(window)) {
@@ -82,19 +91,39 @@ void Program::start() {
 		usrInput.Update(gameState);
 
 		//AI Interaction System
-		//aiInteraction.Update(gameState);
+		if (gameState->UIMode == "Game") { 
+			aiInteraction.Update(gameState);
+		}
 
 		//Physics Engine
-		physicsCL.Update();
-		//std::cout << "Box position:  X:" << gameState->cubeLocation.x << "  Y:" << gameState->cubeLocation.y << "  Z:" << gameState->cubeLocation.z << std::endl; //Test statement, delete it if you want
-
+		if (gameState->UIMode == "Game") {
+			physicsCL.Update();
+			//std::cout << "Box position:  X:" << gameState->cubeLocation.x << "  Y:" << gameState->cubeLocation.y << "  Z:" << gameState->cubeLocation.z << std::endl; //Test statement, delete it if you want
+		}
 
 		//Audio Engine
 		audioCL.playSound(gameState);
 		
+		//UI System
+		UICL.Update(gameState);
+
 		//Render Engine
-		scene->displayScene();
-		glfwSwapBuffers(window);
+		if (gameState->UIMode == "Game") {
+			scene->displayScene();
+			glfwSwapBuffers(window);
+		}
+
+		/*****--- Old camera code. Delete this and handle camera in rendering. ---*****/
+		if (UserInput::MouseXpos != oldMouseXpos) {
+			gameState->camera.rotateHorizontal((oldMouseXpos - UserInput::MouseXpos) * 0.01);
+			oldMouseXpos = UserInput::MouseXpos;
+		}
+		if (UserInput::MouseYpos != oldMouseYpos) {
+			gameState->camera.rotateVertical((oldMouseYpos - UserInput::MouseYpos) * 0.01);
+			oldMouseYpos = UserInput::MouseYpos;
+		}
+		/**********/
+
 		//glfwWaitEvents();
 		glfwPollEvents();
 

@@ -1,6 +1,5 @@
 #include "AI_Interaction.h"
 
-
 AI_Interaction::AI_Interaction()
 {
 }

@@ -19,6 +19,7 @@
 #include "AI_Interaction.h"
 #include "Physics_Controller.h"
 #include "Audio_Controller.h"
+#include "UI_Controller.h"
 #include "Gamestate.h"
 #include "Entity.h"
 #include "Vehicle.h"
@@ -49,8 +50,8 @@ void Program::start() {
 	gameState->time = 0.0;
 	gameState->timeStep = 1.0 / 60.0; //60 fps
 	gameState->button = "";
-	//gameState->UIMode = "StartMenu";
-	gameState->UIMode = "InGame";
+	//gameState->UIMode = "Start";
+	gameState->UIMode = "Game";
 
 	SDL_Init(SDL_INIT_AUDIO);
 	
@@ -58,6 +59,7 @@ void Program::start() {
 	AI_Interaction aiInteraction = AI_Interaction();
 	Physics_Controller physicsCL = Physics_Controller(gameState);
 	Audio_Controller audioCL = Audio_Controller();
+	UI_Controller UICL = UI_Controller();
 	
 	renderingEngine = new RenderingEngine(gameState);
 	scene = new Scene(renderingEngine);
@@ -89,12 +91,12 @@ void Program::start() {
 		usrInput.Update(gameState);
 
 		//AI Interaction System
-		if (gameState->UIMode == "InGame") { 
+		if (gameState->UIMode == "Game") { 
 			aiInteraction.Update(gameState);
 		}
 
 		//Physics Engine
-		if (gameState->UIMode == "InGame") {
+		if (gameState->UIMode == "Game") {
 			physicsCL.Update();
 			//std::cout << "Box position:  X:" << gameState->cubeLocation.x << "  Y:" << gameState->cubeLocation.y << "  Z:" << gameState->cubeLocation.z << std::endl; //Test statement, delete it if you want
 		}
@@ -102,8 +104,11 @@ void Program::start() {
 		//Audio Engine
 		audioCL.playSound(gameState);
 		
+		//UI System
+		UICL.Update(gameState);
+
 		//Render Engine
-		if (gameState->UIMode == "InGame") {
+		if (gameState->UIMode == "Game") {
 			scene->displayScene();
 			glfwSwapBuffers(window);
 		}

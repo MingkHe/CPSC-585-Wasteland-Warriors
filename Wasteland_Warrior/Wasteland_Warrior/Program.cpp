@@ -28,6 +28,11 @@
 #include <SDL_mixer.h>
 #include <SDL.h>
 
+/*****--- Old camera code. Delete this and handle camera in rendering. ---*****/
+float oldMouseXpos;
+float oldMouseYpos;
+/**********/
+
 Program::Program() {
 	setupWindow();
 }
@@ -44,7 +49,8 @@ void Program::start() {
 	gameState->time = 0.0;
 	gameState->timeStep = 1.0 / 60.0; //60 fps
 	gameState->button = "";
-	gameState->UIMode = "StartMenu";
+	//gameState->UIMode = "StartMenu";
+	gameState->UIMode = "InGame";
 
 	SDL_Init(SDL_INIT_AUDIO);
 	
@@ -57,14 +63,15 @@ void Program::start() {
 	scene = new Scene(renderingEngine);
 	gameState->scene = scene;
 
-	//Create Entities
-	PlayerUnit mainCar = PlayerUnit();
-	EnemyUnit Enemy1 = EnemyUnit();
-	EnemyUnit Enemy2 = EnemyUnit();
+	//Create Entities Example
 
-	gameState->Entities.push_back(mainCar);
-	gameState->Entities.push_back(Enemy1);
-	gameState->Entities.push_back(Enemy2);
+	//PlayerUnit mainCar = PlayerUnit();
+	//EnemyUnit Enemy1 = EnemyUnit();
+	//EnemyUnit Enemy2 = EnemyUnit();
+
+	//gameState->Entities.push_back(mainCar);
+	//gameState->Entities.push_back(Enemy1);
+	//gameState->Entities.push_back(Enemy2);
 
 	//Main render loop
 	while (!glfwWindowShouldClose(window)) {
@@ -82,19 +89,36 @@ void Program::start() {
 		usrInput.Update(gameState);
 
 		//AI Interaction System
-		//aiInteraction.Update(gameState);
+		if (gameState->UIMode == "InGame") { 
+			aiInteraction.Update(gameState);
+		}
 
 		//Physics Engine
-		physicsCL.Update();
-		//std::cout << "Box position:  X:" << gameState->cubeLocation.x << "  Y:" << gameState->cubeLocation.y << "  Z:" << gameState->cubeLocation.z << std::endl; //Test statement, delete it if you want
-
+		if (gameState->UIMode == "InGame") {
+			physicsCL.Update();
+			//std::cout << "Box position:  X:" << gameState->cubeLocation.x << "  Y:" << gameState->cubeLocation.y << "  Z:" << gameState->cubeLocation.z << std::endl; //Test statement, delete it if you want
+		}
 
 		//Audio Engine
 		audioCL.playSound(gameState);
 		
 		//Render Engine
-		scene->displayScene();
-		glfwSwapBuffers(window);
+		if (gameState->UIMode == "InGame") {
+			scene->displayScene();
+			glfwSwapBuffers(window);
+		}
+
+		/*****--- Old camera code. Delete this and handle camera in rendering. ---*****/
+		if (UserInput::MouseXpos != oldMouseXpos) {
+			gameState->camera.rotateHorizontal((oldMouseXpos - UserInput::MouseXpos) * 0.01);
+			oldMouseXpos = UserInput::MouseXpos;
+		}
+		if (UserInput::MouseYpos != oldMouseYpos) {
+			gameState->camera.rotateVertical((oldMouseYpos - UserInput::MouseYpos) * 0.01);
+			oldMouseYpos = UserInput::MouseYpos;
+		}
+		/**********/
+
 		//glfwWaitEvents();
 		glfwPollEvents();
 

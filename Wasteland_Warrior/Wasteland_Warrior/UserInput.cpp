@@ -46,7 +46,7 @@ void UserInput::Update(Gamestate* gameState)
 		gameState->button = "";
 	}
 
-	//WASD
+	//WASD car control
 	if (UserInput::WKey == true) {
 		gameState->WKey = true;
 	}
@@ -78,23 +78,21 @@ void UserInput::Update(Gamestate* gameState)
 		gameState->SPACEKey = false;
 	}
 
-
 	//Update state
-	gameState->UIMode = "InGame";
+	//gameState->UIMode = "InGame";
 
 	//Update camera
-	gameState->camera.rotateHorizontal(gameState->leftStickX * cameraSensitivity);
-	gameState->camera.rotateVertical(gameState->leftStickY * cameraSensitivity);
+	//gameState->camera.rotateHorizontal(gameState->leftStickX * cameraSensitivity);
+	//gameState->camera.rotateVertical(gameState->leftStickY * cameraSensitivity);
 
-	if (UserInput::MouseXpos != oldMouseXpos) {
-		gameState->camera.rotateHorizontal((oldMouseXpos - UserInput::MouseXpos) * cameraSensitivity);
-		oldMouseXpos = UserInput::MouseXpos;
-	}
-	if (UserInput::MouseYpos != oldMouseYpos) {
-		gameState->camera.rotateVertical((oldMouseYpos - UserInput::MouseYpos) * cameraSensitivity);
-		oldMouseYpos = UserInput::MouseYpos;
-	}
-
+	//if (UserInput::MouseXpos != oldMouseXpos) {
+		//gameState->camera.rotateHorizontal((oldMouseXpos - UserInput::MouseXpos) * cameraSensitivity);
+		//oldMouseXpos = UserInput::MouseXpos;
+	//}
+	//if (UserInput::MouseYpos != oldMouseYpos) {
+		//gameState->camera.rotateVertical((oldMouseYpos - UserInput::MouseYpos) * cameraSensitivity);
+		//oldMouseYpos = UserInput::MouseYpos;
+	//}
 }
 
 // Callback for key presses
@@ -172,29 +170,6 @@ void UserInput::key(GLFWwindow* window, int key, int scancode, int action, int m
 			UserInput::inputBuffer.push("RSHIFT");
 			break;
 		}
-		break;
-
-	case GLFW_REPEAT:
-	{
-		//switch (key) {
-		//	//Car Controls
-		//case GLFW_KEY_W:
-		//	UserInput::WKey = true;
-		//	break;
-		//case GLFW_KEY_A:
-		//	UserInput::AKey = true;
-		//	break;
-		//case GLFW_KEY_S:
-		//	UserInput::SKey = true;
-		//	break;
-		//case GLFW_KEY_D:
-		//	UserInput::DKey = true;
-		//	break;
-		//case GLFW_KEY_SPACE:
-		//	UserInput::SPACEKey = true;
-		//	break;
-		//}
-	}
 		break;
 
 	case GLFW_RELEASE:

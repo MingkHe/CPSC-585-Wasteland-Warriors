@@ -28,13 +28,12 @@ void main(void) {
 	vec3 normLightVec = normalize(lightVec);
 	vec3 reflection = 2*dot(normLightVec, normal) * normal - normLightVec;
 
-	float shading = max(dot(normal, normLightVec), 0)//*5.f/pow(length(lightVec), 2.f)			//diffuse
-	+ pow(max(0.f, dot(reflection, normalize(cameraVec))), 10)*5.f//pow(length(lightVec), 2.f)	//specular
-	+ .1f;																						//ambient
+	float shading = max(abs(dot(normalize(normal), normLightVec)), 0)//*5.f/pow(length(lightVec), 2.f)			//diffuse
+	//+ pow(max(0.f, dot(reflection, normalize(cameraVec))), 10)*5.f//pow(length(lightVec), 2.f)	//specular
+	+ .6f;																						//ambient
 	if(shade == 0) {
 		FragmentColour *= shading;
-	}
-	if(shade == 1) {
+	} else if(shade == 1) {
 		if(shading > .95f) {
 			FragmentColour *= 1.f;
 		} else if(shading > .6f) {
@@ -45,4 +44,7 @@ void main(void) {
 			FragmentColour *= .5f;
 		}
 	}
+	/*if(normal.x == 0.f && normal.y == 1.f && normal.z == 0.f) {
+		FragmentColour = vec4(0, 1, 0, 0);
+	}*/
 }

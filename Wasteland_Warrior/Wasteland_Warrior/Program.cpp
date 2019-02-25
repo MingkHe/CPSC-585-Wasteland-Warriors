@@ -16,6 +16,7 @@
 #include "RenderingEngine.h"
 #include "Scene.h"
 #include "UserInput.h"
+#include "Logic.h"
 #include "AI_Interaction.h"
 #include "Physics_Controller.h"
 #include "Audio_Controller.h"
@@ -56,6 +57,7 @@ void Program::start() {
 	SDL_Init(SDL_INIT_AUDIO);
 	
 	UserInput usrInput = UserInput();
+	Logic logic = Logic();
 	AI_Interaction aiInteraction = AI_Interaction();
 	Physics_Controller physicsCL = Physics_Controller(gameState);
 	Audio_Controller audioCL = Audio_Controller();
@@ -89,6 +91,8 @@ void Program::start() {
 
 		//User Input
 		usrInput.Update(gameState);
+
+		logic.Update(gameState);
 
 		//AI Interaction System
 		if (gameState->UIMode == "Game") { 

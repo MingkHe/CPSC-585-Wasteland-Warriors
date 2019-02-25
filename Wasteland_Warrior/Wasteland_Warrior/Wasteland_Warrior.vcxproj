@@ -157,6 +157,7 @@
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Gamestate.cpp" />
     <ClCompile Include="Geometry.cpp" />
+    <ClCompile Include="Logic.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MapObstacle.cpp" />
     <ClCompile Include="MapTerrain.cpp" />
@@ -168,6 +169,7 @@
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="ShaderTools.cpp" />
     <ClCompile Include="AI_Interaction.cpp" />
+    <ClCompile Include="UI_Controller.cpp" />
     <ClCompile Include="UserInput.cpp" />
     <ClCompile Include="Vehicle.cpp" />
   </ItemGroup>
@@ -179,6 +181,7 @@
     <ClInclude Include="Gamestate.h" />
     <ClInclude Include="Geometry.h" />
     <ClInclude Include="AI_Interaction.h" />
+    <ClInclude Include="Logic.h" />
     <ClInclude Include="MapObstacle.h" />
     <ClInclude Include="MapTerrain.h" />
     <ClInclude Include="MusicPool.h" />
@@ -189,6 +192,7 @@
     <ClInclude Include="Scene.h" />
     <ClInclude Include="ShaderTools.h" />
     <ClInclude Include="SnippetPVD.h" />
+    <ClInclude Include="UI_Controller.h" />
     <ClInclude Include="UserInput.h" />
     <ClInclude Include="Vehicle.h" />
   </ItemGroup>

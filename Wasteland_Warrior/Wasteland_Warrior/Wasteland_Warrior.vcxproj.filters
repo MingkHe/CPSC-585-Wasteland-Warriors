@@ -27,6 +27,8 @@
     <ClCompile Include="..\include\snippetFiles\snippetvehiclecommon\SnippetVehicleCreate.cpp" />
     <ClCompile Include="..\include\snippetFiles\snippetvehiclecommon\SnippetVehicleFilterShader.cpp" />
     <ClCompile Include="..\include\snippetFiles\snippetvehiclecommon\SnippetVehicleSceneQuery.cpp" />
+    <ClCompile Include="Logic.cpp" />
+    <ClCompile Include="UI_Controller.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Geometry.h" />
@@ -48,6 +50,8 @@
     <ClInclude Include="MusicPool.h" />
     <ClInclude Include="SnippetPVD.h" />
     <ClInclude Include="Physics_Controller.h" />
+    <ClInclude Include="Logic.h" />
+    <ClInclude Include="UI_Controller.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Wasteland_Warrior.vcxproj.filters.txt" />

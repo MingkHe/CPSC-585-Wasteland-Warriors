@@ -1,3 +1,6 @@
+//#ifndef CAMERA_H
+//#define CAMERA_H
+#pragma once
 #include <glm/glm.hpp>
 //#include "Gamestate.h"
 
@@ -8,7 +11,6 @@ public:
 	glm::vec3 dir, right, up, pos;
 	float radius;
 
-	//Camera(Gamestate* newGamestate) :dir(glm::vec3(0, 0, -1)), right(glm::vec3(1, 0, 0)), up(glm::vec3(0, 1, 0)), pos(glm::vec3(0)), radius(1.f){}
 	Camera() :dir(glm::vec3(0, 0, -1)), right(glm::vec3(1, 0, 0)), up(glm::vec3(0, 1, 0)), pos(glm::vec3(0)), radius(1.f) {}
 
 
@@ -18,3 +20,5 @@ public:
 
 	Gamestate* gameState;
 };
+
+//#endif

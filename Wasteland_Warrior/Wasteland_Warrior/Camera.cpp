@@ -1,6 +1,6 @@
 #include "Camera.h"
 #include <glm/gtc/matrix_transform.hpp>
-
+#include "Gamestate.h"
 
 using namespace std;
 using namespace glm;
@@ -13,8 +13,9 @@ Camera::Camera(Gamestate* newGamestate) {
 }*/
 
 glm::mat4 Camera::viewMatrix() const {
-	//glm::vec3 at = gameState->Entities[0].position;
-	glm::vec3 at = { 0.0f, 0.0f, 20.0f };
+	//int test = gameState->gstest;
+	glm::vec3 at = gameState->Entities.front().position;
+	//glm::vec3 at = { 0.0f, 0.0f, 20.0f };
 	glm::mat4 viewMatrix = glm::lookAt(pos, at, up);
 	return viewMatrix;
 }

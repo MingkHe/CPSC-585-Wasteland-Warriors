@@ -46,7 +46,11 @@ Program::~Program() {
 void Program::start() {
 	//Initialization
 	Gamestate* gameState = new Gamestate();
-	gameState->time = std::chrono::system_clock::now();
+
+	auto currentTime = std::chrono::system_clock::now();
+	gameState->time = currentTime;
+	std::chrono::duration<double> elapsed_seconds = currentTime - currentTime;
+
 	gameState->timeStep = 1.0 / 60.0; //60 fps
 	gameState->button = "";
 	//gameState->UIMode = "Start";
@@ -74,6 +78,7 @@ void Program::start() {
 	//gameState->Entities.push_back(mainCar);
 	//gameState->Entities.push_back(Enemy1);
 	//gameState->Entities.push_back(Enemy2);
+
 
 	//Main render loop
 	while (!glfwWindowShouldClose(window)) {
@@ -109,10 +114,12 @@ void Program::start() {
 		glfwPollEvents();
 
 		//Fixed Timestep
-		while (std::chrono::system_clock::now() < time + gameState->timeStep) {
-			//Wait
+		while (elapsed_seconds.count() < gameState->timeStep){
+			currentTime = std::chrono::system_clock::now();
+			std::chrono::duration<double> elapsed_seconds = currentTime - gameState->time;
 		}
-		gameState->time = std::chrono::system_clock::now();
+
+		gameState->time = currentTime;
 	}
 
 }

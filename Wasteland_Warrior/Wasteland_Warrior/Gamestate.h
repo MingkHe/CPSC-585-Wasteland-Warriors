@@ -7,6 +7,8 @@
 #include "Entity.h"
 #include "Camera.h"
 #include "Scene.h"
+#include <chrono>
+
 #pragma once
 
 
@@ -37,7 +39,7 @@ public:
 	float rightTrigger;
 
 	//Time
-	std::chrono::time_point time;
+	std::chrono::time_point<std::chrono::system_clock> time;
 	double timeStep;
 
 	int gstest = 5;

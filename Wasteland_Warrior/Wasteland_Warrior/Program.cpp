@@ -113,10 +113,12 @@ void Program::start() {
 		//glfwWaitEvents();
 		glfwPollEvents();
 
+		std::cout << "Time check" << std::endl; //Test statement, delete it if you want
+
 		//Fixed Timestep
 		while (elapsed_seconds.count() < gameState->timeStep){
 			currentTime = std::chrono::system_clock::now();
-			std::chrono::duration<double> elapsed_seconds = currentTime - gameState->time;
+			elapsed_seconds = currentTime - gameState->time;
 		}
 
 		gameState->time = currentTime;

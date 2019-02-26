@@ -11,6 +11,7 @@
 //**Must include glad and GLFW in this order or it breaks**
 #include "glad/glad.h"
 #include <GLFW/glfw3.h>
+#include <chrono>
 
 #include "Program.h"
 #include "RenderingEngine.h"
@@ -30,6 +31,7 @@
 #include <SDL_mixer.h>
 #include <SDL.h>
 
+//https://stackoverflow.com/questions/997946/how-to-get-current-time-and-date-in-c
 
 Program::Program() {
 	setupWindow();
@@ -44,7 +46,11 @@ Program::~Program() {
 void Program::start() {
 	//Initialization
 	Gamestate* gameState = new Gamestate();
-	gameState->time = 0.0;
+
+	auto currentTime = std::chrono::system_clock::now();
+	gameState->time = currentTime;
+	std::chrono::duration<double> elapsed_seconds = currentTime - currentTime;
+
 	gameState->timeStep = 1.0 / 60.0; //60 fps
 	gameState->button = "";
 	//gameState->UIMode = "Start";
@@ -72,6 +78,7 @@ void Program::start() {
 	//gameState->Entities.push_back(mainCar);
 	//gameState->Entities.push_back(Enemy1);
 	//gameState->Entities.push_back(Enemy2);
+
 
 	//Main render loop
 	while (!glfwWindowShouldClose(window)) {
@@ -106,8 +113,15 @@ void Program::start() {
 		//glfwWaitEvents();
 		glfwPollEvents();
 
+		std::cout << "Time check" << std::endl; //Test statement, delete it if you want
+
 		//Fixed Timestep
-		gameState->time += gameState->timeStep;
+		while (elapsed_seconds.count() < gameState->timeStep){
+			currentTime = std::chrono::system_clock::now();
+			elapsed_seconds = currentTime - gameState->time;
+		}
+
+		gameState->time = currentTime;
 	}
 
 }

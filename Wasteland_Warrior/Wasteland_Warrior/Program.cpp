@@ -11,6 +11,7 @@
 //**Must include glad and GLFW in this order or it breaks**
 #include "glad/glad.h"
 #include <GLFW/glfw3.h>
+#include <chrono>
 
 #include "Program.h"
 #include "RenderingEngine.h"
@@ -30,6 +31,7 @@
 #include <SDL_mixer.h>
 #include <SDL.h>
 
+//https://stackoverflow.com/questions/997946/how-to-get-current-time-and-date-in-c
 
 Program::Program() {
 	setupWindow();
@@ -44,7 +46,7 @@ Program::~Program() {
 void Program::start() {
 	//Initialization
 	Gamestate* gameState = new Gamestate();
-	gameState->time = 0.0;
+	gameState->time = std::chrono::system_clock::now();
 	gameState->timeStep = 1.0 / 60.0; //60 fps
 	gameState->button = "";
 	//gameState->UIMode = "Start";
@@ -107,7 +109,10 @@ void Program::start() {
 		glfwPollEvents();
 
 		//Fixed Timestep
-		gameState->time += gameState->timeStep;
+		while (std::chrono::system_clock::now() < time + gameState->timeStep) {
+			//Wait
+		}
+		gameState->time = std::chrono::system_clock::now();
 	}
 
 }

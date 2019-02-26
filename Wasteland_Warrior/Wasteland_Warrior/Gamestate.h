@@ -37,7 +37,7 @@ public:
 	float rightTrigger;
 
 	//Time
-	double time;
+	std::chrono::time_point time;
 	double timeStep;
 
 	int gstest = 5;

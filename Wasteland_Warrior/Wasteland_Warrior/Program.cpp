@@ -66,8 +66,11 @@ void Program::start() {
 	UI_Controller UICL = UI_Controller();
 	
 	renderingEngine = new RenderingEngine(gameState);
-	scene = new Scene(renderingEngine);
+	scene = new Scene(renderingEngine, gameState);
 	gameState->scene = scene;
+
+	physicsCL.setPosition(0, glm::vec3{ 0.0f, 5.0f, 30.0f });
+	physicsCL.setPosition(0, glm::vec3{ 0.0f, 5.0f, 20.0f });
 
 	//Main render loop
 	while (!glfwWindowShouldClose(window)) {
@@ -102,14 +105,17 @@ void Program::start() {
 		//glfwWaitEvents();
 		glfwPollEvents();
 
-		std::cout << "Time check" << std::endl; //Test statement, delete it if you want
-
 		//Fixed Timestep
 		while (elapsed_seconds.count() < gameState->timeStep){
 			currentTime = std::chrono::system_clock::now();
 			elapsed_seconds = currentTime - gameState->time;
-		}
 
+			//std::cout << "Time elapsed: " << elapsed_seconds.count() << std::endl; //Test statement, delete it if you want
+			if (elapsed_seconds.count() >= (gameState->timeStep * 2)) {
+				std::cout << "Frame lost" << std::endl; //Test statement, delete it if you want
+			}
+		}
+		elapsed_seconds = currentTime-currentTime;
 		gameState->time = currentTime;
 	}
 

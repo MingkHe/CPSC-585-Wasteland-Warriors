@@ -6,6 +6,7 @@
 */
 
 #include "Scene.h"
+#include "Gamestate.h"
 
 #include "RenderingEngine.h"
 
@@ -17,7 +18,9 @@
 #include "glad/glad.h"
 #include <GLFW/glfw3.h>
 
-Scene::Scene(RenderingEngine* renderer) : renderer(renderer) {
+Scene::Scene(RenderingEngine* renderer, Gamestate* newGamestate) : renderer(renderer) {
+	gameState = newGamestate;
+
 	Geometry ground;
 	ground.verts.push_back(glm::vec3(-250.f, 0.0f, -250.f));
 	ground.verts.push_back(glm::vec3(250.f, 0.0f, -250.f));
@@ -27,12 +30,14 @@ Scene::Scene(RenderingEngine* renderer) : renderer(renderer) {
 		ground.colors.push_back(glm::vec3(0.5f, 0.5f, 0.5f));
 		ground.normals.push_back(glm::vec3(0.f, 1.f, 0.f));
 	}
+
 	ground.transform = glm::mat4(
-		1.f, 0.f, 0.f, 0.f,
-		0.f, 1.f, 0.f, 0.f,
-		0.f, 0.f, 1.f, 0.f,
-		0.f, 1.f, 0.f, 1.f
+			1.f, 0.f, 0.f, 0.f,
+			0.f, 1.f, 0.f, 0.f,
+			0.f, 0.f, 1.f, 0.f,
+			0.f, 0.f, 0.f, 1.f
 	);
+
 	ground.drawMode = GL_TRIANGLE_STRIP;
 	RenderingEngine::assignBuffers(ground);
 	RenderingEngine::setBufferData(ground);
@@ -42,6 +47,9 @@ Scene::Scene(RenderingEngine* renderer) : renderer(renderer) {
 	generateRectPrism(5.0, 3.0, 2.0);
 }
 
+void Scene::setGamestate(Gamestate* newGamestate) {
+	gameState = newGamestate;
+}
 
 void Scene::generateRectPrism(float length, float width, float height) {
 	Geometry box;
@@ -109,12 +117,8 @@ void Scene::generateRectPrism(float length, float width, float height) {
 	for (int i = 0; i < box.verts.size(); i++) {
 		box.colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
 	}
-	box.transform = glm::mat4(
-		4.f, 0.f, 0.f, 0.f,
-		0.f, 4.f, 0.f, 0.f,
-		0.f, 0.f, 4.f, 0.f,
-		1.f, 0.f, 0.f, 1.f
-	);
+
+
 	box.drawMode = GL_TRIANGLE_STRIP;
 	RenderingEngine::assignBuffers(box);
 	RenderingEngine::setBufferData(box);
@@ -127,5 +131,7 @@ Scene::~Scene() {
 }
 
 void Scene::displayScene() {
+	objects[1].transform = gameState->playerVehicle.transformationMatrix;
+
 	renderer->RenderScene(objects);
 }

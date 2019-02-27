@@ -15,6 +15,7 @@
 #include "Program.h"
 #include "RenderingEngine.h"
 #include "Scene.h"
+#include "SceneMainMenu.h"
 #include "UserInput.h"
 #include "AI_Interaction.h"
 #include "Physics_Controller.h"
@@ -25,6 +26,7 @@
 #include "Vehicle.h"
 #include "PlayerUnit.h"
 #include "EnemyUnit.h"
+#include "texture.h"
 
 #include <SDL_mixer.h>
 #include <SDL.h>
@@ -50,8 +52,8 @@ void Program::start() {
 	gameState->time = 0.0;
 	gameState->timeStep = 1.0 / 60.0; //60 fps
 	gameState->button = "";
-	//gameState->UIMode = "Start";
-	gameState->UIMode = "Game";
+	gameState->UIMode = "Start";
+	//gameState->UIMode = "Game";
 
 	SDL_Init(SDL_INIT_AUDIO);
 	
@@ -59,12 +61,22 @@ void Program::start() {
 	AI_Interaction aiInteraction = AI_Interaction();
 	Physics_Controller physicsCL = Physics_Controller(gameState);
 	Audio_Controller audioCL = Audio_Controller();
-	UI_Controller UICL = UI_Controller();
+	UI_Controller UICL = UI_Controller(gameState);
 	
-	renderingEngine = new RenderingEngine(gameState);
-	scene = new Scene(renderingEngine);
-	gameState->scene = scene;
+	const char* vertexFile = "../shaders/vertex.glsl";
+	const char* fragmentFile = "../shaders/fragment.glsl";
 
+	renderingEngine = new RenderingEngine(gameState, vertexFile, fragmentFile);
+	
+	scene = new Scene(renderingEngine);
+	gameState->scene = scene; // what is the scene meaning here in the gamestate?
+
+
+
+	//RenderingEngine* renderingEngine2 = new RenderingEngine(gameState, vertexMainFile, fragmentMainFile);
+	//SceneMainMenu* mainScene2 = new SceneMainMenu(renderingEngine_MainMenu);
+	//SceneMainMenu* mainScene3 = new SceneMainMenu(renderingEngine_MainMenu);
+	//SceneMainMenu* mainScene4 = new SceneMainMenu(renderingEngine_MainMenu);
 	//Create Entities Example
 
 	//PlayerUnit mainCar = PlayerUnit();
@@ -77,15 +89,6 @@ void Program::start() {
 
 	//Main render loop
 	while (!glfwWindowShouldClose(window)) {
-
-		//testing sound code, will be reomoved
-		//audioCL.playMusic();
-
-		/* glfw key invalid error key 0 ?
-		if (glfwGetKey(window, GLFW_KEY_P == GLFW_PRESS)){
-			audioCL.playMusic();
-		}
-		*/
 
 		//User Input
 		usrInput.Update(gameState);
@@ -105,14 +108,17 @@ void Program::start() {
 		audioCL.playSound(gameState);
 		
 		//UI System
-		UICL.Update(gameState);
+		UICL.Update(gameState, window);
 
 		//Render Engine
 		if (gameState->UIMode == "Game") {
+			printf("gamegamegamegame...\n");
+			//scene = new Scene(renderingEngine);
 			scene->displayScene();
-			glfwSwapBuffers(window);
+			//glfwSwapBuffers(window);
+			//delete scene;
 		}
-
+		
 		/*****--- Old camera code. Delete this and handle camera in rendering. ---*****/
 		if (UserInput::MouseXpos != oldMouseXpos) {
 			gameState->camera.rotateHorizontal((oldMouseXpos - UserInput::MouseXpos) * 0.01);
@@ -123,12 +129,13 @@ void Program::start() {
 			oldMouseYpos = UserInput::MouseYpos;
 		}
 		/**********/
-
+		glfwSwapBuffers(window);
 		//glfwWaitEvents();
 		glfwPollEvents();
 
 		//Fixed Timestep
 		gameState->time += gameState->timeStep;
+
 	}
 
 }

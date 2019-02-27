@@ -12,8 +12,9 @@
 //included here because it just contains some global functions
 #include "ShaderTools.h"
 
-RenderingEngine::RenderingEngine(Gamestate *gameState) {
-	shaderProgram = ShaderTools::InitializeShaders();
+RenderingEngine::RenderingEngine(Gamestate *gameState, const char* vertexFile, const char* fragmentFile) {
+	
+	shaderProgram = ShaderTools::InitializeShaders(vertexFile,fragmentFile);
 	game_state = gameState;
 	if (shaderProgram == 0) {
 		std::cout << "Program could not initialize shaders, TERMINATING" << std::endl;
@@ -67,6 +68,56 @@ void RenderingEngine::RenderScene(const std::vector<Geometry>& objects) {
 	CheckGLErrors();
 }
 
+void RenderingEngine::RenderMenuScene(const std::vector<Geometry>& objects) {
+	//Clears the screen to a dark grey background
+	//glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+	//glClear(GL_COLOR_BUFFER_BIT);
+
+	// bind our shader program and the vertex array object containing our
+	// scene geometry, then tell OpenGL to draw our geometry
+	glUseProgram(shaderProgram);
+
+	for (const Geometry& g : objects) {
+		glBindVertexArray(g.vao);
+		glDrawArrays(g.drawMode, 0, g.verts.size());
+
+		// reset state to default (no shader or geometry bound)
+		glBindVertexArray(0);
+	}
+
+	glUseProgram(0);
+
+	// check for an report any OpenGL errors
+	CheckGLErrors();
+}
+
+void RenderingEngine::RenderMenuSceneClear(const std::vector<Geometry>& objects) {
+	//Clears the screen to a dark grey background
+	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	// bind our shader program and the vertex array object containing our
+	// scene geometry, then tell OpenGL to draw our geometry
+	glUseProgram(shaderProgram);
+
+	for (const Geometry& g : objects) {
+		glBindVertexArray(g.vao);
+		glDrawArrays(g.drawMode, 0, g.verts.size());
+
+		// reset state to default (no shader or geometry bound)
+		glBindVertexArray(0);
+	}
+
+	glUseProgram(0);
+
+	// check for an report any OpenGL errors
+	CheckGLErrors();
+}
+
+void RenderingEngine::SwitchShaderProgram(GLuint shader) {
+	shaderProgram = shader;
+}
+
 void RenderingEngine::assignBuffers(Geometry& geometry) {
 	//Generate vao for the object
 	//Constant 1 means 1 vao is being generated
@@ -92,10 +143,10 @@ void RenderingEngine::assignBuffers(Geometry& geometry) {
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 	glEnableVertexAttribArray(1);
 
-	/*glGenBuffers(1, &geometry.uvBuffer);
+	glGenBuffers(1, &geometry.uvBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, geometry.uvBuffer);
 	glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
-	glEnableVertexAttribArray(3);*/
+	glEnableVertexAttribArray(3);
 
 
 }
@@ -112,8 +163,8 @@ void RenderingEngine::setBufferData(Geometry& geometry) {
 	glBindBuffer(GL_ARRAY_BUFFER, geometry.colorBuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * geometry.colors.size(), geometry.colors.data(), GL_STATIC_DRAW);
 
-	/*glBindBuffer(GL_ARRAY_BUFFER, geometry.uvBuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * geometry.uvs.size(), geometry.uvs.data(), GL_STATIC_DRAW);*/
+	glBindBuffer(GL_ARRAY_BUFFER, geometry.uvBuffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * geometry.uvs.size(), geometry.uvs.data(), GL_STATIC_DRAW);
 }
 
 void RenderingEngine::deleteBufferData(Geometry& geometry) {

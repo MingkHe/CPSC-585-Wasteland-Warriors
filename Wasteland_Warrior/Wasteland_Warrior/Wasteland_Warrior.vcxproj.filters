@@ -27,6 +27,9 @@
     <ClCompile Include="..\include\snippetFiles\snippetvehiclecommon\SnippetVehicleCreate.cpp" />
     <ClCompile Include="..\include\snippetFiles\snippetvehiclecommon\SnippetVehicleFilterShader.cpp" />
     <ClCompile Include="..\include\snippetFiles\snippetvehiclecommon\SnippetVehicleSceneQuery.cpp" />
+    <ClCompile Include="UI_Controller.cpp" />
+    <ClCompile Include="SceneMainMenu.cpp" />
+    <ClCompile Include="texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Geometry.h" />
@@ -48,6 +51,9 @@
     <ClInclude Include="MusicPool.h" />
     <ClInclude Include="SnippetPVD.h" />
     <ClInclude Include="Physics_Controller.h" />
+    <ClInclude Include="UI_Controller.h" />
+    <ClInclude Include="SceneMainMenu.h" />
+    <ClInclude Include="texture.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Wasteland_Warrior.vcxproj.filters.txt" />
@@ -66,6 +72,8 @@
     <None Include="libvorbis-0.dll" />
     <None Include="SDL2.dll" />
     <None Include="SDL2_mixer.dll" />
+    <None Include="..\shaders\fragmentMainMenu.glsl" />
+    <None Include="..\shaders\vertexMainMenu.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="bgm.mp3" />

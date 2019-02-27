@@ -21,12 +21,15 @@ struct GLFWwindow;
 
 class RenderingEngine {
 public:
-	RenderingEngine(Gamestate *gameState);
+	RenderingEngine(Gamestate *gameState, const char* vertexFile, const char* fragmentFile);
 	virtual ~RenderingEngine();
 	Gamestate *game_state;
 
 	//Renders each object
+	void SwitchShaderProgram(GLuint shader);
 	void RenderScene(const std::vector<Geometry>& objects);
+	void RenderMenuScene(const std::vector<Geometry>& objects);
+	void RenderMenuSceneClear(const std::vector<Geometry>& objects);
 
 	//Create vao and vbos for objects
 	static void assignBuffers(Geometry& geometry);
@@ -36,7 +39,7 @@ public:
 	//Ensures that vao and vbos are set up properly
 	bool CheckGLErrors();
 
-private:
+//private:
 	//Pointer to the current shader program being used to render
 	GLuint shaderProgram;
 };

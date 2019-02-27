@@ -69,17 +69,6 @@ void Program::start() {
 	scene = new Scene(renderingEngine);
 	gameState->scene = scene;
 
-	//Create Entities Example
-
-	//PlayerUnit mainCar = PlayerUnit();
-	//EnemyUnit Enemy1 = EnemyUnit();
-	//EnemyUnit Enemy2 = EnemyUnit();
-
-	//gameState->Entities.push_back(mainCar);
-	//gameState->Entities.push_back(Enemy1);
-	//gameState->Entities.push_back(Enemy2);
-
-
 	//Main render loop
 	while (!glfwWindowShouldClose(window)) {
 

@@ -9,5 +9,6 @@ public:
 	~Vehicle();
 
 	int playerDrivemode;
+	float health;
 };
 

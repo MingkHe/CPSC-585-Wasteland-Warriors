@@ -53,7 +53,7 @@ public:
 	Scene *scene;
 
 	std::string UIMode;
-	std::list<Entity> Entities; 
+	std::vector<Entity> Entities; 
 };
 
 //#endif

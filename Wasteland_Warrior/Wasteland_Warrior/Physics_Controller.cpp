@@ -535,48 +535,20 @@ void Physics_Controller::stepPhysics(bool interactive)
 	PxVec3 yRotation = rotation.getBasisVector1();
 	PxVec3 zRotation = rotation.getBasisVector2();
 
-	gameState->Entities.front().position.x = location.x;
-	gameState->Entities.front().position.y = location.y;
-	gameState->Entities.front().position.z = location.z;
-
-
-
-	//FIX THIS LATER!
-	gameState->scene->objects[1].transform[3][0] = location.x;
-	gameState->scene->objects[1].transform[3][1] = location.y;
-	gameState->scene->objects[1].transform[3][2] = location.z;
-
-	std::cout << "Box position:  X:" << yRotation.x << "  Y:" << yRotation.y << "  Z:" << yRotation.z << std::endl; //Test statement, delete it if you want
+	
+	gameState->Entities[0].position.x = location.x;
+	gameState->Entities[0].position.y = location.y;
+	gameState->Entities[0].position.z = location.z;
 
 	
-	gameState->scene->objects[1].transform[0][0] = xRotation.x;
-	gameState->scene->objects[1].transform[0][1] = xRotation.y;
-	gameState->scene->objects[1].transform[0][2] = xRotation.z;
+	gameState->Entities[0].transformationMatrix[0] = {xRotation.x, xRotation.y, xRotation.z, 0.0f };
+	gameState->Entities[0].transformationMatrix[1] = {yRotation.x, yRotation.y, yRotation.z, 0.0f };
+	gameState->Entities[0].transformationMatrix[2] = {zRotation.x, zRotation.y, zRotation.z, 0.0f };
+	gameState->Entities[0].transformationMatrix[3] = {location.x , location.y , location.z , 1.0f };
+	
+	std::cout << "Box position:  X:" << location.x << "  Y:" << location.y << "  Z:" << location.z << std::endl; //Test statement, delete it if you want
 
-	gameState->scene->objects[1].transform[1][0] = yRotation.x;
-	gameState->scene->objects[1].transform[1][1] = yRotation.y;
-	gameState->scene->objects[1].transform[1][2] = yRotation.z;
-
-	gameState->scene->objects[1].transform[2][0] = zRotation.x;
-	gameState->scene->objects[1].transform[2][1] = zRotation.y;
-	gameState->scene->objects[1].transform[2][2] = zRotation.z;
-
-
-	/*
-
-
-	glm::mat4 transofrmationMatrix = 
-		glm::mat4{
-		{xRotation.x, yRotation.x, zRotation.x, 0.f},
-		{xRotation.y, yRotation.y, zRotation.y, 0.f},
-		{xRotation.z, yRotation.z, zRotation.z, 0.f},
-		{0.0f		, 0.0f		 , 0.0f		  , 1.0f}
-	};
-
-	gameState->camera.pos = glm::vec4(location.x, (location.y+3), (location.z+5), 1.0f)*transofrmationMatrix;
-	gameState->camera.dir = glm::vec4(0.0f, -5.0f, 0.0f, 0.0f)*transofrmationMatrix;
-	gameState->camera.right = glm::vec4(1.0f, 0.0f, 0.0f, 0.0f)*transofrmationMatrix;
-	gameState->camera.up = glm::cross(gameState->camera.dir, gameState->camera.right);*/
+	
 }
 
 

@@ -66,7 +66,7 @@ void Program::start() {
 	UI_Controller UICL = UI_Controller();
 	
 	renderingEngine = new RenderingEngine(gameState);
-	scene = new Scene(renderingEngine);
+	scene = new Scene(renderingEngine, gameState);
 	gameState->scene = scene;
 
 
@@ -121,8 +121,13 @@ void Program::start() {
 		while (elapsed_seconds.count() < gameState->timeStep){
 			currentTime = std::chrono::system_clock::now();
 			elapsed_seconds = currentTime - gameState->time;
-		}
 
+			//std::cout << "Time elapsed: " << elapsed_seconds.count() << std::endl; //Test statement, delete it if you want
+			if (elapsed_seconds.count() >= (gameState->timeStep * 2)) {
+				std::cout << "Frame lost" << std::endl; //Test statement, delete it if you want
+			}
+		}
+		elapsed_seconds = currentTime-currentTime;
 		gameState->time = currentTime;
 	}
 

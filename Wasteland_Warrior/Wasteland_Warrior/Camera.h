@@ -1,8 +1,5 @@
-//#ifndef CAMERA_H
-//#define CAMERA_H
 #pragma once
 #include <glm/glm.hpp>
-//#include "Gamestate.h"
 
 class Gamestate;
 

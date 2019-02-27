@@ -131,7 +131,7 @@ Scene::~Scene() {
 }
 
 void Scene::displayScene() {
-	gameState->scene->objects[1].transform = gameState->Entities[0].transformationMatrix;
+	objects[1].transform = gameState->playerVehicle.transformationMatrix;
 
 	renderer->RenderScene(objects);
 }

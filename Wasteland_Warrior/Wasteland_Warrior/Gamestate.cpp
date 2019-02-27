@@ -1,16 +1,19 @@
 #include "Gamestate.h"
-#include "Vehicle.h"
+#include "PlayerUnit.h"
+#include "EnemyUnit.h"
 
 Gamestate::Gamestate()
 {
-	camera.setGamestate(this);
 	camera.pos = glm::vec3(0.f, 15.f, 0.f);
 
 	Vehicle playerVehicle = Vehicle();
-	Entities.push_back(playerVehicle);
 }
 
 Gamestate::~Gamestate()
 {
 }
 
+void Gamestate::SpawnEnemy(int type, float x, float y) {
+
+	Enemies.push_back(EnemyUnit(type, x, y));
+}

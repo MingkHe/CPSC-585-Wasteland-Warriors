@@ -69,20 +69,8 @@ void Program::start() {
 	scene = new Scene(renderingEngine, gameState);
 	gameState->scene = scene;
 
-
 	physicsCL.setPosition(0, glm::vec3{ 0.0f, 5.0f, 30.0f });
 	physicsCL.setPosition(0, glm::vec3{ 0.0f, 5.0f, 20.0f });
-
-	//Create Entities Example
-
-	//PlayerUnit mainCar = PlayerUnit();
-	//EnemyUnit Enemy1 = EnemyUnit();
-	//EnemyUnit Enemy2 = EnemyUnit();
-
-	//gameState->Entities.push_back(mainCar);
-	//gameState->Entities.push_back(Enemy1);
-	//gameState->Entities.push_back(Enemy2);
-
 
 	//Main render loop
 	while (!glfwWindowShouldClose(window)) {

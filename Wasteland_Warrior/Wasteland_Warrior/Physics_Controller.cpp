@@ -535,16 +535,15 @@ void Physics_Controller::stepPhysics(bool interactive)
 	PxVec3 yRotation = rotation.getBasisVector1();
 	PxVec3 zRotation = rotation.getBasisVector2();
 
-	
-	gameState->Entities[0].position.x = location.x;
-	gameState->Entities[0].position.y = location.y;
-	gameState->Entities[0].position.z = location.z;
+	gameState->playerVehicle.position.x = location.x;
+	gameState->playerVehicle.position.y = location.y;
+	gameState->playerVehicle.position.z = location.z;
 
 	
-	gameState->Entities[0].transformationMatrix[0] = {xRotation.x, xRotation.y, xRotation.z, 0.0f };
-	gameState->Entities[0].transformationMatrix[1] = {yRotation.x, yRotation.y, yRotation.z, 0.0f };
-	gameState->Entities[0].transformationMatrix[2] = {zRotation.x, zRotation.y, zRotation.z, 0.0f };
-	gameState->Entities[0].transformationMatrix[3] = {location.x , location.y , location.z , 1.0f };
+	gameState->playerVehicle.transformationMatrix[0] = {xRotation.x, xRotation.y, xRotation.z, 0.0f };
+	gameState->playerVehicle.transformationMatrix[1] = {yRotation.x, yRotation.y, yRotation.z, 0.0f };
+	gameState->playerVehicle.transformationMatrix[2] = {zRotation.x, zRotation.y, zRotation.z, 0.0f };
+	gameState->playerVehicle.transformationMatrix[3] = {location.x , location.y , location.z , 1.0f };
 	
 	std::cout << "Box position:  X:" << location.x << "  Y:" << location.y << "  Z:" << location.z << std::endl; //Test statement, delete it if you want
 

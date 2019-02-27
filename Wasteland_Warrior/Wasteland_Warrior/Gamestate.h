@@ -1,22 +1,23 @@
-//#ifndef GAMESTATE_H
-//#define GAMESTATE_H
-#pragma once
 
 #include <list>
 #include <string>
+#include <chrono>
 #include "Entity.h"
 #include "Camera.h"
 #include "Scene.h"
-#include <chrono>
+#include "PlayerUnit.h"
+#include "EnemyUnit.h"
 
 #pragma once
-
 
 class Gamestate
 {
 public:
 	Gamestate();
 	~Gamestate();
+
+	//playerVehicle
+	PlayerUnit playerVehicle = PlayerUnit(); //inherits Vehicle
 
 	//Button input
 	std::string button;
@@ -45,7 +46,7 @@ public:
 	int gstest = 5;
 
 	//Graphics
-	Camera camera;
+	Camera camera = Camera(this);
 	glm::vec3 light = glm::vec3(0.f, 6.f, 0.f);
 	unsigned char shading_model = 0;
 
@@ -53,7 +54,10 @@ public:
 	Scene *scene;
 
 	std::string UIMode;
-	std::vector<Entity> Entities; 
+
+	std::vector<EnemyUnit> Enemies;
+
+	void SpawnEnemy(int type, float x, float y);
 };
 
 //#endif

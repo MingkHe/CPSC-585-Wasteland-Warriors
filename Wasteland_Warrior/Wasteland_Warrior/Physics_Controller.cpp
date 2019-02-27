@@ -521,9 +521,9 @@ void Physics_Controller::stepPhysics(bool interactive)
 	gameState->scene->objects[1].transform[3][2] = location.z;
 
 
-	gameState->Entities.front().position.x = location.x;
-	gameState->Entities.front().position.y = location.y;
-	gameState->Entities.front().position.z = location.z;
+	gameState->playerVehicle.position.x = location.x;
+	gameState->playerVehicle.position.y = location.y;
+	gameState->playerVehicle.position.z = location.z;
 
 	std::cout << "Box position:  X:" << yRotation.x << "  Y:" << yRotation.y << "  Z:" << yRotation.z << std::endl; //Test statement, delete it if you want
 

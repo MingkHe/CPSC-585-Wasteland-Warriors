@@ -1,22 +1,23 @@
 //#ifndef GAMESTATE_H
 //#define GAMESTATE_H
-#pragma once
 
 #include <list>
 #include <string>
+#include <chrono>
 #include "Entity.h"
 #include "Camera.h"
 #include "Scene.h"
-#include <chrono>
-
-#pragma once
-
+#include "PlayerUnit.h"
+#include "EnemyUnit.h"
 
 class Gamestate
 {
 public:
 	Gamestate();
 	~Gamestate();
+
+	//playerVehicle
+	PlayerUnit playerVehicle = PlayerUnit(); //inherits Vehicle
 
 	//Button input
 	std::string button;
@@ -53,7 +54,9 @@ public:
 	Scene *scene;
 
 	std::string UIMode;
-	std::list<Entity> Entities; 
+	std::list<EnemyUnit> Enemies;
+
+	void SpawnEnemy(int type, float x, float y);
 };
 
 //#endif

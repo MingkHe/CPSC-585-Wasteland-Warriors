@@ -6,5 +6,9 @@ class EnemyUnit :
 public:
 	EnemyUnit();
 	~EnemyUnit();
+
+	EnemyUnit(int type, float x, float y);
+
+	int type;
 };
 

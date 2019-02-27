@@ -18,3 +18,8 @@ void Gamestate::SpawnEnemy(int type, float x, float y) {
 
 	Enemies.push_back(EnemyUnit(type, x, y));
 }
+
+void Gamestate::DespawnEnemy(EnemyUnit enemy) {
+
+	Enemies.remove(enemy);
+}

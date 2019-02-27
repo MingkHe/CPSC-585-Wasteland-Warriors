@@ -57,6 +57,7 @@ public:
 	std::list<EnemyUnit> Enemies;
 
 	void SpawnEnemy(int type, float x, float y);
+	void DespawnEnemy(EnemyUnit enemy);
 };
 
 //#endif

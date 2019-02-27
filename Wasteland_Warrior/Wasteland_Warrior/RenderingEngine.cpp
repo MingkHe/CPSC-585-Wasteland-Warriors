@@ -12,9 +12,22 @@
 //included here because it just contains some global functions
 #include "ShaderTools.h"
 
-RenderingEngine::RenderingEngine(Gamestate *gameState, const char* vertexFile, const char* fragmentFile) {
+RenderingEngine::RenderingEngine(Gamestate *gameState, const char* v, const char* f) {
 	
+	const char* vertexMainFile = "../shaders/vertexMainMenu.glsl";
+	const char* fragmentMainFile = "../shaders/fragmentMainMenu.glsl";
+
+	const char* vertexFile = "../shaders/vertex.glsl";
+	const char* fragmentFile = "../shaders/fragment.glsl";
+
 	shaderProgram = ShaderTools::InitializeShaders(vertexFile,fragmentFile);
+
+	shaderProgramList.push_back(shaderProgram);
+
+	GLuint shaderProgram2 = ShaderTools::InitializeShaders(vertexMainFile, fragmentMainFile);
+
+	shaderProgramList.push_back(shaderProgram2);
+	
 	game_state = gameState;
 	if (shaderProgram == 0) {
 		std::cout << "Program could not initialize shaders, TERMINATING" << std::endl;
@@ -28,33 +41,34 @@ RenderingEngine::~RenderingEngine() {
 
 void RenderingEngine::RenderScene(const std::vector<Geometry>& objects) {
 	//Clears the screen to a dark grey background
+	printf("rendering rendering rendering rendering!\n");
+
 	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 
 	//sets uniforms
-	GLint cameraGL = glGetUniformLocation(shaderProgram, "cameraPos");
-	GLint lightGL = glGetUniformLocation(shaderProgram, "light");
-	GLint shadeGL = glGetUniformLocation(shaderProgram, "shade");
-	GLint transformGL = glGetUniformLocation(shaderProgram, "transform");
+	GLint cameraGL = glGetUniformLocation(shaderProgramList[0], "cameraPos");
+	GLint lightGL = glGetUniformLocation(shaderProgramList[0], "light");
+	GLint shadeGL = glGetUniformLocation(shaderProgramList[0], "shade");
+	GLint transformGL = glGetUniformLocation(shaderProgramList[0], "transform");
 	glm::mat4 perspectiveMatrix = glm::perspective(PI_F*.4f, 512.f / 512.f, .1f, 200.f);
 	glm::mat4 modelViewProjection = perspectiveMatrix * game_state->camera.viewMatrix();
 	glm::vec4 light4 = modelViewProjection * glm::vec4(game_state->light, 1.0);
 	glm::vec3 light = glm::vec3(light4.x, light4.y, light4.z);
-	glUseProgram(shaderProgram);
+	glUseProgram(shaderProgramList[0]);
 	glUniform3fv(cameraGL, 1, &(game_state->camera.pos.x));
 	glUniform3fv(lightGL, 1, &(light.x));
 	glUniform1i(shadeGL, game_state->shading_model);
-	GLint uniformLocation = glGetUniformLocation(shaderProgram, "modelViewProjection");
+	GLint uniformLocation = glGetUniformLocation(shaderProgramList[0], "modelViewProjection");
 	glUniformMatrix4fv(uniformLocation, 1, false, glm::value_ptr(modelViewProjection));
 
 	// bind our shader program and the vertex array object containing our
 	// scene geometry, then tell OpenGL to draw our geometry
-	glUseProgram(shaderProgram);
+	glUseProgram(shaderProgramList[0]);
 
 	for (const Geometry& g : objects) {
-		glUseProgram(shaderProgram);
 		glUniformMatrix4fv(transformGL, 1, false, &(g.transform[0][0]));
 		glBindVertexArray(g.vao);
 		glDrawArrays(g.drawMode, 0, g.verts.size());
@@ -75,7 +89,7 @@ void RenderingEngine::RenderMenuScene(const std::vector<Geometry>& objects) {
 
 	// bind our shader program and the vertex array object containing our
 	// scene geometry, then tell OpenGL to draw our geometry
-	glUseProgram(shaderProgram);
+	glUseProgram(shaderProgramList[1]);
 
 	for (const Geometry& g : objects) {
 		glBindVertexArray(g.vao);

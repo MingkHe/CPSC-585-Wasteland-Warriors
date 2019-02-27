@@ -5,7 +5,7 @@
 class UI_Controller
 {
 public:
-	UI_Controller(Gamestate* gameState);
+	UI_Controller(Gamestate* gameState, RenderingEngine* render);
 	~UI_Controller();
 
 	RenderingEngine* renderingEngine;

@@ -61,7 +61,7 @@ void Program::start() {
 	AI_Interaction aiInteraction = AI_Interaction();
 	Physics_Controller physicsCL = Physics_Controller(gameState);
 	Audio_Controller audioCL = Audio_Controller();
-	UI_Controller UICL = UI_Controller(gameState);
+	
 	
 	const char* vertexFile = "../shaders/vertex.glsl";
 	const char* fragmentFile = "../shaders/fragment.glsl";
@@ -71,7 +71,7 @@ void Program::start() {
 	scene = new Scene(renderingEngine);
 	gameState->scene = scene; // what is the scene meaning here in the gamestate?
 
-
+	UI_Controller UICL = UI_Controller(gameState,renderingEngine);
 
 	//RenderingEngine* renderingEngine2 = new RenderingEngine(gameState, vertexMainFile, fragmentMainFile);
 	//SceneMainMenu* mainScene2 = new SceneMainMenu(renderingEngine_MainMenu);

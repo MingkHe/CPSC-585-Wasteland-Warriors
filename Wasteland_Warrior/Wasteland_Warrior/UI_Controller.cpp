@@ -1,11 +1,12 @@
 #include "UI_Controller.h"
 
 
-UI_Controller::UI_Controller(Gamestate* gameState)
+UI_Controller::UI_Controller(Gamestate* gameState, RenderingEngine* render)
 {
 	const char* vertexMainFile = "../shaders/vertexMainMenu.glsl";
 	const char* fragmentMainFile = "../shaders/fragmentMainMenu.glsl";
-	renderingEngine = new RenderingEngine(gameState, vertexMainFile, fragmentMainFile);
+	//renderingEngine = new RenderingEngine(gameState, vertexMainFile, fragmentMainFile);
+	renderingEngine = render;
 
 	MyTexture texture;
 	InitializeTexture(&texture, "Image/bg.jpg", GL_TEXTURE_RECTANGLE);
@@ -19,6 +20,10 @@ UI_Controller::UI_Controller(Gamestate* gameState)
 
 	InitializeTexture(&texture, "Image/pointer.png", GL_TEXTURE_RECTANGLE);
 	textureArray.push_back(texture);
+
+	mainScene_bg = new SceneMainMenu(renderingEngine);
+	mainScene_start = new SceneMainMenu(renderingEngine);
+	mainScene_quit = new SceneMainMenu(renderingEngine);
 	
 }
 
@@ -45,12 +50,12 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 
 		//render start screen image
 		//Should update based on selected menu item.
-		mainScene_bg = new SceneMainMenu(renderingEngine);
-		mainScene_start = new SceneMainMenu(renderingEngine);
-		mainScene_quit = new SceneMainMenu(renderingEngine);
-		mainScene_pointer = new SceneMainMenu(renderingEngine);
+
 
 		std::string input = GameState->button;
+
+	
+		mainScene_pointer = new SceneMainMenu(renderingEngine);
 
 
 		//Background Image
@@ -59,7 +64,7 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 		position.push_back(glm::vec3(1.0f, 1.0f, 1.0f));
 		position.push_back(glm::vec3(-1.0f, 1.0f, 1.0f));
 
-		mainScene_bg->displayTextureClear(textureArray[0], position);
+		mainScene_bg->displayTexture(textureArray[0], position);
 		position.clear();
 
 		//Start Image
@@ -87,9 +92,7 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 			pointerState = (pointerState + 1) % 2;
 		}
 
-		if (pointerState == 0 && input == "ENTER") {
-			GameState->UIMode = "Game";
-		}
+
 
 		if (pointerState == 0) {
 			position.push_back(glm::vec3(-.63f, -.08f, 1.0f));
@@ -106,10 +109,15 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 		mainScene_pointer->displayTexture(textureArray[3], position);
 		position.clear();
 
-		delete mainScene_bg;
-		delete mainScene_start;
-		delete mainScene_quit;
+		//delete mainScene_bg;
+		//delete mainScene_start;
+		//delete mainScene_quit;
 		delete mainScene_pointer;
+
+		if (pointerState == 0 && input == "ENTER") {
+			GameState->UIMode = "Game";
+			printf("switch success!\n");
+		}
 
 		//glfwSwapBuffers(window);
 	}

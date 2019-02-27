@@ -127,5 +127,6 @@ Scene::~Scene() {
 }
 
 void Scene::displayScene() {
+	glUseProgram(renderer->shaderProgramList[0]);
 	renderer->RenderScene(objects);
 }

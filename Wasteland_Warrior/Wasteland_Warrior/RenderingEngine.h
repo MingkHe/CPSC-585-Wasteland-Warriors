@@ -24,6 +24,7 @@ public:
 	RenderingEngine(Gamestate *gameState, const char* vertexFile, const char* fragmentFile);
 	virtual ~RenderingEngine();
 	Gamestate *game_state;
+	std::vector<GLuint> shaderProgramList;
 
 	//Renders each object
 	void SwitchShaderProgram(GLuint shader);

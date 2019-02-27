@@ -117,19 +117,19 @@ void SceneMainMenu::displayMenuScene() {
 void SceneMainMenu::displayTexture(MyTexture &texture, std::vector<glm::vec3> pos) {
 
 	
-
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	glUseProgram(renderer->shaderProgram);
+	
+	glUseProgram(renderer->shaderProgramList[1]);
 	//Set which texture unit the texture is bound to
 	glActiveTexture(GL_TEXTURE0);
 	//Bind the texture to GL_TEXTURE0
 	glBindTexture(GL_TEXTURE_RECTANGLE, texture.textureID);
 	//Get identifier for uniform
-	GLuint uniformLocation = glGetUniformLocation(renderer->shaderProgram, "ImageTexture");
+	GLuint uniformLocation = glGetUniformLocation(renderer->shaderProgramList[1], "ImageTexture");
 	//Load texture unit number into uniform
 	glUniform1i(uniformLocation, 0);
+
 
 	rectangle.verts.push_back(pos[0]);
 	rectangle.verts.push_back(pos[1]);
@@ -164,6 +164,8 @@ void SceneMainMenu::displayTexture(MyTexture &texture, std::vector<glm::vec3> po
 	objects.clear();
 
 	//printf("size: %d\n",objects.size());
+	
+	glDisable(GL_BLEND);
 }
 
 void SceneMainMenu::displayTextureClear(MyTexture &texture, std::vector<glm::vec3> pos) {

@@ -1,5 +1,3 @@
-//#ifndef GAMESTATE_H
-//#define GAMESTATE_H
 
 #include <list>
 #include <string>
@@ -9,6 +7,8 @@
 #include "Scene.h"
 #include "PlayerUnit.h"
 #include "EnemyUnit.h"
+
+#pragma once
 
 class Gamestate
 {

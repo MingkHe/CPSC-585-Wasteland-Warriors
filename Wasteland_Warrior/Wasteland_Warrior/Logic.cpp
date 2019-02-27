@@ -25,7 +25,7 @@ void Logic::Update(Gamestate* gameState)
 		//WAVE 1
 		else if (wave == 1) {
 			//if there are no enemy AIs left
-			if (gameState->Enemies.size == 0) {
+			if (gameState->Enemies.empty()) {
 				wave = 2;
 				//spawn power ups
 			}
@@ -33,7 +33,7 @@ void Logic::Update(Gamestate* gameState)
 				//Despawn/Explode enemies that are dead 
 				for (EnemyUnit const& enemy : gameState->Enemies) {
 					if (enemy.health <= 0.0) {
-						gameState->Enemies.remove(enemy);
+						//gameState->Enemies.remove(enemy);
 					}
 				}
 			}
@@ -54,7 +54,7 @@ void Logic::Update(Gamestate* gameState)
 		//WAVE 2
 		else if (wave == 2) {
 			//if there are no enemy AIs left
-			if (gameState->Enemies.size == 0) {
+			if (gameState->Enemies.empty()) {
 					wave = 3;
 					//spawn power ups
 			}
@@ -62,7 +62,7 @@ void Logic::Update(Gamestate* gameState)
 				//Despawn/Explode enemies that are dead 
 				for (EnemyUnit const& enemy : gameState->Enemies) {
 					if (enemy.health <= 0.0) {
-							gameState->Enemies.remove(enemy);
+							//gameState->Enemies.remove(enemy);
 					}
 				}
 			}
@@ -83,7 +83,7 @@ void Logic::Update(Gamestate* gameState)
 		//WAVE 3
 		else if (wave == 3) {
 			//if there are no enemy AIs left
-			if (gameState->Enemies.size == 0) {
+			if (gameState->Enemies.empty()) {
 				wave = 4;
 				//spawn power ups
 			}
@@ -91,7 +91,7 @@ void Logic::Update(Gamestate* gameState)
 				//Despawn/Explode enemies that are dead 
 				for (EnemyUnit const& enemy : gameState->Enemies) {
 					if (enemy.health <= 0.0) {
-						gameState->Enemies.remove(enemy);
+						//gameState->Enemies.remove(enemy);
 					}
 				}
 			}
@@ -112,7 +112,7 @@ void Logic::Update(Gamestate* gameState)
 		//WAVE 4
 		else if (wave == 4) {
 			//if there are no enemy AIs left
-			if (gameState->Enemies.size == 0) {
+			if (gameState->Enemies.empty()) {
 				wave = 5;
 				//spawn power ups
 			}
@@ -120,7 +120,7 @@ void Logic::Update(Gamestate* gameState)
 				//Despawn/Explode enemies that are dead 
 				for (EnemyUnit const& enemy : gameState->Enemies) {
 					if (enemy.health <= 0.0) {
-						gameState->Enemies.remove(enemy);
+						//gameState->Enemies.remove(enemy);
 					}
 				}
 			}
@@ -141,7 +141,7 @@ void Logic::Update(Gamestate* gameState)
 		//WAVE 5
 		else if (wave == 5) {
 		//if there are no enemy AIs left
-		if (gameState->Enemies.size == 0) {
+		if (gameState->Enemies.empty()) {
 			wave = 6;
 			//spawn power ups
 		}
@@ -149,7 +149,7 @@ void Logic::Update(Gamestate* gameState)
 			//Despawn/Explode enemies that are dead 
 			for (EnemyUnit const& enemy : gameState->Enemies) {
 				if (enemy.health <= 0.0) {
-					gameState->Enemies.remove(enemy);
+					//gameState->Enemies.remove(enemy);
 				}
 			}
 		}

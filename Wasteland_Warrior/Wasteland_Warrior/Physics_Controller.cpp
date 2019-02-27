@@ -347,7 +347,7 @@ void Physics_Controller::initPhysics(bool interactive)
 	//Create a vehicle that will drive on the plane.
 	VehicleDesc vehicleDesc = initPlayerVehiclePhysicsDesc();
 	gVehicle4W = createVehicle4W(vehicleDesc, gPhysics, gCooking);
-	PxTransform startTransform(PxVec3(0, (vehicleDesc.chassisDims.y*0.5f + vehicleDesc.wheelRadius + 1.0f), 0), PxQuat(PxIdentity));
+	PxTransform startTransform(PxVec3(0, (vehicleDesc.chassisDims.y*0.5f + vehicleDesc.wheelRadius + 1.0f), 0.0f), PxQuat(PxIdentity));
 	gVehicle4W->getRigidDynamicActor()->setGlobalPose(startTransform);
 	gScene->addActor(*gVehicle4W->getRigidDynamicActor());
 
@@ -358,6 +358,18 @@ void Physics_Controller::initPhysics(bool interactive)
 	gVehicle4W->mDriveDynData.setUseAutoGears(true);
 
 	startBrakeMode();
+}
+
+void Physics_Controller::setPosition(glm::vec3 newLocation){
+	PxU32 numOfRidg = gScene->getNbActors(PxActorTypeFlag::eRIGID_DYNAMIC);
+	PxActor *userBuffer[50];
+
+	PxU32 numOfRidgActors = gScene->getActors(PxActorTypeFlag::eRIGID_DYNAMIC, userBuffer, numOfRidg, 0);
+	PxActor *box = userBuffer[0];
+	PxRigidActor *rigidActor = box->is<PxRigidActor>();
+
+	//PxTransform
+	rigidActor->setGlobalPose({ newLocation.x, newLocation.y, newLocation.z });
 }
 
 void userDriveInput(bool WKey, bool AKey, bool SKey, bool DKey, bool SPACEKey) {
@@ -500,10 +512,8 @@ void Physics_Controller::stepPhysics(bool interactive)
 	PxU32 numOfRidg = gScene->getNbActors(PxActorTypeFlag::eRIGID_DYNAMIC);
 	PxActor *userBuffer[50];
 
-	//std::cout << "Number of obj:" << numOfRidg;
 	PxU32 numOfRidgActors = gScene->getActors(PxActorTypeFlag::eRIGID_DYNAMIC, userBuffer, numOfRidg, 0);
 	PxActor *box = userBuffer[0];
-	//If we had a PxRigidActor 
 	PxRigidActor *rigidActor = box->is<PxRigidActor>();
 	
 	PxTransform orientation = rigidActor->getGlobalPose();		//   https://docs.nvidia.com/gameworks/content/gameworkslibrary/physx/apireference/files/classPxRigidActor.html

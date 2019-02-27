@@ -14,5 +14,7 @@ public:
 
 	void Update();
 
+	void setPosition(glm::vec3 newLocation);
+
 	Gamestate* gameState;
 };

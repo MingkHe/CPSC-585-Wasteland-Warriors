@@ -69,6 +69,9 @@ void Program::start() {
 	scene = new Scene(renderingEngine);
 	gameState->scene = scene;
 
+
+	physicsCL.setPosition(glm::vec3{ 0.0f, 5.0f, 20.0f });
+
 	//Create Entities Example
 
 	//PlayerUnit mainCar = PlayerUnit();

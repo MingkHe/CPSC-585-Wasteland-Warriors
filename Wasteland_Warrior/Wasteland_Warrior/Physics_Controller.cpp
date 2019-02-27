@@ -333,7 +333,7 @@ void Physics_Controller::initPhysics(bool interactive)
 	
 
 	//Create the batched scene queries for the suspension raycasts.
-	gVehicleSceneQueryData = VehicleSceneQueryData::allocate(1, PX_MAX_NB_WHEELS, 1, 1, WheelSceneQueryPreFilterBlocking, NULL, gAllocator); //!!
+	gVehicleSceneQueryData = VehicleSceneQueryData::allocate(1, PX_MAX_NB_WHEELS, 1, 1, WheelSceneQueryPreFilterBlocking, NULL, gAllocator); 
 	gBatchQuery = VehicleSceneQueryData::setUpBatchedSceneQuery(0, *gVehicleSceneQueryData, gScene);
 
 	//Create the friction table for each combination of tire and surface type.
@@ -344,6 +344,13 @@ void Physics_Controller::initPhysics(bool interactive)
 	gGroundPlane = createDrivablePlane(groundPlaneSimFilterData, gMaterial, gPhysics);
 	gScene->addActor(*gGroundPlane);
 
+	createVehicle();
+	createVehicle();
+
+	startBrakeMode();
+}
+
+int Physics_Controller::createVehicle() {
 	//Create a vehicle that will drive on the plane.
 	VehicleDesc vehicleDesc = initPlayerVehiclePhysicsDesc();
 	gVehicle4W = createVehicle4W(vehicleDesc, gPhysics, gCooking);
@@ -357,16 +364,17 @@ void Physics_Controller::initPhysics(bool interactive)
 	gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
 	gVehicle4W->mDriveDynData.setUseAutoGears(true);
 
-	startBrakeMode();
+	rigidDynamicActorNumber++;
+	return rigidDynamicActorNumber;
 }
 
-void Physics_Controller::setPosition(glm::vec3 newLocation){
+void Physics_Controller::setPosition(int actorIndex, glm::vec3 newLocation){
 	PxU32 numOfRidg = gScene->getNbActors(PxActorTypeFlag::eRIGID_DYNAMIC);
 	PxActor *userBuffer[50];
 
 	PxU32 numOfRidgActors = gScene->getActors(PxActorTypeFlag::eRIGID_DYNAMIC, userBuffer, numOfRidg, 0);
-	PxActor *box = userBuffer[0];
-	PxRigidActor *rigidActor = box->is<PxRigidActor>();
+	PxActor *actor = userBuffer[actorIndex];
+	PxRigidActor *rigidActor = actor->is<PxRigidActor>();
 
 	//PxTransform
 	rigidActor->setGlobalPose({ newLocation.x, newLocation.y, newLocation.z });
@@ -513,27 +521,30 @@ void Physics_Controller::stepPhysics(bool interactive)
 	PxActor *userBuffer[50];
 
 	PxU32 numOfRidgActors = gScene->getActors(PxActorTypeFlag::eRIGID_DYNAMIC, userBuffer, numOfRidg, 0);
-	PxActor *box = userBuffer[0];
+	PxActor *box = userBuffer[1];
 	PxRigidActor *rigidActor = box->is<PxRigidActor>();
 	
+	//std::cout << "Number of Ridged objects: " << numOfRidgActors << std::endl; //Test statement, delete it if you want
+
+
 	PxTransform orientation = rigidActor->getGlobalPose();		//   https://docs.nvidia.com/gameworks/content/gameworkslibrary/physx/apireference/files/classPxRigidActor.html
-	PxVec3 location = orientation.p;								//	https://docs.nvidia.com/gameworks/content/gameworkslibrary/physx/apireference/files/classPxTransform.html
+	PxVec3 location = orientation.p;							//	https://docs.nvidia.com/gameworks/content/gameworkslibrary/physx/apireference/files/classPxTransform.html
 	PxQuat rotation = orientation.q;			
 	
 	PxVec3 xRotation = rotation.getBasisVector0();
 	PxVec3 yRotation = rotation.getBasisVector1();
 	PxVec3 zRotation = rotation.getBasisVector2();
 
+	gameState->Entities.front().position.x = location.x;
+	gameState->Entities.front().position.y = location.y;
+	gameState->Entities.front().position.z = location.z;
+
+
 
 	//FIX THIS LATER!
 	gameState->scene->objects[1].transform[3][0] = location.x;
 	gameState->scene->objects[1].transform[3][1] = location.y;
 	gameState->scene->objects[1].transform[3][2] = location.z;
-
-
-	gameState->Entities.front().position.x = location.x;
-	gameState->Entities.front().position.y = location.y;
-	gameState->Entities.front().position.z = location.z;
 
 	std::cout << "Box position:  X:" << yRotation.x << "  Y:" << yRotation.y << "  Z:" << yRotation.z << std::endl; //Test statement, delete it if you want
 

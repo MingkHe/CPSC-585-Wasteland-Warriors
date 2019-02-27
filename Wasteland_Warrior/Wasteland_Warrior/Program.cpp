@@ -70,7 +70,8 @@ void Program::start() {
 	gameState->scene = scene;
 
 
-	physicsCL.setPosition(glm::vec3{ 0.0f, 5.0f, 20.0f });
+	physicsCL.setPosition(0, glm::vec3{ 0.0f, 5.0f, 30.0f });
+	physicsCL.setPosition(0, glm::vec3{ 0.0f, 5.0f, 20.0f });
 
 	//Create Entities Example
 
@@ -115,8 +116,6 @@ void Program::start() {
 
 		//glfwWaitEvents();
 		glfwPollEvents();
-
-		std::cout << "Time check" << std::endl; //Test statement, delete it if you want
 
 		//Fixed Timestep
 		while (elapsed_seconds.count() < gameState->timeStep){

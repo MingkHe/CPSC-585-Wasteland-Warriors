@@ -345,7 +345,7 @@ void Physics_Controller::initPhysics(bool interactive)
 	gScene->addActor(*gGroundPlane);
 
 	createVehicle();
-	createVehicle();
+	//createVehicle();
 
 	startBrakeMode();
 }
@@ -521,7 +521,7 @@ void Physics_Controller::stepPhysics(bool interactive)
 	PxActor *userBuffer[50];
 
 	PxU32 numOfRidgActors = gScene->getActors(PxActorTypeFlag::eRIGID_DYNAMIC, userBuffer, numOfRidg, 0);
-	PxActor *box = userBuffer[1];
+	PxActor *box = userBuffer[0];
 	PxRigidActor *rigidActor = box->is<PxRigidActor>();
 	
 	//std::cout << "Number of Ridged objects: " << numOfRidgActors << std::endl; //Test statement, delete it if you want

@@ -14,5 +14,9 @@ public:
 
 	void Update();
 
+	void setPosition(int actorIndex, glm::vec3 newLocation);
+	int createVehicle();
+
+	int rigidDynamicActorNumber = 0;
 	Gamestate* gameState;
 };

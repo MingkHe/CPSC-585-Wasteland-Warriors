@@ -46,7 +46,7 @@ public:
 	int gstest = 5;
 
 	//Graphics
-	Camera camera;
+	Camera camera = Camera(this);
 	glm::vec3 light = glm::vec3(0.f, 6.f, 0.f);
 	unsigned char shading_model = 0;
 
@@ -54,7 +54,8 @@ public:
 	Scene *scene;
 
 	std::string UIMode;
-	std::list<EnemyUnit> Enemies;
+
+	std::vector<EnemyUnit> Enemies;
 
 	void SpawnEnemy(int type, float x, float y);
 	void DespawnEnemy(EnemyUnit enemy);

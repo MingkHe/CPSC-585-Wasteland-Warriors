@@ -14,8 +14,6 @@
     <ClCompile Include="Audio_Controller.cpp" />
     <ClCompile Include="EnemyUnit.cpp" />
     <ClCompile Include="Entity.cpp" />
-    <ClCompile Include="MapObstacle.cpp" />
-    <ClCompile Include="MapTerrain.cpp" />
     <ClCompile Include="PlayerUnit.cpp" />
     <ClCompile Include="Vehicle.cpp" />
     <ClCompile Include="Camera.cpp" />
@@ -29,6 +27,8 @@
     <ClCompile Include="..\include\snippetFiles\snippetvehiclecommon\SnippetVehicleSceneQuery.cpp" />
     <ClCompile Include="Logic.cpp" />
     <ClCompile Include="UI_Controller.cpp" />
+    <ClCompile Include="PowerUp.cpp" />
+    <ClCompile Include="Object.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Geometry.h" />
@@ -42,8 +42,6 @@
     <ClInclude Include="Audio_Controller.h" />
     <ClInclude Include="EnemyUnit.h" />
     <ClInclude Include="Entity.h" />
-    <ClInclude Include="MapObstacle.h" />
-    <ClInclude Include="MapTerrain.h" />
     <ClInclude Include="PlayerUnit.h" />
     <ClInclude Include="Vehicle.h" />
     <ClInclude Include="Camera.h" />
@@ -52,6 +50,8 @@
     <ClInclude Include="Physics_Controller.h" />
     <ClInclude Include="Logic.h" />
     <ClInclude Include="UI_Controller.h" />
+    <ClInclude Include="PowerUp.h" />
+    <ClInclude Include="Object.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Wasteland_Warrior.vcxproj.filters.txt" />

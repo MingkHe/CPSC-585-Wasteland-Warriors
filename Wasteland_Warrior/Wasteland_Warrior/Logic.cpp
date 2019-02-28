@@ -33,7 +33,7 @@ void Logic::Update(Gamestate* gameState)
 				//Despawn/Explode enemies that are dead 
 				for (EnemyUnit const& enemy : gameState->Enemies) {
 					if (enemy.health <= 0.0) {
-						//gameState->Enemies.remove(enemy);
+						gameState->DespawnEnemy(enemy);
 					}
 				}
 			}
@@ -62,7 +62,7 @@ void Logic::Update(Gamestate* gameState)
 				//Despawn/Explode enemies that are dead 
 				for (EnemyUnit const& enemy : gameState->Enemies) {
 					if (enemy.health <= 0.0) {
-							//gameState->Enemies.remove(enemy);
+						gameState->DespawnEnemy(enemy);
 					}
 				}
 			}
@@ -91,7 +91,7 @@ void Logic::Update(Gamestate* gameState)
 				//Despawn/Explode enemies that are dead 
 				for (EnemyUnit const& enemy : gameState->Enemies) {
 					if (enemy.health <= 0.0) {
-						//gameState->Enemies.remove(enemy);
+						gameState->DespawnEnemy(enemy);
 					}
 				}
 			}
@@ -120,7 +120,7 @@ void Logic::Update(Gamestate* gameState)
 				//Despawn/Explode enemies that are dead 
 				for (EnemyUnit const& enemy : gameState->Enemies) {
 					if (enemy.health <= 0.0) {
-						//gameState->Enemies.remove(enemy);
+						gameState->DespawnEnemy(enemy);
 					}
 				}
 			}
@@ -149,7 +149,7 @@ void Logic::Update(Gamestate* gameState)
 			//Despawn/Explode enemies that are dead 
 			for (EnemyUnit const& enemy : gameState->Enemies) {
 				if (enemy.health <= 0.0) {
-					//gameState->Enemies.remove(enemy);
+					gameState->DespawnEnemy(enemy);
 				}
 			}
 		}

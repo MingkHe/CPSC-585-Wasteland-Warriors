@@ -7,6 +7,7 @@ Gamestate::Gamestate()
 	camera.pos = glm::vec3(0.f, 15.f, 0.f);
 
 	Vehicle playerVehicle = Vehicle();
+	Entity map = Entity();
 }
 
 Gamestate::~Gamestate()
@@ -20,5 +21,5 @@ void Gamestate::SpawnEnemy(int type, float x, float y) {
 
 void Gamestate::DespawnEnemy(EnemyUnit enemy) {
 
-	Enemies.remove(enemy);
+	//Enemies.remove(enemy);
 }

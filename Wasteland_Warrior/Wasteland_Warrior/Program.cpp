@@ -70,7 +70,7 @@ void Program::start() {
 	gameState->scene = scene;
 
 	physicsCL.setPosition(0, glm::vec3{ 0.0f, 5.0f, 30.0f });
-	physicsCL.setPosition(0, glm::vec3{ 0.0f, 5.0f, 20.0f });
+	//physicsCL.setPosition(0, glm::vec3{ 0.0f, 5.0f, 20.0f });
 
 	//Main render loop
 	while (!glfwWindowShouldClose(window)) {

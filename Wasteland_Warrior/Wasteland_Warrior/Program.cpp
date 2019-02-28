@@ -78,7 +78,10 @@ void Program::start() {
 		//User Input
 		usrInput.Update(gameState);
 
-		logic.Update(gameState);
+		//Game Rules
+		if (gameState->UIMode == "Game") {
+			logic.Update(gameState);
+		}
 
 		//AI Interaction System
 		if (gameState->UIMode == "Game") { 

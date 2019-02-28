@@ -21,7 +21,7 @@ void Gamestate::SpawnEnemy(int type, float x, float y) {
 	//Mesh/Textures?
 }
 
-void Gamestate::DespawnEnemy(EnemyUnit enemy) {
+void Gamestate::DespawnEnemy(EnemyUnit enemy) { // Needs to blow up or something cool
 
 	//Add to entity system
 	//Enemies.remove(enemy);

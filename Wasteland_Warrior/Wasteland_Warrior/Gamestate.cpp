@@ -1,13 +1,8 @@
 #include "Gamestate.h"
-#include "PlayerUnit.h"
-#include "EnemyUnit.h"
 
 Gamestate::Gamestate()
 {
 	camera.pos = glm::vec3(0.f, 15.f, 0.f);
-
-	Vehicle playerVehicle = Vehicle();
-	Entity map = Entity();
 }
 
 Gamestate::~Gamestate()
@@ -22,4 +17,29 @@ void Gamestate::SpawnEnemy(int type, float x, float y) {
 void Gamestate::DespawnEnemy(EnemyUnit enemy) {
 
 	//Enemies.remove(enemy);
+}
+
+void Gamestate::SpawnPowerUp(int type, float x, float y) {
+
+	PowerUps.push_back(PowerUp(type, x, y));
+}
+
+void Gamestate::DespawnPowerUp(PowerUp powerUp) {
+
+	//PowerUps.remove(powerUp);
+}
+
+void Gamestate::SpawnObject(int type, float x, float y) {
+
+	if (type == 0) {
+		DynamicObjects.push_back(Object(type, x, y));
+	}
+	else {
+		StaticObjects.push_back(Object(type, x, y));
+	}
+}
+
+void Gamestate::DespawnObject(Object object) {
+
+	//Objects.remove(object);
 }

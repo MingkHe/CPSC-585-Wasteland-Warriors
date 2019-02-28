@@ -1,4 +1,3 @@
-
 #include <list>
 #include <string>
 #include <chrono>
@@ -7,6 +6,8 @@
 #include "Scene.h"
 #include "PlayerUnit.h"
 #include "EnemyUnit.h"
+#include "PowerUp.h"
+#include "Object.h"
 
 #pragma once
 
@@ -16,8 +17,13 @@ public:
 	Gamestate();
 	~Gamestate();
 
-	//playerVehicle
-	PlayerUnit playerVehicle = PlayerUnit(); //inherits Vehicle
+	//Entities
+	PlayerUnit playerVehicle = PlayerUnit();
+	Entity map = Entity();
+	std::vector<EnemyUnit> Enemies;
+	std::vector<PowerUp> PowerUps;
+	std::vector<Object> StaticObjects;
+	std::vector<Object> DynamicObjects;
 
 	//Button input
 	std::string button;
@@ -55,10 +61,12 @@ public:
 
 	std::string UIMode;
 
-	std::vector<EnemyUnit> Enemies;
-
 	void SpawnEnemy(int type, float x, float y);
 	void DespawnEnemy(EnemyUnit enemy);
+	void SpawnPowerUp(int type, float x, float y);
+	void DespawnPowerUp(PowerUp powerUp);
+	void SpawnObject(int type, float x, float y);
+	void DespawnObject(Object object);
 };
 
 //#endif

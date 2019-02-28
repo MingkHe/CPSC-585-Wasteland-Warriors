@@ -1,12 +1,12 @@
 #include "Camera.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include "Gamestate.h"
+#include <math.h>
 
 using namespace std;
 using namespace glm;
 
 const float MAX_VERT = 0.99f;
-
 
 Camera::Camera(Gamestate* newGamestate) {
 	dir = glm::vec3(0, 0, -1);
@@ -19,11 +19,21 @@ Camera::Camera(Gamestate* newGamestate) {
 	gameState = newGamestate;
 }
 
-
 glm::mat4 Camera::viewMatrix() const {
 
-	glm::vec3 at = gameState->playerVehicle.position;
-	glm::mat4 viewMatrix = glm::lookAt(pos, at, up);
+	glm::vec3 car = gameState->playerVehicle.position;
+	glm::vec3 cam = gameState->playerVehicle.position;
+
+	//Position behind car
+	cam.z = cam.z - 25;
+	cam.y = cam.y + 10;
+
+	//Rotate camera based on direction
+	float angle = atan(gameState->playerVehicle.direction.y / gameState->playerVehicle.direction.x);
+	cam.x = ((cam.x - car.x) * cos(angle)) - ((cam.z - car.z) * sin(angle)) + car.x;
+	cam.z = ((cam.x - car.x) * sin(angle)) + ((cam.z - car.z) * cos(angle)) + car.z;
+
+	glm::mat4 viewMatrix = glm::lookAt(cam, car, up);
 	return viewMatrix;
 }
 

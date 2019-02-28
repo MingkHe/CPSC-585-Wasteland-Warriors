@@ -61,12 +61,13 @@ public:
 
 	std::string UIMode;
 
+	//Spawning/Despawning Entities
 	void SpawnEnemy(int type, float x, float y);
 	void DespawnEnemy(EnemyUnit enemy);
 	void SpawnPowerUp(int type, float x, float y);
 	void DespawnPowerUp(PowerUp powerUp);
 	void SpawnObject(int type, float x, float y);
 	void DespawnObject(Object object);
-};
 
-//#endif
+	void Collision(Entity entity1, Entity entity2, float speed1, float speed2);
+};

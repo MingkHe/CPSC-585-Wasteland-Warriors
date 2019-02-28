@@ -43,3 +43,6 @@ void Gamestate::DespawnObject(Object object) {
 
 	//Objects.remove(object);
 }
+
+void Gamestate::Collision(Entity entity1, Entity entity2, float speed1, float speed2) {
+}

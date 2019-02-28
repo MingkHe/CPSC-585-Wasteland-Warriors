@@ -27,8 +27,8 @@
     <ClCompile Include="..\include\snippetFiles\snippetvehiclecommon\SnippetVehicleSceneQuery.cpp" />
     <ClCompile Include="Logic.cpp" />
     <ClCompile Include="UI_Controller.cpp" />
-    <ClCompile Include="PowerUp.cpp" />
     <ClCompile Include="Object.cpp" />
+    <ClCompile Include="PowerUp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Geometry.h" />
@@ -50,8 +50,8 @@
     <ClInclude Include="Physics_Controller.h" />
     <ClInclude Include="Logic.h" />
     <ClInclude Include="UI_Controller.h" />
-    <ClInclude Include="PowerUp.h" />
     <ClInclude Include="Object.h" />
+    <ClInclude Include="PowerUp.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Wasteland_Warrior.vcxproj.filters.txt" />

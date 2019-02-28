@@ -9,8 +9,7 @@ public:
 	PowerUp();
 	~PowerUp();
 
-	int type;
+	int type;//Health Boost/ Accelereration Boost/ Max Speed Boost
 
 	PowerUp(int type, float x, float y);
 };
-

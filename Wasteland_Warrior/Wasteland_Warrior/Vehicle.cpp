@@ -4,6 +4,7 @@
 
 Vehicle::Vehicle()
 {
+	this->health = 100;
 }
 
 

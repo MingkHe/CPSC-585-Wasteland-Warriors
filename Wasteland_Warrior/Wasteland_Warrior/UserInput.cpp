@@ -7,8 +7,8 @@
 
 std::queue<std::string> UserInput::inputBuffer;
 
-float UserInput::MouseXpos;
-float UserInput::MouseYpos;
+double UserInput::MouseXpos;
+double UserInput::MouseYpos;
 
 //WASD
 bool UserInput::WKey;

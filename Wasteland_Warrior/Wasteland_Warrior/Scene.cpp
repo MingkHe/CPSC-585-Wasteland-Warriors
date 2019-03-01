@@ -6,6 +6,7 @@
 */
 
 #include "Scene.h"
+#include "Gamestate.h"
 
 #include "RenderingEngine.h"
 
@@ -17,7 +18,10 @@
 #include "glad/glad.h"
 #include <GLFW/glfw3.h>
 
-Scene::Scene(RenderingEngine* renderer) : renderer(renderer) {
+Scene::Scene(RenderingEngine* renderer, Gamestate* newGamestate) : renderer(renderer) {
+	gameState = newGamestate;
+	gameState->scene = this;
+
 	Geometry ground;
 	ground.verts.push_back(glm::vec3(-250.f, 0.0f, -250.f));
 	ground.verts.push_back(glm::vec3(250.f, 0.0f, -250.f));
@@ -27,23 +31,28 @@ Scene::Scene(RenderingEngine* renderer) : renderer(renderer) {
 		ground.colors.push_back(glm::vec3(0.5f, 0.5f, 0.5f));
 		ground.normals.push_back(glm::vec3(0.f, 1.f, 0.f));
 	}
+
 	ground.transform = glm::mat4(
-		1.f, 0.f, 0.f, 0.f,
-		0.f, 1.f, 0.f, 0.f,
-		0.f, 0.f, 1.f, 0.f,
-		0.f, 1.f, 0.f, 1.f
+			1.f, 0.f, 0.f, 0.f,
+			0.f, 1.f, 0.f, 0.f,
+			0.f, 0.f, 1.f, 0.f,
+			0.f, 0.f, 0.f, 1.f
 	);
+
 	ground.drawMode = GL_TRIANGLE_STRIP;
 	RenderingEngine::assignBuffers(ground);
 	RenderingEngine::setBufferData(ground);
 	objects.push_back(ground);
 
 
-	generateRectPrism(5.0, 3.0, 2.0);
+	//generateRectPrism(5.0, 3.0, 2.0);
 }
 
+void Scene::setGamestate(Gamestate* newGamestate) {
+	gameState = newGamestate;
+}
 
-void Scene::generateRectPrism(float length, float width, float height) {
+int Scene::generateRectPrism(float length, float width, float height) {
 	Geometry box;
 	float carL = width; // Actually is width
 	float carW = length; //Actually is length
@@ -106,19 +115,19 @@ void Scene::generateRectPrism(float length, float width, float height) {
 		box.normals.push_back(glm::vec3(0.f, -1.f, 0.f));
 	}
 
-	for (int i = 0; i < box.verts.size(); i++) {
+	//Casting to signed int to resolve warning of signed/unsigned comparison
+	for (int i = 0; i < (signed int)box.verts.size(); i++) {
 		box.colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
 	}
-	box.transform = glm::mat4(
-		4.f, 0.f, 0.f, 0.f,
-		0.f, 4.f, 0.f, 0.f,
-		0.f, 0.f, 4.f, 0.f,
-		1.f, 0.f, 0.f, 1.f
-	);
+
+
 	box.drawMode = GL_TRIANGLE_STRIP;
 	RenderingEngine::assignBuffers(box);
 	RenderingEngine::setBufferData(box);
 	objects.push_back(box);
+
+	sceneObjectIndex++;
+	return(sceneObjectIndex);
 }
 
 
@@ -127,8 +136,16 @@ Scene::~Scene() {
 }
 
 void Scene::displayScene() {
+<<<<<<< HEAD
 	//glUseProgram(renderer->shaderProgramList[0]);
 	GLuint shader = renderer->GetShaderProgram("gamePlayShader");
 	renderer->SwitchShaderProgram(shader);
+=======
+	for (int i = 1; i <= sceneObjectIndex; i++) {
+		objects[i].transform = gameState->getEntityTransformation(i);
+	}
+	//objects[1].transform = gameState->playerVehicle.transformationMatrix;
+
+>>>>>>> master
 	renderer->RenderScene(objects);
 }

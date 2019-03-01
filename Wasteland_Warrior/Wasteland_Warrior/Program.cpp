@@ -11,12 +11,14 @@
 //**Must include glad and GLFW in this order or it breaks**
 #include "glad/glad.h"
 #include <GLFW/glfw3.h>
+#include <chrono>
 
 #include "Program.h"
 #include "RenderingEngine.h"
 #include "Scene.h"
 #include "SceneMainMenu.h"
 #include "UserInput.h"
+#include "Logic.h"
 #include "AI_Interaction.h"
 #include "Physics_Controller.h"
 #include "Audio_Controller.h"
@@ -31,10 +33,7 @@
 #include <SDL_mixer.h>
 #include <SDL.h>
 
-/*****--- Old camera code. Delete this and handle camera in rendering. ---*****/
-float oldMouseXpos;
-float oldMouseYpos;
-/**********/
+//https://stackoverflow.com/questions/997946/how-to-get-current-time-and-date-in-c
 
 Program::Program() {
 	setupWindow();
@@ -49,7 +48,11 @@ Program::~Program() {
 void Program::start() {
 	//Initialization
 	Gamestate* gameState = new Gamestate();
-	gameState->time = 0.0;
+
+	auto currentTime = std::chrono::system_clock::now();
+	gameState->time = currentTime;
+	std::chrono::duration<double> elapsed_seconds = currentTime - currentTime;
+
 	gameState->timeStep = 1.0 / 60.0; //60 fps
 	gameState->button = "";
 	gameState->UIMode = "Start";
@@ -58,11 +61,13 @@ void Program::start() {
 	SDL_Init(SDL_INIT_AUDIO);
 	
 	UserInput usrInput = UserInput();
+	Logic logic = Logic();
 	AI_Interaction aiInteraction = AI_Interaction();
 	Physics_Controller physicsCL = Physics_Controller(gameState);
 	Audio_Controller audioCL = Audio_Controller();
 	
 	renderingEngine = new RenderingEngine(gameState);
+<<<<<<< HEAD
 
 	const char* vertexFile = "../shaders/vertex.glsl";
 	const char* fragmentFile = "../shaders/fragment.glsl";
@@ -84,20 +89,28 @@ void Program::start() {
 	//SceneMainMenu* mainScene3 = new SceneMainMenu(renderingEngine_MainMenu);
 	//SceneMainMenu* mainScene4 = new SceneMainMenu(renderingEngine_MainMenu);
 	//Create Entities Example
+=======
+	scene = new Scene(renderingEngine, gameState);
 
-	//PlayerUnit mainCar = PlayerUnit();
-	//EnemyUnit Enemy1 = EnemyUnit();
-	//EnemyUnit Enemy2 = EnemyUnit();
+	gameState->SpawnEnemy(0, 15);
+	gameState->SpawnPlayer(0, 0);
+>>>>>>> master
 
-	//gameState->Entities.push_back(mainCar);
-	//gameState->Entities.push_back(Enemy1);
-	//gameState->Entities.push_back(Enemy2);
+
+	//Test creation
+	//physicsCL.createVehicle();
+	//physicsCL.setPosition(1, { 0.0f, 4.0f,  5.0f });
 
 	//Main render loop
 	while (!glfwWindowShouldClose(window)) {
 
 		//User Input
 		usrInput.Update(gameState);
+
+		//Game Rules
+		if (gameState->UIMode == "Game") {
+			logic.Update(gameState);
+		}
 
 		//AI Interaction System
 		if (gameState->UIMode == "Game") { 
@@ -107,7 +120,6 @@ void Program::start() {
 		//Physics Engine
 		if (gameState->UIMode == "Game") {
 			physicsCL.Update();
-			//std::cout << "Box position:  X:" << gameState->cubeLocation.x << "  Y:" << gameState->cubeLocation.y << "  Z:" << gameState->cubeLocation.z << std::endl; //Test statement, delete it if you want
 		}
 
 		//Audio Engine
@@ -124,6 +136,7 @@ void Program::start() {
 			//glfwSwapBuffers(window);
 			//delete scene;
 		}
+<<<<<<< HEAD
 		
 		/*****--- Old camera code. Delete this and handle camera in rendering. ---*****/
 		if (UserInput::MouseXpos != oldMouseXpos) {
@@ -136,12 +149,29 @@ void Program::start() {
 		}
 		/**********/
 		glfwSwapBuffers(window);
+=======
+
+>>>>>>> master
 		//glfwWaitEvents();
 		glfwPollEvents();
 
 		//Fixed Timestep
+<<<<<<< HEAD
 		gameState->time += gameState->timeStep;
 
+=======
+		while (elapsed_seconds.count() < gameState->timeStep){
+			currentTime = std::chrono::system_clock::now();
+			elapsed_seconds = currentTime - gameState->time;
+
+			//std::cout << "Time elapsed: " << elapsed_seconds.count() << std::endl; //Test statement, delete it if you want
+			if (elapsed_seconds.count() >= (gameState->timeStep * 2)) {
+				std::cout << "Frame lost" << std::endl; //Test statement, delete it if you want
+			}
+		}
+		elapsed_seconds = currentTime-currentTime;
+		gameState->time = currentTime;
+>>>>>>> master
 	}
 
 }

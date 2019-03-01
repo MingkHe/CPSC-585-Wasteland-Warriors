@@ -1,39 +1,41 @@
 #include "Camera.h"
 #include <glm/gtc/matrix_transform.hpp>
+#include "Gamestate.h"
+#include <math.h>
 
 using namespace std;
 using namespace glm;
 
 const float MAX_VERT = 0.99f;
 
-//const float MAX_RADIUS = 300.0f;
-//const float MIN_RADIUS = 5.0f;
-//const float RADIUS = 1.f;
+Camera::Camera(Gamestate* newGamestate) {
+	dir = glm::vec3(0, 0, -1);
+	right = glm::vec3(1, 0, 0);
+	up = glm::vec3(0, 1, 0);
+
+	pos = glm::vec3(0);
+	radius = 1.f;
+
+	gameState = newGamestate;
+}
 
 glm::mat4 Camera::viewMatrix() const {
-	mat4 cRotation = transpose(mat4(vec4(right, 0), vec4(up, 0), vec4(-dir, 0), vec4(0, 0, 0, 1)));
-	mat4 cTranslation = glm::translate(mat4(1.f), -pos + (radius*dir));
-	return cRotation * cTranslation;
-}
 
-void Camera::rotateVertical(float radians) {
-	mat4 rotationMatrix = glm::rotate(mat4(1.f), radians, right);
-	vec3 newDir = normalize(vec3(rotationMatrix*vec4(dir, 0)));
+	glm::vec3 car = gameState->playerVehicle.position;
+	glm::vec3 cam = gameState->playerVehicle.position;
 
-	if (abs(newDir.y) < MAX_VERT) {
-		dir = newDir;
-		up = normalize(cross(right, dir));
-	}
-}
+	//Position behind car
+	float lagSensitivity = 0.0;
+	cam.z = (cam.z - 25) - (gameState->playerVehicle.acceleration * lagSensitivity);
+	cam.y = cam.y + 10;
 
-void Camera::rotateHorizontal(float radians) {
-	mat4 rotationMatrix = glm::rotate(mat4(1.f), radians, vec3(0, 1, 0));
-	dir = normalize(vec3(rotationMatrix*vec4(dir, 0)));
-	right = normalize(cross(dir, vec3(0, 1, 0)));
-	up = normalize(cross(right, dir));
+	//Rotate camera based on direction
+	float angle = atan(gameState->playerVehicle.direction.y / gameState->playerVehicle.direction.x);
+	cam.x = ((cam.x - car.x) * cos(angle)) - ((cam.z - car.z) * sin(angle)) + car.x;
+	cam.z = ((cam.x - car.x) * sin(angle)) + ((cam.z - car.z) * cos(angle)) + car.z;
+
+	glm::mat4 viewMatrix = glm::lookAt(cam, car, up);
+	return viewMatrix;
 }
 
 
-void Camera::move(vec3 movement) {
-	pos += movement.x*right + movement.y*up + movement.z*dir;
-}

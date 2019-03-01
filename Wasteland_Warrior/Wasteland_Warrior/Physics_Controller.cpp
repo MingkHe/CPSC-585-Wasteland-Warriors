@@ -1,4 +1,5 @@
 #include "Physics_Controller.h"
+#include "Gamestate.h"
 
 #include <ctype.h>
 
@@ -55,6 +56,7 @@ bool					changeToForwardGear = false;
 Physics_Controller::Physics_Controller(Gamestate* newGameState)
 {
 	gameState = newGameState;
+	gameState->physics_Controller = this;
 	initPhysics(false);
 }
 
@@ -81,16 +83,18 @@ void Physics_Controller::Update()
 	PX_MAX_F32, PX_MAX_F32
 };*/
 
+
+// Casting values to PxF32 to resolve warning of mismatch types
 PxF32 gSteerVsForwardSpeedData[2 * 8] =
 {
-	0.1*PX_MAX_F32,		0.5f,
-	0.2*PX_MAX_F32,		0.45f,
-	0.3*PX_MAX_F32,		0.4f,
-	0.4*PX_MAX_F32,		0.35f,
-	0.5*PX_MAX_F32,		0.3f,
-	0.6*PX_MAX_F32,		0.25f,
-	0.7*PX_MAX_F32,		0.2f,
-	0.8*PX_MAX_F32,		0.1f
+	(PxF32)0.1*PX_MAX_F32,		0.5f,
+	(PxF32)0.2*PX_MAX_F32,		0.45f,
+	(PxF32)0.3*PX_MAX_F32,		0.4f,
+	(PxF32)0.4*PX_MAX_F32,		0.35f,
+	(PxF32)0.5*PX_MAX_F32,		0.3f,
+	(PxF32)0.6*PX_MAX_F32,		0.25f,
+	(PxF32)0.7*PX_MAX_F32,		0.2f,
+	(PxF32)0.8*PX_MAX_F32,		0.1f
 };
 
 
@@ -333,7 +337,7 @@ void Physics_Controller::initPhysics(bool interactive)
 	
 
 	//Create the batched scene queries for the suspension raycasts.
-	gVehicleSceneQueryData = VehicleSceneQueryData::allocate(1, PX_MAX_NB_WHEELS, 1, 1, WheelSceneQueryPreFilterBlocking, NULL, gAllocator); //!!
+	gVehicleSceneQueryData = VehicleSceneQueryData::allocate(1, PX_MAX_NB_WHEELS, 1, 1, WheelSceneQueryPreFilterBlocking, NULL, gAllocator); 
 	gBatchQuery = VehicleSceneQueryData::setUpBatchedSceneQuery(0, *gVehicleSceneQueryData, gScene);
 
 	//Create the friction table for each combination of tire and surface type.
@@ -344,10 +348,14 @@ void Physics_Controller::initPhysics(bool interactive)
 	gGroundPlane = createDrivablePlane(groundPlaneSimFilterData, gMaterial, gPhysics);
 	gScene->addActor(*gGroundPlane);
 
+	startBrakeMode();
+}
+
+int Physics_Controller::createVehicle() {
 	//Create a vehicle that will drive on the plane.
 	VehicleDesc vehicleDesc = initPlayerVehiclePhysicsDesc();
 	gVehicle4W = createVehicle4W(vehicleDesc, gPhysics, gCooking);
-	PxTransform startTransform(PxVec3(0, (vehicleDesc.chassisDims.y*0.5f + vehicleDesc.wheelRadius + 1.0f), 0), PxQuat(PxIdentity));
+	PxTransform startTransform(PxVec3(0, (vehicleDesc.chassisDims.y*0.5f + vehicleDesc.wheelRadius + 1.0f), 0.0f), PxQuat(PxIdentity));
 	gVehicle4W->getRigidDynamicActor()->setGlobalPose(startTransform);
 	gScene->addActor(*gVehicle4W->getRigidDynamicActor());
 
@@ -357,7 +365,20 @@ void Physics_Controller::initPhysics(bool interactive)
 	gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
 	gVehicle4W->mDriveDynData.setUseAutoGears(true);
 
-	startBrakeMode();
+	rigidDynamicActorIndex++;
+	return rigidDynamicActorIndex;
+}
+
+void Physics_Controller::setPosition(int actorIndex, glm::vec3 newLocation){
+	PxU32 numOfRidg = gScene->getNbActors(PxActorTypeFlag::eRIGID_DYNAMIC);
+	PxActor *userBuffer[50];
+
+	PxU32 numOfRidgActors = gScene->getActors(PxActorTypeFlag::eRIGID_DYNAMIC, userBuffer, numOfRidg, 0);
+	PxActor *actor = userBuffer[actorIndex];
+	PxRigidActor *rigidActor = actor->is<PxRigidActor>();
+
+	//PxTransform
+	rigidActor->setGlobalPose({ newLocation.x, newLocation.y, newLocation.z });
 }
 
 void userDriveInput(bool WKey, bool AKey, bool SKey, bool DKey, bool SPACEKey) {
@@ -497,61 +518,40 @@ void Physics_Controller::stepPhysics(bool interactive)
 	gScene->fetchResults(true);
 
 
+	updateEntities();
+}
+
+void Physics_Controller::updateEntities() {
 	PxU32 numOfRidg = gScene->getNbActors(PxActorTypeFlag::eRIGID_DYNAMIC);
 	PxActor *userBuffer[50];
+	//std::cout << "Number of Ridged objects: " << numOfRidg << std::endl; //Test statement, delete it if you want
 
-	//std::cout << "Number of obj:" << numOfRidg;
 	PxU32 numOfRidgActors = gScene->getActors(PxActorTypeFlag::eRIGID_DYNAMIC, userBuffer, numOfRidg, 0);
-	PxActor *box = userBuffer[0];
-	//If we had a PxRigidActor 
-	PxRigidActor *rigidActor = box->is<PxRigidActor>();
-	
-	PxTransform orientation = rigidActor->getGlobalPose();		//   https://docs.nvidia.com/gameworks/content/gameworkslibrary/physx/apireference/files/classPxRigidActor.html
-	PxVec3 location = orientation.p;								//	https://docs.nvidia.com/gameworks/content/gameworkslibrary/physx/apireference/files/classPxTransform.html
-	PxQuat rotation = orientation.q;			
-	
-	PxVec3 xRotation = rotation.getBasisVector0();
-	PxVec3 yRotation = rotation.getBasisVector1();
-	PxVec3 zRotation = rotation.getBasisVector2();
 
+	for (int i = 0; i <= rigidDynamicActorIndex; i++) {
+		PxActor *actor = userBuffer[i];
+		PxRigidActor *rigidActor = actor->is<PxRigidActor>();
 
-	//FIX THIS LATER!
-	gameState->scene->objects[1].transform[3][0] = location.x;
-	gameState->scene->objects[1].transform[3][1] = location.y;
-	gameState->scene->objects[1].transform[3][2] = location.z;
+		PxTransform orientation = rigidActor->getGlobalPose();		//   https://docs.nvidia.com/gameworks/content/gameworkslibrary/physx/apireference/files/classPxRigidActor.html
+		PxVec3 location = orientation.p;							//	https://docs.nvidia.com/gameworks/content/gameworkslibrary/physx/apireference/files/classPxTransform.html
+		PxQuat rotation = orientation.q;
 
-	std::cout << "Box position:  X:" << yRotation.x << "  Y:" << yRotation.y << "  Z:" << yRotation.z << std::endl; //Test statement, delete it if you want
+		PxVec3 xRotation = rotation.getBasisVector0();
+		PxVec3 yRotation = rotation.getBasisVector1();
+		PxVec3 zRotation = rotation.getBasisVector2();
 
-	
-	gameState->scene->objects[1].transform[0][0] = xRotation.x;
-	gameState->scene->objects[1].transform[0][1] = xRotation.y;
-	gameState->scene->objects[1].transform[0][2] = xRotation.z;
+		glm::mat4 transformationMatrix;
+		transformationMatrix[0] = { xRotation.x, xRotation.y, xRotation.z, 0.0f };
+		transformationMatrix[1] = { yRotation.x, yRotation.y, yRotation.z, 0.0f };
+		transformationMatrix[2] = { zRotation.x, zRotation.y, zRotation.z, 0.0f };
+		transformationMatrix[3] = { location.x , location.y , location.z , 1.0f };
 
-	gameState->scene->objects[1].transform[1][0] = yRotation.x;
-	gameState->scene->objects[1].transform[1][1] = yRotation.y;
-	gameState->scene->objects[1].transform[1][2] = yRotation.z;
-
-	gameState->scene->objects[1].transform[2][0] = zRotation.x;
-	gameState->scene->objects[1].transform[2][1] = zRotation.y;
-	gameState->scene->objects[1].transform[2][2] = zRotation.z;
-
-
-	/*
-
-
-	glm::mat4 transofrmationMatrix = 
-		glm::mat4{
-		{xRotation.x, yRotation.x, zRotation.x, 0.f},
-		{xRotation.y, yRotation.y, zRotation.y, 0.f},
-		{xRotation.z, yRotation.z, zRotation.z, 0.f},
-		{0.0f		, 0.0f		 , 0.0f		  , 1.0f}
-	};
-
-	gameState->camera.pos = glm::vec4(location.x, (location.y+3), (location.z+5), 1.0f)*transofrmationMatrix;
-	gameState->camera.dir = glm::vec4(0.0f, -5.0f, 0.0f, 0.0f)*transofrmationMatrix;
-	gameState->camera.right = glm::vec4(1.0f, 0.0f, 0.0f, 0.0f)*transofrmationMatrix;
-	gameState->camera.up = glm::cross(gameState->camera.dir, gameState->camera.right);*/
+		gameState->updateEntity(i, glm::vec3{ location.x, location.y, location.z }, transformationMatrix);
+	}
 }
+
+
+
 
 
 void Physics_Controller::cleanupPhysics(bool interactive)

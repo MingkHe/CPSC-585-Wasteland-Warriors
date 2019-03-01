@@ -29,7 +29,7 @@ void main()
 
     // assign output colour to be interpolated
     Colour = VertexColour;
-	lightVec = light - VertexPosition;
-	cameraVec = cameraPos - VertexPosition;
-	normal = (modelViewProjection*vec4(Normal, 1.0)).xyz;
+	lightVec = light - (transform*vec4(VertexPosition, 1.0)).xyz;
+	cameraVec = cameraPos - (transform*vec4(VertexPosition, 1.0)).xyz;
+	normal = Normal;//(modelViewProjection*vec4(Normal, 1.0)).xyz;
 }

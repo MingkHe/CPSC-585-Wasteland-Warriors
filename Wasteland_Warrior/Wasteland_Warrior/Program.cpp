@@ -68,7 +68,9 @@ void Program::start() {
 	renderingEngine = new RenderingEngine(gameState);
 	scene = new Scene(renderingEngine, gameState);
 
+	gameState->SpawnEnemy(0, 15);
 	gameState->SpawnPlayer(0, 0);
+
 
 	//Test creation
 	//physicsCL.createVehicle();

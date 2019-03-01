@@ -5,9 +5,8 @@ class EnemyUnit :
 {
 public:
 	EnemyUnit();
+	EnemyUnit(int newPhysicsIndex, int newSceneObjectIndex);
 	~EnemyUnit();
-
-	EnemyUnit(int type, float x, float y);
 
 	int type;
 };

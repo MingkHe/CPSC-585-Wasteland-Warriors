@@ -66,7 +66,7 @@ public:
 
 	//Spawning/Despawning Entities
 	void SpawnPlayer(float x, float y);
-	void SpawnEnemy(int type, float x, float y);
+	void SpawnEnemy(float x, float y);
 	void DespawnEnemy(EnemyUnit enemy);
 	void SpawnPowerUp(int type, float x, float y);
 	void DespawnPowerUp(PowerUp powerUp);
@@ -76,4 +76,5 @@ public:
 	void Collision(Entity entity1, Entity entity2, float speed1, float speed2);
 
 	void updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 newTransformationMatrix);
+	glm::mat4 getEntityTransformation(int sceneObjectIndex);
 };

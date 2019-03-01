@@ -15,7 +15,7 @@ void Logic::Update(Gamestate* gameState)
 		if (wave == 0) {
 			//create 3 enemy AIs
 			for (int i = 0; i < 3; i++) {
-				gameState->SpawnEnemy(1, 0.0, 0.0);
+				//gameState->SpawnEnemy(1, 0.0, 0.0);
 			}
 			wave = 1;
 			waveBreak = 1;
@@ -45,7 +45,7 @@ void Logic::Update(Gamestate* gameState)
 				//remove powerups
 				//create 5 enemy AIs
 				for (int i = 0; i < 5; i++) {
-					gameState->SpawnEnemy(1, 0.0, 0.0);
+					//gameState->SpawnEnemy(1, 0.0, 0.0);
 				}
 			}
 			breakTime--;
@@ -74,7 +74,7 @@ void Logic::Update(Gamestate* gameState)
 				//remove powerups
 				//create 10 enemy AIs
 				for (int i = 0; i < 10; i++) {
-					gameState->SpawnEnemy(1, 0.0, 0.0);
+					//gameState->SpawnEnemy(1, 0.0, 0.0);
 				}
 			}
 			breakTime--;
@@ -103,7 +103,7 @@ void Logic::Update(Gamestate* gameState)
 				//remove powerups
 				//create 15 enemy AIs
 				for (int i = 0; i < 15; i++) {
-					gameState->SpawnEnemy(1, 0.0, 0.0);
+					//gameState->SpawnEnemy(1, 0.0, 0.0);
 				}
 			}
 			breakTime--;
@@ -132,7 +132,7 @@ void Logic::Update(Gamestate* gameState)
 				//remove powerups
 				//create 20 enemy AIs
 				for (int i = 0; i < 20; i++) {
-					gameState->SpawnEnemy(1, 0.0, 0.0);
+					//gameState->SpawnEnemy(1, 0.0, 0.0);
 				}
 			}
 			breakTime--;

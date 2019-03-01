@@ -38,7 +38,7 @@ public:
 	std::vector<Geometry> objects;
 	int generateRectPrism(float length, float width, float height);
 
-	int sceneObjectIndex = -1;
+	int sceneObjectIndex = 0;
 
 private:
 };

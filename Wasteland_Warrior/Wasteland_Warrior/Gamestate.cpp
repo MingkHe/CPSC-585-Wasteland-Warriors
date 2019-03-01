@@ -12,19 +12,18 @@ Gamestate::~Gamestate()
 
 void Gamestate::SpawnPlayer (float x, float y) {
 	int physicsIndex = physics_Controller->createVehicle();
-	physics_Controller->setPosition(0, glm::vec3{x, 4.0f, y});
-	int sceneObjectIndex = scene->generateRectPrism(5.0, 3.0, 2.0);
+	physics_Controller->setPosition(physicsIndex, glm::vec3{x, 4.0f, y});
+	int sceneObjectIndex = scene->generateRectPrism(2.4, 1.6, 1.2);
 	playerVehicle = PlayerUnit(physicsIndex, sceneObjectIndex);
 }
 
 
-void Gamestate::SpawnEnemy(int type, float x, float y) {
-	//int physicsIndex = physics_Controller->createVehicle();
-	//physics_Controller->setPosition(0, glm::vec3{ x, 5.0f, y });
-	//int sceneObjectIndex = scene->generateRectPrism(5.0, 3.0, 2.0);
-	Enemies.push_back(EnemyUnit(type, x, y));
-
-	//Mesh/Textures?
+void Gamestate::SpawnEnemy(float x, float y) {
+	int physicsIndex = physics_Controller->createVehicle();
+	physics_Controller->setPosition(physicsIndex, glm::vec3{ x, 5.0f, y });
+	int sceneObjectIndex = scene->generateRectPrism(2.4, 1.6, 1.2);
+	EnemyUnit enemy = EnemyUnit(physicsIndex, sceneObjectIndex);
+	Enemies.push_back(enemy);
 }
 
 void Gamestate::DespawnEnemy(EnemyUnit enemy) { // Needs to blow up or something cool
@@ -100,11 +99,72 @@ void Gamestate::Collision(Entity entity1, Entity entity2, float speed1, float sp
 
 
 void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 newTransformationMatrix) {
-	if (physicsIndex == playerVehicle.physicsIndex) {
-		playerVehicle.position = newPosition;
-		playerVehicle.transformationMatrix = newTransformationMatrix;
+	Entity* updateEntity = NULL;
 
-		//std::cout << "Box position:  X:" << location.x << "  Y:" << location.y << "  Z:" << location.z << std::endl; //Test statement, delete it if you want
+	if (physicsIndex == playerVehicle.physicsIndex) {
+		updateEntity = &playerVehicle;
+		//std::cout << "Box position:  X:" << newPosition.x << "  Y:" << newPosition.y << "  Z:" << newPosition.z << std::endl; //Test statement, delete it if you want
 	}
 
+	for (int i = 0; i < Enemies.size(); i++) {
+		if (physicsIndex == Enemies[i].physicsIndex) {
+			updateEntity = &Enemies[i];
+		}
+	}
+
+	for (int i = 0; i < PowerUps.size(); i++) {
+		if (physicsIndex == PowerUps[i].physicsIndex) {
+			updateEntity = &PowerUps[i];
+		}
+	}
+
+	for (int i = 0; i < StaticObjects.size(); i++) {
+		if (physicsIndex == StaticObjects[i].physicsIndex) {
+			updateEntity = &StaticObjects[i];
+		}
+	}
+
+	for (int i = 0; i < DynamicObjects.size(); i++) {
+		if (physicsIndex == DynamicObjects[i].physicsIndex) {
+			updateEntity = &DynamicObjects[i];
+		}
+	}
+
+	if (updateEntity==NULL){
+		updateEntity = &Entity();	//If no entity was found, update is waisted
+		std::cout << "Gamestate failed to locate the physicsIndex, entity not updated" << std::endl;
+	}
+
+	updateEntity->position = newPosition;
+	updateEntity->transformationMatrix = newTransformationMatrix;
+}
+
+glm::mat4 Gamestate::getEntityTransformation(int sceneObjectIndex) {
+	if (sceneObjectIndex == playerVehicle.sceneObjectIndex) {
+		return playerVehicle.transformationMatrix;
+	}
+
+	for (int i = 0; i < Enemies.size(); i++) {
+		if (sceneObjectIndex == Enemies[i].sceneObjectIndex) {
+			return Enemies[i].transformationMatrix;
+		}
+	}
+
+	for (int i = 0; i < PowerUps.size(); i++) {
+		if (sceneObjectIndex == PowerUps[i].sceneObjectIndex) {
+			return PowerUps[i].transformationMatrix;
+		}
+	}
+
+	for (int i = 0; i < StaticObjects.size(); i++) {
+		if (sceneObjectIndex == StaticObjects[i].sceneObjectIndex) {
+			return StaticObjects[i].transformationMatrix;
+		}
+	}
+
+	for (int i = 0; i < DynamicObjects.size(); i++) {
+		if (sceneObjectIndex == DynamicObjects[i].sceneObjectIndex) {
+			return DynamicObjects[i].transformationMatrix;
+		}
+	}
 }

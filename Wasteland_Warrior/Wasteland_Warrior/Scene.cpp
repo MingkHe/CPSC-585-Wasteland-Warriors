@@ -136,7 +136,10 @@ Scene::~Scene() {
 }
 
 void Scene::displayScene() {
-	objects[1].transform = gameState->playerVehicle.transformationMatrix;
+	for (int i = 1; i <= sceneObjectIndex; i++) {
+		objects[i].transform = gameState->getEntityTransformation(i);
+	}
+	//objects[1].transform = gameState->playerVehicle.transformationMatrix;
 
 	renderer->RenderScene(objects);
 }

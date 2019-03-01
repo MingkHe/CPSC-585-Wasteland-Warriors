@@ -12,27 +12,8 @@
 //included here because it just contains some global functions
 #include "ShaderTools.h"
 
-RenderingEngine::RenderingEngine(Gamestate *gameState, const char* v, const char* f) {
-	
-	const char* vertexMainFile = "../shaders/vertexMainMenu.glsl";
-	const char* fragmentMainFile = "../shaders/fragmentMainMenu.glsl";
-
-	const char* vertexFile = "../shaders/vertex.glsl";
-	const char* fragmentFile = "../shaders/fragment.glsl";
-
-	shaderProgram = ShaderTools::InitializeShaders(vertexFile,fragmentFile);
-
-	shaderProgramList.push_back(shaderProgram);
-
-	GLuint shaderProgram2 = ShaderTools::InitializeShaders(vertexMainFile, fragmentMainFile);
-
-	shaderProgramList.push_back(shaderProgram2);
-	
+RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	game_state = gameState;
-	if (shaderProgram == 0) {
-		std::cout << "Program could not initialize shaders, TERMINATING" << std::endl;
-		return;
-	}
 }
 
 RenderingEngine::~RenderingEngine() {
@@ -49,24 +30,24 @@ void RenderingEngine::RenderScene(const std::vector<Geometry>& objects) {
 	glDepthFunc(GL_LESS);
 
 	//sets uniforms
-	GLint cameraGL = glGetUniformLocation(shaderProgramList[0], "cameraPos");
-	GLint lightGL = glGetUniformLocation(shaderProgramList[0], "light");
-	GLint shadeGL = glGetUniformLocation(shaderProgramList[0], "shade");
-	GLint transformGL = glGetUniformLocation(shaderProgramList[0], "transform");
+	GLint cameraGL = glGetUniformLocation(shaderProgram, "cameraPos");
+	GLint lightGL = glGetUniformLocation(shaderProgram, "light");
+	GLint shadeGL = glGetUniformLocation(shaderProgram, "shade");
+	GLint transformGL = glGetUniformLocation(shaderProgram, "transform");
 	glm::mat4 perspectiveMatrix = glm::perspective(PI_F*.4f, 512.f / 512.f, .1f, 200.f);
 	glm::mat4 modelViewProjection = perspectiveMatrix * game_state->camera.viewMatrix();
 	glm::vec4 light4 = modelViewProjection * glm::vec4(game_state->light, 1.0);
 	glm::vec3 light = glm::vec3(light4.x, light4.y, light4.z);
-	glUseProgram(shaderProgramList[0]);
+	glUseProgram(shaderProgram);
 	glUniform3fv(cameraGL, 1, &(game_state->camera.pos.x));
 	glUniform3fv(lightGL, 1, &(light.x));
 	glUniform1i(shadeGL, game_state->shading_model);
-	GLint uniformLocation = glGetUniformLocation(shaderProgramList[0], "modelViewProjection");
+	GLint uniformLocation = glGetUniformLocation(shaderProgram, "modelViewProjection");
 	glUniformMatrix4fv(uniformLocation, 1, false, glm::value_ptr(modelViewProjection));
 
 	// bind our shader program and the vertex array object containing our
 	// scene geometry, then tell OpenGL to draw our geometry
-	glUseProgram(shaderProgramList[0]);
+	glUseProgram(shaderProgram);
 
 	for (const Geometry& g : objects) {
 		glUniformMatrix4fv(transformGL, 1, false, &(g.transform[0][0]));
@@ -89,7 +70,7 @@ void RenderingEngine::RenderMenuScene(const std::vector<Geometry>& objects) {
 
 	// bind our shader program and the vertex array object containing our
 	// scene geometry, then tell OpenGL to draw our geometry
-	glUseProgram(shaderProgramList[1]);
+	glUseProgram(shaderProgram);
 
 	for (const Geometry& g : objects) {
 		glBindVertexArray(g.vao);
@@ -126,6 +107,29 @@ void RenderingEngine::RenderMenuSceneClear(const std::vector<Geometry>& objects)
 
 	// check for an report any OpenGL errors
 	CheckGLErrors();
+}
+
+void RenderingEngine::LoadShaderProgram(std::string name, const char* vertexFile, const char* fragmentFile) {
+
+	if (shaderProgramList[name] == NULL)
+	{
+		//myMusic[path] = Mix_LoadMUS(path.c_str());
+		shaderProgramList[name] = ShaderTools::InitializeShaders(vertexFile, fragmentFile);
+
+		if (shaderProgramList[name] == NULL) {
+			printf("Shader loading error: Program %s Error\n", name);
+		}
+
+	}
+
+}
+
+GLuint RenderingEngine::GetShaderProgram(std::string name) {
+	if (shaderProgramList[name] == NULL)
+	{
+		printf("Shader haven't loaded yet. Please load shader first. Error Shader name: %s Error\n", name);
+	}
+	return shaderProgramList[name];
 }
 
 void RenderingEngine::SwitchShaderProgram(GLuint shader) {

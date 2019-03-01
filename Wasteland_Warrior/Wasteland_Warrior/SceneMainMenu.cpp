@@ -119,14 +119,17 @@ void SceneMainMenu::displayTexture(MyTexture &texture, std::vector<glm::vec3> po
 	
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	GLuint shader = renderer->GetShaderProgram("menuShader");
+	renderer->SwitchShaderProgram(shader);
 	
-	glUseProgram(renderer->shaderProgramList[1]);
+	glUseProgram(renderer->shaderProgram);
 	//Set which texture unit the texture is bound to
 	glActiveTexture(GL_TEXTURE0);
 	//Bind the texture to GL_TEXTURE0
 	glBindTexture(GL_TEXTURE_RECTANGLE, texture.textureID);
 	//Get identifier for uniform
-	GLuint uniformLocation = glGetUniformLocation(renderer->shaderProgramList[1], "ImageTexture");
+	GLuint uniformLocation = glGetUniformLocation(renderer->shaderProgram, "ImageTexture");
 	//Load texture unit number into uniform
 	glUniform1i(uniformLocation, 0);
 

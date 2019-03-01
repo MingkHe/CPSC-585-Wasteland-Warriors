@@ -127,6 +127,8 @@ Scene::~Scene() {
 }
 
 void Scene::displayScene() {
-	glUseProgram(renderer->shaderProgramList[0]);
+	//glUseProgram(renderer->shaderProgramList[0]);
+	GLuint shader = renderer->GetShaderProgram("gamePlayShader");
+	renderer->SwitchShaderProgram(shader);
 	renderer->RenderScene(objects);
 }

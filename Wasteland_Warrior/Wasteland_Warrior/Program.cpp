@@ -62,11 +62,17 @@ void Program::start() {
 	Physics_Controller physicsCL = Physics_Controller(gameState);
 	Audio_Controller audioCL = Audio_Controller();
 	
-	
+	renderingEngine = new RenderingEngine(gameState);
+
 	const char* vertexFile = "../shaders/vertex.glsl";
 	const char* fragmentFile = "../shaders/fragment.glsl";
 
-	renderingEngine = new RenderingEngine(gameState, vertexFile, fragmentFile);
+	const char* vertexMenuFile = "../shaders/vertexMainMenu.glsl";
+	const char* fragmentMenuFile = "../shaders/fragmentMainMenu.glsl";
+
+	renderingEngine->LoadShaderProgram("gamePlayShader", vertexFile, fragmentFile);
+
+	renderingEngine->LoadShaderProgram("menuShader", vertexMenuFile, fragmentMenuFile);
 	
 	scene = new Scene(renderingEngine);
 	gameState->scene = scene; // what is the scene meaning here in the gamestate?

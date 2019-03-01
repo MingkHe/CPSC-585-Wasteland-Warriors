@@ -14,5 +14,3 @@ public:
 
 	Gamestate* gameState;
 };
-
-//#endif

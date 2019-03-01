@@ -1,4 +1,6 @@
-#include "Gamestate.h"
+#pragma once
+#include <glm/glm.hpp>
+class Gamestate;
 
 class Physics_Controller
 {
@@ -13,10 +15,11 @@ public:
 	void cleanupPhysics(bool interactive);
 
 	void Update();
+	void updateEntities();
 
 	void setPosition(int actorIndex, glm::vec3 newLocation);
 	int createVehicle();
 
-	int rigidDynamicActorNumber = 0;
+	int rigidDynamicActorIndex = -1;
 	Gamestate* gameState;
 };

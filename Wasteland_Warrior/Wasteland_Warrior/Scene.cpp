@@ -20,6 +20,7 @@
 
 Scene::Scene(RenderingEngine* renderer, Gamestate* newGamestate) : renderer(renderer) {
 	gameState = newGamestate;
+	gameState->scene = this;
 
 	Geometry ground;
 	ground.verts.push_back(glm::vec3(-250.f, 0.0f, -250.f));
@@ -44,14 +45,14 @@ Scene::Scene(RenderingEngine* renderer, Gamestate* newGamestate) : renderer(rend
 	objects.push_back(ground);
 
 
-	generateRectPrism(5.0, 3.0, 2.0);
+	//generateRectPrism(5.0, 3.0, 2.0);
 }
 
 void Scene::setGamestate(Gamestate* newGamestate) {
 	gameState = newGamestate;
 }
 
-void Scene::generateRectPrism(float length, float width, float height) {
+int Scene::generateRectPrism(float length, float width, float height) {
 	Geometry box;
 	float carL = width; // Actually is width
 	float carW = length; //Actually is length
@@ -114,7 +115,8 @@ void Scene::generateRectPrism(float length, float width, float height) {
 		box.normals.push_back(glm::vec3(0.f, -1.f, 0.f));
 	}
 
-	for (int i = 0; i < box.verts.size(); i++) {
+	//Casting to signed int to resolve warning of signed/unsigned comparison
+	for (int i = 0; i < (signed int)box.verts.size(); i++) {
 		box.colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
 	}
 
@@ -123,6 +125,9 @@ void Scene::generateRectPrism(float length, float width, float height) {
 	RenderingEngine::assignBuffers(box);
 	RenderingEngine::setBufferData(box);
 	objects.push_back(box);
+
+	sceneObjectIndex++;
+	return(sceneObjectIndex);
 }
 
 
@@ -131,7 +136,10 @@ Scene::~Scene() {
 }
 
 void Scene::displayScene() {
-	objects[1].transform = gameState->playerVehicle.transformationMatrix;
+	for (int i = 1; i <= sceneObjectIndex; i++) {
+		objects[i].transform = gameState->getEntityTransformation(i);
+	}
+	//objects[1].transform = gameState->playerVehicle.transformationMatrix;
 
 	renderer->RenderScene(objects);
 }

@@ -14,8 +14,8 @@ public:
 
 	static std::queue<std::string> inputBuffer;
 	
-	static float MouseXpos;
-	static float MouseYpos;
+	static double MouseXpos;
+	static double MouseYpos;
 	float oldMouseXpos;
 	float oldMouseYpos;
 
@@ -26,7 +26,7 @@ public:
 	static bool DKey;
 	static bool SPACEKey;
 
-	float cameraSensitivity = 0.01;
+	float cameraSensitivity = 0.01f;
 
 	void Update(Gamestate* gameState);
 	static void key(GLFWwindow * window, int key, int scancode, int action, int mods);

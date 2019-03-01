@@ -67,10 +67,12 @@ void Program::start() {
 	
 	renderingEngine = new RenderingEngine(gameState);
 	scene = new Scene(renderingEngine, gameState);
-	gameState->scene = scene;
 
-	physicsCL.setPosition(0, glm::vec3{ 0.0f, 5.0f, 30.0f });
-	//physicsCL.setPosition(0, glm::vec3{ 0.0f, 5.0f, 20.0f });
+	gameState->SpawnPlayer(0, 0);
+
+	//Test creation
+	//physicsCL.createVehicle();
+	//physicsCL.setPosition(1, { 0.0f, 4.0f,  5.0f });
 
 	//Main render loop
 	while (!glfwWindowShouldClose(window)) {

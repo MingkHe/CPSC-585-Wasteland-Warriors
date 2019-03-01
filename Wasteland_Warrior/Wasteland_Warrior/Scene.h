@@ -36,9 +36,11 @@ public:
 
 	//list of objects in the scene
 	std::vector<Geometry> objects;
+	int generateRectPrism(float length, float width, float height);
+
+	int sceneObjectIndex = -1;
 
 private:
-	void generateRectPrism(float length, float width, float height);
 };
 
 

@@ -1,4 +1,5 @@
 #include "Physics_Controller.h"
+#include "Gamestate.h"
 
 #include <ctype.h>
 
@@ -55,6 +56,7 @@ bool					changeToForwardGear = false;
 Physics_Controller::Physics_Controller(Gamestate* newGameState)
 {
 	gameState = newGameState;
+	gameState->physics_Controller = this;
 	initPhysics(false);
 }
 
@@ -81,16 +83,18 @@ void Physics_Controller::Update()
 	PX_MAX_F32, PX_MAX_F32
 };*/
 
+
+// Casting values to PxF32 to resolve warning of mismatch types
 PxF32 gSteerVsForwardSpeedData[2 * 8] =
 {
-	0.1*PX_MAX_F32,		0.5f,
-	0.2*PX_MAX_F32,		0.45f,
-	0.3*PX_MAX_F32,		0.4f,
-	0.4*PX_MAX_F32,		0.35f,
-	0.5*PX_MAX_F32,		0.3f,
-	0.6*PX_MAX_F32,		0.25f,
-	0.7*PX_MAX_F32,		0.2f,
-	0.8*PX_MAX_F32,		0.1f
+	(PxF32)0.1*PX_MAX_F32,		0.5f,
+	(PxF32)0.2*PX_MAX_F32,		0.45f,
+	(PxF32)0.3*PX_MAX_F32,		0.4f,
+	(PxF32)0.4*PX_MAX_F32,		0.35f,
+	(PxF32)0.5*PX_MAX_F32,		0.3f,
+	(PxF32)0.6*PX_MAX_F32,		0.25f,
+	(PxF32)0.7*PX_MAX_F32,		0.2f,
+	(PxF32)0.8*PX_MAX_F32,		0.1f
 };
 
 
@@ -344,9 +348,6 @@ void Physics_Controller::initPhysics(bool interactive)
 	gGroundPlane = createDrivablePlane(groundPlaneSimFilterData, gMaterial, gPhysics);
 	gScene->addActor(*gGroundPlane);
 
-	createVehicle();
-	//createVehicle();
-
 	startBrakeMode();
 }
 
@@ -364,8 +365,8 @@ int Physics_Controller::createVehicle() {
 	gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
 	gVehicle4W->mDriveDynData.setUseAutoGears(true);
 
-	rigidDynamicActorNumber++;
-	return rigidDynamicActorNumber;
+	rigidDynamicActorIndex++;
+	return rigidDynamicActorIndex;
 }
 
 void Physics_Controller::setPosition(int actorIndex, glm::vec3 newLocation){
@@ -517,38 +518,40 @@ void Physics_Controller::stepPhysics(bool interactive)
 	gScene->fetchResults(true);
 
 
+	updateEntities();
+}
+
+void Physics_Controller::updateEntities() {
 	PxU32 numOfRidg = gScene->getNbActors(PxActorTypeFlag::eRIGID_DYNAMIC);
 	PxActor *userBuffer[50];
+	//std::cout << "Number of Ridged objects: " << numOfRidg << std::endl; //Test statement, delete it if you want
 
 	PxU32 numOfRidgActors = gScene->getActors(PxActorTypeFlag::eRIGID_DYNAMIC, userBuffer, numOfRidg, 0);
-	PxActor *box = userBuffer[0];
-	PxRigidActor *rigidActor = box->is<PxRigidActor>();
-	
-	//std::cout << "Number of Ridged objects: " << numOfRidgActors << std::endl; //Test statement, delete it if you want
 
+	for (int i = 0; i <= rigidDynamicActorIndex; i++) {
+		PxActor *actor = userBuffer[i];
+		PxRigidActor *rigidActor = actor->is<PxRigidActor>();
 
-	PxTransform orientation = rigidActor->getGlobalPose();		//   https://docs.nvidia.com/gameworks/content/gameworkslibrary/physx/apireference/files/classPxRigidActor.html
-	PxVec3 location = orientation.p;							//	https://docs.nvidia.com/gameworks/content/gameworkslibrary/physx/apireference/files/classPxTransform.html
-	PxQuat rotation = orientation.q;			
-	
-	PxVec3 xRotation = rotation.getBasisVector0();
-	PxVec3 yRotation = rotation.getBasisVector1();
-	PxVec3 zRotation = rotation.getBasisVector2();
+		PxTransform orientation = rigidActor->getGlobalPose();		//   https://docs.nvidia.com/gameworks/content/gameworkslibrary/physx/apireference/files/classPxRigidActor.html
+		PxVec3 location = orientation.p;							//	https://docs.nvidia.com/gameworks/content/gameworkslibrary/physx/apireference/files/classPxTransform.html
+		PxQuat rotation = orientation.q;
 
-	gameState->playerVehicle.position.x = location.x;
-	gameState->playerVehicle.position.y = location.y;
-	gameState->playerVehicle.position.z = location.z;
+		PxVec3 xRotation = rotation.getBasisVector0();
+		PxVec3 yRotation = rotation.getBasisVector1();
+		PxVec3 zRotation = rotation.getBasisVector2();
 
-	
-	gameState->playerVehicle.transformationMatrix[0] = {xRotation.x, xRotation.y, xRotation.z, 0.0f };
-	gameState->playerVehicle.transformationMatrix[1] = {yRotation.x, yRotation.y, yRotation.z, 0.0f };
-	gameState->playerVehicle.transformationMatrix[2] = {zRotation.x, zRotation.y, zRotation.z, 0.0f };
-	gameState->playerVehicle.transformationMatrix[3] = {location.x , location.y , location.z , 1.0f };
-	
-	std::cout << "Box position:  X:" << location.x << "  Y:" << location.y << "  Z:" << location.z << std::endl; //Test statement, delete it if you want
+		glm::mat4 transformationMatrix;
+		transformationMatrix[0] = { xRotation.x, xRotation.y, xRotation.z, 0.0f };
+		transformationMatrix[1] = { yRotation.x, yRotation.y, yRotation.z, 0.0f };
+		transformationMatrix[2] = { zRotation.x, zRotation.y, zRotation.z, 0.0f };
+		transformationMatrix[3] = { location.x , location.y , location.z , 1.0f };
 
-	
+		gameState->updateEntity(i, glm::vec3{ location.x, location.y, location.z }, transformationMatrix);
+	}
 }
+
+
+
 
 
 void Physics_Controller::cleanupPhysics(bool interactive)

@@ -8,6 +8,7 @@
 #include "EnemyUnit.h"
 #include "PowerUp.h"
 #include "Object.h"
+#include "Physics_Controller.h"
 
 #pragma once
 
@@ -17,8 +18,10 @@ public:
 	Gamestate();
 	~Gamestate();
 
+	Physics_Controller* physics_Controller;
+
 	//Entities
-	PlayerUnit playerVehicle = PlayerUnit();
+	PlayerUnit playerVehicle;
 	Entity map = Entity();
 	std::vector<EnemyUnit> Enemies;
 	std::vector<PowerUp> PowerUps;
@@ -62,6 +65,7 @@ public:
 	std::string UIMode;
 
 	//Spawning/Despawning Entities
+	void SpawnPlayer(float x, float y);
 	void SpawnEnemy(int type, float x, float y);
 	void DespawnEnemy(EnemyUnit enemy);
 	void SpawnPowerUp(int type, float x, float y);
@@ -70,4 +74,6 @@ public:
 	void DespawnObject(Object object);
 
 	void Collision(Entity entity1, Entity entity2, float speed1, float speed2);
+
+	void updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 newTransformationMatrix);
 };

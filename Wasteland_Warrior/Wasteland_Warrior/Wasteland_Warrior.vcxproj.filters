@@ -26,14 +26,20 @@
     <ClCompile Include="..\include\snippetFiles\snippetvehiclecommon\SnippetVehicleFilterShader.cpp" />
     <ClCompile Include="..\include\snippetFiles\snippetvehiclecommon\SnippetVehicleSceneQuery.cpp" />
 <<<<<<< HEAD
+<<<<<<< HEAD
     <ClCompile Include="UI_Controller.cpp" />
     <ClCompile Include="SceneMainMenu.cpp" />
     <ClCompile Include="texture.cpp" />
 =======
+=======
+>>>>>>> master
     <ClCompile Include="Logic.cpp" />
     <ClCompile Include="UI_Controller.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="PowerUp.cpp" />
+<<<<<<< HEAD
+>>>>>>> master
+=======
 >>>>>>> master
   </ItemGroup>
   <ItemGroup>
@@ -55,14 +61,20 @@
     <ClInclude Include="SnippetPVD.h" />
     <ClInclude Include="Physics_Controller.h" />
 <<<<<<< HEAD
+<<<<<<< HEAD
     <ClInclude Include="UI_Controller.h" />
     <ClInclude Include="SceneMainMenu.h" />
     <ClInclude Include="texture.h" />
 =======
+=======
+>>>>>>> master
     <ClInclude Include="Logic.h" />
     <ClInclude Include="UI_Controller.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="PowerUp.h" />
+<<<<<<< HEAD
+>>>>>>> master
+=======
 >>>>>>> master
   </ItemGroup>
   <ItemGroup>

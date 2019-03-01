@@ -68,6 +68,7 @@ void Program::start() {
 	
 	renderingEngine = new RenderingEngine(gameState);
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 	const char* vertexFile = "../shaders/vertex.glsl";
 	const char* fragmentFile = "../shaders/fragment.glsl";
@@ -97,6 +98,14 @@ void Program::start() {
 >>>>>>> master
 
 
+=======
+	scene = new Scene(renderingEngine, gameState);
+
+	gameState->SpawnEnemy(0, 15);
+	gameState->SpawnPlayer(0, 0);
+
+
+>>>>>>> master
 	//Test creation
 	//physicsCL.createVehicle();
 	//physicsCL.setPosition(1, { 0.0f, 4.0f,  5.0f });
@@ -137,6 +146,7 @@ void Program::start() {
 			//delete scene;
 		}
 <<<<<<< HEAD
+<<<<<<< HEAD
 		
 		/*****--- Old camera code. Delete this and handle camera in rendering. ---*****/
 		if (UserInput::MouseXpos != oldMouseXpos) {
@@ -152,14 +162,20 @@ void Program::start() {
 =======
 
 >>>>>>> master
+=======
+
+>>>>>>> master
 		//glfwWaitEvents();
 		glfwPollEvents();
 
 		//Fixed Timestep
 <<<<<<< HEAD
+<<<<<<< HEAD
 		gameState->time += gameState->timeStep;
 
 =======
+=======
+>>>>>>> master
 		while (elapsed_seconds.count() < gameState->timeStep){
 			currentTime = std::chrono::system_clock::now();
 			elapsed_seconds = currentTime - gameState->time;
@@ -171,6 +187,9 @@ void Program::start() {
 		}
 		elapsed_seconds = currentTime-currentTime;
 		gameState->time = currentTime;
+<<<<<<< HEAD
+>>>>>>> master
+=======
 >>>>>>> master
 	}
 

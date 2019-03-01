@@ -25,7 +25,8 @@ glm::mat4 Camera::viewMatrix() const {
 	glm::vec3 cam = gameState->playerVehicle.position;
 
 	//Position behind car
-	cam.z = cam.z - 25;
+	float lagSensitivity = 0.0;
+	cam.z = (cam.z - 25) - (gameState->playerVehicle.acceleration * lagSensitivity);
 	cam.y = cam.y + 10;
 
 	//Rotate camera based on direction

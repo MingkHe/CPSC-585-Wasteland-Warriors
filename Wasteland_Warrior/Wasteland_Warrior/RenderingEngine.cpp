@@ -1,3 +1,4 @@
+
 /*
 * RenderingEngine.cpp
 *
@@ -13,12 +14,7 @@
 #include "ShaderTools.h"
 
 RenderingEngine::RenderingEngine(Gamestate *gameState) {
-	shaderProgram = ShaderTools::InitializeShaders();
 	game_state = gameState;
-	if (shaderProgram == 0) {
-		std::cout << "Program could not initialize shaders, TERMINATING" << std::endl;
-		return;
-	}
 }
 
 RenderingEngine::~RenderingEngine() {
@@ -27,6 +23,8 @@ RenderingEngine::~RenderingEngine() {
 
 void RenderingEngine::RenderScene(const std::vector<Geometry>& objects) {
 	//Clears the screen to a dark grey background
+	printf("rendering rendering rendering rendering!\n");
+
 	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
@@ -39,11 +37,11 @@ void RenderingEngine::RenderScene(const std::vector<Geometry>& objects) {
 	GLint transformGL = glGetUniformLocation(shaderProgram, "transform");
 	glm::mat4 perspectiveMatrix = glm::perspective(PI_F*.4f, 512.f / 512.f, .1f, 200.f);
 	glm::mat4 modelViewProjection = perspectiveMatrix * game_state->camera.viewMatrix();
-	//glm::vec4 light4 = modelViewProjection * glm::vec4(game_state->light, 1.0);
-	//glm::vec3 light = game_state->light;// glm::vec3(light4.x, light4.y, light4.z);
+	glm::vec4 light4 = modelViewProjection * glm::vec4(game_state->light, 1.0);
+	glm::vec3 light = glm::vec3(light4.x, light4.y, light4.z);
 	glUseProgram(shaderProgram);
 	glUniform3fv(cameraGL, 1, &(game_state->camera.pos.x));
-	glUniform3fv(lightGL, 1, &(game_state->light.x));
+	glUniform3fv(lightGL, 1, &(light.x));
 	glUniform1i(shadeGL, game_state->shading_model);
 	GLint uniformLocation = glGetUniformLocation(shaderProgram, "modelViewProjection");
 	glUniformMatrix4fv(uniformLocation, 1, false, glm::value_ptr(modelViewProjection));
@@ -53,7 +51,6 @@ void RenderingEngine::RenderScene(const std::vector<Geometry>& objects) {
 	glUseProgram(shaderProgram);
 
 	for (const Geometry& g : objects) {
-		glUseProgram(shaderProgram);
 		glUniformMatrix4fv(transformGL, 1, false, &(g.transform[0][0]));
 		glBindVertexArray(g.vao);
 		glDrawArrays(g.drawMode, 0, g.verts.size());
@@ -65,6 +62,79 @@ void RenderingEngine::RenderScene(const std::vector<Geometry>& objects) {
 
 	// check for an report any OpenGL errors
 	CheckGLErrors();
+}
+
+void RenderingEngine::RenderMenuScene(const std::vector<Geometry>& objects) {
+	//Clears the screen to a dark grey background
+	//glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+	//glClear(GL_COLOR_BUFFER_BIT);
+
+	// bind our shader program and the vertex array object containing our
+	// scene geometry, then tell OpenGL to draw our geometry
+	glUseProgram(shaderProgram);
+
+	for (const Geometry& g : objects) {
+		glBindVertexArray(g.vao);
+		glDrawArrays(g.drawMode, 0, g.verts.size());
+
+		// reset state to default (no shader or geometry bound)
+		glBindVertexArray(0);
+	}
+
+	glUseProgram(0);
+
+	// check for an report any OpenGL errors
+	CheckGLErrors();
+}
+
+void RenderingEngine::RenderMenuSceneClear(const std::vector<Geometry>& objects) {
+	//Clears the screen to a dark grey background
+	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	// bind our shader program and the vertex array object containing our
+	// scene geometry, then tell OpenGL to draw our geometry
+	glUseProgram(shaderProgram);
+
+	for (const Geometry& g : objects) {
+		glBindVertexArray(g.vao);
+		glDrawArrays(g.drawMode, 0, g.verts.size());
+
+		// reset state to default (no shader or geometry bound)
+		glBindVertexArray(0);
+	}
+
+	glUseProgram(0);
+
+	// check for an report any OpenGL errors
+	CheckGLErrors();
+}
+
+void RenderingEngine::LoadShaderProgram(std::string name, const char* vertexFile, const char* fragmentFile) {
+
+	if (shaderProgramList[name] == NULL)
+	{
+		//myMusic[path] = Mix_LoadMUS(path.c_str());
+		shaderProgramList[name] = ShaderTools::InitializeShaders(vertexFile, fragmentFile);
+
+		if (shaderProgramList[name] == NULL) {
+			printf("Shader loading error: Program %s Error\n", name);
+		}
+
+	}
+
+}
+
+GLuint RenderingEngine::GetShaderProgram(std::string name) {
+	if (shaderProgramList[name] == NULL)
+	{
+		printf("Shader haven't loaded yet. Please load shader first. Error Shader name: %s Error\n", name);
+	}
+	return shaderProgramList[name];
+}
+
+void RenderingEngine::SwitchShaderProgram(GLuint shader) {
+	shaderProgram = shader;
 }
 
 void RenderingEngine::assignBuffers(Geometry& geometry) {
@@ -92,10 +162,10 @@ void RenderingEngine::assignBuffers(Geometry& geometry) {
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 	glEnableVertexAttribArray(1);
 
-	/*glGenBuffers(1, &geometry.uvBuffer);
+	glGenBuffers(1, &geometry.uvBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, geometry.uvBuffer);
 	glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
-	glEnableVertexAttribArray(3);*/
+	glEnableVertexAttribArray(3);
 
 
 }
@@ -112,8 +182,8 @@ void RenderingEngine::setBufferData(Geometry& geometry) {
 	glBindBuffer(GL_ARRAY_BUFFER, geometry.colorBuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * geometry.colors.size(), geometry.colors.data(), GL_STATIC_DRAW);
 
-	/*glBindBuffer(GL_ARRAY_BUFFER, geometry.uvBuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * geometry.uvs.size(), geometry.uvs.data(), GL_STATIC_DRAW);*/
+	glBindBuffer(GL_ARRAY_BUFFER, geometry.uvBuffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * geometry.uvs.size(), geometry.uvs.data(), GL_STATIC_DRAW);
 }
 
 void RenderingEngine::deleteBufferData(Geometry& geometry) {
@@ -145,4 +215,5 @@ bool RenderingEngine::CheckGLErrors() {
 		error = true;
 	}
 	return error;
+
 }

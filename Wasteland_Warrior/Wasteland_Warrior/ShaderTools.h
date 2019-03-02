@@ -25,7 +25,7 @@ namespace ShaderTools {
 	GLuint LinkProgram(GLuint vertexShader, GLuint fragmentShader);
 	GLuint LinkProgram(GLuint vertexShader, GLuint fragmentShader, GLint geoShader);
 
-	GLuint InitializeShaders();
+	GLuint InitializeShaders(const char* vertexFile, const char* fragmentFile);
 }
 
 #endif /* SHADERTOOLS_H_ */

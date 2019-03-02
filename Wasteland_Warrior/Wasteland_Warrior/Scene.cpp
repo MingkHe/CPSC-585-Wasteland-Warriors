@@ -136,6 +136,10 @@ Scene::~Scene() {
 }
 
 void Scene::displayScene() {
+	//glUseProgram(renderer->shaderProgramList[0]);
+	GLuint shader = renderer->GetShaderProgram("gamePlayShader");
+	renderer->SwitchShaderProgram(shader);
+
 	for (int i = 1; i <= sceneObjectIndex; i++) {
 		objects[i].transform = gameState->getEntityTransformation(i);
 	}

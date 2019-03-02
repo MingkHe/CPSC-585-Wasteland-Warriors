@@ -136,22 +136,14 @@ Scene::~Scene() {
 }
 
 void Scene::displayScene() {
-<<<<<<< HEAD
-<<<<<<< HEAD
 	//glUseProgram(renderer->shaderProgramList[0]);
 	GLuint shader = renderer->GetShaderProgram("gamePlayShader");
 	renderer->SwitchShaderProgram(shader);
-=======
-=======
->>>>>>> master
+
 	for (int i = 1; i <= sceneObjectIndex; i++) {
 		objects[i].transform = gameState->getEntityTransformation(i);
 	}
 	//objects[1].transform = gameState->playerVehicle.transformationMatrix;
 
-<<<<<<< HEAD
->>>>>>> master
-=======
->>>>>>> master
 	renderer->RenderScene(objects);
 }

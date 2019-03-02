@@ -169,13 +169,9 @@
     <ClCompile Include="SceneMainMenu.cpp" />
     <ClCompile Include="ShaderTools.cpp" />
     <ClCompile Include="AI_Interaction.cpp" />
-<<<<<<< HEAD
-<<<<<<< HEAD
+
     <ClCompile Include="texture.cpp" />
-=======
->>>>>>> master
-=======
->>>>>>> master
+
     <ClCompile Include="UI_Controller.cpp" />
     <ClCompile Include="UserInput.cpp" />
     <ClCompile Include="Vehicle.cpp" />
@@ -200,13 +196,9 @@
     <ClInclude Include="SceneMainMenu.h" />
     <ClInclude Include="ShaderTools.h" />
     <ClInclude Include="SnippetPVD.h" />
-<<<<<<< HEAD
-<<<<<<< HEAD
+
     <ClInclude Include="texture.h" />
-=======
->>>>>>> master
-=======
->>>>>>> master
+
     <ClInclude Include="UI_Controller.h" />
     <ClInclude Include="UserInput.h" />
     <ClInclude Include="Vehicle.h" />

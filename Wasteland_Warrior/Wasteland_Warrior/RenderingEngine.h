@@ -51,6 +51,10 @@ public:
 //private:
 	//Pointer to the current shader program being used to render
 	GLuint shaderProgram;
+	GLuint healthshaderProgram;
+	GLuint radarshaderProgram;
+	Geometry health;
+	Geometry radar;
 };
 
 #endif /* RENDERINGENGINE_H_ */

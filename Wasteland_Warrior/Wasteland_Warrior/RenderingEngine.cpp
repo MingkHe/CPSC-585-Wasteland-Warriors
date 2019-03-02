@@ -15,6 +15,33 @@
 
 RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	game_state = gameState;
+
+	healthshaderProgram = ShaderTools::InitializeShaders("../shaders/healthvertex.glsl", "../shaders/healthfragment.glsl");
+	radarshaderProgram = ShaderTools::InitializeShaders("../shaders/radarvertex.glsl", "../shaders/radarfragment.glsl");
+
+	health.verts.push_back(glm::vec3(.5f, .8f, 0.f));
+	health.verts.push_back(glm::vec3(.5f, .9f, 0.f));
+	health.verts.push_back(glm::vec3(.9f, .8f, 0.f));
+	health.verts.push_back(glm::vec3(.9f, .9f, 0.f));
+	health.uvs.push_back(glm::vec2(0.f, 0.f));
+	health.uvs.push_back(glm::vec2(0.f, 1.f));
+	health.uvs.push_back(glm::vec2(1.f, 0.f));
+	health.uvs.push_back(glm::vec2(1.f, 1.f));
+	health.drawMode = GL_TRIANGLE_STRIP;
+	assignBuffers(health);
+	setBufferData(health);
+
+	radar.verts.push_back(glm::vec3(-.6f, -.6f, 0.f));
+	radar.verts.push_back(glm::vec3(-.6f, -.9f, 0.f));
+	radar.verts.push_back(glm::vec3(-.9f, -.6f, 0.f));
+	radar.verts.push_back(glm::vec3(-.9f, -.9f, 0.f));
+	radar.uvs.push_back(glm::vec2(-1.f, -1.f));
+	radar.uvs.push_back(glm::vec2(-1.f, 1.f));
+	radar.uvs.push_back(glm::vec2(1.f, -1.f));
+	radar.uvs.push_back(glm::vec2(1.f, 1.f));
+	radar.drawMode = GL_TRIANGLE_STRIP;
+	assignBuffers(radar);
+	setBufferData(radar);
 }
 
 RenderingEngine::~RenderingEngine() {
@@ -75,6 +102,31 @@ void RenderingEngine::RenderScene(const std::vector<Geometry>& objects) {
 		// reset state to default (no shader or geometry bound)
 		glBindVertexArray(0);
 	}
+
+	//render health bar
+	GLint healthGL = glGetUniformLocation(healthshaderProgram, "health");
+	glUseProgram(healthshaderProgram);
+	glUniform1f(healthGL, game_state->playerVehicle.health);
+	glDisable(GL_DEPTH_TEST);
+	glBindVertexArray(health.vao);
+	glDrawArrays(health.drawMode, 0, health.verts.size());
+
+	//render radar
+	glUseProgram(radarshaderProgram);
+	GLint enemiesGL = glGetUniformLocation(radarshaderProgram, "enemies");
+	GLint numenemiesGL = glGetUniformLocation(radarshaderProgram, "numenemies");
+	GLint playerposGL = glGetUniformLocation(radarshaderProgram, "playerpos");
+	std::vector<glm::vec2> enemy_locations;
+	for (int i = 0; i < game_state->Enemies.size(); i++) {
+		enemy_locations.push_back(glm::vec2(game_state->Enemies[i].position.x, game_state->Enemies[i].position.z));
+	}
+	//std::cout << enemy_locations[0].x << " " << enemy_locations[0].y << std::endl;
+	glUniform2fv(enemiesGL, enemy_locations.size(), &(enemy_locations[0].x));
+	glUniform2f(playerposGL, game_state->playerVehicle.position.x, game_state->playerVehicle.position.z);
+	glUniform1i(numenemiesGL, enemy_locations.size());
+	glBindVertexArray(radar.vao);
+	glDrawArrays(radar.drawMode, 0, radar.verts.size());
+
 	glUseProgram(0);
 
 	// check for an report any OpenGL errors

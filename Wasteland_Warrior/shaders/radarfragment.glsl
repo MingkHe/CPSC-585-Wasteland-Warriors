@@ -1,6 +1,7 @@
 #version 410
 #define xmargin 0.1f
 #define ymargin 0.1f
+#define RADAR_SCALE (1.f/30.f)
 
 // interpolated colour received from vertex stage
 in vec2 position;
@@ -21,7 +22,9 @@ void main(void) {
     // write colour output without modification
 	FragmentColour = vec4(.3, .3, .3, 0);
 	for(int i = 0; i < numenemies; i++) {
-		if(radius_squared(enemies[i]-playerpos, position) < 0.005) {
+		vec2 point = enemies[i]-playerpos;
+		point.y *= -1;
+		if(radius_squared(RADAR_SCALE*point, position) < 0.005) {
 			FragmentColour = vec4(.9, 0, 0, 0);
 		}
 	}

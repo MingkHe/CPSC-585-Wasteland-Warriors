@@ -208,6 +208,10 @@
     <None Include="..\shaders\fragment.glsl" />
     <None Include="..\shaders\fragmentMainMenu.glsl" />
     <None Include="..\shaders\geometry.glsl" />
+    <None Include="..\shaders\healthfragment.glsl" />
+    <None Include="..\shaders\healthvertex.glsl" />
+    <None Include="..\shaders\radarfragment.glsl" />
+    <None Include="..\shaders\radarvertex.glsl" />
     <None Include="..\shaders\vertex.glsl" />
     <None Include="..\shaders\vertexMainMenu.glsl" />
     <None Include="libFLAC-8.dll" />

@@ -120,5 +120,19 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 		}
 
 		//glfwSwapBuffers(window);
+	} else if (GameState->UIMode == "Win") {
+		
+		//Display a win screen
+
+		if (GameState->button == "ENTER") {
+			GameState->UIMode = "Start"
+		}
+	} else if (GameState->UIMode == "Lose") {
+
+		//Display a lose screen 
+
+		if (GameState->button == "ENTER") {
+			GameState->UIMode = "Start"
+		}
 	}
 }

@@ -91,8 +91,19 @@ void Program::start() {
 
 	scene = new Scene(renderingEngine, gameState);
 
-	gameState->SpawnEnemy(0, 15);
+
 	gameState->SpawnPlayer(0, 0);
+
+	gameState->SpawnEnemy(15, 0);
+	gameState->SpawnEnemy(-15, 0);
+	gameState->SpawnEnemy(25, 0);
+
+
+	
+	//gameState->SpawnEnemy(25, 0);
+
+
+
 
 	//Test creation
 	//physicsCL.createVehicle();
@@ -127,7 +138,6 @@ void Program::start() {
 
 		//Render Engine
 		if (gameState->UIMode == "Game") {
-			printf("gamegamegamegame...\n");
 			//scene = new Scene(renderingEngine);
 			scene->displayScene();
 			//glfwSwapBuffers(window);

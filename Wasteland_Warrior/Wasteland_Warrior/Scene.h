@@ -30,7 +30,7 @@ public:
 
 	//Send geometry to the renderer
 	void displayScene();
-	
+	void loadOBJObject(const char* filepath, glm::vec3 color);
 
 	RenderingEngine * renderer;
 

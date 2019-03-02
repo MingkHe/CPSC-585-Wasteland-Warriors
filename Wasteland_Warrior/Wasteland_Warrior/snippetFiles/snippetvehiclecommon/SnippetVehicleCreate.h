@@ -107,7 +107,11 @@ struct VehicleDesc
 	ShapeUserData* shapeUserDatas;
 };
 
+
+
 PxVehicleDrive4W* createVehicle4W(const VehicleDesc& vehDesc, PxPhysics* physics, PxCooking* cooking);
+PxVehicleDrive4W* createPlayerVehicle4W(const VehicleDesc& vehDesc, PxPhysics* physics, PxCooking* cooking);
+PxVehicleDrive4W* createEnemyVehicle4W(const VehicleDesc& vehDesc, PxPhysics* physics, PxCooking* cooking);
 
 PxVehicleDriveTank* createVehicleTank(const VehicleDesc& vehDesc, PxPhysics* physics, PxCooking* cooking);
 

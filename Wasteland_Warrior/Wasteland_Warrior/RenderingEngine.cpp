@@ -23,7 +23,6 @@ RenderingEngine::~RenderingEngine() {
 
 void RenderingEngine::RenderScene(const std::vector<Geometry>& objects) {
 	//Clears the screen to a dark grey background
-	printf("rendering rendering rendering rendering!\n");
 
 	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -39,6 +38,7 @@ void RenderingEngine::RenderScene(const std::vector<Geometry>& objects) {
 	glm::mat4 modelViewProjection = perspectiveMatrix * game_state->camera.viewMatrix();
 	glm::vec4 light4 = modelViewProjection * glm::vec4(game_state->light, 1.0);
 	glm::vec3 light = glm::vec3(light4.x, light4.y, light4.z);
+
 	glUseProgram(shaderProgram);
 	glUniform3fv(cameraGL, 1, &(game_state->camera.pos.x));
 	glUniform3fv(lightGL, 1, &(light.x));
@@ -46,11 +46,28 @@ void RenderingEngine::RenderScene(const std::vector<Geometry>& objects) {
 	GLint uniformLocation = glGetUniformLocation(shaderProgram, "modelViewProjection");
 	glUniformMatrix4fv(uniformLocation, 1, false, glm::value_ptr(modelViewProjection));
 
+
+	//set the shader uniforms
+	/*shaders->setUniform("camera", gCamera.matrix());
+	shaders->setUniform("model", inst.transform);
+	shaders->setUniform("materialTex", 0); //set to 0 because the texture will be bound to GL_TEXTURE0
+	shaders->setUniform("materialShininess", asset->shininess);
+	shaders->setUniform("materialSpecularColor", asset->specularColor);
+	shaders->setUniform("light.position", gLight.position);
+	shaders->setUniform("light.intensities", gLight.intensities);
+	shaders->setUniform("light.attenuation", gLight.attenuation);
+	shaders->setUniform("light.ambientCoefficient", gLight.ambientCoefficient);
+	shaders->setUniform("cameraPosition", gCamera.position());
+	*/
 	// bind our shader program and the vertex array object containing our
 	// scene geometry, then tell OpenGL to draw our geometry
 	glUseProgram(shaderProgram);
 
 	for (const Geometry& g : objects) {
+		//bind the texture
+		glActiveTexture(GL_TEXTURE0);
+		//glBindTexture(GL_TEXTURE_2D, asset->texture->object());
+
 		glUniformMatrix4fv(transformGL, 1, false, &(g.transform[0][0]));
 		glBindVertexArray(g.vao);
 		glDrawArrays(g.drawMode, 0, g.verts.size());
@@ -151,11 +168,6 @@ void RenderingEngine::assignBuffers(Geometry& geometry) {
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 	glEnableVertexAttribArray(0);
 
-	glGenBuffers(1, &geometry.normalBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, geometry.normalBuffer);
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-	glEnableVertexAttribArray(2);
-
 	glGenBuffers(1, &geometry.colorBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, geometry.colorBuffer);
 	//Parameters in order: Index of vbo in the vao, number of primitives per element, primitive type, etc.
@@ -167,6 +179,10 @@ void RenderingEngine::assignBuffers(Geometry& geometry) {
 	glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 	glEnableVertexAttribArray(3);
 
+	glGenBuffers(1, &geometry.normalBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, geometry.normalBuffer);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	glEnableVertexAttribArray(2);
 
 }
 
@@ -176,14 +192,15 @@ void RenderingEngine::setBufferData(Geometry& geometry) {
 	glBindBuffer(GL_ARRAY_BUFFER, geometry.vertexBuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * geometry.verts.size(), geometry.verts.data(), GL_STATIC_DRAW);
 
-	glBindBuffer(GL_ARRAY_BUFFER, geometry.normalBuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * geometry.normals.size(), geometry.normals.data(), GL_STATIC_DRAW);
-
 	glBindBuffer(GL_ARRAY_BUFFER, geometry.colorBuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * geometry.colors.size(), geometry.colors.data(), GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ARRAY_BUFFER, geometry.uvBuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * geometry.uvs.size(), geometry.uvs.data(), GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ARRAY_BUFFER, geometry.normalBuffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * geometry.normals.size(), geometry.normals.data(), GL_STATIC_DRAW);
+
 }
 
 void RenderingEngine::deleteBufferData(Geometry& geometry) {

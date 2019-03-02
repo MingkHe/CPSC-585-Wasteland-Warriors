@@ -5,6 +5,8 @@
 *  Author: John Hall
 */
 
+#define _CRT_SECURE_NO_WARNINGS
+
 #include "Scene.h"
 #include "Gamestate.h"
 
@@ -50,6 +52,88 @@ Scene::Scene(RenderingEngine* renderer, Gamestate* newGamestate) : renderer(rend
 
 void Scene::setGamestate(Gamestate* newGamestate) {
 	gameState = newGamestate;
+}
+
+void Scene::loadOBJObject(const char* filepath, glm::vec3 color) {
+	Geometry OBJobject;
+	std::vector< unsigned int > vertexIndices, uvIndices, normalIndices;
+	std::vector< glm::vec3 > temp_vertices;
+	std::vector< glm::vec2 > temp_uvs;
+	std::vector< glm::vec3 > temp_normals;
+	bool openSuccessful = true;
+	int count = 0;
+	//printf("1\n");
+	FILE * file = fopen(filepath, "r");
+	if (file == NULL) {
+		printf("Impossible to open the file !\n");
+		openSuccessful = false;
+		//return false;
+	}
+	while (openSuccessful) {
+		//printf("2\n");
+		//count++;
+		char lineHeader[128];
+		// read the first word of the line
+		int res = fscanf(file, "%s", lineHeader);
+		if (res == EOF) {
+			openSuccessful = false;
+			break; // EOF = End Of File. Quit the loop.
+		}
+		// else : parse lineHeader
+		if (strcmp(lineHeader, "v") == 0) {
+			//printf("6\n");
+			glm::vec3 vertex;
+			fscanf(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z);
+			temp_vertices.push_back(vertex);
+		}
+		else if (strcmp(lineHeader, "vt") == 0) {
+			//printf("7\n");
+			glm::vec2 uv;
+			fscanf(file, "%f %f\n", &uv.x, &uv.y);
+			temp_uvs.push_back(uv);
+		}
+		else if (strcmp(lineHeader, "vn") == 0) {
+			//printf("8\n");
+			glm::vec3 normal;
+			fscanf(file, "%f %f %f\n", &normal.x, &normal.y, &normal.z);
+			temp_normals.push_back(normal);
+		}
+		else if (strcmp(lineHeader, "f") == 0) {
+			//printf("9\n");
+			std::string vertex1, vertex2, vertex3;
+			unsigned int vertexIndex[3], uvIndex[3], normalIndex[3];
+			int matches = fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n", &vertexIndex[0], &uvIndex[0], &normalIndex[0], &vertexIndex[1], &uvIndex[1], &normalIndex[1], &vertexIndex[2], &uvIndex[2], &normalIndex[2]);
+			if (matches != 9) {
+				printf("File can't be read properly: (Faces larger than triangles\n");
+				//return false;
+			}
+			vertexIndices.push_back(vertexIndex[0]);
+			vertexIndices.push_back(vertexIndex[1]);
+			vertexIndices.push_back(vertexIndex[2]);
+			uvIndices.push_back(uvIndex[0]);
+			uvIndices.push_back(uvIndex[1]);
+			uvIndices.push_back(uvIndex[2]);
+			normalIndices.push_back(normalIndex[0]);
+			normalIndices.push_back(normalIndex[1]);
+			normalIndices.push_back(normalIndex[2]);
+		}
+	}
+
+	// For each vertex of each triangle
+	for (unsigned int i = 0; i < vertexIndices.size(); i++) {
+		OBJobject.verts.push_back(temp_vertices[vertexIndices[i] - 1]);
+	}
+	for (unsigned int j = 0; j < uvIndices.size(); j++) {
+		OBJobject.uvs.push_back(temp_uvs[uvIndices[j] - 1]);
+	}
+	for (unsigned int k = 0; k < normalIndices.size(); k++) {
+		OBJobject.colors.push_back(color);
+		OBJobject.normals.push_back(temp_normals[normalIndices[k] - 1]);
+	}
+	OBJobject.drawMode = GL_TRIANGLES;
+	RenderingEngine::assignBuffers(OBJobject);
+	RenderingEngine::setBufferData(OBJobject);
+	objects.push_back(OBJobject);
 }
 
 int Scene::generateRectPrism(float length, float width, float height) {

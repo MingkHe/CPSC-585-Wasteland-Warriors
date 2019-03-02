@@ -3,6 +3,8 @@
 #include <SDL_mixer.h>
 #include <SDL.h>
 
+using namespace std;
+
 class Audio_Controller
 {
 private:

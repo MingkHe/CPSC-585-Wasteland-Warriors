@@ -23,11 +23,11 @@ int Audio_Controller::playSound(Gamestate* gameState)
 	//Implementation
 	std::string input = gameState->button;
 
-	printf("Button: %s\n",input.c_str());
+	//printf("Button: %s\n",input.c_str());
 
-	printf("Music: %s\n",currentMusic.c_str());
+	//printf("Music: %s\n",currentMusic.c_str());
 
-	printf("Pool Size: %d\n", myMusics->getPoolSize());
+	//printf("Pool Size: %d\n", myMusics->getPoolSize());
 
 	if (input == "N")
 	{ 

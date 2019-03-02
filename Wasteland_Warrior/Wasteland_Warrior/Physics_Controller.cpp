@@ -4,16 +4,18 @@
 #include <ctype.h>
 
 #include "PxPhysicsAPI.h"
+//#include "ContactReportCallback.h"
 
-#include "../include/vehicle/PxVehicleUtil.h"
-#include "../include/snippetFiles/snippetvehiclecommon/SnippetVehicleSceneQuery.h"
-#include "../include/snippetFiles/snippetvehiclecommon/SnippetVehicleFilterShader.h"
-#include "../include/snippetFiles/snippetvehiclecommon/SnippetVehicleTireFriction.h"
-#include "../include/snippetFiles/snippetvehiclecommon/SnippetVehicleCreate.h"
 
-#include "../include/snippetFiles/snippetcommon/SnippetPrint.h"
-#include "../include/snippetFiles/snippetcommon/SnippetPVD.h"
-#include "../include/snippetFiles/snippetutils/SnippetUtils.h"
+#include "vehicle/PxVehicleUtil.h"
+#include "SnippetVehicleSceneQuery.h"
+#include "SnippetVehicleFilterShader.h"
+#include "SnippetVehicleTireFriction.h"
+#include "SnippetVehicleCreate.h"
+
+#include "snippetcommon/SnippetPrint.h"
+#include "snippetcommon/SnippetPVD.h"
+#include "snippetutils/SnippetUtils.h"
 
 #include <PxScene.h>
 #include <iostream>
@@ -50,6 +52,7 @@ bool					brakeCar = false;
 int                     currentGear = 1;
 bool					changeToReverseGear = false;
 bool					changeToForwardGear = false;
+
 
 
 
@@ -302,6 +305,26 @@ void releaseAllControls()
 	}
 }
 
+
+PxFilterFlags contactReportFilterShader(PxFilterObjectAttributes attributes0, PxFilterData filterData0,
+	PxFilterObjectAttributes attributes1, PxFilterData filterData1,
+	PxPairFlags& pairFlags, const void* constantBlock, PxU32 constantBlockSize)
+{
+	PX_UNUSED(attributes0);
+	PX_UNUSED(attributes1);
+	PX_UNUSED(filterData0);
+	PX_UNUSED(filterData1);
+	PX_UNUSED(constantBlockSize);
+	PX_UNUSED(constantBlock);
+
+	// all initial and persisting reports for everything, with per-point data
+	pairFlags = PxPairFlag::eSOLVE_CONTACT | PxPairFlag::eDETECT_DISCRETE_CONTACT
+		| PxPairFlag::eNOTIFY_TOUCH_FOUND
+		| PxPairFlag::eNOTIFY_TOUCH_PERSISTS
+		| PxPairFlag::eNOTIFY_CONTACT_POINTS;
+	return PxFilterFlag::eDEFAULT;
+}
+
 void Physics_Controller::initPhysics(bool interactive)
 {
 	gFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, gAllocator, gErrorCallback);
@@ -317,7 +340,8 @@ void Physics_Controller::initPhysics(bool interactive)
 	PxU32 numWorkers = 1;
 	gDispatcher = PxDefaultCpuDispatcherCreate(numWorkers);
 	sceneDesc.cpuDispatcher = gDispatcher;
-	sceneDesc.filterShader = PxDefaultSimulationFilterShader;
+	sceneDesc.filterShader = contactReportFilterShader;
+	sceneDesc.simulationEventCallback = &gContactReportCallback;
 	gScene = gPhysics->createScene(sceneDesc);
 
 	PxPvdSceneClient* pvdClient = gScene->getScenePvdClient();
@@ -514,8 +538,10 @@ void Physics_Controller::stepPhysics(bool interactive)
 	gIsVehicleInAir = gVehicle4W->getRigidDynamicActor()->isSleeping() ? false : PxVehicleIsInAir(vehicleQueryResults[0]);
 
 	//Scene update.
+	gContactReportCallback.gContactPositions.clear();
 	gScene->simulate(timestep);
 	gScene->fetchResults(true);
+	printf("%d contact reports\n", PxU32(gContactReportCallback.gContactPositions.size()));
 
 
 	updateEntities();

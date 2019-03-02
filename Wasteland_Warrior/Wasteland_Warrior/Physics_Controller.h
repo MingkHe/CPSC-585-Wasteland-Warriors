@@ -1,5 +1,6 @@
 #pragma once
 #include <glm/glm.hpp>
+#include "ContactReportCallback.h"
 class Gamestate;
 
 class Physics_Controller
@@ -20,6 +21,10 @@ public:
 	void setPosition(int actorIndex, glm::vec3 newLocation);
 	int createVehicle();
 
+	ContactReportCallback gContactReportCallback;
+
 	int rigidDynamicActorIndex = -1;
 	Gamestate* gameState;
+
+
 };

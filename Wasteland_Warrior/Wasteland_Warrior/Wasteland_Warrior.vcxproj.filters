@@ -29,6 +29,7 @@
     <ClCompile Include="UI_Controller.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="PowerUp.cpp" />
+    <ClCompile Include="MyContactModification.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Geometry.h" />
@@ -52,6 +53,7 @@
     <ClInclude Include="UI_Controller.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="PowerUp.h" />
+    <ClInclude Include="MyContactModification.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Wasteland_Warrior.vcxproj.filters.txt" />

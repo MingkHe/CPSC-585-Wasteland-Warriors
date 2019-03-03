@@ -64,7 +64,7 @@ void Program::start() {
 	Logic logic = Logic();
 	AI_Interaction aiInteraction = AI_Interaction();
 	Physics_Controller physicsCL = Physics_Controller(gameState);
-	Audio_Controller audioCL = Audio_Controller();
+	Audio_Controller audioCL = *Audio_Controller::instance();
 	
 	renderingEngine = new RenderingEngine(gameState);
 
@@ -83,10 +83,7 @@ void Program::start() {
 
 	UI_Controller UICL = UI_Controller(gameState,renderingEngine);
 
-	//RenderingEngine* renderingEngine2 = new RenderingEngine(gameState, vertexMainFile, fragmentMainFile);
-	//SceneMainMenu* mainScene2 = new SceneMainMenu(renderingEngine_MainMenu);
-	//SceneMainMenu* mainScene3 = new SceneMainMenu(renderingEngine_MainMenu);
-	//SceneMainMenu* mainScene4 = new SceneMainMenu(renderingEngine_MainMenu);
+
 	//Create Entities Example
 
 	scene = new Scene(renderingEngine, gameState);

@@ -168,6 +168,7 @@
     <ClCompile Include="RenderingEngine.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneMainMenu.cpp" />
+    <ClCompile Include="SFXPool.cpp" />
     <ClCompile Include="ShaderTools.cpp" />
     <ClCompile Include="AI_Interaction.cpp" />
     <ClCompile Include="texture.cpp" />
@@ -196,6 +197,7 @@
     <ClInclude Include="RenderingEngine.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneMainMenu.h" />
+    <ClInclude Include="SFXPool.h" />
     <ClInclude Include="ShaderTools.h" />
     <ClInclude Include="snippetFiles\snippetvehiclecommon\SnippetVehicleCreate.h" />
     <ClInclude Include="SnippetPVD.h" />

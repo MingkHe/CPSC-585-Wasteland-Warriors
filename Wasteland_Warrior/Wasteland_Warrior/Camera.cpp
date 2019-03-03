@@ -25,15 +25,14 @@ glm::mat4 Camera::viewMatrix() const {
 	glm::vec3 car = gameState->playerVehicle.position;
 	glm::vec3 cam = gameState->playerVehicle.position;
 
-	//Position behind car
 	float lagSensitivity = 0.0;
 
 	//Rotate camera based on direction
 	float xVal = gameState->playerVehicle.direction.x / gameState->playerVehicle.direction.length();
 	float yVal = gameState->playerVehicle.direction.y / gameState->playerVehicle.direction.length();
-	cam.x = -15*xVal+car.x;
-	cam.z = -15 *yVal+car.z - (gameState->playerVehicle.acceleration * lagSensitivity);
-	cam.y = cam.y + 5;
+	cam.x = -15 * xVal + car.x;
+	cam.z = -15 * yVal + car.z - (gameState->playerVehicle.acceleration * lagSensitivity);
+	cam.y = cam.y + 2;
 
 	glm::mat4 viewMatrix = glm::lookAt(cam, car, up);
 	return viewMatrix;

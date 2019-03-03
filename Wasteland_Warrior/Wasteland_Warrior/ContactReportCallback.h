@@ -15,9 +15,12 @@ public:
 	ContactReportCallback();
 	ContactReportCallback(Gamestate* newGamestate);
 	Gamestate* gameState;
+	PxScene* gScene;
 
 	std::vector<PxVec3> gContactPositions;
 	std::vector<PxVec3> gContactImpulses;
+	std::vector<PxActor*> gContactActor1s;
+	std::vector<PxActor*> gContactActor2s;
 
 	void onConstraintBreak(PxConstraintInfo* constraints, PxU32 count);
 	void onWake(PxActor** actors, PxU32 count);

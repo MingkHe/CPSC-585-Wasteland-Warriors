@@ -69,7 +69,7 @@ PxFilterFlags contactReportFilterShader(
 		return PxFilterFlag::eDEFAULT;
 	}
 	// generate contacts for all that were not filtered above
-	pairFlags = PxPairFlag::eCONTACT_DEFAULT;
+	pairFlags = PxPairFlag::eCONTACT_DEFAULT | PxPairFlag::eNOTIFY_CONTACT_POINTS;
 
 	// trigger the contact callback for pairs (A,B) where
 	// the filtermask of A contains the ID of B and vice versa.
@@ -516,7 +516,6 @@ int Physics_Controller::createPlayerVehicle() {
 
 	//Test code to identify vehicles
 	PxActor *actor = gVehicle4W->getRigidDynamicActor()->is<PxActor>();
-	actor->setName("BLA");
 
 	gVehicle4W->getRigidDynamicActor()->setGlobalPose(startTransform);
 	gScene->addActor(*gVehicle4W->getRigidDynamicActor());
@@ -694,11 +693,60 @@ void Physics_Controller::stepPhysics(bool interactive)
 	gContactReportCallback.gContactPositions.clear();
 	gScene->simulate(timestep);
 	gScene->fetchResults(true);
-	//printf("%d contact reports\n", PxU32(gContactReportCallback.gContactPositions.size()));
 
+
+
+	/*
+	//This is how to get impulse data, this will be deleted later but I am using it as a refrence
+	//printf("%d contact points\n", PxU32(gContactReportCallback.gContactPositions.size()));
+	if (gContactReportCallback.gContactImpulses.size() >= 1) {
+		printf("Calucalting contact vector\n");
+		glm::vec2 impulse = glm::normalize(glm::vec2{ gContactReportCallback.gContactImpulses[0].x, gContactReportCallback.gContactImpulses[0].z });
+		std::cout << "Contact vector:  [" << impulse.x << "," << impulse.y << "]" << std::endl;
+	}
+
+	if (gContactReportCallback.gContactImpulses.size() >= 1) {
+		printf("Calucalting contact vector\n");
+		glm::vec2 contactPoint = glm::normalize(glm::vec2{ gContactReportCallback.gContactPositions[0].x, gContactReportCallback.gContactPositions[0].z });
+		std::cout << "Contact point:  [" << contactPoint.x << "," << contactPoint.y << "]" << std::endl;
+	}*/
+
+
+	//Efficency of this could be improved but not critical
+	if (gContactReportCallback.gContactActor1s.size() >= 1) {
+		PxU32 numOfRidg = gScene->getNbActors(PxActorTypeFlag::eRIGID_DYNAMIC);
+		PxActor *userBuffer[50];
+		PxU32 numOfRidgActors = gScene->getActors(PxActorTypeFlag::eRIGID_DYNAMIC, userBuffer, numOfRidg, 0);
+
+		Vehicle* vehicle1 = new Vehicle();
+		Vehicle* vehicle2 = new Vehicle();
+
+		for (int index = 0; index <= rigidDynamicActorIndex; index++) {
+			PxActor *actor = userBuffer[index];
+			if (gContactReportCallback.gContactActor1s[0] == actor) {
+				vehicle1 = gameState->lookupVUsingPI(index);
+			}
+			if (gContactReportCallback.gContactActor2s[0] == actor) {
+				vehicle2 = gameState->lookupVUsingPI(index);
+			}
+		}
+
+		glm::vec2 impulse = (glm::vec2{ gContactReportCallback.gContactImpulses[0].x, gContactReportCallback.gContactImpulses[0].z });
+		gameState->Collision(vehicle1, vehicle2, impulse);
+	}
+
+
+	//Clear contact report
+	gContactReportCallback.gContactActor1s.clear();
+	gContactReportCallback.gContactActor2s.clear();
+	gContactReportCallback.gContactPositions.clear();
+	gContactReportCallback.gContactImpulses.clear();
 
 	updateEntities();
 }
+
+
+
 
 void Physics_Controller::updateEntities() {
 	PxU32 numOfRidg = gScene->getNbActors(PxActorTypeFlag::eRIGID_DYNAMIC);
@@ -712,6 +760,9 @@ void Physics_Controller::updateEntities() {
 		PxActor *actor = userBuffer[index];
 
 		PxRigidActor *rigidActor = actor->is<PxRigidActor>();
+		PxRigidBody *rigidBody = rigidActor->is<PxRigidBody>();
+		PxVec3 velocity = rigidBody->getLinearVelocity();
+		float speed = glm::length(glm::vec2{ velocity.x, velocity.z });
 		//PxRigidDynamicActor *rigidActor = actor->is<PxRigidActor>();
 		//rigidActor->setAnalogAccel(1.0f);
 
@@ -729,8 +780,7 @@ void Physics_Controller::updateEntities() {
 		transformationMatrix[2] = { zRotation.x, zRotation.y, zRotation.z, 0.0f };
 		transformationMatrix[3] = { location.x , location.y , location.z , 1.0f };
 
-		gameState->updateEntity(index, glm::vec3{ location.x, location.y, location.z }, transformationMatrix);
-
+		gameState->updateEntity(index, glm::vec3{ location.x, location.y, location.z }, transformationMatrix, speed);
 	}
 }
 

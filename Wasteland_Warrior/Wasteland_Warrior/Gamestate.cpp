@@ -10,6 +10,15 @@ Gamestate::~Gamestate()
 {
 }
 
+//This function is a standing for proper handling of collision resolution
+void Gamestate::testFunction(int test) {
+	if (test == 0)
+		std::cout << "----------------Collision---------------" << std::endl;
+	else 
+		std::cout << "!!!!!!!!!!!!!!!!!!!Vehicle Collision!!!!!!!!!!!!!!!!!!!" << std::endl;
+
+}
+
 void Gamestate::SpawnPlayer (float x, float y) {
 	int physicsIndex = physics_Controller->createPlayerVehicle();
 	physics_Controller->setPosition(physicsIndex, glm::vec3{x, 2.0f, y});

@@ -73,9 +73,11 @@ public:
 	void SpawnObject(int type, float x, float y);
 	void DespawnObject(Object object);
 
-	void Collision(Vehicle entity1, Vehicle entity2, float speed1, float speed2);
+	void Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse);
 
 	void updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 newTransformationMatrix);
+	Vehicle* lookupVUsingPI(int physicsIndex);
+
 	glm::mat4 getEntityTransformation(int sceneObjectIndex);
 
 

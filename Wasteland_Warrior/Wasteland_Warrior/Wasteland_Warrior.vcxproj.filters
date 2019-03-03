@@ -31,6 +31,7 @@
     <ClCompile Include="UI_Controller.cpp" />
     <ClCompile Include="UserInput.cpp" />
     <ClCompile Include="Vehicle.cpp" />
+    <ClCompile Include="SFXPool.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio_Controller.h" />
@@ -58,6 +59,7 @@
     <ClInclude Include="Vehicle.h" />
     <ClInclude Include="..\snippetFiles\snippetvehiclecommon\SnippetVehicleCreate.h" />
     <ClInclude Include="snippetFiles\snippetvehiclecommon\SnippetVehicleCreate.h" />
+    <ClInclude Include="SFXPool.h" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="bgm.mp3" />

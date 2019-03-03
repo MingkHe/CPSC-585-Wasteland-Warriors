@@ -4,6 +4,17 @@
 Gamestate::Gamestate()
 {
 	camera.pos = glm::vec3(0.f, 15.f, 0.f);
+
+	carStart_sound = false;
+	carIdle_sound = false;
+	carRunning_sound = false;
+	carBrake_sound = false;
+	carCrash_sound = false;
+	carExpo_sound = false;
+
+	ui_enter = false;
+	ui_switch = false;
+	ui_menu = false;
 }
 
 Gamestate::~Gamestate()

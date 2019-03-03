@@ -38,6 +38,26 @@ public:
 	bool DKey;
 	bool SPACEKey;
 
+	//car engine ignition sound
+	bool carStart_sound;
+	//car engine sound when the car is idle
+	bool carIdle_sound;
+	//engine acceleration sound
+	bool carRunning_sound;
+	//car braking sound
+	bool carBrake_sound;
+	//car crashing sound
+	bool carCrash_sound;
+	//car explosion sound
+	bool carExpo_sound;
+
+	//the sound for select the start button
+	bool ui_enter;
+	//the sound for ui menu switching between button
+	bool ui_switch;
+	//menu bgm
+	bool ui_menu;
+
 	//Joysticks
 	float leftStickX;
 	float leftStickY;

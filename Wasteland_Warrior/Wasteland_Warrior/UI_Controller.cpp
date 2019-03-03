@@ -47,7 +47,7 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 	
 	//Start Menu
 	} else if (GameState->UIMode == "Start") {
-
+		GameState->ui_menu = true;
 		//render start screen image
 		//Should update based on selected menu item.
 
@@ -90,6 +90,7 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 
 		if (input == "UP" || input == "DOWN") {
 			pointerState = (pointerState + 1) % 2;
+			GameState->ui_switch = true;
 		}
 
 
@@ -116,9 +117,28 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 
 		if (pointerState == 0 && input == "ENTER") {
 			GameState->UIMode = "Game";
+			GameState->ui_enter = true;
+			GameState->ui_menu = false;
 			printf("switch success!\n");
+		} else if (input == "ENTER") {
+			glfwSetWindowShouldClose(window, GL_TRUE);
+			printf("quit\n");
 		}
 
 		//glfwSwapBuffers(window);
+	} else if (GameState->UIMode == "Win") {
+		
+		//Display a win screen
+
+		if (GameState->button == "ENTER") {
+			GameState->UIMode = "Start";
+		}
+	} else if (GameState->UIMode == "Lose") {
+
+		//Display a lose screen 
+
+		if (GameState->button == "ENTER") {
+			GameState->UIMode = "Start";
+		}
 	}
 }

@@ -6,45 +6,56 @@
 // ==========================================================================
 #version 410
 
-// interpolated colour received from vertex stage
-in vec3 Colour;
-//in vec2 texCoord;
-//uniform sampler2DRect image;
 
-uniform int shade;
+//uniform mat4 model;  //=transform
+uniform mat4 transform;  //=transform
+uniform vec3 cameraPosition; // =cameraPosition
 
-in vec3 normal;
-in vec3 lightVec;
-in vec3 cameraVec;
+// material settings
+uniform sampler2D materialTex;
+uniform float materialShininess;
+uniform vec3 materialSpecularColor;
 
-// first output is mapped to the framebuffer's colour index by default
-out vec4 FragmentColour;
+uniform vec3 lightPosition;
+uniform vec3 lightColour;
+uniform float lightAttenuation;
+uniform float lightAmbientCoeff;
+uniform vec2 uvTest;
+in vec2 fragTexCoord;
+in vec3 fragNormal;
+in vec3 fragVert;
 
-void main(void) {
-    // write colour output without modification
-    FragmentColour = vec4(Colour, 0);
-	//FragmentColour = texture(image, texCoord);
-	
-	vec3 normLightVec = normalize(lightVec);
-	vec3 reflection = 2*dot(normLightVec, normal) * normal - normLightVec;
+out vec4 finalColor;
 
-	float shading = max(abs(dot(normalize(normal), normLightVec)), 0)//*5.f/pow(length(lightVec), 2.f)			//diffuse
-	//+ pow(max(0.f, dot(reflection, normalize(cameraVec))), 10)*5.f//pow(length(lightVec), 2.f)	//specular
-	+ .6f;																						//ambient
-	if(shade == 0) {
-		FragmentColour *= shading;
-	} else if(shade == 1) {
-		if(shading > .95f) {
-			FragmentColour *= 1.f;
-		} else if(shading > .6f) {
-			FragmentColour *= .8f;
-		} else if(shading > .4f) {
-			FragmentColour *= .8f;
-		} else {
-			FragmentColour *= .5f;
-		}
-	}
-	/*if(normal.x == 0.f && normal.y == 1.f && normal.z == 0.f) {
-		FragmentColour = vec4(0, 1, 0, 0);
-	}*/
+void main() {
+    vec3 normal = normalize(transpose(inverse(mat3(transform))) * fragNormal);
+    vec3 surfacePos = vec3(transform * vec4(fragVert, 1));
+    vec4 surfaceColor = texture(materialTex, fragTexCoord);
+	//vec4 surfaceColor = texture(materialTex, uvTest);
+    vec3 surfaceToLight = normalize(lightPosition - surfacePos);
+    vec3 surfaceToCamera = normalize(cameraPosition - surfacePos);
+    
+    //ambient
+    vec3 ambient = lightAmbientCoeff * surfaceColor.rgb * lightColour;
+
+    //diffuse
+    float diffuseCoefficient = max(0.0, dot(normal, surfaceToLight));
+    vec3 diffuse = diffuseCoefficient * surfaceColor.rgb * lightColour;
+    
+    //specular
+    float specularCoefficient = 0.0;
+    if(diffuseCoefficient > 0.0)
+        specularCoefficient = pow(max(0.0, dot(surfaceToCamera, reflect(-surfaceToLight, normal))), materialShininess);
+    vec3 specular = specularCoefficient * materialSpecularColor * lightColour;
+    
+    //attenuation
+    float distanceToLight = length(lightPosition - surfacePos);
+    float attenuation = 1.0 / (1.0 + lightAttenuation * pow(distanceToLight, 2));
+
+    //linear color (color before gamma correction)
+    vec3 linearColor = ambient + attenuation*(diffuse + specular);
+    
+    //final color (after gamma correction)
+    vec3 gamma = vec3(1.0/2.2);
+    finalColor = vec4(pow(linearColor, gamma), surfaceColor.a);
 }

@@ -164,21 +164,23 @@
     <ClCompile Include="PlayerUnit.cpp" />
     <ClCompile Include="PowerUp.cpp" />
     <ClCompile Include="Program.cpp" />
+    <ClCompile Include="ContactReportCallback.cpp" />
     <ClCompile Include="RenderingEngine.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneMainMenu.cpp" />
+    <ClCompile Include="SFXPool.cpp" />
     <ClCompile Include="ShaderTools.cpp" />
     <ClCompile Include="AI_Interaction.cpp" />
-
     <ClCompile Include="texture.cpp" />
-
     <ClCompile Include="UI_Controller.cpp" />
     <ClCompile Include="UserInput.cpp" />
     <ClCompile Include="Vehicle.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\snippetFiles\snippetvehiclecommon\SnippetVehicleCreate.h" />
     <ClInclude Include="Audio_Controller.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CompositeWorldObject.h" />
     <ClInclude Include="EnemyUnit.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Gamestate.h" />
@@ -191,14 +193,15 @@
     <ClInclude Include="PlayerUnit.h" />
     <ClInclude Include="PowerUp.h" />
     <ClInclude Include="Program.h" />
+    <ClInclude Include="ContactReportCallback.h" />
     <ClInclude Include="RenderingEngine.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneMainMenu.h" />
+    <ClInclude Include="SFXPool.h" />
     <ClInclude Include="ShaderTools.h" />
+    <ClInclude Include="snippetFiles\snippetvehiclecommon\SnippetVehicleCreate.h" />
     <ClInclude Include="SnippetPVD.h" />
-
     <ClInclude Include="texture.h" />
-
     <ClInclude Include="UI_Controller.h" />
     <ClInclude Include="UserInput.h" />
     <ClInclude Include="Vehicle.h" />
@@ -210,6 +213,10 @@
     <None Include="..\shaders\fragment.glsl" />
     <None Include="..\shaders\fragmentMainMenu.glsl" />
     <None Include="..\shaders\geometry.glsl" />
+    <None Include="..\shaders\healthfragment.glsl" />
+    <None Include="..\shaders\healthvertex.glsl" />
+    <None Include="..\shaders\radarfragment.glsl" />
+    <None Include="..\shaders\radarvertex.glsl" />
     <None Include="..\shaders\vertex.glsl" />
     <None Include="..\shaders\vertexMainMenu.glsl" />
     <None Include="libFLAC-8.dll" />

@@ -15,15 +15,41 @@
 
 RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	game_state = gameState;
+
+	healthshaderProgram = ShaderTools::InitializeShaders("../shaders/healthvertex.glsl", "../shaders/healthfragment.glsl");
+	radarshaderProgram = ShaderTools::InitializeShaders("../shaders/radarvertex.glsl", "../shaders/radarfragment.glsl");
+
+	health.verts.push_back(glm::vec3(.5f, .8f, 0.f));
+	health.verts.push_back(glm::vec3(.5f, .9f, 0.f));
+	health.verts.push_back(glm::vec3(.9f, .8f, 0.f));
+	health.verts.push_back(glm::vec3(.9f, .9f, 0.f));
+	health.uvs.push_back(glm::vec2(0.f, 0.f));
+	health.uvs.push_back(glm::vec2(0.f, 1.f));
+	health.uvs.push_back(glm::vec2(1.f, 0.f));
+	health.uvs.push_back(glm::vec2(1.f, 1.f));
+	health.drawMode = GL_TRIANGLE_STRIP;
+	assignBuffers(health);
+	setBufferData(health);
+
+	radar.verts.push_back(glm::vec3(-.6f, -.6f, 0.f));
+	radar.verts.push_back(glm::vec3(-.6f, -.9f, 0.f));
+	radar.verts.push_back(glm::vec3(-.9f, -.6f, 0.f));
+	radar.verts.push_back(glm::vec3(-.9f, -.9f, 0.f));
+	radar.uvs.push_back(glm::vec2(-1.f, -1.f));
+	radar.uvs.push_back(glm::vec2(-1.f, 1.f));
+	radar.uvs.push_back(glm::vec2(1.f, -1.f));
+	radar.uvs.push_back(glm::vec2(1.f, 1.f));
+	radar.drawMode = GL_TRIANGLE_STRIP;
+	assignBuffers(radar);
+	setBufferData(radar);
 }
 
 RenderingEngine::~RenderingEngine() {
 
 }
 
-void RenderingEngine::RenderScene(const std::vector<Geometry>& objects) {
+void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objects) {
 	//Clears the screen to a dark grey background
-	printf("rendering rendering rendering rendering!\n");
 
 	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -31,33 +57,66 @@ void RenderingEngine::RenderScene(const std::vector<Geometry>& objects) {
 	glDepthFunc(GL_LESS);
 
 	//sets uniforms
-	GLint cameraGL = glGetUniformLocation(shaderProgram, "cameraPos");
-	GLint lightGL = glGetUniformLocation(shaderProgram, "light");
-	GLint shadeGL = glGetUniformLocation(shaderProgram, "shade");
-	GLint transformGL = glGetUniformLocation(shaderProgram, "transform");
+
 	glm::mat4 perspectiveMatrix = glm::perspective(PI_F*.4f, 512.f / 512.f, .1f, 200.f);
 	glm::mat4 modelViewProjection = perspectiveMatrix * game_state->camera.viewMatrix();
-	glm::vec4 light4 = modelViewProjection * glm::vec4(game_state->light, 1.0);
-	glm::vec3 light = glm::vec3(light4.x, light4.y, light4.z);
-	glUseProgram(shaderProgram);
-	glUniform3fv(cameraGL, 1, &(game_state->camera.pos.x));
-	glUniform3fv(lightGL, 1, &(light.x));
-	glUniform1i(shadeGL, game_state->shading_model);
-	GLint uniformLocation = glGetUniformLocation(shaderProgram, "modelViewProjection");
-	glUniformMatrix4fv(uniformLocation, 1, false, glm::value_ptr(modelViewProjection));
 
-	// bind our shader program and the vertex array object containing our
-	// scene geometry, then tell OpenGL to draw our geometry
 	glUseProgram(shaderProgram);
+	GLint transformGL = glGetUniformLocation(shaderProgram, "transform");
+	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "modelViewProjection"), 1, false, glm::value_ptr(modelViewProjection));
 
-	for (const Geometry& g : objects) {
-		glUniformMatrix4fv(transformGL, 1, false, &(g.transform[0][0]));
-		glBindVertexArray(g.vao);
-		glDrawArrays(g.drawMode, 0, g.verts.size());
+	glUniform3fv(glGetUniformLocation(shaderProgram, "cameraPosition"), 1, glm::value_ptr(game_state->camera.pos));
+	glUniform3fv(glGetUniformLocation(shaderProgram, "lightPosition"), 1, glm::value_ptr(game_state->light));
+	glUniform3fv(glGetUniformLocation(shaderProgram, "lightColour"), 1, glm::value_ptr(game_state->lightColor));
+	glUniform1f(glGetUniformLocation(shaderProgram, "lightAttenuation"), game_state->lightAttenuation);
+	glUniform1f(glGetUniformLocation(shaderProgram, "lightAmbientCoeff"), game_state->lightAmbientCoefficient);
+
+	glUniform3fv(glGetUniformLocation(shaderProgram, "materialSpecularColor"), 1, glm::value_ptr(game_state->materialSpecularColor));
+	glUniform1f(glGetUniformLocation(shaderProgram, "materialShininess"), game_state->materialShininess);
+	glUniform1i(glGetUniformLocation(shaderProgram, "materialTex"), 0);
+	
+
+	for (const CompositeWorldObject& g : objects) {
+		glUniformMatrix4fv(transformGL, 1, false, glm::value_ptr(g.geometry[0].transform));
+		//bind the texture
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, g.geometry[0].texture.textureID);
+
+		glBindVertexArray(g.geometry[0].vao);
+		glDrawArrays(g.geometry[0].drawMode, 0, g.geometry[0].verts.size());
 
 		// reset state to default (no shader or geometry bound)
 		glBindVertexArray(0);
 	}
+
+	//render health bar
+	GLint healthGL = glGetUniformLocation(healthshaderProgram, "health");
+	glUseProgram(healthshaderProgram);
+	glUniform1f(healthGL, game_state->playerVehicle.health);
+	glDisable(GL_DEPTH_TEST);
+	glBindVertexArray(health.vao);
+	glDrawArrays(health.drawMode, 0, health.verts.size());
+
+	//render radar
+	glUseProgram(radarshaderProgram);
+	GLint enemiesGL = glGetUniformLocation(radarshaderProgram, "enemies");
+	GLint numenemiesGL = glGetUniformLocation(radarshaderProgram, "numenemies");
+	GLint playerposGL = glGetUniformLocation(radarshaderProgram, "playerpos");
+	GLint playerdirGL = glGetUniformLocation(radarshaderProgram, "playerdir");
+	GLint radar_distGL = glGetUniformLocation(radarshaderProgram, "radar_dist");
+	std::vector<glm::vec2> enemy_locations;
+	for (int i = 0; i < game_state->Enemies.size(); i++) {
+		enemy_locations.push_back(glm::vec2(game_state->Enemies[i].position.x, game_state->Enemies[i].position.z));
+	}
+	//std::cout << enemy_locations[0].x << " " << enemy_locations[0].y << std::endl;
+	glUniform2fv(enemiesGL, enemy_locations.size(), &(enemy_locations[0].x));
+	glUniform2f(playerposGL, game_state->playerVehicle.position.x, game_state->playerVehicle.position.z);
+	glUniform2f(playerdirGL, game_state->playerVehicle.direction.x, game_state->playerVehicle.direction.y);
+	glUniform1i(numenemiesGL, enemy_locations.size());
+	glUniform1f(radar_distGL, game_state->radar_view);
+	glBindVertexArray(radar.vao);
+	glDrawArrays(radar.drawMode, 0, radar.verts.size());
+
 	glUseProgram(0);
 
 	// check for an report any OpenGL errors
@@ -151,21 +210,22 @@ void RenderingEngine::assignBuffers(Geometry& geometry) {
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 	glEnableVertexAttribArray(0);
 
-	glGenBuffers(1, &geometry.normalBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, geometry.normalBuffer);
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-	glEnableVertexAttribArray(2);
-
 	glGenBuffers(1, &geometry.colorBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, geometry.colorBuffer);
 	//Parameters in order: Index of vbo in the vao, number of primitives per element, primitive type, etc.
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 	glEnableVertexAttribArray(1);
 
+	glGenBuffers(1, &geometry.normalBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, geometry.normalBuffer);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	glEnableVertexAttribArray(2);
+
 	glGenBuffers(1, &geometry.uvBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, geometry.uvBuffer);
 	glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 	glEnableVertexAttribArray(3);
+
 
 
 }
@@ -176,14 +236,15 @@ void RenderingEngine::setBufferData(Geometry& geometry) {
 	glBindBuffer(GL_ARRAY_BUFFER, geometry.vertexBuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * geometry.verts.size(), geometry.verts.data(), GL_STATIC_DRAW);
 
-	glBindBuffer(GL_ARRAY_BUFFER, geometry.normalBuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * geometry.normals.size(), geometry.normals.data(), GL_STATIC_DRAW);
-
 	glBindBuffer(GL_ARRAY_BUFFER, geometry.colorBuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * geometry.colors.size(), geometry.colors.data(), GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ARRAY_BUFFER, geometry.uvBuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * geometry.uvs.size(), geometry.uvs.data(), GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ARRAY_BUFFER, geometry.normalBuffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * geometry.normals.size(), geometry.normals.data(), GL_STATIC_DRAW);
+
 }
 
 void RenderingEngine::deleteBufferData(Geometry& geometry) {

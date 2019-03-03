@@ -12,6 +12,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "texture.h"
 
 //**Must include glad and GLFW in this order or it breaks**
 #include <glad/glad.h>
@@ -28,6 +29,8 @@ public:
 	std::vector<glm::vec3> colors;
 	std::vector<glm::vec2> uvs;
 
+	MyTexture texture;
+	const char* textureFilePath;
 	glm::mat4 transform;
 	glm::vec3 center;
 

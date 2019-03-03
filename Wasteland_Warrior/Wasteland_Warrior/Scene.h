@@ -12,6 +12,8 @@
 #include <vector>
 
 #include "Geometry.h"
+#include "texture.h"
+#include "CompositeWorldObject.h"
 
 
 class Gamestate;
@@ -30,12 +32,12 @@ public:
 
 	//Send geometry to the renderer
 	void displayScene();
-	void loadOBJObject(const char* filepath, glm::vec3 color);
+	int loadOBJObject(const char* filepath, const char* textureFilepath);
 
 	RenderingEngine * renderer;
 
 	//list of objects in the scene
-	std::vector<Geometry> objects;
+	std::vector<CompositeWorldObject> objects;
 	int generateRectPrism(float length, float width, float height);
 
 	int sceneObjectIndex = 0;

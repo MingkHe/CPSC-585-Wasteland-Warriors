@@ -179,6 +179,7 @@
     <ClInclude Include="..\snippetFiles\snippetvehiclecommon\SnippetVehicleCreate.h" />
     <ClInclude Include="Audio_Controller.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CompositeWorldObject.h" />
     <ClInclude Include="EnemyUnit.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Gamestate.h" />

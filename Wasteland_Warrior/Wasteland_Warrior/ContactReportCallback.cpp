@@ -32,7 +32,7 @@ void ContactReportCallback::onContact(const PxContactPairHeader& pairHeader, con
 	for (PxU32 i = 0; i < nbPairs; i++)
 	{
 
-		gameState->testFunction(0);
+		std::cout << "----------------Collision---------------" << std::endl;
 
 		PxActor* actor1 = pairHeader.actors[0]->is<PxActor>();
 		PxActor* actor2 = pairHeader.actors[1]->is<PxActor>();
@@ -43,13 +43,12 @@ void ContactReportCallback::onContact(const PxContactPairHeader& pairHeader, con
 
 
 		PxU32 contactCount = pairs[i].contactCount;
-		std::cout << "Contact Point Count: " << contactCount << std::endl;
+		//std::cout << "Contact Point Count: " << contactCount << std::endl;
 
 
 
 		if (contactCount)
 		{
-			gameState->testFunction(1);
 			contactPoints.resize(contactCount);
 			pairs[i].extractContacts(&contactPoints[0], contactCount);
 
@@ -61,7 +60,3 @@ void ContactReportCallback::onContact(const PxContactPairHeader& pairHeader, con
 		}
 	}
 }
-
-//Entity
-//Angle
-//Speed

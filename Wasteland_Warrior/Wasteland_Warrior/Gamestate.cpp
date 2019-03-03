@@ -10,31 +10,33 @@ Gamestate::~Gamestate()
 {
 }
 
-//This function is a standing for proper handling of collision resolution
-void Gamestate::testFunction(int test) {
-	if (test == 0)
-		std::cout << "----------------Collision---------------" << std::endl;
-	else 
-		std::cout << "!!!!!!!!!!!!!!!!!!!Vehicle Collision!!!!!!!!!!!!!!!!!!!" << std::endl;
 
-}
 
 void Gamestate::SpawnPlayer (float x, float y) {
 	int physicsIndex = physics_Controller->createPlayerVehicle();
-	physics_Controller->setPosition(physicsIndex, glm::vec3{x, 4.0f, y});
-	int sceneObjectIndex = scene->generateRectPrism(2.4f, 1.6f, 1.2f);
+	physics_Controller->setPosition(physicsIndex, glm::vec3{x, 2.0f, y});
+	//int sceneObjectIndex = scene->generateRectPrism(2.4, 1.6, 1.2);
+	//int sceneObjectIndex = scene->loadOBJObject("Objects/BladedDragster/bourak.obj","Objects/BladedDragster/bourak.jpg" );
+	//int sceneObjectIndex = scene->loadOBJObject("Objects/Wooden_train_cars/wagon.obj", "Objects/Wooden_train_cars/wagon_tex3.png");
+	int sceneObjectIndex = scene->loadOBJObject("Objects/Realistic_Box_Model/box_realistic.obj", "Objects/Realistic_Box_Model/box_texture_color.jpg");
 	playerVehicle = PlayerUnit(physicsIndex, sceneObjectIndex);
-	std::cout << physicsIndex << " " << sceneObjectIndex << std::endl;
 }
 
 
 void Gamestate::SpawnEnemy(float x, float y) {
 	int physicsIndex = physics_Controller->createEnemyVehicle();
 	physics_Controller->setPosition(physicsIndex, glm::vec3{ x, 5.0f, y });
+	int sceneObjectIndex = scene->loadOBJObject("Objects/Wooden_train_cars/wagon.obj", "Objects/Wooden_train_cars/wagon_tex3.png");
+	//int sceneObjectIndex = scene->generateRectPrism(2.4, 1.6, 1.2);
+	EnemyUnit enemy = EnemyUnit(physicsIndex, sceneObjectIndex);
+	Enemies.push_back(enemy);
+}
 
-	int sceneObjectIndex = scene->generateRectPrism(2.4f, 1.6f, 1.2f);
-	std::cout << physicsIndex << " " << sceneObjectIndex << std::endl;
-
+void Gamestate::SpawnEnemy2(float x, float y) {
+	int physicsIndex = physics_Controller->createEnemyVehicle();
+	physics_Controller->setPosition(physicsIndex, glm::vec3{ x, 5.0f, y });
+	int sceneObjectIndex = scene->loadOBJObject("Objects/Wooden_train_cars/wagon.obj", "Objects/Realistic_Box_Model/box_texture_color.jpg");
+	//int sceneObjectIndex = scene->generateRectPrism(2.4, 1.6, 1.2);
 	EnemyUnit enemy = EnemyUnit(physicsIndex, sceneObjectIndex);
 	Enemies.push_back(enemy);
 }
@@ -115,16 +117,16 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse)
 
 
 	if (entity1 == &playerVehicle)
-		std::cout << "Player ran into ";
+		std::cout << "Player and ";
 	
 	else
-		std::cout << "Enemy ran into ";
+		std::cout << "Enemy and ";
 
 	if (entity2 == &playerVehicle)
-		std::cout << "Player" << std::endl;
+		std::cout << "Player collided" << std::endl;
 
 	else
-		std::cout << "Enemy " << std::endl;
+		std::cout << "Enemy collided ";
 
 	float totalForce = abs(impulse.x) + abs(impulse.y);
 	std::cout << "with force: " << totalForce << std::endl;

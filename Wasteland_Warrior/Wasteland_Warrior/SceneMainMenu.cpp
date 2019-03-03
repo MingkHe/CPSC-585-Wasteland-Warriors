@@ -23,91 +23,12 @@ SceneMainMenu::SceneMainMenu(RenderingEngine* renderer) : renderer(renderer) {
 }
 
 
-void SceneMainMenu::generateRectPrism(float length, float width, float height) {
-	Geometry box;
-	float carL = width; // Actually is width
-	float carW = length; //Actually is length
-	float carH = height;
-
-
-	//Front Side
-	box.verts.push_back({ carL, carH, carW });
-	box.verts.push_back({ -carL, carH, carW });
-	box.verts.push_back({ carL, -carH, carW });
-	box.verts.push_back({ -carL, -carH, carW });
-	for (int i = 0; i < 4; i++) {
-		box.normals.push_back(glm::vec3(1.f, 0.f, 0.f));
-	}
-
-	//Back
-	box.verts.push_back({ carL, carH, -carW });
-	box.verts.push_back({ -carL, carH, -carW });
-	box.verts.push_back({ carL, -carH, -carW });
-	box.verts.push_back({ -carL, -carH, -carW });
-	for (int i = 0; i < 4; i++) {
-		box.normals.push_back(glm::vec3(-1.f, 0.f, 0.f));
-	}
-
-	//Left
-	box.verts.push_back({ carL, carH, carW });
-	box.verts.push_back({ carL, -carH, carW });
-	box.verts.push_back({ carL, carH, -carW });
-	box.verts.push_back({ carL, -carH, -carW });
-	for (int i = 0; i < 4; i++) {
-		box.normals.push_back(glm::vec3(0.f, 0.f, -1.f));
-	}
-
-	//Right
-	box.verts.push_back({ -carL, carH, carW });
-	box.verts.push_back({ -carL, -carH, carW });
-	box.verts.push_back({ -carL, carH, -carW });
-	box.verts.push_back({ -carL, -carH, -carW });
-
-	for (int i = 0; i < 4; i++) {
-		box.normals.push_back(glm::vec3(0.f, 0.f, 1.f));
-	}
-
-	//Top
-	box.verts.push_back({ carL, carH, carW });
-	box.verts.push_back({ -carL, carH, carW });
-	box.verts.push_back({ carL, carH, -carW });
-	box.verts.push_back({ -carL, carH, -carW });
-	for (int i = 0; i < 4; i++) {
-		box.normals.push_back(glm::vec3(0.f, 1.f, 0.f));
-	}
-
-	//Bottom
-	box.verts.push_back({ carL, -carH, carW });
-	box.verts.push_back({ -carL, -carH, carW });
-	box.verts.push_back({ carL, -carH, -carW });
-	box.verts.push_back({ -carL, -carH, -carW });
-
-	for (int i = 0; i < 4; i++) {
-		box.normals.push_back(glm::vec3(0.f, -1.f, 0.f));
-	}
-
-	for (int i = 0; i < box.verts.size(); i++) {
-		box.colors.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
-	}
-	box.transform = glm::mat4(
-		4.f, 0.f, 0.f, 0.f,
-		0.f, 4.f, 0.f, 0.f,
-		0.f, 0.f, 4.f, 0.f,
-		1.f, 0.f, 0.f, 1.f
-	);
-	box.drawMode = GL_TRIANGLE_STRIP;
-	RenderingEngine::assignBuffers(box);
-	RenderingEngine::setBufferData(box);
-	objects.push_back(box);
-}
-
-
 SceneMainMenu::~SceneMainMenu() {
 
 }
 
 void SceneMainMenu::displayScene() {
-	renderer->RenderScene(objects);
+	//renderer->RenderScene(objects);
 }
 
 void SceneMainMenu::displayMenuScene() {

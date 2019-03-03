@@ -60,6 +60,9 @@
     <ClInclude Include="UI_Controller.h" />
     <ClInclude Include="UserInput.h" />
     <ClInclude Include="Vehicle.h" />
+    <ClInclude Include="..\snippetFiles\snippetvehiclecommon\SnippetVehicleCreate.h" />
+    <ClInclude Include="snippetFiles\snippetvehiclecommon\SnippetVehicleCreate.h" />
+    <ClInclude Include="CompositeWorldObject.h" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="bgm.mp3" />

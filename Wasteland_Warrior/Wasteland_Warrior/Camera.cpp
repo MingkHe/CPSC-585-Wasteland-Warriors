@@ -2,6 +2,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "Gamestate.h"
 #include <math.h>
+#include <iostream>
 
 using namespace std;
 using namespace glm;
@@ -13,7 +14,7 @@ Camera::Camera(Gamestate* newGamestate) {
 	right = glm::vec3(1, 0, 0);
 	up = glm::vec3(0, 1, 0);
 
-	pos = glm::vec3(0);
+	pos = glm::vec3(0,0,0);
 	radius = 1.f;
 
 	gameState = newGamestate;
@@ -26,13 +27,13 @@ glm::mat4 Camera::viewMatrix() const {
 
 	//Position behind car
 	float lagSensitivity = 0.0;
-	cam.z = (cam.z - 25) - (gameState->playerVehicle.acceleration * lagSensitivity);
-	cam.y = cam.y + 10;
 
 	//Rotate camera based on direction
-	float angle = atan(gameState->playerVehicle.direction.y / gameState->playerVehicle.direction.x);
-	cam.x = ((cam.x - car.x) * cos(angle)) - ((cam.z - car.z) * sin(angle)) + car.x;
-	cam.z = ((cam.x - car.x) * sin(angle)) + ((cam.z - car.z) * cos(angle)) + car.z;
+	float xVal = gameState->playerVehicle.direction.x / gameState->playerVehicle.direction.length();
+	float yVal = gameState->playerVehicle.direction.y / gameState->playerVehicle.direction.length();
+	cam.x = -15*xVal+car.x;
+	cam.z = -15 *yVal+car.z - (gameState->playerVehicle.acceleration * lagSensitivity);
+	cam.y = cam.y + 5;
 
 	glm::mat4 viewMatrix = glm::lookAt(cam, car, up);
 	return viewMatrix;

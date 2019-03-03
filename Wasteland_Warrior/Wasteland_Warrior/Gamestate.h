@@ -56,7 +56,14 @@ public:
 
 	//Graphics
 	Camera camera = Camera(this);
-	glm::vec3 light = glm::vec3(0.0f, 10.0f, 0.0f);
+	glm::vec3 light = glm::vec3(0.0f, 1000.0f, 0.0f);
+	glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
+	double lightAttenuation = 0.000001;
+	float lightAmbientCoefficient = 0.05;
+
+	glm::vec3 materialSpecularColor = glm::vec3(1.0f, 1.0f, 1.0f);
+	float materialShininess = 0.2;
+
 	unsigned char shading_model = 0;
 
 	glm::vec3 cubeLocation = glm::vec3{ 0.0f, 0.0f, 0.0f};
@@ -67,6 +74,7 @@ public:
 	//Spawning/Despawning Entities
 	void SpawnPlayer(float x, float y);
 	void SpawnEnemy(float x, float y);
+	void SpawnEnemy2(float x, float y);
 	void DespawnEnemy(EnemyUnit enemy);
 	void SpawnPowerUp(int type, float x, float y);
 	void DespawnPowerUp(PowerUp powerUp);
@@ -79,7 +87,4 @@ public:
 	Vehicle* lookupVUsingPI(int physicsIndex);
 
 	glm::mat4 getEntityTransformation(int sceneObjectIndex);
-
-
-	void testFunction(int test);
 };

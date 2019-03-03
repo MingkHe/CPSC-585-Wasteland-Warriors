@@ -111,6 +111,7 @@ public:
 	float materialShininess = 0.2;
 
 	unsigned char shading_model = 0;
+	float radar_view = 1.f / 40.f;//this needs to be the inverse of the view distance
 
 	glm::vec3 cubeLocation = glm::vec3{ 0.0f, 0.0f, 0.0f};
 	Scene *scene;

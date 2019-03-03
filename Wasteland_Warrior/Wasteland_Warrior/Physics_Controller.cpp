@@ -73,7 +73,7 @@ void Physics_Controller::Update()
 	stepPhysics(false);
 }
 
-PxF32 gSteerVsForwardSpeedData[2*8]=
+/*PxF32 gSteerVsForwardSpeedData[2*8]=
 {
 	0.0f,		0.2f,
 	5.0f,		0.2f,
@@ -83,21 +83,21 @@ PxF32 gSteerVsForwardSpeedData[2*8]=
 	PX_MAX_F32, PX_MAX_F32,
 	PX_MAX_F32, PX_MAX_F32,
 	PX_MAX_F32, PX_MAX_F32
-};
+};*/
 
 
 // Casting values to PxF32 to resolve warning of mismatch types
-/*PxF32 gSteerVsForwardSpeedData[2 * 8] =
+PxF32 gSteerVsForwardSpeedData[2 * 8] =
 {
-	(PxF32)0.1*PX_MAX_F32,		0.5f,
-	(PxF32)0.2*PX_MAX_F32,		0.45f,
-	(PxF32)0.3*PX_MAX_F32,		0.4f,
-	(PxF32)0.4*PX_MAX_F32,		0.35f,
-	(PxF32)0.5*PX_MAX_F32,		0.3f,
-	(PxF32)0.6*PX_MAX_F32,		0.25f,
-	(PxF32)0.7*PX_MAX_F32,		0.2f,
-	(PxF32)0.8*PX_MAX_F32,		0.1f
-};*/
+	0.0f,		0.2f,
+	(PxF32)0.2*PX_MAX_F32,		0.175f,
+	(PxF32)0.3*PX_MAX_F32,		0.15f,
+	(PxF32)0.4*PX_MAX_F32,		0.125f,
+	(PxF32)0.5*PX_MAX_F32,		0.1f,
+	(PxF32)0.6*PX_MAX_F32,		0.075f,
+	(PxF32)0.7*PX_MAX_F32,		0.05,
+	(PxF32)0.8*PX_MAX_F32,		0.025f
+};
 
 
 PxFixedSizeLookupTable<8> gSteerVsForwardSpeedTable(gSteerVsForwardSpeedData, 4);
@@ -150,8 +150,8 @@ VehicleDesc initPlayerVehiclePhysicsDesc()
 	//Set up the chassis mass, dimensions, moment of inertia, and center of mass offset.
 	//The moment of inertia is just the moment of inertia of a cuboid but modified for easier steering.
 	//Center of mass offset is 0.65m above the base of the chassis and 0.25m towards the front.
-	const PxF32 chassisMass = 1500.0f;
-	const PxVec3 chassisDims(3.0f, 2.0f, 5.0f);
+	const PxF32 chassisMass = 1000.0f;
+	const PxVec3 chassisDims(2.0f, 1.5f, 5.0f);
 	const PxVec3 chassisMOI
 		((chassisDims.y*chassisDims.y + chassisDims.z*chassisDims.z)*chassisMass/12.0f,
 		 (chassisDims.x*chassisDims.x + chassisDims.z*chassisDims.z)*0.6f*chassisMass/12.0f,
@@ -196,11 +196,11 @@ VehicleDesc initEnemyVehiclePhysicsDesc()
 	//The moment of inertia is just the moment of inertia of a cuboid but modified for easier steering.
 	//Center of mass offset is 0.65m above the base of the chassis and 0.25m towards the front.
 	const PxF32 chassisMass = 1500.0f;
-	const PxVec3 chassisDims(3.0f, 2.0f, 5.0f);
+	const PxVec3 chassisDims(2.0f, 1.5f, 5.0f);
 	const PxVec3 chassisMOI
-	((chassisDims.y*chassisDims.y + chassisDims.z*chassisDims.z)*chassisMass / 12.0f,
-		(chassisDims.x*chassisDims.x + chassisDims.z*chassisDims.z)*0.6f*chassisMass / 12.0f,
-		(chassisDims.x*chassisDims.x + chassisDims.y*chassisDims.y)*chassisMass / 12.0f);
+	((chassisDims.y*chassisDims.y + chassisDims.z*chassisDims.z)*chassisMass,
+		(chassisDims.x*chassisDims.x + chassisDims.z*chassisDims.z)*0.8f*chassisMass ,
+		(chassisDims.x*chassisDims.x + chassisDims.y*chassisDims.y)*chassisMass);
 	/*const PxVec3 chassisMOI
 	((chassisDims.y*chassisDims.y + chassisDims.z*chassisDims.z)*chassisMass,
 		(chassisDims.x*chassisDims.x + chassisDims.z*chassisDims.z)*0.8f*chassisMass,
@@ -443,7 +443,7 @@ int Physics_Controller::createVehicle() {
 
 int Physics_Controller::createEnemyVehicle() {
 	//Create a vehicle that will drive on the plane.
-	VehicleDesc vehicleDesc = initPlayerVehiclePhysicsDesc();;
+	VehicleDesc vehicleDesc = initEnemyVehiclePhysicsDesc();;
 	enemyVehicle = createEnemyVehicle4W(vehicleDesc, gPhysics, gCooking);
 	PxTransform startTransform(PxVec3(0, (vehicleDesc.chassisDims.y*0.5f + vehicleDesc.wheelRadius + 1.0f), 0.0f), PxQuat(PxIdentity));
 	enemyVehicle->getRigidDynamicActor()->setGlobalPose(startTransform);
@@ -622,7 +622,7 @@ void Physics_Controller::stepPhysics(bool interactive)
 	}
 
 	//Raycasts.
-	PxVehicleWheels* vehicles[1] = { gVehicle4W };
+	PxVehicleWheels* vehicles[2] = { gVehicle4W};
 	PxRaycastQueryResult* raycastResults = gVehicleSceneQueryData->getRaycastQueryResultBuffer(0);
 	const PxU32 raycastResultsSize = gVehicleSceneQueryData->getQueryResultBufferSize();
 	PxVehicleSuspensionRaycasts(gBatchQuery, 1, vehicles, raycastResultsSize, raycastResults);
@@ -630,7 +630,7 @@ void Physics_Controller::stepPhysics(bool interactive)
 	//Vehicle update.
 	const PxVec3 grav = gScene->getGravity();
 	PxWheelQueryResult wheelQueryResults[PX_MAX_NB_WHEELS];
-	PxVehicleWheelQueryResult vehicleQueryResults[1] = { {wheelQueryResults, gVehicle4W->mWheelsSimData.getNbWheels()} };
+	PxVehicleWheelQueryResult vehicleQueryResults[2] = { {wheelQueryResults, gVehicle4W->mWheelsSimData.getNbWheels()}};
 	PxVehicleUpdates(timestep, grav, *gFrictionPairs, 1, vehicles, vehicleQueryResults);
 
 	//Work out if the vehicle is in the air.
@@ -688,8 +688,8 @@ void Physics_Controller::cleanupPhysics(bool interactive)
 	gVehicle4W->getRigidDynamicActor()->release();
 	gVehicle4W->free();
 
-	enemyVehicle->getRigidDynamicActor()->release();
-	enemyVehicle->free();
+	//enemyVehicle->getRigidDynamicActor()->release();
+	//enemyVehicle->free();
 
 	gGroundPlane->release();
 	gBatchQuery->release();

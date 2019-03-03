@@ -12,18 +12,29 @@ Gamestate::~Gamestate()
 
 void Gamestate::SpawnPlayer (float x, float y) {
 	int physicsIndex = physics_Controller->createPlayerVehicle();
-	physics_Controller->setPosition(physicsIndex, glm::vec3{x, 4.0f, y});
-	int sceneObjectIndex = scene->generateRectPrism(2.4, 1.6, 1.2);
+	physics_Controller->setPosition(physicsIndex, glm::vec3{x, 2.0f, y});
+	//int sceneObjectIndex = scene->generateRectPrism(2.4, 1.6, 1.2);
+	//int sceneObjectIndex = scene->loadOBJObject("Objects/BladedDragster/bourak.obj","Objects/BladedDragster/bourak.jpg" );
+	//int sceneObjectIndex = scene->loadOBJObject("Objects/Wooden_train_cars/wagon.obj", "Objects/Wooden_train_cars/wagon_tex3.png");
+	int sceneObjectIndex = scene->loadOBJObject("Objects/Realistic_Box_Model/box_realistic.obj", "Objects/Realistic_Box_Model/box_texture_color.jpg");
 	playerVehicle = PlayerUnit(physicsIndex, sceneObjectIndex);
-	std::cout << physicsIndex << " " << sceneObjectIndex << std::endl;
 }
 
 
 void Gamestate::SpawnEnemy(float x, float y) {
 	int physicsIndex = physics_Controller->createEnemyVehicle();
 	physics_Controller->setPosition(physicsIndex, glm::vec3{ x, 5.0f, y });
-	int sceneObjectIndex = scene->generateRectPrism(2.4, 1.6, 1.2);
-	std::cout << physicsIndex << " " << sceneObjectIndex << std::endl;
+	int sceneObjectIndex = scene->loadOBJObject("Objects/Wooden_train_cars/wagon.obj", "Objects/Wooden_train_cars/wagon_tex3.png");
+	//int sceneObjectIndex = scene->generateRectPrism(2.4, 1.6, 1.2);
+	EnemyUnit enemy = EnemyUnit(physicsIndex, sceneObjectIndex);
+	Enemies.push_back(enemy);
+}
+
+void Gamestate::SpawnEnemy2(float x, float y) {
+	int physicsIndex = physics_Controller->createEnemyVehicle();
+	physics_Controller->setPosition(physicsIndex, glm::vec3{ x, 5.0f, y });
+	int sceneObjectIndex = scene->loadOBJObject("Objects/Wooden_train_cars/wagon.obj", "Objects/Realistic_Box_Model/box_texture_color.jpg");
+	//int sceneObjectIndex = scene->generateRectPrism(2.4, 1.6, 1.2);
 	EnemyUnit enemy = EnemyUnit(physicsIndex, sceneObjectIndex);
 	Enemies.push_back(enemy);
 }

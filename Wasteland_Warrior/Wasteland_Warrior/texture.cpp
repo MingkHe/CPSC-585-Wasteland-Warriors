@@ -43,7 +43,6 @@ bool InitializeTexture(MyTexture* texture, const char* filename, GLenum target)
 	if (data != nullptr)
 	{
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);		//Set alignment to be 1
-
 		texture->target = target;
 		glGenTextures(1, &texture->textureID);
 		glBindTexture(texture->target, texture->textureID);

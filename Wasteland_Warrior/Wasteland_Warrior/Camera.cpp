@@ -13,7 +13,7 @@ Camera::Camera(Gamestate* newGamestate) {
 	right = glm::vec3(1, 0, 0);
 	up = glm::vec3(0, 1, 0);
 
-	pos = glm::vec3(0);
+	pos = glm::vec3(0,0,0);
 	radius = 1.f;
 
 	gameState = newGamestate;
@@ -26,8 +26,8 @@ glm::mat4 Camera::viewMatrix() const {
 
 	//Position behind car
 	float lagSensitivity = 0.0;
-	cam.z = (cam.z - 25) - (gameState->playerVehicle.acceleration * lagSensitivity);
-	cam.y = cam.y + 10;
+	cam.z = (cam.z - 15) - (gameState->playerVehicle.acceleration * lagSensitivity);
+	cam.y = cam.y + 5;
 
 	//Rotate camera based on direction
 	float angle = atan(gameState->playerVehicle.direction.y / gameState->playerVehicle.direction.x);

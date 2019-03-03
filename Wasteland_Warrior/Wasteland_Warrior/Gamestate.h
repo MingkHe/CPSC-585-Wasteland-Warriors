@@ -75,7 +75,7 @@ public:
 
 	void Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse);
 
-	void updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 newTransformationMatrix);
+	void updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 newTransformationMatrix, float newSpeed);
 	Vehicle* lookupVUsingPI(int physicsIndex);
 
 	glm::mat4 getEntityTransformation(int sceneObjectIndex);

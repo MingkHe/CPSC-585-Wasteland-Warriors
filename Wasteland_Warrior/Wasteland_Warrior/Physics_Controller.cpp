@@ -760,6 +760,9 @@ void Physics_Controller::updateEntities() {
 		PxActor *actor = userBuffer[index];
 
 		PxRigidActor *rigidActor = actor->is<PxRigidActor>();
+		PxRigidBody *rigidBody = rigidActor->is<PxRigidBody>();
+		PxVec3 velocity = rigidBody->getLinearVelocity();
+		float speed = glm::length(glm::vec2{ velocity.x, velocity.z });
 		//PxRigidDynamicActor *rigidActor = actor->is<PxRigidActor>();
 		//rigidActor->setAnalogAccel(1.0f);
 
@@ -777,8 +780,7 @@ void Physics_Controller::updateEntities() {
 		transformationMatrix[2] = { zRotation.x, zRotation.y, zRotation.z, 0.0f };
 		transformationMatrix[3] = { location.x , location.y , location.z , 1.0f };
 
-		gameState->updateEntity(index, glm::vec3{ location.x, location.y, location.z }, transformationMatrix);
-
+		gameState->updateEntity(index, glm::vec3{ location.x, location.y, location.z }, transformationMatrix, speed);
 	}
 }
 

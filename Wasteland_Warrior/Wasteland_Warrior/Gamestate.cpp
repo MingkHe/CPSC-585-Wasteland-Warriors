@@ -126,31 +126,49 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse)
 	else
 		std::cout << "Enemy " << std::endl;
 
-	float totalForce = impulse.x + impulse.y;
+	float totalForce = abs(impulse.x) + abs(impulse.y);
 	std::cout << "with force: " << totalForce << std::endl;
 
+
+	float damageScaling = 200;		//Smaller number means more damage
+
+
+	//If both vehicles align 
+	if ((entity1AttackLevel >= attackLevelThreshold && entity2AttackLevel >= attackLevelThreshold) ||
+		(entity2AttackLevel <= -attackLevelThreshold && entity1AttackLevel <= -attackLevelThreshold)) {
+
+		if (entity1->speed > entity2->speed) {
+			entity2->health -= totalForce / damageScaling;
+		}
+		else{
+			entity1->health -= totalForce / damageScaling;
+		}
+	}
+
+
 	if (entity1AttackLevel >= attackLevelThreshold || entity1AttackLevel <= -attackLevelThreshold)
-		entity2->health -= 10;
+		entity2->health -= totalForce/ damageScaling;
 
 	if (entity2AttackLevel >= attackLevelThreshold || entity1AttackLevel <= -attackLevelThreshold)
-		entity1->health -= 10;
+		entity1->health -= totalForce/ damageScaling;
+
+
+
+	if (entity1->health <= 0)
+		physics_Controller->setPosition(entity1->physicsIndex, glm::vec3{ 300.0f, 4.0f, 300.0f });\
+
+	if(entity2->health <= 0)
+		physics_Controller->setPosition(entity2->physicsIndex, glm::vec3{ 300.0f, 4.0f, 300.0f});
+
 
 	std::cout << "New health values: " << entity1->health << " | " << entity2->health << std::endl;
 
 
-
-	/*entity1.health -= 10;
-	if(entity1.health <= 0)
-		physics_Controller->setPosition(entity1.physicsIndex, glm::vec3{ 0.0f, 10.0f, 0.0f });
-
-	entity2.health -= 10;
-	if (entity2.health <= 0)
-		physics_Controller->setPosition(entity1.physicsIndex, glm::vec3{ 0.0f, 10.0f, 0.0f });*/
 }
 
 
 
-void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 newTransformationMatrix) {
+void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 newTransformationMatrix, float newSpeed) {
 	Entity* entityToUpdate = NULL;
 	glm::vec4 newDirection = glm::vec4{ 0.0f, 0.0f, 1.0f, 0.0f } *newTransformationMatrix;
 
@@ -200,6 +218,7 @@ void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 
 	}
 
 	if (found) {
+		entityToUpdate->speed = newSpeed;
 		entityToUpdate->position = newPosition;
 		entityToUpdate->transformationMatrix = newTransformationMatrix;
 	}

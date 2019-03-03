@@ -37,6 +37,7 @@ public:
 	//Get the shader use its name seted by the LoadShaderProgram method
 	GLuint GetShaderProgram(std::string name);
 	void RenderScene(const std::vector<Geometry>& objects);
+	void RenderScene(const std::vector<CompositeWorldObject>& objects);
 	void RenderMenuScene(const std::vector<Geometry>& objects);
 	void RenderMenuSceneClear(const std::vector<Geometry>& objects);
 
@@ -51,6 +52,10 @@ public:
 //private:
 	//Pointer to the current shader program being used to render
 	GLuint shaderProgram;
+	GLuint healthshaderProgram;
+	GLuint radarshaderProgram;
+	Geometry health;
+	Geometry radar;
 };
 
 #endif /* RENDERINGENGINE_H_ */

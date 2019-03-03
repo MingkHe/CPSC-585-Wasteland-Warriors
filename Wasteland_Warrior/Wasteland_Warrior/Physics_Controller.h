@@ -1,5 +1,6 @@
 #pragma once
 #include <glm/glm.hpp>
+#include "ContactReportCallback.h"
 class Gamestate;
 
 class Physics_Controller
@@ -23,6 +24,10 @@ public:
 	int createEnemyVehicle();
 	int createPlayerVehicle();
 
+	ContactReportCallback gContactReportCallback;
+
 	int rigidDynamicActorIndex = -1;
 	Gamestate* gameState;
+
+
 };

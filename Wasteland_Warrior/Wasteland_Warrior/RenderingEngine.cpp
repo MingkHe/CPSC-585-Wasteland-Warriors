@@ -15,13 +15,40 @@
 
 RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	game_state = gameState;
+
+	healthshaderProgram = ShaderTools::InitializeShaders("../shaders/healthvertex.glsl", "../shaders/healthfragment.glsl");
+	radarshaderProgram = ShaderTools::InitializeShaders("../shaders/radarvertex.glsl", "../shaders/radarfragment.glsl");
+
+	health.verts.push_back(glm::vec3(.5f, .8f, 0.f));
+	health.verts.push_back(glm::vec3(.5f, .9f, 0.f));
+	health.verts.push_back(glm::vec3(.9f, .8f, 0.f));
+	health.verts.push_back(glm::vec3(.9f, .9f, 0.f));
+	health.uvs.push_back(glm::vec2(0.f, 0.f));
+	health.uvs.push_back(glm::vec2(0.f, 1.f));
+	health.uvs.push_back(glm::vec2(1.f, 0.f));
+	health.uvs.push_back(glm::vec2(1.f, 1.f));
+	health.drawMode = GL_TRIANGLE_STRIP;
+	assignBuffers(health);
+	setBufferData(health);
+
+	radar.verts.push_back(glm::vec3(-.6f, -.6f, 0.f));
+	radar.verts.push_back(glm::vec3(-.6f, -.9f, 0.f));
+	radar.verts.push_back(glm::vec3(-.9f, -.6f, 0.f));
+	radar.verts.push_back(glm::vec3(-.9f, -.9f, 0.f));
+	radar.uvs.push_back(glm::vec2(-1.f, -1.f));
+	radar.uvs.push_back(glm::vec2(-1.f, 1.f));
+	radar.uvs.push_back(glm::vec2(1.f, -1.f));
+	radar.uvs.push_back(glm::vec2(1.f, 1.f));
+	radar.drawMode = GL_TRIANGLE_STRIP;
+	assignBuffers(radar);
+	setBufferData(radar);
 }
 
 RenderingEngine::~RenderingEngine() {
 
 }
 
-void RenderingEngine::RenderScene(const std::vector<Geometry>& objects) {
+void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objects) {
 	//Clears the screen to a dark grey background
 
 	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
@@ -30,51 +57,62 @@ void RenderingEngine::RenderScene(const std::vector<Geometry>& objects) {
 	glDepthFunc(GL_LESS);
 
 	//sets uniforms
-	GLint cameraGL = glGetUniformLocation(shaderProgram, "cameraPos");
-	GLint lightGL = glGetUniformLocation(shaderProgram, "light");
-	GLint shadeGL = glGetUniformLocation(shaderProgram, "shade");
-	GLint transformGL = glGetUniformLocation(shaderProgram, "transform");
+
 	glm::mat4 perspectiveMatrix = glm::perspective(PI_F*.4f, 512.f / 512.f, .1f, 200.f);
 	glm::mat4 modelViewProjection = perspectiveMatrix * game_state->camera.viewMatrix();
-	glm::vec4 light4 = modelViewProjection * glm::vec4(game_state->light, 1.0);
-	glm::vec3 light = glm::vec3(light4.x, light4.y, light4.z);
 
 	glUseProgram(shaderProgram);
-	glUniform3fv(cameraGL, 1, &(game_state->camera.pos.x));
-	glUniform3fv(lightGL, 1, &(light.x));
-	glUniform1i(shadeGL, game_state->shading_model);
-	GLint uniformLocation = glGetUniformLocation(shaderProgram, "modelViewProjection");
-	glUniformMatrix4fv(uniformLocation, 1, false, glm::value_ptr(modelViewProjection));
+	GLint transformGL = glGetUniformLocation(shaderProgram, "transform");
+	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "modelViewProjection"), 1, false, glm::value_ptr(modelViewProjection));
 
+	glUniform3fv(glGetUniformLocation(shaderProgram, "cameraPosition"), 1, glm::value_ptr(game_state->camera.pos));
+	glUniform3fv(glGetUniformLocation(shaderProgram, "lightPosition"), 1, glm::value_ptr(game_state->light));
+	glUniform3fv(glGetUniformLocation(shaderProgram, "lightColour"), 1, glm::value_ptr(game_state->lightColor));
+	glUniform1f(glGetUniformLocation(shaderProgram, "lightAttenuation"), game_state->lightAttenuation);
+	glUniform1f(glGetUniformLocation(shaderProgram, "lightAmbientCoeff"), game_state->lightAmbientCoefficient);
 
-	//set the shader uniforms
-	/*shaders->setUniform("camera", gCamera.matrix());
-	shaders->setUniform("model", inst.transform);
-	shaders->setUniform("materialTex", 0); //set to 0 because the texture will be bound to GL_TEXTURE0
-	shaders->setUniform("materialShininess", asset->shininess);
-	shaders->setUniform("materialSpecularColor", asset->specularColor);
-	shaders->setUniform("light.position", gLight.position);
-	shaders->setUniform("light.intensities", gLight.intensities);
-	shaders->setUniform("light.attenuation", gLight.attenuation);
-	shaders->setUniform("light.ambientCoefficient", gLight.ambientCoefficient);
-	shaders->setUniform("cameraPosition", gCamera.position());
-	*/
-	// bind our shader program and the vertex array object containing our
-	// scene geometry, then tell OpenGL to draw our geometry
-	glUseProgram(shaderProgram);
+	glUniform3fv(glGetUniformLocation(shaderProgram, "materialSpecularColor"), 1, glm::value_ptr(game_state->materialSpecularColor));
+	glUniform1f(glGetUniformLocation(shaderProgram, "materialShininess"), game_state->materialShininess);
+	glUniform1i(glGetUniformLocation(shaderProgram, "materialTex"), 0);
+	
 
-	for (const Geometry& g : objects) {
+	for (const CompositeWorldObject& g : objects) {
+		glUniformMatrix4fv(transformGL, 1, false, glm::value_ptr(g.geometry[0].transform));
 		//bind the texture
 		glActiveTexture(GL_TEXTURE0);
-		//glBindTexture(GL_TEXTURE_2D, asset->texture->object());
+		glBindTexture(GL_TEXTURE_2D, g.geometry[0].texture.textureID);
 
-		glUniformMatrix4fv(transformGL, 1, false, &(g.transform[0][0]));
-		glBindVertexArray(g.vao);
-		glDrawArrays(g.drawMode, 0, g.verts.size());
+		glBindVertexArray(g.geometry[0].vao);
+		glDrawArrays(g.geometry[0].drawMode, 0, g.geometry[0].verts.size());
 
 		// reset state to default (no shader or geometry bound)
 		glBindVertexArray(0);
 	}
+
+	//render health bar
+	GLint healthGL = glGetUniformLocation(healthshaderProgram, "health");
+	glUseProgram(healthshaderProgram);
+	glUniform1f(healthGL, game_state->playerVehicle.health);
+	glDisable(GL_DEPTH_TEST);
+	glBindVertexArray(health.vao);
+	glDrawArrays(health.drawMode, 0, health.verts.size());
+
+	//render radar
+	glUseProgram(radarshaderProgram);
+	GLint enemiesGL = glGetUniformLocation(radarshaderProgram, "enemies");
+	GLint numenemiesGL = glGetUniformLocation(radarshaderProgram, "numenemies");
+	GLint playerposGL = glGetUniformLocation(radarshaderProgram, "playerpos");
+	std::vector<glm::vec2> enemy_locations;
+	for (int i = 0; i < game_state->Enemies.size(); i++) {
+		enemy_locations.push_back(glm::vec2(game_state->Enemies[i].position.x, game_state->Enemies[i].position.z));
+	}
+	//std::cout << enemy_locations[0].x << " " << enemy_locations[0].y << std::endl;
+	glUniform2fv(enemiesGL, enemy_locations.size(), &(enemy_locations[0].x));
+	glUniform2f(playerposGL, game_state->playerVehicle.position.x, game_state->playerVehicle.position.z);
+	glUniform1i(numenemiesGL, enemy_locations.size());
+	glBindVertexArray(radar.vao);
+	glDrawArrays(radar.drawMode, 0, radar.verts.size());
+
 	glUseProgram(0);
 
 	// check for an report any OpenGL errors
@@ -174,15 +212,17 @@ void RenderingEngine::assignBuffers(Geometry& geometry) {
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 	glEnableVertexAttribArray(1);
 
+	glGenBuffers(1, &geometry.normalBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, geometry.normalBuffer);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	glEnableVertexAttribArray(2);
+
 	glGenBuffers(1, &geometry.uvBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, geometry.uvBuffer);
 	glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 	glEnableVertexAttribArray(3);
 
-	glGenBuffers(1, &geometry.normalBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, geometry.normalBuffer);
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-	glEnableVertexAttribArray(2);
+
 
 }
 

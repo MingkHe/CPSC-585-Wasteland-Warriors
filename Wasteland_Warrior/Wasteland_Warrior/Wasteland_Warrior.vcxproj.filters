@@ -22,6 +22,7 @@
     <ClCompile Include="PlayerUnit.cpp" />
     <ClCompile Include="PowerUp.cpp" />
     <ClCompile Include="Program.cpp" />
+    <ClCompile Include="ContactReportCallback.cpp" />
     <ClCompile Include="RenderingEngine.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneMainMenu.cpp" />
@@ -34,6 +35,7 @@
     <ClCompile Include="SFXPool.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\snippetFiles\snippetvehiclecommon\SnippetVehicleCreate.h" />
     <ClInclude Include="Audio_Controller.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="EnemyUnit.h" />
@@ -48,10 +50,12 @@
     <ClInclude Include="PlayerUnit.h" />
     <ClInclude Include="PowerUp.h" />
     <ClInclude Include="Program.h" />
+    <ClInclude Include="ContactReportCallback.h" />
     <ClInclude Include="RenderingEngine.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneMainMenu.h" />
     <ClInclude Include="ShaderTools.h" />
+    <ClInclude Include="snippetFiles\snippetvehiclecommon\SnippetVehicleCreate.h" />
     <ClInclude Include="SnippetPVD.h" />
     <ClInclude Include="texture.h" />
     <ClInclude Include="UI_Controller.h" />
@@ -60,6 +64,7 @@
     <ClInclude Include="..\snippetFiles\snippetvehiclecommon\SnippetVehicleCreate.h" />
     <ClInclude Include="snippetFiles\snippetvehiclecommon\SnippetVehicleCreate.h" />
     <ClInclude Include="SFXPool.h" />
+    <ClInclude Include="CompositeWorldObject.h" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="bgm.mp3" />
@@ -68,6 +73,10 @@
     <None Include="..\shaders\fragment.glsl" />
     <None Include="..\shaders\fragmentMainMenu.glsl" />
     <None Include="..\shaders\geometry.glsl" />
+    <None Include="..\shaders\healthfragment.glsl" />
+    <None Include="..\shaders\healthvertex.glsl" />
+    <None Include="..\shaders\radarfragment.glsl" />
+    <None Include="..\shaders\radarvertex.glsl" />
     <None Include="..\shaders\vertex.glsl" />
     <None Include="..\shaders\vertexMainMenu.glsl" />
     <None Include="libFLAC-8.dll" />

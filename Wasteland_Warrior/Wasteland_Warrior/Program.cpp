@@ -16,6 +16,7 @@
 #include "Program.h"
 #include "RenderingEngine.h"
 #include "Scene.h"
+#include "SceneMainMenu.h"
 #include "UserInput.h"
 #include "Logic.h"
 #include "AI_Interaction.h"
@@ -27,6 +28,7 @@
 #include "Vehicle.h"
 #include "PlayerUnit.h"
 #include "EnemyUnit.h"
+#include "texture.h"
 
 #include <SDL_mixer.h>
 #include <SDL.h>
@@ -53,8 +55,8 @@ void Program::start() {
 
 	gameState->timeStep = 1.0 / 60.0; //60 fps
 	gameState->button = "";
-	//gameState->UIMode = "Start";
-	gameState->UIMode = "Game";
+	gameState->UIMode = "Start";
+	//gameState->UIMode = "Game";
 
 	SDL_Init(SDL_INIT_AUDIO);
 	
@@ -63,13 +65,44 @@ void Program::start() {
 	AI_Interaction aiInteraction = AI_Interaction();
 	Physics_Controller physicsCL = Physics_Controller(gameState);
 	Audio_Controller audioCL = Audio_Controller();
-	UI_Controller UICL = UI_Controller();
 	
 	renderingEngine = new RenderingEngine(gameState);
+
+	const char* vertexFile = "../shaders/vertex.glsl";
+	const char* fragmentFile = "../shaders/fragment.glsl";
+
+	const char* vertexMenuFile = "../shaders/vertexMainMenu.glsl";
+	const char* fragmentMenuFile = "../shaders/fragmentMainMenu.glsl";
+
+	renderingEngine->LoadShaderProgram("gamePlayShader", vertexFile, fragmentFile);
+
+	renderingEngine->LoadShaderProgram("menuShader", vertexMenuFile, fragmentMenuFile);
+	
+	//scene = new Scene(renderingEngine);
+	gameState->scene = scene; // what is the scene meaning here in the gamestate?
+
+	UI_Controller UICL = UI_Controller(gameState,renderingEngine);
+
+	//RenderingEngine* renderingEngine2 = new RenderingEngine(gameState, vertexMainFile, fragmentMainFile);
+	//SceneMainMenu* mainScene2 = new SceneMainMenu(renderingEngine_MainMenu);
+	//SceneMainMenu* mainScene3 = new SceneMainMenu(renderingEngine_MainMenu);
+	//SceneMainMenu* mainScene4 = new SceneMainMenu(renderingEngine_MainMenu);
+	//Create Entities Example
+
 	scene = new Scene(renderingEngine, gameState);
 
-	gameState->SpawnEnemy(0, 15);
+
 	gameState->SpawnPlayer(0, 0);
+
+	gameState->SpawnEnemy(15, 0);
+	//gameState->SpawnEnemy(-15, 0);
+	//gameState->SpawnEnemy(25, 0);
+
+
+	
+	//gameState->SpawnEnemy(25, 0);
+
+
 
 
 	//Test creation
@@ -101,18 +134,23 @@ void Program::start() {
 		audioCL.playSound(gameState);
 		
 		//UI System
-		UICL.Update(gameState);
+		UICL.Update(gameState, window);
 
 		//Render Engine
 		if (gameState->UIMode == "Game") {
+			//scene = new Scene(renderingEngine);
 			scene->displayScene();
-			glfwSwapBuffers(window);
+			//glfwSwapBuffers(window);
+			//delete scene;
 		}
+
+		glfwSwapBuffers(window);
 
 		//glfwWaitEvents();
 		glfwPollEvents();
 
 		//Fixed Timestep
+
 		while (elapsed_seconds.count() < gameState->timeStep){
 			currentTime = std::chrono::system_clock::now();
 			elapsed_seconds = currentTime - gameState->time;

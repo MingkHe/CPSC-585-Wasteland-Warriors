@@ -40,11 +40,11 @@ void ContactReportCallback::onContact(const PxContactPairHeader& pairHeader, con
 		const char* name2 = actor2->getName();
 
 
-
+		/* This code will be used later but after the recent merge causes a crash (non-critical for the moment)
 		if (strcmp(name1, name0) == 0 || strcmp(name2, name0) == 0)
 		{
 			gameState->testFunction(1);
-		}
+		}*/
 
 
 

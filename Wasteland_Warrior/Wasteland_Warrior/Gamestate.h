@@ -56,7 +56,7 @@ public:
 
 	//Graphics
 	Camera camera = Camera(this);
-	glm::vec3 light = glm::vec3(0.f, 6.f, 0.f);
+	glm::vec3 light = glm::vec3(0.0f, 10.0f, 0.0f);
 	unsigned char shading_model = 0;
 
 	glm::vec3 cubeLocation = glm::vec3{ 0.0f, 0.0f, 0.0f};

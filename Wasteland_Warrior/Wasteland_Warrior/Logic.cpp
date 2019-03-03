@@ -12,6 +12,8 @@ Logic::~Logic()
 void Logic::Update(Gamestate* gameState)
 {
 	if (gameState->playerVehicle.health > 0.0) {
+
+		//Initialize
 		if (wave == 0) {
 			//create 3 enemy AIs
 			for (int i = 0; i < 3; i++) {
@@ -157,12 +159,14 @@ void Logic::Update(Gamestate* gameState)
 
 		//Player has beaten all five waves
 		else if (wave == 6) {
-			//Game over
+			wave = 0;
+			gameState->UIMode = "Win";
 		}
 	}
 
 	//Player has lost all health
 	else {
-		//Game over
+		wave = 0;
+		gameState->UIMode = "lose";
 	}
 }

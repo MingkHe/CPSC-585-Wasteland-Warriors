@@ -17,6 +17,18 @@
 #include "glad/glad.h"
 #include <GLFW/glfw3.h>
 
+
+/*
+ Represents a point light
+ */
+/*struct Light {
+	glm::vec3 position;
+	glm::vec3 intensities; //a.k.a. the color of the light
+	float attenuation;
+	float ambientCoefficient;
+};*/
+
+
 //Shader associated functions are put in the ShaderTools namespace
 
 std::string ShaderTools::LoadSource(const std::string &filename) {
@@ -116,10 +128,10 @@ GLuint ShaderTools::LinkProgram(GLuint vertexShader, GLuint fragmentShader, GLin
 	return programObject;
 }
 
-GLuint ShaderTools::InitializeShaders() {
+GLuint ShaderTools::InitializeShaders(const char* vertexFile, const char* fragmentFile) {
 	// load shader source from files
-	std::string vertexSource = LoadSource("../shaders/vertex.glsl");
-	std::string fragmentSource = LoadSource("../shaders/fragment.glsl");
+	std::string vertexSource = LoadSource(vertexFile);
+	std::string fragmentSource = LoadSource(fragmentFile);
 	//std::string geoSource = LoadSource("../shaders/geometry.glsl");
 	if (vertexSource.empty() || fragmentSource.empty()) return false;
 

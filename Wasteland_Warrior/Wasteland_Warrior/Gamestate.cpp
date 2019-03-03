@@ -19,17 +19,21 @@ void Gamestate::testFunction(int test) {
 }
 
 void Gamestate::SpawnPlayer (float x, float y) {
-	int physicsIndex = physics_Controller->createVehicle();
+	int physicsIndex = physics_Controller->createPlayerVehicle();
 	physics_Controller->setPosition(physicsIndex, glm::vec3{x, 4.0f, y});
 	int sceneObjectIndex = scene->generateRectPrism(2.4f, 1.6f, 1.2f);
 	playerVehicle = PlayerUnit(physicsIndex, sceneObjectIndex);
+	std::cout << physicsIndex << " " << sceneObjectIndex << std::endl;
 }
 
 
 void Gamestate::SpawnEnemy(float x, float y) {
-	int physicsIndex = physics_Controller->createVehicle();
+	int physicsIndex = physics_Controller->createEnemyVehicle();
 	physics_Controller->setPosition(physicsIndex, glm::vec3{ x, 5.0f, y });
+
 	int sceneObjectIndex = scene->generateRectPrism(2.4f, 1.6f, 1.2f);
+	std::cout << physicsIndex << " " << sceneObjectIndex << std::endl;
+
 	EnemyUnit enemy = EnemyUnit(physicsIndex, sceneObjectIndex);
 	Enemies.push_back(enemy);
 }
@@ -115,35 +119,44 @@ void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 
 	Entity* entityToUpdate = NULL;
 	glm::vec4 newDirection = glm::vec4{ 0.0f, 0.0f, 1.0f, 0.0f } *newTransformationMatrix;
 
+	bool found = false;
 	if (physicsIndex == playerVehicle.physicsIndex) {
+		found = true;
+
 		entityToUpdate = &playerVehicle;
 		playerVehicle.direction = glm::vec2{ -newDirection.x , newDirection.z };
 		//std::cout << "Player direction: [" << playerVehicle.direction.x << "," << playerVehicle.direction.y << "]" << std::endl; //Test statement, delete it if you want
 		//std::cout << "Player position:  X:" << newPosition.x << "  Y:" << newPosition.y << "  Z:" << newPosition.z << std::endl; //Test statement, delete it if you want
+
 	}
+	
 
 	for (int i = 0; i < (int)Enemies.size(); i++) {
 		if (physicsIndex == Enemies[i].physicsIndex) {
 			Enemies[i].direction = glm::vec2{ -newDirection.x , newDirection.z };
 			entityToUpdate = &Enemies[i];
+			found = true;
 		}
 	}
 
 	for (int i = 0; i < (int)PowerUps.size(); i++) {
 		if (physicsIndex == PowerUps[i].physicsIndex) {
 			entityToUpdate = &PowerUps[i];
+			found = true;
 		}
 	}
 
 	for (int i = 0; i < (int)StaticObjects.size(); i++) {
 		if (physicsIndex == StaticObjects[i].physicsIndex) {
 			entityToUpdate = &StaticObjects[i];
+			found = true;
 		}
 	}
 
 	for (int i = 0; i < (int)DynamicObjects.size(); i++) {
 		if (physicsIndex == DynamicObjects[i].physicsIndex) {
 			entityToUpdate = &DynamicObjects[i];
+			found = true;
 		}
 	}
 
@@ -152,11 +165,14 @@ void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 
 		std::cout << "Gamestate failed to locate the physicsIndex, entity not updated" << std::endl;
 	}
 
-	entityToUpdate->position = newPosition;
-	entityToUpdate->transformationMatrix = newTransformationMatrix;
+	if (found) {
+		entityToUpdate->position = newPosition;
+		entityToUpdate->transformationMatrix = newTransformationMatrix;
+	}
 }
 
 glm::mat4 Gamestate::getEntityTransformation(int sceneObjectIndex) {
+	//sceneObjectIndex--;   //SceneObjectIndex is different than the dynamicObjectIndex. Currently 1 smaller.
 	if (sceneObjectIndex == playerVehicle.sceneObjectIndex) {
 		return playerVehicle.transformationMatrix;
 	}

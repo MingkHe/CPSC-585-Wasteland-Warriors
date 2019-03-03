@@ -99,52 +99,61 @@ void Gamestate::DespawnObject(Object object) {
 	//Mesh/Textures?
 }
 
-void Gamestate::Collision(Entity entity1, Entity entity2, float speed1, float speed2) {
-	//Health update
-	//Sound effect
+void Gamestate::Collision(Vehicle entity1, Vehicle entity2, float speed1, float speed2) {
+	entity1.health -= 10;
+	if(entity1.health <= 0)
+		physics_Controller->setPosition(entity1.physicsIndex, glm::vec3{ 0.0f, 10.0f, 0.0f });
+
+	entity2.health -= 10;
+	if (entity2.health <= 0)
+		physics_Controller->setPosition(entity1.physicsIndex, glm::vec3{ 0.0f, 10.0f, 0.0f });
 }
 
 
 
 void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 newTransformationMatrix) {
-	Entity* updateEntity = NULL;
+	Entity* entityToUpdate = NULL;
+	glm::vec4 newDirection = glm::vec4{ 0.0f, 0.0f, 1.0f, 0.0f } *newTransformationMatrix;
 
 	if (physicsIndex == playerVehicle.physicsIndex) {
-		updateEntity = &playerVehicle;
-		//std::cout << "Box position:  X:" << newPosition.x << "  Y:" << newPosition.y << "  Z:" << newPosition.z << std::endl; //Test statement, delete it if you want
+		entityToUpdate = &playerVehicle;
+		playerVehicle.direction = glm::vec2{ -newDirection.x , newDirection.z };
+		//std::cout << "Player direction: [" << playerVehicle.direction.x << "," << playerVehicle.direction.y << "]" << std::endl; //Test statement, delete it if you want
+		//std::cout << "Player position:  X:" << newPosition.x << "  Y:" << newPosition.y << "  Z:" << newPosition.z << std::endl; //Test statement, delete it if you want
 	}
 
 	for (int i = 0; i < (int)Enemies.size(); i++) {
 		if (physicsIndex == Enemies[i].physicsIndex) {
-			updateEntity = &Enemies[i];
+			Enemies[i].direction = glm::vec2{ -newDirection.x , newDirection.z };
+			entityToUpdate = &Enemies[i];
 		}
 	}
 
 	for (int i = 0; i < (int)PowerUps.size(); i++) {
 		if (physicsIndex == PowerUps[i].physicsIndex) {
-			updateEntity = &PowerUps[i];
+			entityToUpdate = &PowerUps[i];
 		}
 	}
 
 	for (int i = 0; i < (int)StaticObjects.size(); i++) {
 		if (physicsIndex == StaticObjects[i].physicsIndex) {
-			updateEntity = &StaticObjects[i];
+			entityToUpdate = &StaticObjects[i];
 		}
 	}
 
 	for (int i = 0; i < (int)DynamicObjects.size(); i++) {
 		if (physicsIndex == DynamicObjects[i].physicsIndex) {
-			updateEntity = &DynamicObjects[i];
+			entityToUpdate = &DynamicObjects[i];
 		}
 	}
 
-	if (updateEntity==NULL){
-		updateEntity = &Entity();	//If no entity was found, update is waisted
+	if (entityToUpdate ==NULL){
+		entityToUpdate = &Entity();	//If no entity was found, update is waisted
 		std::cout << "Gamestate failed to locate the physicsIndex, entity not updated" << std::endl;
 	}
 
-	updateEntity->position = newPosition;
-	updateEntity->transformationMatrix = newTransformationMatrix;
+	entityToUpdate->position = newPosition;
+	entityToUpdate->transformationMatrix = newTransformationMatrix;
 }
 
 glm::mat4 Gamestate::getEntityTransformation(int sceneObjectIndex) {

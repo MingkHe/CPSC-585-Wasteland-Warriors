@@ -406,6 +406,7 @@ int Physics_Controller::createVehicle() {
 	gVehicle4W = createVehicle4W(vehicleDesc, gPhysics, gCooking);
 	PxTransform startTransform(PxVec3(0, (vehicleDesc.chassisDims.y*0.5f + vehicleDesc.wheelRadius + 1.0f), 0.0f), PxQuat(PxIdentity));
 
+	//Test code to identify vehicles
 	PxActor *actor = gVehicle4W->getRigidDynamicActor()->is<PxActor>();
 	actor->setName("BLA");
 
@@ -570,7 +571,7 @@ void Physics_Controller::stepPhysics(bool interactive)
 	gContactReportCallback.gContactPositions.clear();
 	gScene->simulate(timestep);
 	gScene->fetchResults(true);
-	printf("%d contact reports\n", PxU32(gContactReportCallback.gContactPositions.size()));
+	//printf("%d contact reports\n", PxU32(gContactReportCallback.gContactPositions.size()));
 
 
 	updateEntities();
@@ -583,9 +584,11 @@ void Physics_Controller::updateEntities() {
 
 	PxU32 numOfRidgActors = gScene->getActors(PxActorTypeFlag::eRIGID_DYNAMIC, userBuffer, numOfRidg, 0);
 
-	for (int i = 0; i <= rigidDynamicActorIndex; i++) {
-		PxActor *actor = userBuffer[i];
+	for (int index = 0; index <= rigidDynamicActorIndex; index++) {
+		PxActor *actor = userBuffer[index];
 		PxRigidActor *rigidActor = actor->is<PxRigidActor>();
+		//PxRigidDynamicActor *rigidActor = actor->is<PxRigidActor>();
+		//rigidActor->setAnalogAccel(1.0f);
 
 		PxTransform orientation = rigidActor->getGlobalPose();		//   https://docs.nvidia.com/gameworks/content/gameworkslibrary/physx/apireference/files/classPxRigidActor.html
 		PxVec3 location = orientation.p;							//	https://docs.nvidia.com/gameworks/content/gameworkslibrary/physx/apireference/files/classPxTransform.html
@@ -601,7 +604,7 @@ void Physics_Controller::updateEntities() {
 		transformationMatrix[2] = { zRotation.x, zRotation.y, zRotation.z, 0.0f };
 		transformationMatrix[3] = { location.x , location.y , location.z , 1.0f };
 
-		gameState->updateEntity(i, glm::vec3{ location.x, location.y, location.z }, transformationMatrix);
+		gameState->updateEntity(index, glm::vec3{ location.x, location.y, location.z }, transformationMatrix);
 	}
 }
 

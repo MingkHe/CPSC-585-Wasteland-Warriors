@@ -22,7 +22,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{8516B0C0-F488-4F9A-AFCB-5C7CBDBA3983}</ProjectGuid>
     <RootNamespace>Wasteland_Warrior</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -164,6 +164,7 @@
     <ClCompile Include="PlayerUnit.cpp" />
     <ClCompile Include="PowerUp.cpp" />
     <ClCompile Include="Program.cpp" />
+    <ClCompile Include="ContactReportCallback.cpp" />
     <ClCompile Include="RenderingEngine.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneMainMenu.cpp" />
@@ -190,6 +191,7 @@
     <ClInclude Include="PlayerUnit.h" />
     <ClInclude Include="PowerUp.h" />
     <ClInclude Include="Program.h" />
+    <ClInclude Include="ContactReportCallback.h" />
     <ClInclude Include="RenderingEngine.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneMainMenu.h" />

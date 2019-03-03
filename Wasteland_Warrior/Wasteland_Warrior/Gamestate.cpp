@@ -10,11 +10,12 @@ Gamestate::~Gamestate()
 {
 }
 
+//This function is a standing for proper handling of collision resolution
 void Gamestate::testFunction(int test) {
 	if (test == 0)
-		std::cout << "----------------New trigger---------------" << std::endl;
+		std::cout << "----------------Collision---------------" << std::endl;
 	else 
-		std::cout << "!!!!!!!!!!!!!!!!!!!TEST!!!!!!!!!!!!!!!!!!!" << std::endl;
+		std::cout << "!!!!!!!!!!!!!!!!!!!Vehicle Collision!!!!!!!!!!!!!!!!!!!" << std::endl;
 
 }
 

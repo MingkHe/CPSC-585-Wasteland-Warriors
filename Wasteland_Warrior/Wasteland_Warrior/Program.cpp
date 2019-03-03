@@ -95,8 +95,8 @@ void Program::start() {
 	gameState->SpawnPlayer(0, 0);
 
 	gameState->SpawnEnemy(15, 0);
-	//gameState->SpawnEnemy(-15, 0);
-	//gameState->SpawnEnemy(25, 0);
+	gameState->SpawnEnemy(-15, 0);
+	gameState->SpawnEnemy(25, 0);
 
 
 	

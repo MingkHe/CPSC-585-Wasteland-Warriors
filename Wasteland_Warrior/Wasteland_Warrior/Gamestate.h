@@ -77,4 +77,7 @@ public:
 
 	void updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 newTransformationMatrix);
 	glm::mat4 getEntityTransformation(int sceneObjectIndex);
+
+
+	void testFunction(int test);
 };

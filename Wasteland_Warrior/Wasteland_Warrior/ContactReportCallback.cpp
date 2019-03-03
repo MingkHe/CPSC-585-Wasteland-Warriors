@@ -1,5 +1,19 @@
 #include "ContactReportCallback.h"
 #include <vector>
+#include "Gamestate.h"
+
+#include "PxPhysicsAPI.h"
+#include <iostream>
+
+
+
+
+
+ContactReportCallback::ContactReportCallback() {}
+
+ContactReportCallback::ContactReportCallback(Gamestate* newGamestate) {
+	gameState = newGamestate;
+}
 
 void ContactReportCallback::onConstraintBreak(PxConstraintInfo* constraints, PxU32 count) {
 	PX_UNUSED(constraints); PX_UNUSED(count);
@@ -16,6 +30,23 @@ void ContactReportCallback::onContact(const PxContactPairHeader& pairHeader, con
 
 	for (PxU32 i = 0; i < nbPairs; i++)
 	{
+		gameState->testFunction(0);
+
+		PxActor* actor1 = pairHeader.actors[0]->is<PxActor>();
+		PxActor* actor2 = pairHeader.actors[1]->is<PxActor>();
+
+		const char* name0 = "BLA";
+		const char* name1 = actor1->getName();
+		const char* name2 = actor2->getName();
+
+
+
+		if (strcmp(name1, name0) == 0 || strcmp(name2, name0) == 0)
+		{
+			gameState->testFunction(1);
+		}
+
+
 
 		PxU32 contactCount = pairs[i].contactCount;
 		if (contactCount)

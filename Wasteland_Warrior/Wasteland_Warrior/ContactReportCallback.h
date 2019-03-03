@@ -2,6 +2,9 @@
 #include "PxSimulationEventCallback.h"
 #include <vector>
 
+class Gamestate;
+
+
 using namespace physx;
 
 class ContactReportCallback: public PxSimulationEventCallback
@@ -9,6 +12,10 @@ class ContactReportCallback: public PxSimulationEventCallback
 private:
 
 public:
+	ContactReportCallback();
+	ContactReportCallback(Gamestate* newGamestate);
+	Gamestate* gameState;
+
 	std::vector<PxVec3> gContactPositions;
 	std::vector<PxVec3> gContactImpulses;
 

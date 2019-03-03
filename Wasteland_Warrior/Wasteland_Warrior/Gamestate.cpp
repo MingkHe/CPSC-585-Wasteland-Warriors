@@ -10,6 +10,14 @@ Gamestate::~Gamestate()
 {
 }
 
+void Gamestate::testFunction(int test) {
+	if (test == 0)
+		std::cout << "----------------New trigger---------------" << std::endl;
+	else 
+		std::cout << "!!!!!!!!!!!!!!!!!!!TEST!!!!!!!!!!!!!!!!!!!" << std::endl;
+
+}
+
 void Gamestate::SpawnPlayer (float x, float y) {
 	int physicsIndex = physics_Controller->createVehicle();
 	physics_Controller->setPosition(physicsIndex, glm::vec3{x, 4.0f, y});

@@ -104,61 +104,72 @@ void Gamestate::DespawnObject(Object object) {
 	//Mesh/Textures?
 }
 
-void Gamestate::Collision(Entity entity1, Entity entity2, float speed1, float speed2) {
-	//Health update
-	//Sound effect
+void Gamestate::Collision(Vehicle entity1, Vehicle entity2, float speed1, float speed2) {
+	entity1.health -= 10;
+	if(entity1.health <= 0)
+		physics_Controller->setPosition(entity1.physicsIndex, glm::vec3{ 0.0f, 10.0f, 0.0f });
+
+	entity2.health -= 10;
+	if (entity2.health <= 0)
+		physics_Controller->setPosition(entity1.physicsIndex, glm::vec3{ 0.0f, 10.0f, 0.0f });
 }
 
 
 
 void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 newTransformationMatrix) {
-	Entity* updateEntity = NULL;
+	Entity* entityToUpdate = NULL;
+	glm::vec4 newDirection = glm::vec4{ 0.0f, 0.0f, 1.0f, 0.0f } *newTransformationMatrix;
+
 	bool found = false;
 	if (physicsIndex == playerVehicle.physicsIndex) {
-		updateEntity = &playerVehicle;
 		found = true;
-		//std::cout << "Box position:  X:" << newPosition.x << "  Y:" << newPosition.y << "  Z:" << newPosition.z << std::endl; //Test statement, delete it if you want
+
+		entityToUpdate = &playerVehicle;
+		playerVehicle.direction = glm::vec2{ -newDirection.x , newDirection.z };
+		//std::cout << "Player direction: [" << playerVehicle.direction.x << "," << playerVehicle.direction.y << "]" << std::endl; //Test statement, delete it if you want
+		//std::cout << "Player position:  X:" << newPosition.x << "  Y:" << newPosition.y << "  Z:" << newPosition.z << std::endl; //Test statement, delete it if you want
+
 	}
 	
 
-	for (int i = 0; ((i < Enemies.size())&& !found); i++) {
-		
+	for (int i = 0; i < (int)Enemies.size(); i++) {
 		if (physicsIndex == Enemies[i].physicsIndex) {
-			updateEntity = &Enemies[i];
+			Enemies[i].direction = glm::vec2{ -newDirection.x , newDirection.z };
+			entityToUpdate = &Enemies[i];
 			found = true;
 		}
 	}
 
-	for (int i = 0; ((i < PowerUps.size()) && !found); i++) {
+	for (int i = 0; i < (int)PowerUps.size(); i++) {
 		if (physicsIndex == PowerUps[i].physicsIndex) {
-			updateEntity = &PowerUps[i];
+			entityToUpdate = &PowerUps[i];
 			found = true;
 		}
 	}
 
-	for (int i = 0; ((i < StaticObjects.size()) && !found); i++) {
+	for (int i = 0; i < (int)StaticObjects.size(); i++) {
 		if (physicsIndex == StaticObjects[i].physicsIndex) {
-			updateEntity = &StaticObjects[i];
+			entityToUpdate = &StaticObjects[i];
 			found = true;
 		}
 	}
 
-	for (int i = 0; ((i < DynamicObjects.size()) && !found); i++) {
+	for (int i = 0; i < (int)DynamicObjects.size(); i++) {
 		if (physicsIndex == DynamicObjects[i].physicsIndex) {
-			updateEntity = &DynamicObjects[i];
+			entityToUpdate = &DynamicObjects[i];
 			found = true;
 		}
 	}
 
-	if (updateEntity==NULL){
-		updateEntity = &Entity();	//If no entity was found, update is waisted
+	if (entityToUpdate ==NULL){
+		entityToUpdate = &Entity();	//If no entity was found, update is waisted
 		std::cout << "Gamestate failed to locate the physicsIndex, entity not updated" << std::endl;
 	}
+
 	if (found) {
-		updateEntity->position = newPosition;
-		updateEntity->transformationMatrix = newTransformationMatrix;
+		entityToUpdate->position = newPosition;
+		entityToUpdate->transformationMatrix = newTransformationMatrix;
 	}
-	
 }
 
 glm::mat4 Gamestate::getEntityTransformation(int sceneObjectIndex) {
@@ -167,27 +178,33 @@ glm::mat4 Gamestate::getEntityTransformation(int sceneObjectIndex) {
 		return playerVehicle.transformationMatrix;
 	}
 
-	for (int i = 0; i < Enemies.size(); i++) {
+	for (int i = 0; i < (int)Enemies.size(); i++) {
 		if (sceneObjectIndex == Enemies[i].sceneObjectIndex) {
 			return Enemies[i].transformationMatrix;
 		}
 	}
 
-	for (int i = 0; i < PowerUps.size(); i++) {
+	for (int i = 0; i < (int)PowerUps.size(); i++) {
 		if (sceneObjectIndex == PowerUps[i].sceneObjectIndex) {
 			return PowerUps[i].transformationMatrix;
 		}
 	}
 
-	for (int i = 0; i < StaticObjects.size(); i++) {
+	for (int i = 0; i < (int)StaticObjects.size(); i++) {
 		if (sceneObjectIndex == StaticObjects[i].sceneObjectIndex) {
 			return StaticObjects[i].transformationMatrix;
 		}
 	}
 
-	for (int i = 0; i < DynamicObjects.size(); i++) {
+	for (int i = 0; i < (int)DynamicObjects.size(); i++) {
 		if (sceneObjectIndex == DynamicObjects[i].sceneObjectIndex) {
 			return DynamicObjects[i].transformationMatrix;
 		}
 	}
+
+	//If object was not found, return identity matrix
+	return (glm::mat4{ {1.0f,0.0f,0.0f,0.0f},
+						{0.0f,1.0f,0.0f,0.0f},
+						{0.0f,0.0f,1.0f,0.0f},
+						{0.0f,0.0f,0.0f,1.0f} });
 }

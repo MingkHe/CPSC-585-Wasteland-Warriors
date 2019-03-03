@@ -26,7 +26,7 @@ public:
 	static bool DKey;
 	static bool SPACEKey;
 
-	float cameraSensitivity = 0.01f;
+	static bool restart;
 
 	void Update(Gamestate* gameState);
 	static void key(GLFWwindow * window, int key, int scancode, int action, int mods);

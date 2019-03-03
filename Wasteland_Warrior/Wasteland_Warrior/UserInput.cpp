@@ -17,6 +17,8 @@ bool UserInput::SKey;
 bool UserInput::DKey;
 bool UserInput::SPACEKey;
 
+bool UserInput::restart;
+
 UserInput::UserInput()
 {
 }
@@ -78,21 +80,12 @@ void UserInput::Update(Gamestate* gameState)
 		gameState->SPACEKey = false;
 	}
 
-	//Update state
-	//gameState->UIMode = "InGame";
+	//Restart game
+	if (UserInput::restart == true) {
+		UserInput::restart = false;
+		gameState->UIMode = "Start";
+	}
 
-	//Update camera
-	//gameState->camera.rotateHorizontal(gameState->leftStickX * cameraSensitivity);
-	//gameState->camera.rotateVertical(gameState->leftStickY * cameraSensitivity);
-
-	//if (UserInput::MouseXpos != oldMouseXpos) {
-		//gameState->camera.rotateHorizontal((oldMouseXpos - UserInput::MouseXpos) * cameraSensitivity);
-		//oldMouseXpos = UserInput::MouseXpos;
-	//}
-	//if (UserInput::MouseYpos != oldMouseYpos) {
-		//gameState->camera.rotateVertical((oldMouseYpos - UserInput::MouseYpos) * cameraSensitivity);
-		//oldMouseYpos = UserInput::MouseYpos;
-	//}
 }
 
 // Callback for key presses
@@ -123,7 +116,7 @@ void UserInput::key(GLFWwindow* window, int key, int scancode, int action, int m
 
 			//Escape
 		case GLFW_KEY_ESCAPE:
-			glfwSetWindowShouldClose(window, GL_TRUE);
+			UserInput::restart = true;
 			break;
 
 		case GLFW_KEY_T:

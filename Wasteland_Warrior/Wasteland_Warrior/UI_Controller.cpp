@@ -120,6 +120,9 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 			GameState->ui_enter = true;
 			GameState->ui_menu = false;
 			printf("switch success!\n");
+		} else if (input == "ENTER") {
+			glfwSetWindowShouldClose(window, GL_TRUE);
+			printf("quit\n");
 		}
 
 		//glfwSwapBuffers(window);

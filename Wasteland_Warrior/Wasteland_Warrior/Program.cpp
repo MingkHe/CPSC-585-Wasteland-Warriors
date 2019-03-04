@@ -61,7 +61,7 @@ void Program::start() {
 	
 	UserInput usrInput = UserInput();
 	Logic logic = Logic();
-	AI_Interaction aiInteraction = AI_Interaction();
+	AI_Interaction aiInteraction = AI_Interaction(gameState);
 	Physics_Controller physicsCL = Physics_Controller(gameState);
 	Audio_Controller audioCL = *Audio_Controller::instance();
 	
@@ -107,7 +107,7 @@ void Program::start() {
 
 		//AI Interaction System
 		if (gameState->UIMode == "Game") { 
-			aiInteraction.Update(gameState);
+			aiInteraction.Update();
 		}
 
 		//Physics Engine

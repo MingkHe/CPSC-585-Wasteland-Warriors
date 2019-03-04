@@ -47,6 +47,7 @@ void Gamestate::SpawnEnemy(int type, float x, float y, float z) {
 	//int sceneObjectIndex = scene->generateRectPrism(2.4, 1.6, 1.2);
 	EnemyUnit enemy = EnemyUnit(physicsIndex, sceneObjectIndex);
 	Enemies.push_back(enemy);
+	pathfindingInputs.push_back(glm::vec2{ 0.0f,0.0f });
 }
 
 void Gamestate::SpawnEnemy2(float x, float y) {
@@ -57,6 +58,7 @@ void Gamestate::SpawnEnemy2(float x, float y) {
 	//int sceneObjectIndex = scene->generateRectPrism(2.4, 1.6, 1.2);
 	EnemyUnit enemy = EnemyUnit(physicsIndex, sceneObjectIndex);
 	Enemies.push_back(enemy);
+	pathfindingInputs.push_back(glm::vec2{ 0.0f,0.0f });
 }
 
 void Gamestate::DespawnEnemy(EnemyUnit enemy) { // Needs to blow up or something cool
@@ -264,6 +266,15 @@ Vehicle* Gamestate::lookupVUsingPI(int physicsIndex) {
 	return vehicle;
 }
 
+int Gamestate::lookupGSIUsingPI(int physicsIndex) {
+	int gameStateIndex = -1;
+	for (int i = 0; i < (int)Enemies.size(); i++) {
+		if (physicsIndex == Enemies[i].physicsIndex) {
+			gameStateIndex = i;
+		}
+	}
+	return gameStateIndex;
+}
 
 
 

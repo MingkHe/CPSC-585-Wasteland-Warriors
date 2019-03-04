@@ -42,7 +42,7 @@ using namespace physx;
 ////////////////////////////////////////////////
 
 PxRigidStatic* createDrivablePlane(const PxFilterData& simFilterData, PxMaterial* material, PxPhysics* physics);
-PxRigidStatic* createTriangleMesh(const PxVec3* verts, const PxU32 numVerts, const PxVec3* indices, const PxU32 triCount, PxPhysics& physics, PxCooking& cooking);
+PxRigidStatic* createRigidTriangleMesh(const PxVec3* verts, const PxU32 numVerts, const PxVec3* indices, const PxU32 triCount, PxMaterial* material, PxPhysics& physics, PxCooking& cooking, const PxFilterData& simFilterData);
 ////////////////////////////////////////////////
 
 struct ActorUserData

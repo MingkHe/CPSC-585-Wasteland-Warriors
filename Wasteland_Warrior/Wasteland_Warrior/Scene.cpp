@@ -55,7 +55,7 @@ Scene::Scene(RenderingEngine* renderer, Gamestate* newGamestate) : renderer(rend
 	groundComp.geometry.push_back(ground);
 	objects.push_back(groundComp);
 
-	loadOBJObject("Objects/testLevel.obj", "Textures/redLines.jpg");
+	//loadOBJObject("Objects/testLevel.obj", "Textures/redLines.jpg");
 
 
 }
@@ -155,7 +155,8 @@ int Scene::loadOBJObject(const char* filepath, const char* textureFilepath) {
 
 	OBJobject.textureFilePath = textureFilepath;
 	InitializeTexture(&OBJobject.texture, OBJobject.textureFilePath);
-
+	OBJobject.vertsPhys = temp_vertices;
+	OBJobject.faceVertexIndices = vertexIndices;
 	// For each vertex of each triangle
 	for (unsigned int i = 0; i < vertexIndices.size(); i++) {
 		OBJobject.verts.push_back(temp_vertices[vertexIndices[i] - 1]);

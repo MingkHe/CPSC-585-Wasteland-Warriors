@@ -87,12 +87,15 @@ void Program::start() {
 	//Create Entities Example
 
 	scene = new Scene(renderingEngine, gameState);
-
+	
+	//gameState->SpawnMap();
 
 	gameState->SpawnPlayer(0, 0);
 
 	gameState->SpawnEnemy(15, 0);
+
 	gameState->SpawnEnemy2(-15, 0);
+
 	gameState->SpawnEnemy(25, 0);
 
 

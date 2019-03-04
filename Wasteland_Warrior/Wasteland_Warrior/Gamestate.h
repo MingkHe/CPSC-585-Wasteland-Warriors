@@ -121,6 +121,7 @@ public:
 	std::string UIMode;
 
 	//Spawning/Despawning Entities
+	void SpawnMap();
 	void SpawnPlayer(float x, float y);
 	void SpawnEnemy(float x, float y);
 	void SpawnEnemy2(float x, float y);

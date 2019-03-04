@@ -78,7 +78,7 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 		//Should update based on selected menu item.
 		
 		//todo: pause menu sound effect
-		GameState->ui_menu = true;
+		GameState->ui_pauseMenu = true;
 
 		std::string input = GameState->button;
 
@@ -162,7 +162,7 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 		if (pausePointerState == 0 && input == "ENTER") {
 			GameState->UIMode = "Game";
 			GameState->ui_enter = true;
-			GameState->ui_menu = false;
+			GameState->ui_pauseMenu = false;
 		}
 		else if (pausePointerState == 1 && input == "ENTER") {
 			//GameState->UIMode = "Game";
@@ -175,7 +175,7 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 		else if (pausePointerState == 2 && input == "ENTER"){
 			GameState->UIMode = "Start";
 			GameState->ui_enter = true;
-			//GameState->ui_menu = false;
+			GameState->ui_pauseMenu = false;
 		}
 		//glfwSwapBuffers(window);
 	}

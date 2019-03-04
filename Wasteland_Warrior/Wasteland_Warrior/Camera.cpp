@@ -30,7 +30,7 @@ glm::mat4 Camera::viewMatrix() const {
 	glm::vec3 cam = gameState->playerVehicle.position; 
 
 	float lagSensitivity = 1.0;
-	float distanceBehindCar = 12 + (gameState->playerVehicle.speed * lagSensitivity); //change to acceleration once its being captured acuratly
+	float distanceBehindCar = 12 + (gameState->playerVehicle.speed * lagSensitivity); //change to acceleration once its being captured more smoothly
 	float distanceAboveCar = 3;
 
 	//rotation angle based on input

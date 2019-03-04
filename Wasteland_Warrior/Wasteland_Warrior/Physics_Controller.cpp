@@ -476,7 +476,6 @@ int Physics_Controller::createStaticObject(const PxVec3* verts, const PxU32 numV
 
 }
 
-
 int Physics_Controller::createEnemyVehicle() {
 	//Create a vehicle that will drive on the plane.
 	VehicleDesc vehicleDesc = initEnemyVehiclePhysicsDesc();;
@@ -645,9 +644,6 @@ void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DK
 		}
 	}
 	else {
-		//printf(" rt: %.6f", rightTrigger);
-		//printf(" lt: %.6f", leftTrigger);
-		//printf(" ls: %.6f\n", leftStickX);
 		if (rightTrigger > -1) {
 			if (currentGear < 0) {
 				currentGear = 1;
@@ -664,7 +660,7 @@ void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DK
 			gVehicleInputData.setAnalogAccel((leftTrigger + 1)/2);
 		}
 
-		gVehicleInputData.setAnalogSteer(leftStickX);
+		gVehicleInputData.setAnalogSteer(-leftStickX);
 	}
 
 	//If the mode about to start is eDRIVE_MODE_ACCEL_REVERSE then switch to reverse gears.

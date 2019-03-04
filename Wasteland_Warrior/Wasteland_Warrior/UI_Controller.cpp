@@ -86,7 +86,7 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 		std::string input = GameState->button;
 		GameState->ui_gameplay = true;
 
-		if (GameState->playerVehicle.speed > 0) {
+		if (GameState->playerVehicle.acceleration > 0) {
 			GameState->carRunning_sound = true;
 		}
 		else {
@@ -197,7 +197,7 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 			position.push_back(glm::vec3(-.5f, .4f, 1.0f));
 			position.push_back(glm::vec3(-.63f, .4f, 1.0f));
 		}
-		else if(pausePointerState ==1)
+		else if(pausePointerState == 1)
 		{
 			position.push_back(glm::vec3(-.63f, -.1f, 1.0f));
 			position.push_back(glm::vec3(-.5f, -.1f, 1.0f));
@@ -226,7 +226,8 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 			GameState->ui_pauseMenu = false;
 		}
 		else if (pausePointerState == 1 && input == "ENTER") {
-			//GameState->UIMode = "Game";
+			GameState->UIMode = "Game";
+			GameState->restart = true;
 
 			//todo unknow sound effect bug when the next line call
 			GameState->ui_enter = true;
@@ -244,15 +245,14 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 	//Start Menu
 	else if (GameState->UIMode == "Start") {
 		GameState->ui_menu = true;
+		GameState->restart = true;
 		//render start screen image
 		//Should update based on selected menu item.
 
 
 		std::string input = GameState->button;
 
-	
 		mainScene_pointer = new SceneMainMenu(renderingEngine);
-
 
 		//Background Image
 		position.push_back(glm::vec3(-1.0f, -1.0f, 1.0f));
@@ -282,14 +282,11 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 		position.clear();
 
 		//Pointer Image
-		//
 
 		if (input == "UP" || input == "DOWN") {
 			pointerState = (pointerState + 1) % 2;
 			GameState->ui_switch = true;
 		}
-
-
 
 		if (pointerState == 0) {
 			position.push_back(glm::vec3(-.63f, -.1f, 1.0f));

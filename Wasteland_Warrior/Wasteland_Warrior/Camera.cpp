@@ -28,8 +28,9 @@ glm::mat4 Camera::viewMatrix() const {
 
 	glm::vec3 car = gameState->playerVehicle.position;
 	glm::vec3 cam = gameState->playerVehicle.position; 
-	
-	float distanceBehindCar = 12;
+
+	float lagSensitivity = 1.0;
+	float distanceBehindCar = 12 + (gameState->playerVehicle.speed * lagSensitivity); //change to acceleration once its being captured more smoothly
 	float distanceAboveCar = 3;
 
 	//rotation angle based on input
@@ -47,13 +48,11 @@ glm::mat4 Camera::viewMatrix() const {
 	newDirection.x = (direction.x * cos(angle)) - (direction.y * sin(angle));
 	newDirection.y = (direction.y * cos(angle)) + (direction.x * sin(angle));
 
-	float lagSensitivity = 0.0;
-
 	float xVal = newDirection.x / newDirection.length();
 	float yVal = newDirection.y / newDirection.length();
 
-	cam.x = (-distanceBehindCar + (gameState->playerVehicle.acceleration * lagSensitivity)) *xVal + car.x;
-	cam.z = (-distanceBehindCar + (gameState->playerVehicle.acceleration * lagSensitivity)) *yVal + car.z;
+	cam.x = -distanceBehindCar *xVal + car.x;
+	cam.z = -distanceBehindCar *yVal + car.z;
 	cam.y = cam.y + distanceAboveCar;
 
 	viewMatrix = glm::lookAt(cam, car, up);

@@ -15,10 +15,15 @@ void Logic::Update(Gamestate* gameState)
 
 		//Initialize
 		if (gameState->wave == 0) {
+
+			//Spawn Player
+			gameState->SpawnPlayer(0, 0, 2);
+
 			//create 3 enemy AIs
-			for (int i = 0; i < 3; i++) {
-				//gameState->SpawnEnemy(1, 0.0, 0.0);
-			}
+			gameState->SpawnEnemy(0, 15, 0, 2);
+			gameState->SpawnEnemy(1,-15, 0, 2);
+			gameState->SpawnEnemy(0,25, 0, 2);
+
 			gameState->wave = 1;
 			waveBreak = 1;
 			breakTime = 30 * 60;

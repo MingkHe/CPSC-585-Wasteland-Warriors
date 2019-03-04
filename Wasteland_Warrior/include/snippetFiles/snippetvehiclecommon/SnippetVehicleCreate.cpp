@@ -39,10 +39,30 @@ namespace snippetvehicle
 
 using namespace physx;
 
-PxRigidStatic* createDrivablePlane(const PxFilterData& simFilterData, PxMaterial* material, PxPhysics* physics)
+/*PxRigidStatic* createDrivablePlane(const PxFilterData& simFilterData, PxMaterial* material, PxPhysics* physics)
 {
 	//Add a plane to the scene.
 	PxRigidStatic* groundPlane = PxCreatePlane(*physics, PxPlane(0,1,0,0), *material);
+
+	//Get the plane shape so we can set query and simulation filter data.
+	PxShape* shapes[1];
+	groundPlane->getShapes(shapes, 1);
+
+	//Set the query filter data of the ground plane so that the vehicle raycasts can hit the ground.
+	PxFilterData qryFilterData;
+	setupDrivableSurface(qryFilterData);
+	shapes[0]->setQueryFilterData(qryFilterData);
+
+	//Set the simulation filter data of the ground plane so that it collides with the chassis of a vehicle but not the wheels.
+	shapes[0]->setSimulationFilterData(simFilterData);
+
+	return groundPlane;
+}*/
+
+PxRigidStatic* createDrivablePlane(const PxFilterData& simFilterData, PxMaterial* material, PxPhysics* physics)
+{
+	//Add a plane to the scene.
+	PxRigidStatic* groundPlane = PxCreatePlane(*physics, PxPlane(0, 1, 0, 0), *material);
 
 	//Get the plane shape so we can set query and simulation filter data.
 	PxShape* shapes[1];
@@ -77,6 +97,26 @@ static PxConvexMesh* createConvexMesh(const PxVec3* verts, const PxU32 numVerts,
 	}
 
 	return convexMesh;
+}
+
+static PxConvexMesh* createTriangleMesh(const PxVec3* verts, const PxU32 numVerts, PxPhysics& physics, PxCooking& cooking)
+{
+	// Create descriptor for convex mesh
+	PxConvexMeshDesc convexDesc;
+	convexDesc.points.count = numVerts;
+	convexDesc.points.stride = sizeof(PxVec3);
+	convexDesc.points.data = verts;
+	convexDesc.flags = PxConvexFlag::eCOMPUTE_CONVEX;
+
+	PxConvexMesh* triangleMesh = NULL;
+	PxDefaultMemoryOutputStream buf;
+	if (cooking.cookConvexMesh(convexDesc, buf))
+	{
+		PxDefaultMemoryInputData id(buf.getData(), buf.getSize());
+		triangleMesh = physics.createConvexMesh(id);
+	}
+
+	return triangleMesh;
 }
 
 PxConvexMesh* createChassisMesh(const PxVec3 dims, PxPhysics& physics, PxCooking& cooking)

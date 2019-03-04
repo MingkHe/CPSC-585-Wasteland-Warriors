@@ -42,6 +42,7 @@ using namespace physx;
 ////////////////////////////////////////////////
 
 PxRigidStatic* createDrivablePlane(const PxFilterData& simFilterData, PxMaterial* material, PxPhysics* physics);
+PxRigidStatic* createMapRigidGround(const PxFilterData& simFilterData, PxMaterial* material, PxPhysics* physics);
 
 ////////////////////////////////////////////////
 

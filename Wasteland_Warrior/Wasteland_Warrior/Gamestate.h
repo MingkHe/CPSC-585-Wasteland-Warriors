@@ -130,8 +130,10 @@ public:
 
 	std::string UIMode;
 
+	//Logic
 	int wave;
 	bool restart;
+	int enemiesLeft;
 
 	//Spawning/Despawning Entities
 

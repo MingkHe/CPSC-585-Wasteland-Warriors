@@ -15,6 +15,7 @@ Gamestate::Gamestate()
 	ui_enter = false;
 	ui_switch = false;
 	ui_menu = false;
+	ui_pauseMenu = false;
 }
 
 Gamestate::~Gamestate()

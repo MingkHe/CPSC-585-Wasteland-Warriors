@@ -187,7 +187,7 @@ VehicleDesc initPlayerVehiclePhysicsDesc()
 	((chassisDims.y*chassisDims.y + chassisDims.z*chassisDims.z)*chassisMass / 12.0f,
 		(chassisDims.x*chassisDims.x + chassisDims.z*chassisDims.z)*0.8f*chassisMass / 12.0f,
 		(chassisDims.x*chassisDims.x + chassisDims.y*chassisDims.y)*chassisMass / 12.0f);
-	const PxVec3 chassisCMOffset(0.0f, -chassisDims.y*0.5f + 0.5f, -0.05f);
+	const PxVec3 chassisCMOffset(0.0f, -chassisDims.y*0.5f + 0.0f, -0.05f);
 
 	//Set up the wheel mass, radius, width, moment of inertia, and number of wheels.
 	//Moment of inertia is just the moment of inertia of a cylinder.
@@ -228,7 +228,7 @@ VehicleDesc initEnemyVehiclePhysicsDesc()
 	((chassisDims.y*chassisDims.y + chassisDims.z*chassisDims.z)*chassisMass / 12.0f,
 		(chassisDims.x*chassisDims.x + chassisDims.z*chassisDims.z)*0.8f*chassisMass / 12.0f,
 		(chassisDims.x*chassisDims.x + chassisDims.y*chassisDims.y)*chassisMass / 12.0f);
-	const PxVec3 chassisCMOffset(0.0f, -chassisDims.y*0.5f + 0.5f, -0.05f);
+	const PxVec3 chassisCMOffset(0.0f, -chassisDims.y*0.5f + 0.0f, -0.05f);
 
 	//Set up the wheel mass, radius, width, moment of inertia, and number of wheels.
 	//Moment of inertia is just the moment of inertia of a cylinder.
@@ -537,6 +537,18 @@ void Physics_Controller::setPosition(int actorIndex, glm::vec3 newLocation){
 	rigidActor->setGlobalPose({ newLocation.x, newLocation.y, newLocation.z });
 }
 
+void Physics_Controller::resetOrientation(int actorIndex) {
+	/*xU32 numOfRidg = gScene->getNbActors(PxActorTypeFlag::eRIGID_DYNAMIC);
+	PxActor *userBuffer[50];
+
+	PxU32 numOfRidgActors = gScene->getActors(PxActorTypeFlag::eRIGID_DYNAMIC, userBuffer, numOfRidg, 0);
+	PxActor *actor = userBuffer[actorIndex];
+	PxRigidActor *rigidActor = actor->is<PxRigidActor>();
+
+	//PxTransform
+	rigidActor->setGlobalPose({ newLocation.x, newLocation.y, newLocation.z });*/
+}
+
 void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DKey, bool SPACEKey, bool hello, float leftStickX, float leftTrigger, float rightTrigger) {
 	releaseAllControls();
 	steerDirection = "";
@@ -718,8 +730,12 @@ void Physics_Controller::stepPhysics(bool interactive)
 		}
 		else {
 			PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, gSteerVsForwardSpeedTable, gVehicleInputData, timestep, gIsVehicleInAir, *vehiclesVector[i]);
+			if (gVehicleInputData.getAnalogAccel >= -10.f)
+				gameState->carRunning_sound = true;
 		}
 		
+
+
 		//Raycasts.
 		PxVehicleWheels* vehicles[1] = { vehiclesVector[i] };
 		PxRaycastQueryResult* raycastResults = gVehicleSceneQueryData->getRaycastQueryResultBuffer(0);
@@ -748,8 +764,8 @@ void Physics_Controller::stepPhysics(bool interactive)
 
 	//Efficency of this could be improved but not critical
 	if (gContactReportCallback.gContactActor1s.size() >= 1) {
-		Vehicle* vehicle1 = new Vehicle();
-		Vehicle* vehicle2 = new Vehicle();
+		Vehicle* vehicle1 = NULL;
+		Vehicle* vehicle2 = NULL;
 
 		for (int index = 0; index <= rigidDynamicActorIndex; index++) {
 			PxActor *actor = userBuffer[index];
@@ -761,8 +777,37 @@ void Physics_Controller::stepPhysics(bool interactive)
 			}
 		}
 
-		glm::vec2 impulse = (glm::vec2{ gContactReportCallback.gContactImpulses[0].x, gContactReportCallback.gContactImpulses[0].z });
-		gameState->Collision(vehicle1, vehicle2, impulse);
+		if (vehicle1 != NULL && vehicle2 != NULL) {
+			glm::vec2 impulse = (glm::vec2{ gContactReportCallback.gContactImpulses[0].x, gContactReportCallback.gContactImpulses[0].z });
+			gameState->Collision(vehicle1, vehicle2, impulse);
+		}
+	}
+
+	//Efficency of this could be improved but not critical
+	if (gContactReportCallback.gContactActor1s.size() >= 1) {
+		Vehicle* vehicle1 = NULL;
+		PowerUp* powerUp = NULL;
+
+		for (int index = 0; index <= rigidDynamicActorIndex; index++) {
+			PxActor *actor = userBuffer[index];
+
+			if (index == gameState->playerVehicle.physicsIndex) {				// Only for the player index
+
+				if (gContactReportCallback.gContactActor1s[0] == actor || gContactReportCallback.gContactActor1s[1] == actor) {
+					//If either actor is the player, ready it
+					vehicle1 = gameState->lookupVUsingPI(index);
+				}
+			}
+
+			if (gContactReportCallback.gContactActor1s[0] == actor || gContactReportCallback.gContactActor1s[1] == actor) {
+				powerUp = gameState->lookupPUUsingPI(index);
+			}
+		}
+
+		if (vehicle1 != NULL && powerUp != NULL) {
+			gameState->Collision(vehicle1, powerUp);
+		}
+
 	}
 
 

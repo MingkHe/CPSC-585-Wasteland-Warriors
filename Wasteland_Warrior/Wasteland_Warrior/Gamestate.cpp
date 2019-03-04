@@ -189,7 +189,7 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse)
 	std::cout << "Entity 1 attack level: " << entity1AttackLevel << std::endl;
 	float entity2AttackLevel = glm::dot(entity2->direction, normalizedImpulse);
 	std::cout << "Entity 2 attack level: " << entity2AttackLevel << std::endl;
-
+	carCrash_sound = true;
 
 	if (entity1 == &playerVehicle)
 		std::cout << "Player and ";
@@ -243,6 +243,11 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse)
 
 }
 
+void Gamestate::Collision(Vehicle* vehicle, PowerUp* powerUp) {
+	//Make powerup affect user
+}
+
+
 void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 newTransformationMatrix, float newSpeed) {
 	Entity* entityToUpdate = NULL;
 	glm::vec4 newDirection = glm::vec4{ 0.0f, 0.0f, 1.0f, 0.0f } *newTransformationMatrix;
@@ -293,16 +298,28 @@ void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 
 	}
 
 	if (found) {
+		entityToUpdate->acceleration = ((newSpeed - entityToUpdate->speed)/60);			//<--Minimal testing done, assume this is the issue if a problem arrises
 		entityToUpdate->speed = newSpeed;
 		entityToUpdate->position = newPosition;
 		entityToUpdate->transformationMatrix = newTransformationMatrix;
 	}
+
+
 }
 
 
 
+PowerUp* Gamestate::lookupPUUsingPI(int physicsIndex) {
+	PowerUp* powerUp = new PowerUp();
+	for (int i = 0; i < (int)PowerUps.size(); i++) {
+		if (physicsIndex == PowerUps[i].physicsIndex) {
+			powerUp = &PowerUps[i];
+		}
+	}
+	return powerUp;
+}
 
-//This will probably get called by Gamestate::updateEntity later
+
 Vehicle* Gamestate::lookupVUsingPI(int physicsIndex) {
 	Vehicle* vehicle = new Vehicle();
 	bool found = false;
@@ -375,3 +392,4 @@ glm::mat4 Gamestate::getEntityTransformation(int sceneObjectIndex) {
 						{0.0f,0.0f,1.0f,0.0f},
 						{0.0f,0.0f,0.0f,1.0f} });
 }
+

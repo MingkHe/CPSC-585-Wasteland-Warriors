@@ -83,7 +83,11 @@ public:
 	bool ui_menu;
 	//pause menu
 	bool ui_pauseMenu;
-
+	
+	//win bgm
+	bool ui_win;
+	//lose bgm
+	bool ui_lose;
 	//----------------------Sound Buffer End-------------------------------
 
 	//Joysticks

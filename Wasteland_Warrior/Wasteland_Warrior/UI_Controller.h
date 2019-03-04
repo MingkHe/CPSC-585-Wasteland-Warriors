@@ -20,6 +20,12 @@ public:
 	SceneMainMenu* pauseScene_resume;
 	SceneMainMenu* pauseScene_menu;
 
+	SceneMainMenu* win_bg;
+	SceneMainMenu* win_text;
+
+	SceneMainMenu* lose_bg;
+	SceneMainMenu* lose_text;
+
 	std::vector<MyTexture> textureArray;
 	std::vector<glm::vec3> position;
 

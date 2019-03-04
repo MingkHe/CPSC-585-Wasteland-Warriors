@@ -176,6 +176,7 @@ void Logic::Update(Gamestate *gameState)
 		else if (gameState->wave == 6) {
 		//gameState->wave = 0;
 			gameState->UIMode = "Win";
+			gameState->ui_gameplay = false;
 		}
 	}
 
@@ -183,6 +184,7 @@ void Logic::Update(Gamestate *gameState)
 	else {
 	//gameState->wave = 0;
 		gameState->UIMode = "lose";
+		gameState->ui_gameplay = false;
 	}
 
 }

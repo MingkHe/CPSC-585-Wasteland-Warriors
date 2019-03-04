@@ -58,13 +58,13 @@ void Program::start() {
 	gameState->UIMode = "Start";
 
 	SDL_Init(SDL_INIT_AUDIO);
-	
+
 	UserInput usrInput = UserInput();
 	Logic logic = Logic();
 	AI_Interaction aiInteraction = AI_Interaction(gameState);
 	Physics_Controller physicsCL = Physics_Controller(gameState);
 	Audio_Controller audioCL = *Audio_Controller::instance();
-	
+
 	renderingEngine = new RenderingEngine(gameState);
 
 	const char* vertexFile = "../shaders/vertex.glsl";
@@ -76,7 +76,7 @@ void Program::start() {
 	renderingEngine->LoadShaderProgram("gamePlayShader", vertexFile, fragmentFile);
 
 	renderingEngine->LoadShaderProgram("menuShader", vertexMenuFile, fragmentMenuFile);
-	
+
 	//scene = new Scene(renderingEngine);
 	gameState->scene = scene; // what is the scene meaning here in the gamestate?
 
@@ -85,7 +85,7 @@ void Program::start() {
 	scene = new Scene(renderingEngine, gameState);
 	//gameState->playSound();
 
-	
+
 	gameState->SpawnMap();
 	gameState->SpawnStaticObject(2,3,0,5);
 	gameState->SpawnStaticObject(1, -3, 0, -25);
@@ -93,12 +93,9 @@ void Program::start() {
 	gameState->SpawnPlayer(0, 3, 0);
 
 	//Spawn Enemies
-	gameState->SpawnEnemy(0, 15, 100, 10000);
-	gameState->SpawnEnemy(0,-15, 100, 10000);
-	gameState->SpawnEnemy(0, 25, 100, 10000);
-
-	//gameState->SpawnEnemy(-5, 0, -5, 10000);
-
+	gameState->SpawnEnemy(0, 10000, 10000, 10000);
+	gameState->SpawnEnemy(0, 10000, 10000, 10000);
+	gameState->SpawnEnemy(0, 10000, 10000, 10000);
 	//gameState->SpawnEnemy(0,-25, 2, -15+10000);
 	//gameState->SpawnEnemy(0, 35, 2, 15+10000);
 
@@ -114,7 +111,7 @@ void Program::start() {
 		}
 
 		//AI Interaction System
-		if (gameState->UIMode == "Game") { 
+		if (gameState->UIMode == "Game") {
 			aiInteraction.Update();
 		}
 
@@ -122,7 +119,7 @@ void Program::start() {
 		if (gameState->UIMode == "Game") {
 			physicsCL.Update();
 		}
-		
+
 		//UI System
 		UICL.Update(gameState, window);
 

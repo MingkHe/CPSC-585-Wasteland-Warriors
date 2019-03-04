@@ -1,5 +1,6 @@
 #include "Logic.h"
 #include "EnemyUnit.h"
+#include <iostream>
 
 Logic::Logic()
 {
@@ -11,14 +12,17 @@ Logic::~Logic()
 
 void Logic::Update(Gamestate* gameState)
 {
+	std::cout << gameState->wave << std::endl;
 	if (gameState->playerVehicle.health > 0.0) {
 
 		//Initialize
 		if (gameState->wave == 0) {
+
 			//create 3 enemy AIs
-			for (int i = 0; i < 3; i++) {
-				//gameState->SpawnEnemy(1, 0.0, 0.0);
-			}
+			gameState->SpawnEnemy(0, 15, 0, 2);
+			gameState->SpawnEnemy(1,-15, 0, 2);
+			gameState->SpawnEnemy(0,25, 0, 2);
+
 			gameState->wave = 1;
 			waveBreak = 1;
 			breakTime = 30 * 60;

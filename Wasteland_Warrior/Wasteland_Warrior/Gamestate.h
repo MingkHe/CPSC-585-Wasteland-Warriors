@@ -130,8 +130,8 @@ public:
 	int wave;
 
 	//Spawning/Despawning Entities
-	void SpawnPlayer(float x, float y);
-	void SpawnEnemy(float x, float y);
+	void SpawnPlayer(float x, float y, float z);
+	void SpawnEnemy(int type, float x, float y, float z);
 	void SpawnEnemy2(float x, float y);
 	void DespawnEnemy(EnemyUnit enemy);
 	void SpawnPowerUp(int type, float x, float y);

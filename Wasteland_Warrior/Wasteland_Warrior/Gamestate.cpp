@@ -28,7 +28,7 @@ Gamestate::~Gamestate()
 
 
 
-void Gamestate::SpawnPlayer (float x, float y) {
+void Gamestate::SpawnPlayer(float x, float y, float z) {
 	int physicsIndex = physics_Controller->createPlayerVehicle();
 	physics_Controller->setPosition(physicsIndex, glm::vec3{x, 2.0f, y});
 	//int sceneObjectIndex = scene->generateRectPrism(2.4, 1.6, 1.2);
@@ -39,7 +39,7 @@ void Gamestate::SpawnPlayer (float x, float y) {
 }
 
 
-void Gamestate::SpawnEnemy(float x, float y) {
+void Gamestate::SpawnEnemy(int type, float x, float y, float z) {
 	int physicsIndex = physics_Controller->createEnemyVehicle();
 	physics_Controller->setPosition(physicsIndex, glm::vec3{ x, 2.0f, y });
 	int sceneObjectIndex = scene->loadOBJObject("Objects/BladedDragster/bourak.obj", "Objects/BladedDragster/bourak.jpg");

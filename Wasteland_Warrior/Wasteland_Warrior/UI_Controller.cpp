@@ -86,7 +86,7 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 		std::string input = GameState->button;
 		GameState->ui_gameplay = true;
 
-		if (GameState->playerVehicle.speed > 0) {
+		if (GameState->playerVehicle.acceleration > 0) {
 			GameState->carRunning_sound = true;
 		}
 		else {

@@ -1,5 +1,6 @@
 #include "Logic.h"
 #include "EnemyUnit.h"
+#include "Physics_Controller.h"
 #include <iostream>
 
 Logic::Logic()
@@ -10,18 +11,28 @@ Logic::~Logic()
 {
 }
 
-void Logic::Update(Gamestate* gameState)
+void Logic::Update(Gamestate *gameState)
 {
-	std::cout << gameState->wave << std::endl;
+	glm::vec3 pos;
+
+	if (gameState->restart) {
+		gameState->wave = 0;
+		gameState->restart = false;
+	}
+
 	if (gameState->playerVehicle.health > 0.0) {
+
+
+		std::cout << gameState->Enemies[0].position.z << std::endl;
 
 		//Initialize
 		if (gameState->wave == 0) {
 
-			//create 3 enemy AIs
-			gameState->SpawnEnemy(0, 15, 0, 2);
-			gameState->SpawnEnemy(1,-15, 0, 2);
-			gameState->SpawnEnemy(0,25, 0, 2);
+			//move up 3 enemy AIs
+			pos = gameState->Enemies[0].position;
+			gameState->physics_Controller->setPosition(gameState->Enemies[0].physicsIndex, glm::vec3{ 15, 2, 35});
+			gameState->physics_Controller->setPosition(gameState->Enemies[1].physicsIndex, glm::vec3{ -15, 2, -25});
+			gameState->physics_Controller->setPosition(gameState->Enemies[2].physicsIndex, glm::vec3{ 35, 2, 35});
 
 			gameState->wave = 1;
 			waveBreak = 1;
@@ -32,14 +43,14 @@ void Logic::Update(Gamestate* gameState)
 		else if (gameState->wave == 1) {
 			//if there are no enemy AIs left
 			if (gameState->Enemies.empty()) {
-				gameState->wave = 2;
+				gameState->wave = 6;
 				//spawn power ups
 			}
 			else {
 				//Despawn/Explode enemies that are dead 
 				for (EnemyUnit const& enemy : gameState->Enemies) {
 					if (enemy.health <= 0.0) {
-						gameState->DespawnEnemy(enemy);
+						gameState->physics_Controller->setPosition(enemy.physicsIndex, glm::vec3{ 10000, 10000, 10000 });
 					}
 				}
 			}
@@ -163,14 +174,15 @@ void Logic::Update(Gamestate* gameState)
 
 		//Player has beaten all five waves
 		else if (gameState->wave == 6) {
-		gameState->wave = 0;
+		//gameState->wave = 0;
 			gameState->UIMode = "Win";
 		}
 	}
 
 	//Player has lost all health
 	else {
-	gameState->wave = 0;
+	//gameState->wave = 0;
 		gameState->UIMode = "lose";
 	}
+
 }

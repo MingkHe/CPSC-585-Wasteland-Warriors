@@ -89,7 +89,12 @@ void Program::start() {
 	scene = new Scene(renderingEngine, gameState);
 
 
+	//Spawn Player
+	gameState->SpawnPlayer(0, 0, 2);
 	//gameState->SpawnPlayer(0, 0);
+	gameState->SpawnEnemy(0, 15, 0, -20);
+			//gameState->SpawnEnemy(1,-15, 0, 2);
+			//gameState->SpawnEnemy(0,25, 0, 2);
 
 	//gameState->SpawnEnemy(15, 0);
 	//gameState->SpawnEnemy2(-15, 0);

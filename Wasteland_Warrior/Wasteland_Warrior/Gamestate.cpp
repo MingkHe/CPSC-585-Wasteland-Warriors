@@ -30,7 +30,7 @@ Gamestate::~Gamestate()
 
 void Gamestate::SpawnPlayer(float x, float y, float z) {
 	int physicsIndex = physics_Controller->createPlayerVehicle();
-	physics_Controller->setPosition(physicsIndex, glm::vec3{x, z, y});
+	physics_Controller->setPosition(physicsIndex, glm::vec3{x, 2.0f, y});
 	//int sceneObjectIndex = scene->generateRectPrism(2.4, 1.6, 1.2);
 	//int sceneObjectIndex = scene->loadOBJObject("Objects/BladedDragster/bourak.obj","Objects/BladedDragster/bourak.jpg" );
 	//int sceneObjectIndex = scene->loadOBJObject("Objects/Wooden_train_cars/wagon.obj", "Objects/Wooden_train_cars/wagon_tex3.png");
@@ -41,7 +41,7 @@ void Gamestate::SpawnPlayer(float x, float y, float z) {
 
 void Gamestate::SpawnEnemy(int type, float x, float y, float z) {
 	int physicsIndex = physics_Controller->createEnemyVehicle();
-	physics_Controller->setPosition(physicsIndex, glm::vec3{ x, z, y });
+	physics_Controller->setPosition(physicsIndex, glm::vec3{ x, 2.0f, y });
 	int sceneObjectIndex = scene->loadOBJObject("Objects/BladedDragster/bourak.obj", "Objects/BladedDragster/bourak.jpg");
 	//int sceneObjectIndex = scene->loadOBJObject("Objects/Wooden_train_cars/wagon.obj", "Objects/Wooden_train_cars/wagon_tex3.png");
 	//int sceneObjectIndex = scene->generateRectPrism(2.4, 1.6, 1.2);

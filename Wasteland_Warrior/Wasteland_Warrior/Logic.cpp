@@ -23,7 +23,7 @@ void Logic::Update(Gamestate *gameState)
 	if (gameState->playerVehicle.health > 0.0) {
 
 
-		std::cout << gameState->Enemies[0].position.z << std::endl;
+		//std::cout << gameState->Enemies[0].position.z << std::endl;
 
 		//Initialize
 		if (gameState->wave == 0) {

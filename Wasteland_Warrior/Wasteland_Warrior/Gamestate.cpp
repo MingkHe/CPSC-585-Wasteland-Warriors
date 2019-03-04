@@ -248,12 +248,29 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse)
 }
 
 void Gamestate::Collision(Vehicle* vehicle, PowerUp* powerUp) {
-	//Make powerup affect user
+	std::cout << "You feel more powerfull!" << std::endl;
 }
 
 
+
+
+void Gamestate::Collision(Vehicle* vehicle, Object* staticObject) {
+	std::cout << "You ran into a wall, nice driving :P" << std::endl;
+}
+
+
+
+
+
+
+
+
+
+
+
+
 void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 newTransformationMatrix, float newSpeed) {
-	Entity* entityToUpdate = NULL;
+	Entity* entityToUpdate = &Entity();
 	glm::vec4 newDirection = glm::vec4{ 0.0f, 0.0f, 1.0f, 0.0f } *newTransformationMatrix;
 
 	bool found = false;
@@ -275,34 +292,13 @@ void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 
 		}
 	}
 
-	for (int i = 0; i < (int)PowerUps.size(); i++) {
-		if (physicsIndex == PowerUps[i].physicsIndex) {
-			entityToUpdate = &PowerUps[i];
-			found = true;
-		}
-	}
 
-	for (int i = 0; i < (int)StaticObjects.size(); i++) {
-		if (physicsIndex == StaticObjects[i].physicsIndex) {
-			entityToUpdate = &StaticObjects[i];
-			found = true;
-		}
-	}
-
-	for (int i = 0; i < (int)DynamicObjects.size(); i++) {
-		if (physicsIndex == DynamicObjects[i].physicsIndex) {
-			entityToUpdate = &DynamicObjects[i];
-			found = true;
-		}
-	}
-
-	if (entityToUpdate ==NULL){
-		entityToUpdate = &Entity();	//If no entity was found, update is waisted
+	if (!found){
 		std::cout << "Gamestate failed to locate the physicsIndex, entity not updated" << std::endl;
 	}
 
 	if (found) {
-		entityToUpdate->acceleration = ((newSpeed - entityToUpdate->speed)/60);			//<--Minimal testing done, assume this is the issue if a problem arrises
+		entityToUpdate->acceleration = ((newSpeed - entityToUpdate->speed)/60);
 		entityToUpdate->speed = newSpeed;
 		entityToUpdate->position = newPosition;
 		entityToUpdate->transformationMatrix = newTransformationMatrix;
@@ -323,6 +319,16 @@ PowerUp* Gamestate::lookupPUUsingPI(int physicsIndex) {
 	return powerUp;
 }
 
+
+Object* Gamestate::lookupSOUsingPI(int physicsIndex) {
+	Object* object = new Object();
+	for (int i = 0; i < (int)StaticObjects.size(); i++) {
+		if (physicsIndex == StaticObjects[i].physicsIndex) {
+			object = &StaticObjects[i];
+		}
+	}
+	return object;
+}
 
 Vehicle* Gamestate::lookupVUsingPI(int physicsIndex) {
 	Vehicle* vehicle = new Vehicle();

@@ -147,9 +147,11 @@ public:
 
 	void Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse);
 	void Collision(Vehicle* vehicle, PowerUp* powerUp);
+	void Collision(Vehicle* vehicle, Object* staticObject);
 
 
 	void updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 newTransformationMatrix, float newSpeed);
+	Object* lookupSOUsingPI(int physicsIndex);
 	PowerUp* lookupPUUsingPI(int physicsIndex);
 	Vehicle* lookupVUsingPI(int physicsIndex);
 	int lookupGSIUsingPI(int physicsIndex);

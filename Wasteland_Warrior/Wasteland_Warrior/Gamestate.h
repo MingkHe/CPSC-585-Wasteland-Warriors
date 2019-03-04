@@ -28,6 +28,8 @@ public:
 	std::vector<Object> StaticObjects;
 	std::vector<Object> DynamicObjects;
 
+	std::vector<glm::vec2> pathfindingInputs;
+
 	//Button input
 	std::string button;
 
@@ -143,6 +145,7 @@ public:
 
 	void updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 newTransformationMatrix, float newSpeed);
 	Vehicle* lookupVUsingPI(int physicsIndex);
+	int lookupGSIUsingPI(int physicsIndex);
 
 	glm::mat4 getEntityTransformation(int sceneObjectIndex);
 };

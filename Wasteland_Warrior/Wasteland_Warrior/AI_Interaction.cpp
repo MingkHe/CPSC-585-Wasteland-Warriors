@@ -1,10 +1,14 @@
 #include "AI_Interaction.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include <iostream>
 
 
-AI_Interaction::AI_Interaction()
+AI_Interaction::AI_Interaction() {}
+
+AI_Interaction::AI_Interaction(Gamestate* newGameState)
 {
+	gameState = newGameState;
 }
 
 
@@ -12,14 +16,16 @@ AI_Interaction::~AI_Interaction()
 {
 }
 
-int AI_Interaction::Update(Gamestate* GameState)
+int AI_Interaction::Update()
 {
 	//This will later be replaced by an arbitrary point passed in
-	glm::vec3 playerPosition = GameState->playerVehicle.position;
-	glm::vec2 targetPosition = { playerPosition.x, playerPosition.z};
+	glm::vec3 EntityPosition = gameState->playerVehicle.position;
+	glm::vec2 targetPosition = { EntityPosition.x, EntityPosition.z};
 
-	for (int i = 0; i < GameState->Enemies.size(); i++) {
-		EnemyUnit enemy = GameState->Enemies[i];
+	//std::cout << 
+
+	for (int i = 0; i < gameState->Enemies.size(); i++) {
+		EnemyUnit enemy = gameState->Enemies[i];
 		glm::vec2 enemyHeading = enemy.direction;
 		glm::vec2 enemyPosition = {enemy.position.x, enemy.position.z};
 
@@ -52,7 +58,7 @@ int AI_Interaction::Update(Gamestate* GameState)
 			}
 		}
 
-		//Pass controllInput to something that controlls the AI vehicles
+		gameState->pathfindingInputs[i] = controllInput;
 
 	} 
 	return 0;

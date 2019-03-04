@@ -20,6 +20,7 @@ public:
 	void userDriveInput(bool WKey, bool AKey, bool SKey, bool DKey, bool SPACEKey, bool hello);
 
 	void setPosition(int actorIndex, glm::vec3 newLocation);
+	int createMap(const PxVec3* verts, const PxU32 numVerts);
 	int createVehicle();
 	int createEnemyVehicle();
 	int createPlayerVehicle();

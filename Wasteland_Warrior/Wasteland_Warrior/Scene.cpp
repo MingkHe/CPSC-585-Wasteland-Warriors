@@ -101,19 +101,7 @@ int Scene::loadOBJObject(const char* filepath, const char* textureFilepath) {
 			//printf("7\n");
 			glm::vec2 uv;
 			fscanf(file, "%f %f\n", &uv.x, &uv.y);
-			//if ((matches == 2)) {
 			temp_uvs.push_back(uv);
-			//}
-
-
-			/*float trash = NULL;
-			int matches = fscanf(file, "%f %f %f\n", &uv.x, &uv.y, &trash);
-			if ((matches == 2) && (trash == 0)) {
-				temp_uvs.push_back(uv);
-			}
-			else if ((matches == 3)) {
-				temp_uvs.push_back(uv);
-			}*/
 
 		}
 		else if (strcmp(lineHeader, "vn") == 0) {
@@ -280,21 +268,26 @@ Scene::~Scene() {
 
 }
 
+
 void Scene::displayScene() {
 	
-		//glUseProgram(renderer->shaderProgramList[0]);
-		GLuint shader = renderer->GetShaderProgram("gamePlayShader");
-		renderer->SwitchShaderProgram(shader);
-		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glUseProgram(renderer->shaderProgram);
-	for (int i = 0; i <= sceneObjectIndex; i++) {
-		if (i >= 2){
-			objects[i].geometry[0].transform = gameState->getEntityTransformation(i);
-		}
-		
+	//glUseProgram(renderer->shaderProgramList[0]);
+	GLuint shader = renderer->GetShaderProgram("gamePlayShader");
+	renderer->SwitchShaderProgram(shader);
+	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glUseProgram(renderer->shaderProgram);
+	//Update Player Position
+	int vehicleIndex = gameState->playerVehicle.sceneObjectIndex;
+	objects[vehicleIndex].geometry[0].transform = gameState->getEntityTransformation(vehicleIndex);
 
-		renderer->RenderScene(objects);
+	int numOfEnemies = gameState->Enemies.size();
+	int index = 0;
+	for (int i = 0; i < numOfEnemies; i++) {
+		index = gameState->Enemies[i].sceneObjectIndex;
+		objects[index].geometry[0].transform = gameState->getEntityTransformation(index);
+		
 	}
+	renderer->RenderScene(objects);
 	
 
 

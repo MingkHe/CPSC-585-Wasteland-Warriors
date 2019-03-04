@@ -84,6 +84,8 @@ public:
 	bool ui_menu;
 	//pause menu
 	bool ui_pauseMenu;
+	//game play
+	bool ui_gameplay;
 	
 	//win bgm
 	bool ui_win;
@@ -134,10 +136,9 @@ public:
 	//Spawning/Despawning Entities
 
 	void SpawnMap();
-	void SpawnStaticObject(int ObjectType);
+	void SpawnStaticObject(int ObjectType, float x, float y, float z);
 	void SpawnPlayer(float x, float y, float z);
 	void SpawnEnemy(int type, float x, float y, float z);
-	void SpawnEnemy2(float x, float y);
 	void DespawnEnemy(EnemyUnit enemy);
 	void SpawnPowerUp(int type, float x, float y);
 	void DespawnPowerUp(PowerUp powerUp);

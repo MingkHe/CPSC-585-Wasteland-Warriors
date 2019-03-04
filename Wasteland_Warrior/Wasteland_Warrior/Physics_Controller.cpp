@@ -458,7 +458,7 @@ void Physics_Controller::initPhysics(bool interactive)
 int Physics_Controller::createMap(const PxVec3* verts, const PxU32 numVerts, const PxU32* indices, const PxU32 triCount){
 
 	PxFilterData groundPlaneSimFilterData(COLLISION_FLAG_GROUND, COLLISION_FLAG_GROUND_AGAINST, 0, 0);
-	gMap1Ground = createRigidTriangleMesh(verts, numVerts, indices, triCount, gMaterial, *gPhysics, *gCooking, groundPlaneSimFilterData);
+	gMap1Ground = createRigidTriangleMeshDrivable(verts, numVerts, indices, triCount, gMaterial, *gPhysics, *gCooking, groundPlaneSimFilterData);
 	gScene->addActor(*gMap1Ground);
 
 	rigidStaticActorIndex++;
@@ -466,10 +466,9 @@ int Physics_Controller::createMap(const PxVec3* verts, const PxU32 numVerts, con
 
 }
 
-int Physics_Controller::createStaticObject(const PxVec3* verts, const PxU32 numVerts, const PxU32* indices, const PxU32 triCount) {
-
-	PxFilterData groundPlaneSimFilterData(COLLISION_FLAG_GROUND, COLLISION_FLAG_GROUND_AGAINST, 0, 0);
-	gStaticObject= createRigidTriangleMesh(verts, numVerts, indices, triCount, gMaterial, *gPhysics, *gCooking, groundPlaneSimFilterData);
+int Physics_Controller::createStaticObject(const PxVec3* verts, const PxU32 numVerts, const PxU32* indices, const PxU32 triCount, float x, float y, float z) {
+	gStaticObject= createRigidTriangleMesh(verts, numVerts, indices, triCount, gMaterial, *gPhysics, *gCooking);
+	gStaticObject->setGlobalPose({ x, y, z });
 	gScene->addActor(*gStaticObject);
 
 	rigidStaticActorIndex++;
@@ -529,7 +528,6 @@ void Physics_Controller::setPosition(int actorIndex, glm::vec3 newLocation){
 	PxU32 numOfRidgActors = gScene->getActors(PxActorTypeFlag::eRIGID_DYNAMIC, userBuffer, numOfRidg, 0);
 	PxActor *actor = userBuffer[actorIndex];
 	PxRigidActor *rigidActor = actor->is<PxRigidActor>();
-
 	//PxTransform
 	rigidActor->setGlobalPose({ newLocation.x, newLocation.y, newLocation.z });
 }

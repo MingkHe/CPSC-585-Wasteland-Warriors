@@ -17,6 +17,7 @@
 #include "snippetutils/SnippetUtils.h"
 
 #include <PxScene.h>
+#include "Scene.h"
 #include <iostream>
 
 using namespace physx;
@@ -43,6 +44,7 @@ PxBatchQuery*			gBatchQuery = NULL;
 PxVehicleDrivableSurfaceToTireFrictionPairs* gFrictionPairs = NULL;
 
 PxRigidStatic*			gGroundPlane = NULL;
+PxRigidStatic*			gMap1Ground = NULL;
 PxVehicleDrive4W*		gVehicle4W = NULL;
 
 PxVehicleDrive4W*		enemyVehicle = NULL;
@@ -118,7 +120,7 @@ void Physics_Controller::Update()
 	stepPhysics(false);
 }
 
-/*PxF32 gSteerVsForwardSpeedData[2*8]=
+PxF32 gSteerVsForwardSpeedData[2*8]=
 {
 	0.0f,		0.2f,
 	5.0f,		0.2f,
@@ -128,11 +130,11 @@ void Physics_Controller::Update()
 	PX_MAX_F32, PX_MAX_F32,
 	PX_MAX_F32, PX_MAX_F32,
 	PX_MAX_F32, PX_MAX_F32
-};*/
+};
 
 
 // Casting values to PxF32 to resolve warning of mismatch types
-PxF32 gSteerVsForwardSpeedData[2 * 8] =
+/*PxF32 gSteerVsForwardSpeedData[2 * 8] =
 {
 	0.0f,		0.2f,
 	(PxF32)0.2*PX_MAX_F32,		0.175f,
@@ -142,7 +144,7 @@ PxF32 gSteerVsForwardSpeedData[2 * 8] =
 	(PxF32)0.6*PX_MAX_F32,		0.075f,
 	(PxF32)0.7*PX_MAX_F32,		0.05,
 	(PxF32)0.8*PX_MAX_F32,		0.025f
-};
+}*/
 
 
 PxFixedSizeLookupTable<8> gSteerVsForwardSpeedTable(gSteerVsForwardSpeedData, 4);
@@ -212,7 +214,7 @@ VehicleDesc initPlayerVehiclePhysicsDesc()
 	const PxF32 wheelMass = 20.0f;
 	const PxF32 wheelRadius = 0.5f;
 	const PxF32 wheelWidth = 0.4f;
-	const PxF32 wheelMOI = 0.5f*wheelMass*wheelRadius*wheelRadius;
+	const PxF32 wheelMOI = 0.5f*wheelMass*wheelRadius*wheelRadius*0.1;
 	const PxU32 nbWheels = 4;
 
 	VehicleDesc vehicleDesc;
@@ -466,10 +468,19 @@ void Physics_Controller::initPhysics(bool interactive)
 
 	//Create a plane to drive on.
 	PxFilterData groundPlaneSimFilterData(COLLISION_FLAG_GROUND, COLLISION_FLAG_GROUND_AGAINST, 0, 0);
+
 	gGroundPlane = createDrivablePlane(groundPlaneSimFilterData, gMaterial, gPhysics);
 	gScene->addActor(*gGroundPlane);
 
 	startBrakeMode();
+}
+
+int Physics_Controller::createMap(const PxVec3* verts, const PxU32 numVerts){
+	//Create a plane to drive on.
+//gMap1Ground = createTriangleMesh(verts, numVerts, gPhysics, gCooking);
+//gScene->addActor(*gMap1Ground);
+	return 1;
+
 }
 
 int Physics_Controller::createVehicle() {
@@ -748,7 +759,7 @@ void Physics_Controller::cleanupPhysics(bool interactive)
 	//enemyVehicle->getRigidDynamicActor()->release();
 	//enemyVehicle->free();
 
-	gGroundPlane->release();
+	//gMap1Ground->release();
 	gBatchQuery->release();
 	gVehicleSceneQueryData->free(gAllocator);
 	gFrictionPairs->release();

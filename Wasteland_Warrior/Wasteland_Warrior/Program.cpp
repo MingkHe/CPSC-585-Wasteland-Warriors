@@ -64,7 +64,7 @@ void Program::start() {
 	Logic logic = Logic();
 	AI_Interaction aiInteraction = AI_Interaction();
 	Physics_Controller physicsCL = Physics_Controller(gameState);
-	Audio_Controller audioCL = Audio_Controller();
+	Audio_Controller audioCL = *Audio_Controller::instance();
 	
 	renderingEngine = new RenderingEngine(gameState);
 
@@ -83,10 +83,7 @@ void Program::start() {
 
 	UI_Controller UICL = UI_Controller(gameState,renderingEngine);
 
-	//RenderingEngine* renderingEngine2 = new RenderingEngine(gameState, vertexMainFile, fragmentMainFile);
-	//SceneMainMenu* mainScene2 = new SceneMainMenu(renderingEngine_MainMenu);
-	//SceneMainMenu* mainScene3 = new SceneMainMenu(renderingEngine_MainMenu);
-	//SceneMainMenu* mainScene4 = new SceneMainMenu(renderingEngine_MainMenu);
+
 	//Create Entities Example
 
 	scene = new Scene(renderingEngine, gameState);
@@ -182,9 +179,11 @@ void Program::setupWindow() {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	int width = 1280;
-	int height = 960;
-	window = glfwCreateWindow(width, height, "Wasteland Warrior", 0, 0);
+	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+	int width = mode->width;//1280;
+	int height = mode->height;//960;
+	window = glfwCreateWindow(width, height, "Wasteland Warrior", NULL, NULL);
+	//window = glfwCreateWindow(width, height, "Wasteland Warrior", glfwGetPrimaryMonitor(), NULL);
 	if (!window) {
 		std::cout << "Program failed to create GLFW window, TERMINATING" << std::endl;
 		glfwTerminate();

@@ -28,33 +28,31 @@ void ContactReportCallback::onContact(const PxContactPairHeader& pairHeader, con
 	PX_UNUSED((pairHeader));
 	std::vector<PxContactPairPoint> contactPoints;
 
+
 	for (PxU32 i = 0; i < nbPairs; i++)
 	{
-		gameState->testFunction(0);
+
+		std::cout << "----------------Collision---------------" << std::endl;
 
 		PxActor* actor1 = pairHeader.actors[0]->is<PxActor>();
 		PxActor* actor2 = pairHeader.actors[1]->is<PxActor>();
 
-		const char* name0 = "BLA";
-		const char* name1 = actor1->getName();
-		const char* name2 = actor2->getName();
-
-
-		/* This code will be used later but after the recent merge causes a crash (non-critical for the moment)
-		if (strcmp(name1, name0) == 0 || strcmp(name2, name0) == 0)
-		{
-			gameState->testFunction(1);
-		}*/
+		gContactActor1s.push_back(actor1);
+		gContactActor2s.push_back(actor2);
 
 
 
 		PxU32 contactCount = pairs[i].contactCount;
+		//std::cout << "Contact Point Count: " << contactCount << std::endl;
+
+
+
 		if (contactCount)
 		{
 			contactPoints.resize(contactCount);
 			pairs[i].extractContacts(&contactPoints[0], contactCount);
 
-			for (PxU32 j = 0; j < contactCount; j++)
+			for (PxU32 j = 0; j < 1; j++)
 			{
 				gContactPositions.push_back(contactPoints[j].position);
 				gContactImpulses.push_back(contactPoints[j].impulse);

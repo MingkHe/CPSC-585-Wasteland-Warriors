@@ -4,20 +4,24 @@
 Gamestate::Gamestate()
 {
 	camera.pos = glm::vec3(0.f, 15.f, 0.f);
+
+	carStart_sound = false;
+	carIdle_sound = false;
+	carRunning_sound = false;
+	carBrake_sound = false;
+	carCrash_sound = false;
+	carExpo_sound = false;
+
+	ui_enter = false;
+	ui_switch = false;
+	ui_menu = false;
 }
 
 Gamestate::~Gamestate()
 {
 }
 
-//This function is a standing for proper handling of collision resolution
-void Gamestate::testFunction(int test) {
-	if (test == 0)
-		std::cout << "----------------Collision---------------" << std::endl;
-	else 
-		std::cout << "!!!!!!!!!!!!!!!!!!!Vehicle Collision!!!!!!!!!!!!!!!!!!!" << std::endl;
 
-}
 
 void Gamestate::SpawnPlayer (float x, float y) {
 	int physicsIndex = physics_Controller->createPlayerVehicle();
@@ -113,19 +117,71 @@ void Gamestate::DespawnObject(Object object) {
 	//Mesh/Textures?
 }
 
-void Gamestate::Collision(Vehicle entity1, Vehicle entity2, float speed1, float speed2) {
-	entity1.health -= 10;
-	if(entity1.health <= 0)
-		physics_Controller->setPosition(entity1.physicsIndex, glm::vec3{ 0.0f, 10.0f, 0.0f });
+void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse) {
+	//Determin who is the attacker
+	glm::vec2 normalizedImpulse = glm::normalize(impulse);
+	float attackLevelThreshold = 0.9;
+	float entity1AttackLevel = glm::dot(entity1->direction, normalizedImpulse);
+	std::cout << "Entity 1 attack level: " << entity1AttackLevel << std::endl;
+	float entity2AttackLevel = glm::dot(entity2->direction, normalizedImpulse);
+	std::cout << "Entity 2 attack level: " << entity2AttackLevel << std::endl;
 
-	entity2.health -= 10;
-	if (entity2.health <= 0)
-		physics_Controller->setPosition(entity1.physicsIndex, glm::vec3{ 0.0f, 10.0f, 0.0f });
+
+	if (entity1 == &playerVehicle)
+		std::cout << "Player and ";
+	
+	else
+		std::cout << "Enemy and ";
+
+	if (entity2 == &playerVehicle)
+		std::cout << "Player collided" << std::endl;
+
+	else
+		std::cout << "Enemy collided ";
+
+	float totalForce = abs(impulse.x) + abs(impulse.y);
+	std::cout << "with force: " << totalForce << std::endl;
+
+
+	float damageScaling = 200;		//Smaller number means more damage
+
+
+	//If both vehicles align 
+	if ((entity1AttackLevel >= attackLevelThreshold && entity2AttackLevel >= attackLevelThreshold) ||
+		(entity2AttackLevel <= -attackLevelThreshold && entity1AttackLevel <= -attackLevelThreshold)) {
+
+		if (entity1->speed > entity2->speed) {
+			entity2->health -= totalForce / damageScaling;
+		}
+		else{
+			entity1->health -= totalForce / damageScaling;
+		}
+	}
+
+
+	if (entity1AttackLevel >= attackLevelThreshold || entity1AttackLevel <= -attackLevelThreshold)
+		entity2->health -= totalForce/ damageScaling;
+
+	if (entity2AttackLevel >= attackLevelThreshold || entity1AttackLevel <= -attackLevelThreshold)
+		entity1->health -= totalForce/ damageScaling;
+
+
+
+	if (entity1->health <= 0)
+		physics_Controller->setPosition(entity1->physicsIndex, glm::vec3{ 300.0f, 4.0f, 300.0f });\
+
+	if(entity2->health <= 0)
+		physics_Controller->setPosition(entity2->physicsIndex, glm::vec3{ 300.0f, 4.0f, 300.0f});
+
+
+	std::cout << "New health values: " << entity1->health << " | " << entity2->health << std::endl;
+
+
 }
 
 
 
-void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 newTransformationMatrix) {
+void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 newTransformationMatrix, float newSpeed) {
 	Entity* entityToUpdate = NULL;
 	glm::vec4 newDirection = glm::vec4{ 0.0f, 0.0f, 1.0f, 0.0f } *newTransformationMatrix;
 
@@ -137,7 +193,6 @@ void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 
 		playerVehicle.direction = glm::vec2{ -newDirection.x , newDirection.z };
 		//std::cout << "Player direction: [" << playerVehicle.direction.x << "," << playerVehicle.direction.y << "]" << std::endl; //Test statement, delete it if you want
 		//std::cout << "Player position:  X:" << newPosition.x << "  Y:" << newPosition.y << "  Z:" << newPosition.z << std::endl; //Test statement, delete it if you want
-
 	}
 	
 
@@ -176,10 +231,42 @@ void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 
 	}
 
 	if (found) {
+		entityToUpdate->speed = newSpeed;
 		entityToUpdate->position = newPosition;
 		entityToUpdate->transformationMatrix = newTransformationMatrix;
 	}
 }
+
+
+
+
+//This will probably get called by Gamestate::updateEntity later
+Vehicle* Gamestate::lookupVUsingPI(int physicsIndex) {
+	Vehicle* vehicle = new Vehicle();
+	bool found = false;
+	if (physicsIndex == playerVehicle.physicsIndex) {
+		found = true;
+		vehicle = &playerVehicle;
+	}
+
+	for (int i = 0; i < (int)Enemies.size(); i++) {
+		if (physicsIndex == Enemies[i].physicsIndex) {
+			vehicle = &Enemies[i];
+			found = true;
+		}
+	}
+	return vehicle;
+}
+
+
+
+
+
+
+
+
+
+
 
 glm::mat4 Gamestate::getEntityTransformation(int sceneObjectIndex) {
 	//sceneObjectIndex--;   //SceneObjectIndex is different than the dynamicObjectIndex. Currently 1 smaller.

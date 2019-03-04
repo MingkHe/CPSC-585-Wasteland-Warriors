@@ -102,6 +102,8 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	GLint enemiesGL = glGetUniformLocation(radarshaderProgram, "enemies");
 	GLint numenemiesGL = glGetUniformLocation(radarshaderProgram, "numenemies");
 	GLint playerposGL = glGetUniformLocation(radarshaderProgram, "playerpos");
+	GLint playerdirGL = glGetUniformLocation(radarshaderProgram, "playerdir");
+	GLint radar_distGL = glGetUniformLocation(radarshaderProgram, "radar_dist");
 	std::vector<glm::vec2> enemy_locations;
 	for (int i = 0; i < game_state->Enemies.size(); i++) {
 		enemy_locations.push_back(glm::vec2(game_state->Enemies[i].position.x, game_state->Enemies[i].position.z));
@@ -109,7 +111,9 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	//std::cout << enemy_locations[0].x << " " << enemy_locations[0].y << std::endl;
 	glUniform2fv(enemiesGL, enemy_locations.size(), &(enemy_locations[0].x));
 	glUniform2f(playerposGL, game_state->playerVehicle.position.x, game_state->playerVehicle.position.z);
+	glUniform2f(playerdirGL, game_state->playerVehicle.direction.x, game_state->playerVehicle.direction.y);
 	glUniform1i(numenemiesGL, enemy_locations.size());
+	glUniform1f(radar_distGL, game_state->radar_view);
 	glBindVertexArray(radar.vao);
 	glDrawArrays(radar.drawMode, 0, radar.verts.size());
 

@@ -83,7 +83,12 @@ void UserInput::Update(Gamestate* gameState)
 	//Restart game
 	if (UserInput::restart == true) {
 		UserInput::restart = false;
-		gameState->UIMode = "Start";
+		if (gameState->UIMode == "Game") {
+			gameState->UIMode = "Pause";
+		}
+		else {
+			gameState->UIMode = "Start";
+		}
 	}
 
 	if (UserInput::MouseXpos != oldMouseXpos) {
@@ -126,6 +131,7 @@ void UserInput::key(GLFWwindow* window, int key, int scancode, int action, int m
 
 			//Escape
 		case GLFW_KEY_ESCAPE:
+
 			UserInput::restart = true;
 			break;
 

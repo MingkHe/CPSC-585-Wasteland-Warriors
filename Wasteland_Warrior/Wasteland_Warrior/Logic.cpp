@@ -1,5 +1,6 @@
 #include "Logic.h"
 #include "EnemyUnit.h"
+#include <iostream>
 
 Logic::Logic()
 {
@@ -11,24 +12,27 @@ Logic::~Logic()
 
 void Logic::Update(Gamestate* gameState)
 {
+	std::cout << gameState->wave << std::endl;
 	if (gameState->playerVehicle.health > 0.0) {
 
 		//Initialize
-		if (wave == 0) {
+		if (gameState->wave == 0) {
+
 			//create 3 enemy AIs
-			for (int i = 0; i < 3; i++) {
-				//gameState->SpawnEnemy(1, 0.0, 0.0);
-			}
-			wave = 1;
+			gameState->SpawnEnemy(0, 15, 0, 2);
+			gameState->SpawnEnemy(1,-15, 0, 2);
+			gameState->SpawnEnemy(0,25, 0, 2);
+
+			gameState->wave = 1;
 			waveBreak = 1;
 			breakTime = 30 * 60;
 		}
 
 		//WAVE 1
-		else if (wave == 1) {
+		else if (gameState->wave == 1) {
 			//if there are no enemy AIs left
 			if (gameState->Enemies.empty()) {
-				wave = 2;
+				gameState->wave = 2;
 				//spawn power ups
 			}
 			else {
@@ -54,10 +58,10 @@ void Logic::Update(Gamestate* gameState)
 		}
 
 		//WAVE 2
-		else if (wave == 2) {
+		else if (gameState->wave == 2) {
 			//if there are no enemy AIs left
 			if (gameState->Enemies.empty()) {
-					wave = 3;
+				gameState->wave = 3;
 					//spawn power ups
 			}
 			else {
@@ -83,10 +87,10 @@ void Logic::Update(Gamestate* gameState)
 		}
 
 		//WAVE 3
-		else if (wave == 3) {
+		else if (gameState->wave == 3) {
 			//if there are no enemy AIs left
 			if (gameState->Enemies.empty()) {
-				wave = 4;
+				gameState->wave = 4;
 				//spawn power ups
 			}
 			else {
@@ -112,10 +116,10 @@ void Logic::Update(Gamestate* gameState)
 		}
 
 		//WAVE 4
-		else if (wave == 4) {
+		else if (gameState->wave == 4) {
 			//if there are no enemy AIs left
 			if (gameState->Enemies.empty()) {
-				wave = 5;
+				gameState->wave = 5;
 				//spawn power ups
 			}
 			else {
@@ -141,10 +145,10 @@ void Logic::Update(Gamestate* gameState)
 		}
 
 		//WAVE 5
-		else if (wave == 5) {
+		else if (gameState->wave == 5) {
 		//if there are no enemy AIs left
 		if (gameState->Enemies.empty()) {
-			wave = 6;
+			gameState->wave = 6;
 			//spawn power ups
 		}
 		else {
@@ -158,15 +162,15 @@ void Logic::Update(Gamestate* gameState)
 		}
 
 		//Player has beaten all five waves
-		else if (wave == 6) {
-			wave = 0;
+		else if (gameState->wave == 6) {
+		gameState->wave = 0;
 			gameState->UIMode = "Win";
 		}
 	}
 
 	//Player has lost all health
 	else {
-		wave = 0;
+	gameState->wave = 0;
 		gameState->UIMode = "lose";
 	}
 }

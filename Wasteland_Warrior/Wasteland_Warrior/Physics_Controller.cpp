@@ -517,7 +517,7 @@ void Physics_Controller::setPosition(int actorIndex, glm::vec3 newLocation){
 	rigidActor->setGlobalPose({ newLocation.x, newLocation.y, newLocation.z });
 }
 
-void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DKey, bool SPACEKey, bool hello) {
+void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DKey, bool SPACEKey, bool hello, float leftStickX, float leftTrigger, float rightTrigger) {
 	releaseAllControls();
 	steerDirection = "";
 	brakeCar = false;
@@ -531,97 +531,121 @@ void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DK
 		gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
 	}
 
-	if ((WKey) && !(SKey) && !(SPACEKey))/*Check if high-order bit is set (1 << 15)*/
-	{
-		if (currentGear < 0) {
-			currentGear = 1;
-			changeToForwardGear = true;
-		}
-
-		if ((AKey) && !(DKey))
+	if (leftStickX == 0 && leftTrigger == 0 && rightTrigger == 0) {
+		if ((WKey) && !(SKey) && !(SPACEKey))/*Check if high-order bit is set (1 << 15)*/
 		{
-			steerDirection = "left";
-			if (SPACEKey) {
-				startHandbrakeTurnRightMode();
+			if (currentGear < 0) {
+				currentGear = 1;
+				changeToForwardGear = true;
+			}
 
+			if ((AKey) && !(DKey))
+			{
+				steerDirection = "left";
+				if (SPACEKey) {
+					startHandbrakeTurnRightMode();
+
+				}
+				else {
+					startTurnHardRightMode();
+
+				}
+			}
+			else if ((DKey) && !(AKey))
+			{
+				steerDirection = "right";
+				if (SPACEKey) {
+
+					startHandbrakeTurnLeftMode();
+				}
+				else {
+					startTurnHardLeftMode();
+
+				}
 			}
 			else {
-				startTurnHardRightMode();
-
+				steerDirection = "straight";
+				startAccelerateForwardsMode();
 			}
 		}
-		else if ((DKey) && !(AKey))
-		{
-			steerDirection = "right";
-			if (SPACEKey) {
 
-				startHandbrakeTurnLeftMode();
+		else if ((SKey) && !(WKey) && !(SPACEKey))/*Check if high-order bit is set (1 << 15)*/
+		{
+			if (currentGear > 0) {
+				currentGear = -1;
+				changeToReverseGear = true;
+			}
+			if ((AKey) && !(DKey))
+			{
+				steerDirection = "left";
+				if (SPACEKey) {
+					startHandbrakeTurnRightMode();
+
+				}
+				else {
+					startTurnHardRightMode();
+
+				}
+			}
+			else if ((DKey) && !(AKey))
+			{
+				steerDirection = "right";
+				if (SPACEKey) {
+
+					startHandbrakeTurnLeftMode();
+				}
+				else {
+					startTurnHardLeftMode();
+
+				}
 			}
 			else {
-				startTurnHardLeftMode();
-
+				steerDirection = "straight";
+				startAccelerateReverseMode();
 			}
 		}
-		else {
-			steerDirection = "straight";
-			startAccelerateForwardsMode();
+
+		if (!(WKey) && !(SKey) && !(SPACEKey))/*Check if high-order bit is set (1 << 15)*/
+		{
+
+			if ((AKey) && !(DKey))
+			{
+				steerDirection = "left";
+				startSteerRightMode();
+			}
+			else if ((DKey) && !(AKey))
+			{
+				steerDirection = "right";
+				startSteerLeftMode();
+			}
+		}
+
+		if ((SPACEKey) || ((WKey) && (SKey))) {
+			startBrakeMode();
+
 		}
 	}
-
-	else if ((SKey) && !(WKey) && !(SPACEKey))/*Check if high-order bit is set (1 << 15)*/
-	{
-		if (currentGear > 0) {
+	else {
+		//printf(" rt: %.6f", rightTrigger);
+		//printf(" lt: %.6f", leftTrigger);
+		//printf(" ls: %.6f\n", leftStickX);
+		if (rightTrigger > -1) {
+			if (currentGear < 0) {
+				currentGear = 1;
+				changeToForwardGear = true;
+			}
+			gVehicleInputData.setAnalogAccel((rightTrigger + 1)/2);
+		}
+		else if (leftTrigger > -1) {
+			if (currentGear > 0) {
 			currentGear = -1;
-			changeToReverseGear = true;
-		}
-		if ((AKey) && !(DKey))
-		{
-			steerDirection = "left";
-			if (SPACEKey) {
-				startHandbrakeTurnRightMode();
-
+				changeToReverseGear = true;
 			}
-			else {
-				startTurnHardRightMode();
-
-			}
+			gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eREVERSE);
+			gVehicleInputData.setAnalogAccel((leftTrigger + 1)/2);
 		}
-		else if ((DKey) && !(AKey))
-		{
-			steerDirection = "right";
-			if (SPACEKey) {
 
-				startHandbrakeTurnLeftMode();
-			}
-			else {
-				startTurnHardLeftMode();
-
-			}
-		}
-		else {
-			steerDirection = "straight";
-			startAccelerateReverseMode();
-		}
-	}
-
-	if (!(WKey) && !(SKey) && !(SPACEKey))/*Check if high-order bit is set (1 << 15)*/
-	{
-
-		if ((AKey) && !(DKey))
-		{
-			steerDirection = "left";
-			startSteerRightMode();
-		}
-		else if ((DKey) && !(AKey))
-		{
-			steerDirection = "right";
-			startSteerLeftMode();
-		}
-	}
-
-	if ((SPACEKey) || ((WKey) && (SKey))) {
-		startBrakeMode();
-
+		gVehicleInputData.setAnalogSteer(leftStickX);
 	}
 
 	//If the mode about to start is eDRIVE_MODE_ACCEL_REVERSE then switch to reverse gears.
@@ -638,7 +662,7 @@ void Physics_Controller::stepPhysics(bool interactive)
 	PX_UNUSED(interactive);
 	const PxF32 timestep = 1.0f / 60.0f;
 
-	userDriveInput(gameState->WKey, gameState->AKey, gameState->SKey, gameState->DKey, gameState->SPACEKey, true);
+	userDriveInput(gameState->WKey, gameState->AKey, gameState->SKey, gameState->DKey, gameState->SPACEKey, true, gameState->leftStickX, gameState->leftTrigger, gameState->rightTrigger);
 	//Update the control inputs for the vehicle.
 	
 	if (gMimicKeyInputs)

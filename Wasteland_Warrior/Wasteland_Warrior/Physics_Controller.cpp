@@ -5,7 +5,6 @@
 
 #include "PxPhysicsAPI.h"
 
-
 #include "vehicle/PxVehicleUtil.h"
 #include "SnippetVehicleSceneQuery.h"
 #include "SnippetVehicleFilterShader.h"
@@ -35,6 +34,7 @@ PxScene*				gScene = NULL;
 PxCooking*				gCooking = NULL;
 
 PxMaterial*				gMaterial = NULL;
+PxMaterial*				tireMaterial = NULL;
 
 PxPvd*                  gPvd = NULL;
 
@@ -55,7 +55,6 @@ bool					brakeCar = false;
 int                     currentGear = 1;
 bool					changeToReverseGear = false;
 bool					changeToForwardGear = false;
-
 
 
 PxFilterFlags contactReportFilterShader(
@@ -79,21 +78,6 @@ PxFilterFlags contactReportFilterShader(
 		pairFlags |= PxPairFlag::eNOTIFY_TOUCH_FOUND;
 
 	return PxFilterFlag::eDEFAULT;
-
-	/*
-	PX_UNUSED(attributes0);
-	PX_UNUSED(attributes1);
-	PX_UNUSED(filterData0);
-	PX_UNUSED(filterData1);
-	PX_UNUSED(constantBlockSize);
-	PX_UNUSED(constantBlock);
-
-	// all initial and persisting reports for everything, with per-point data
-	pairFlags = PxPairFlag::eSOLVE_CONTACT | PxPairFlag::eDETECT_DISCRETE_CONTACT
-		| PxPairFlag::eNOTIFY_TOUCH_FOUND
-		| PxPairFlag::eNOTIFY_TOUCH_PERSISTS
-		| PxPairFlag::eNOTIFY_CONTACT_POINTS;
-	return PxFilterFlag::eDEFAULT;*/
 }
 
 
@@ -120,31 +104,28 @@ void Physics_Controller::Update()
 	stepPhysics(false);
 }
 
-PxF32 gSteerVsForwardSpeedData[2*8]=
+PxF32 gSteerVsForwardSpeedData[2 * 18] =
 {
-	0.0f,		0.2f,
-	5.0f,		0.2f,
-	30.0f,		0.125f,
-	120.0f,		0.1f,
+	0.0f,		0.75f,
+	3.0f,		0.70f,
+	5.0f,		0.65f,	
+	7.0f,		0.53f,
+	10.0f,		0.45f,
+	15.0f,		0.20f,
+	20.0f,		0.12f,
+	30.0f,		0.10f,
+	120.0f,		0.10f,
+	PX_MAX_F32, PX_MAX_F32,
+	PX_MAX_F32, PX_MAX_F32,
+	PX_MAX_F32, PX_MAX_F32,
+	PX_MAX_F32, PX_MAX_F32,
+	PX_MAX_F32, PX_MAX_F32,
 	PX_MAX_F32, PX_MAX_F32,
 	PX_MAX_F32, PX_MAX_F32,
 	PX_MAX_F32, PX_MAX_F32,
 	PX_MAX_F32, PX_MAX_F32
 };
 
-
-// Casting values to PxF32 to resolve warning of mismatch types
-/*PxF32 gSteerVsForwardSpeedData[2 * 8] =
-{
-	0.0f,		0.2f,
-	(PxF32)0.2*PX_MAX_F32,		0.175f,
-	(PxF32)0.3*PX_MAX_F32,		0.15f,
-	(PxF32)0.4*PX_MAX_F32,		0.125f,
-	(PxF32)0.5*PX_MAX_F32,		0.1f,
-	(PxF32)0.6*PX_MAX_F32,		0.075f,
-	(PxF32)0.7*PX_MAX_F32,		0.05,
-	(PxF32)0.8*PX_MAX_F32,		0.025f
-}*/
 
 
 PxFixedSizeLookupTable<8> gSteerVsForwardSpeedTable(gSteerVsForwardSpeedData, 4);
@@ -197,29 +178,25 @@ VehicleDesc initPlayerVehiclePhysicsDesc()
 	//Set up the chassis mass, dimensions, moment of inertia, and center of mass offset.
 	//The moment of inertia is just the moment of inertia of a cuboid but modified for easier steering.
 	//Center of mass offset is 0.65m above the base of the chassis and 0.25m towards the front.
-	const PxF32 chassisMass = 1000.0f;
-	const PxVec3 chassisDims(2.0f, 1.5f, 5.0f);
+	const PxF32 chassisMass = 1300.0f;
+	const PxVec3 chassisDims(2.5f, 2.0f, 5.0f);
 	const PxVec3 chassisMOI
-		((chassisDims.y*chassisDims.y + chassisDims.z*chassisDims.z)*chassisMass/12.0f,
-		 (chassisDims.x*chassisDims.x + chassisDims.z*chassisDims.z)*0.6f*chassisMass/12.0f,
-		 (chassisDims.x*chassisDims.x + chassisDims.y*chassisDims.y)*chassisMass/12.0f);
-	/*const PxVec3 chassisMOI
-	((chassisDims.y*chassisDims.y + chassisDims.z*chassisDims.z)*chassisMass,
-		(chassisDims.x*chassisDims.x + chassisDims.z*chassisDims.z)*0.8f*chassisMass,
-		(chassisDims.x*chassisDims.x + chassisDims.y*chassisDims.y)*chassisMass);*/
-	const PxVec3 chassisCMOffset(0.0f, -chassisDims.y*0.5f + 0.65f, 0.25f);
+	((chassisDims.y*chassisDims.y + chassisDims.z*chassisDims.z)*chassisMass / 12.0f,
+		(chassisDims.x*chassisDims.x + chassisDims.z*chassisDims.z)*0.8f*chassisMass / 12.0f,
+		(chassisDims.x*chassisDims.x + chassisDims.y*chassisDims.y)*chassisMass / 12.0f);
+	const PxVec3 chassisCMOffset(0.0f, -chassisDims.y*0.5f + 0.5f, -0.05f);
 
 	//Set up the wheel mass, radius, width, moment of inertia, and number of wheels.
 	//Moment of inertia is just the moment of inertia of a cylinder.
 	const PxF32 wheelMass = 20.0f;
 	const PxF32 wheelRadius = 0.5f;
 	const PxF32 wheelWidth = 0.4f;
-	const PxF32 wheelMOI = 0.5f*wheelMass*wheelRadius*wheelRadius*0.1;
+	const PxF32 wheelMOI = 0.5f*wheelMass*wheelRadius*wheelRadius*2;
 	const PxU32 nbWheels = 4;
 
 	VehicleDesc vehicleDesc;
 
-	vehicleDesc.chassisMass = chassisMass;
+	vehicleDesc.chassisMass = chassisMass;												////////HERE !!!!!!!!!!
 	vehicleDesc.chassisDims = chassisDims;
 	vehicleDesc.chassisMOI = chassisMOI;
 	vehicleDesc.chassisCMOffset = chassisCMOffset;
@@ -231,7 +208,8 @@ VehicleDesc initPlayerVehiclePhysicsDesc()
 	vehicleDesc.wheelWidth = wheelWidth;
 	vehicleDesc.wheelMOI = wheelMOI;
 	vehicleDesc.numWheels = nbWheels;
-	vehicleDesc.wheelMaterial = gMaterial;
+	tireMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.6f);
+	vehicleDesc.wheelMaterial = tireMaterial;
 	vehicleDesc.chassisSimFilterData = PxFilterData(COLLISION_FLAG_WHEEL, COLLISION_FLAG_WHEEL_AGAINST, 0, 0);
 
 	return vehicleDesc;
@@ -284,6 +262,8 @@ VehicleDesc initEnemyVehiclePhysicsDesc()
 
 void startAccelerateForwardsMode()
 {
+
+
 
 	if (gMimicKeyInputs)
 	{
@@ -450,7 +430,7 @@ void Physics_Controller::initPhysics(bool interactive)
 		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
 		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
 	}
-	gMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.6f);
+	gMaterial = gPhysics->createMaterial(0.6f, 0.6f, 0.6f);
 
 	gCooking = PxCreateCooking(PX_PHYSICS_VERSION, *gFoundation, PxCookingParams(PxTolerancesScale()));
 
@@ -484,23 +464,6 @@ int Physics_Controller::createMap(const PxVec3* verts, const PxU32 numVerts, con
 
 }
 
-int Physics_Controller::createVehicle() {
-	//Create a vehicle that will drive on the plane.
-	VehicleDesc vehicleDesc = initPlayerVehiclePhysicsDesc();;
-	gVehicle4W = createEnemyVehicle4W(vehicleDesc, gPhysics, gCooking);
-	PxTransform startTransform(PxVec3(0, (vehicleDesc.chassisDims.y*0.5f + vehicleDesc.wheelRadius + 1.0f), 0.0f), PxQuat(PxIdentity));
-	gVehicle4W->getRigidDynamicActor()->setGlobalPose(startTransform);
-	gScene->addActor(*gVehicle4W->getRigidDynamicActor());
-
-	//Set the vehicle to rest in first gear.
-	//Set the vehicle to use auto-gears.
-	gVehicle4W->setToRestState();
-	gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
-	gVehicle4W->mDriveDynData.setUseAutoGears(true);
-
-	rigidDynamicActorIndex++;
-	return rigidDynamicActorIndex;
-}
 
 int Physics_Controller::createEnemyVehicle() {
 	//Create a vehicle that will drive on the plane.
@@ -677,17 +640,24 @@ void Physics_Controller::stepPhysics(bool interactive)
 
 	userDriveInput(gameState->WKey, gameState->AKey, gameState->SKey, gameState->DKey, gameState->SPACEKey, true);
 	//Update the control inputs for the vehicle.
+	
 	if (gMimicKeyInputs)
 	{
-		PxVehicleDrive4WSmoothDigitalRawInputsAndSetAnalogInputs(gKeySmoothingData, gSteerVsForwardSpeedTable, gVehicleInputData, timestep, gIsVehicleInAir, *gVehicle4W);
+		PxVehicleDrive4WSmoothDigitalRawInputsAndSetAnalogInputs(gKeySmoothingData, gSteerVsForwardSpeedTable, gVehicleInputData, timestep, gIsVehicleInAir, *enemyVehicle);
 	}
 	else
 	{
-		PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, gSteerVsForwardSpeedTable, gVehicleInputData, timestep, gIsVehicleInAir, *gVehicle4W);
+
+		PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, gSteerVsForwardSpeedTable, gVehicleInputData, timestep, gIsVehicleInAir, *enemyVehicle);
 	}
 
+	enemyVehicle->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
+
+	enemyInputData.setAnalogAccel(1.0f);
+	PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, gSteerVsForwardSpeedTable, gVehicleInputData, timestep, gIsVehicleInAir, *gVehicle4W);
+
 	//Raycasts.
-	PxVehicleWheels* vehicles[2] = { gVehicle4W};
+	PxVehicleWheels* vehicles[1] = { gVehicle4W};
 	PxRaycastQueryResult* raycastResults = gVehicleSceneQueryData->getRaycastQueryResultBuffer(0);
 	const PxU32 raycastResultsSize = gVehicleSceneQueryData->getQueryResultBufferSize();
 	PxVehicleSuspensionRaycasts(gBatchQuery, 1, vehicles, raycastResultsSize, raycastResults);
@@ -695,33 +665,34 @@ void Physics_Controller::stepPhysics(bool interactive)
 	//Vehicle update.
 	const PxVec3 grav = gScene->getGravity();
 	PxWheelQueryResult wheelQueryResults[PX_MAX_NB_WHEELS];
-	PxVehicleWheelQueryResult vehicleQueryResults[2] = { {wheelQueryResults, gVehicle4W->mWheelsSimData.getNbWheels()}};
+	PxVehicleWheelQueryResult vehicleQueryResults[1] = { {wheelQueryResults, gVehicle4W->mWheelsSimData.getNbWheels()}};
 	PxVehicleUpdates(timestep, grav, *gFrictionPairs, 1, vehicles, vehicleQueryResults);
 
 	//Work out if the vehicle is in the air.
 	gIsVehicleInAir = gVehicle4W->getRigidDynamicActor()->isSleeping() ? false : PxVehicleIsInAir(vehicleQueryResults[0]);
+	//std::cout << "Wheel friction: " << vehicleQueryResults[0].wheelQueryResults->tireFriction << std::endl;
+
+	//Raycasts.
+	PxVehicleWheels* vehicles2[2] = { enemyVehicle };
+	PxRaycastQueryResult* raycastResults2 = gVehicleSceneQueryData->getRaycastQueryResultBuffer(0);
+	const PxU32 raycastResultsSize2 = gVehicleSceneQueryData->getQueryResultBufferSize();
+	PxVehicleSuspensionRaycasts(gBatchQuery, 1, vehicles2, raycastResultsSize2, raycastResults2);
+
+	//Vehicle update.
+	PxWheelQueryResult wheelQueryResults2[PX_MAX_NB_WHEELS];
+	PxVehicleWheelQueryResult vehicleQueryResults2[2] = { {wheelQueryResults2, enemyVehicle->mWheelsSimData.getNbWheels()} };
+	PxVehicleUpdates(timestep, grav, *gFrictionPairs, 1, vehicles2, vehicleQueryResults2);
+
+	//Work out if the vehicle is in the air.
+	gIsVehicleInAir = enemyVehicle->getRigidDynamicActor()->isSleeping() ? false : PxVehicleIsInAir(vehicleQueryResults2[0]);
+
+
 
 	//Scene update.
 	gContactReportCallback.gContactPositions.clear();
 	gScene->simulate(timestep);
 	gScene->fetchResults(true);
 
-
-
-	/*
-	//This is how to get impulse data, this will be deleted later but I am using it as a refrence
-	//printf("%d contact points\n", PxU32(gContactReportCallback.gContactPositions.size()));
-	if (gContactReportCallback.gContactImpulses.size() >= 1) {
-		printf("Calucalting contact vector\n");
-		glm::vec2 impulse = glm::normalize(glm::vec2{ gContactReportCallback.gContactImpulses[0].x, gContactReportCallback.gContactImpulses[0].z });
-		std::cout << "Contact vector:  [" << impulse.x << "," << impulse.y << "]" << std::endl;
-	}
-
-	if (gContactReportCallback.gContactImpulses.size() >= 1) {
-		printf("Calucalting contact vector\n");
-		glm::vec2 contactPoint = glm::normalize(glm::vec2{ gContactReportCallback.gContactPositions[0].x, gContactReportCallback.gContactPositions[0].z });
-		std::cout << "Contact point:  [" << contactPoint.x << "," << contactPoint.y << "]" << std::endl;
-	}*/
 
 
 	//Efficency of this could be improved but not critical
@@ -775,8 +746,7 @@ void Physics_Controller::updateEntities() {
 		PxRigidBody *rigidBody = rigidActor->is<PxRigidBody>();
 		PxVec3 velocity = rigidBody->getLinearVelocity();
 		float speed = glm::length(glm::vec2{ velocity.x, velocity.z });
-		//PxRigidDynamicActor *rigidActor = actor->is<PxRigidActor>();
-		//rigidActor->setAnalogAccel(1.0f);
+
 
 		PxTransform orientation = rigidActor->getGlobalPose();		//   https://docs.nvidia.com/gameworks/content/gameworkslibrary/physx/apireference/files/classPxRigidActor.html
 		PxVec3 location = orientation.p;							//	https://docs.nvidia.com/gameworks/content/gameworkslibrary/physx/apireference/files/classPxTransform.html

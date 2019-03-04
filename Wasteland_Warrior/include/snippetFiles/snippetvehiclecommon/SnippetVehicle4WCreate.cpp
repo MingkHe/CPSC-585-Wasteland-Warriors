@@ -515,7 +515,7 @@ PxVehicleDrive4W* createEnemyVehicle4W(const VehicleDesc& vehicle4WDesc, PxPhysi
 
 		//Engine
 		PxVehicleEngineData engine;
-		engine.mPeakTorque = 500.0f;
+		engine.mPeakTorque = 300.0f;
 		engine.mMaxOmega = 600.0f;//approx 6000 rpm
 		driveSimData.setEngineData(engine);
 

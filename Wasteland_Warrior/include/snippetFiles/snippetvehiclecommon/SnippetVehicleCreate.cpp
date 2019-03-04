@@ -114,15 +114,6 @@ PxRigidStatic* createRigidTriangleMesh(const PxVec3* verts, const PxU32 numVerts
 	meshDesc.triangles.stride = 3 * sizeof(PxU32);
 	meshDesc.triangles.data = indices;
 
-	/*
-#ifdef _DEBUG
-	// mesh should be validated before cooked without the mesh cleaning
-	bool res = cooking.validateTriangleMesh(meshDesc);
-	PX_ASSERT(res);
-#endif
-
-	PxTriangleMesh* triangleMesh = cooking.createTriangleMesh(meshDesc, physics.getPhysicsInsertionCallback());
-	*/
 	PxTriangleMesh* triangleMesh = NULL;
 	PxDefaultMemoryOutputStream writeBuffer;
 	PxTriangleMeshCookingResult::Enum result;
@@ -154,6 +145,8 @@ PxRigidStatic* createRigidTriangleMesh(const PxVec3* verts, const PxU32 numVerts
 	
 	return rigidStaticMesh;
 }
+
+
 
 PxConvexMesh* createChassisMesh(const PxVec3 dims, PxPhysics& physics, PxCooking& cooking)
 {

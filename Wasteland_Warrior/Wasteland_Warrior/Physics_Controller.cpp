@@ -46,6 +46,7 @@ PxVehicleDrivableSurfaceToTireFrictionPairs* gFrictionPairs = NULL;
 
 PxRigidStatic*			gGroundPlane = NULL;
 PxRigidStatic*			gMap1Ground = NULL;
+PxRigidStatic*			gStaticObject = NULL;
 PxVehicleDrive4W*		gVehicle4W = NULL;
 
 PxVehicleDrive4W*		enemyVehicle = NULL;
@@ -446,35 +447,30 @@ void Physics_Controller::initPhysics(bool interactive)
 	gFrictionPairs = createFrictionPairs(gMaterial);
 
 	//Create a plane to drive on.
-	PxFilterData groundPlaneSimFilterData(COLLISION_FLAG_GROUND, COLLISION_FLAG_GROUND_AGAINST, 0, 0);
+	//PxFilterData groundPlaneSimFilterData(COLLISION_FLAG_GROUND, COLLISION_FLAG_GROUND_AGAINST, 0, 0);
 
-	gGroundPlane = createDrivablePlane(groundPlaneSimFilterData, gMaterial, gPhysics);
-	gScene->addActor(*gGroundPlane);
+	//gGroundPlane = createDrivablePlane(groundPlaneSimFilterData, gMaterial, gPhysics);
+	//gScene->addActor(*gGroundPlane);
 
 	startBrakeMode();
 }
 
 int Physics_Controller::createMap(const PxVec3* verts, const PxU32 numVerts, const PxU32* indices, const PxU32 triCount){
-	//Create a plane to drive on.
-	//std::cout << " Yo3" << std::endl;
-	//std::cout << sizeof(verts) << " " << " " << sizeof(indices) << " " << std::endl;
+
 	PxFilterData groundPlaneSimFilterData(COLLISION_FLAG_GROUND, COLLISION_FLAG_GROUND_AGAINST, 0, 0);
-	gCookingNoCleaning = PxCreateCooking(PX_PHYSICS_VERSION, *gFoundation, PxCookingParams(PxTolerancesScale()));
-
-	PxTolerancesScale scale;
-	PxCookingParams params(scale);
-	// disable mesh cleaning - perform mesh validation on development configurations
-	params.meshPreprocessParams |= PxMeshPreprocessingFlag::eDISABLE_CLEAN_MESH;
-	// disable edge precompute, edges are set for each triangle, slows contact generation
-	params.meshPreprocessParams |= PxMeshPreprocessingFlag::eDISABLE_ACTIVE_EDGES_PRECOMPUTE;
-	// lower hierarchy for internal mesh
-	//params.meshCookingHint = PxMeshCookingHint::eCOOKING_PERFORMANCE;
-
-	gCookingNoCleaning->setParams(params);
-
-	gMap1Ground = createRigidTriangleMesh(verts, numVerts, indices, triCount, gMaterial, *gPhysics, *gCookingNoCleaning, groundPlaneSimFilterData);
-	//PX_FORCE_INLINE PxRigidDynamic* getRigidDynamicActor() { return mActor; }
+	gMap1Ground = createRigidTriangleMesh(verts, numVerts, indices, triCount, gMaterial, *gPhysics, *gCooking, groundPlaneSimFilterData);
 	gScene->addActor(*gMap1Ground);
+
+	rigidStaticActorIndex++;
+	return rigidStaticActorIndex;
+
+}
+
+int Physics_Controller::createStaticObject(const PxVec3* verts, const PxU32 numVerts, const PxU32* indices, const PxU32 triCount) {
+
+	PxFilterData groundPlaneSimFilterData(COLLISION_FLAG_GROUND, COLLISION_FLAG_GROUND_AGAINST, 0, 0);
+	gStaticObject= createRigidTriangleMesh(verts, numVerts, indices, triCount, gMaterial, *gPhysics, *gCooking, groundPlaneSimFilterData);
+	gScene->addActor(*gStaticObject);
 
 	rigidStaticActorIndex++;
 	return rigidStaticActorIndex;

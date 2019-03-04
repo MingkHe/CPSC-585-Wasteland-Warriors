@@ -51,26 +51,36 @@ void Gamestate::SpawnMap() {
 }
 
 void Gamestate::SpawnStaticObject(int ObjectType) {
-	int sceneObjectIndex = scene->loadOBJObject("Objects/testLevel.obj", "Textures/sandTexture.jpg");
-	int vertsSize = scene->objects[sceneObjectIndex].geometry[0].vertsPhys.size();
-	PxVec3* vertsPhysArray = new PxVec3[vertsSize];
-	glm::vec3 vertHolder = { -1,1,1 };
-	for (int i = 0; i < vertsSize; i++) {
-		vertHolder = scene->objects[sceneObjectIndex].geometry[0].vertsPhys[i];
-		vertsPhysArray[i] = PxVec3(vertHolder.x, vertHolder.y, vertHolder.z);
+	bool objectExists = true;
+	int sceneObjectIndex;
+	if (ObjectType == 1) {
+		sceneObjectIndex = scene->loadOBJObject("Objects\Ruined_Brick_Building\ruined building_brick.obj", "Objects\Ruined_Brick_Building\ruined building_brick.jpg");
 	}
-
-	int faceVertsSize = scene->objects[sceneObjectIndex].geometry[0].faceVertexIndices.size();
-	PxU32* faceVertsPhys = new PxU32[faceVertsSize];
-	PxU32 faceVertHolder = 0;
-	int index = 0;
-	for (int i = 0; i < faceVertsSize; i++) {
-		faceVertHolder = scene->objects[sceneObjectIndex].geometry[0].faceVertexIndices[i];
-		faceVertHolder--;
-		faceVertsPhys[i] = PxU32(faceVertHolder);
-
+	else {
+		objectExists = false;
 	}
-	int physicsIndex = physics_Controller->createMap(vertsPhysArray, vertsSize, faceVertsPhys, faceVertsSize / 3);
+	if (objectExists) {
+		int vertsSize = scene->objects[sceneObjectIndex].geometry[0].vertsPhys.size();
+		PxVec3* vertsPhysArray = new PxVec3[vertsSize];
+		glm::vec3 vertHolder = { -1,1,1 };
+		for (int i = 0; i < vertsSize; i++) {
+			vertHolder = scene->objects[sceneObjectIndex].geometry[0].vertsPhys[i];
+			vertsPhysArray[i] = PxVec3(vertHolder.x, vertHolder.y, vertHolder.z);
+		}
+
+		int faceVertsSize = scene->objects[sceneObjectIndex].geometry[0].faceVertexIndices.size();
+		PxU32* faceVertsPhys = new PxU32[faceVertsSize];
+		PxU32 faceVertHolder = 0;
+		int index = 0;
+		for (int i = 0; i < faceVertsSize; i++) {
+			faceVertHolder = scene->objects[sceneObjectIndex].geometry[0].faceVertexIndices[i];
+			faceVertHolder--;
+			faceVertsPhys[i] = PxU32(faceVertHolder);
+
+		}
+		int physicsIndex = physics_Controller->createMap(vertsPhysArray, vertsSize, faceVertsPhys, faceVertsSize / 3);
+	}
+	
 }
 
 void Gamestate::SpawnPlayer(float x, float y, float z) {

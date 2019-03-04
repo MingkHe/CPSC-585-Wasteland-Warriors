@@ -18,6 +18,7 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 
 	healthshaderProgram = ShaderTools::InitializeShaders("../shaders/healthvertex.glsl", "../shaders/healthfragment.glsl");
 	radarshaderProgram = ShaderTools::InitializeShaders("../shaders/radarvertex.glsl", "../shaders/radarfragment.glsl");
+	basicshaderProgram = ShaderTools::InitializeShaders("../shaders/basicvertex.glsl", "../shaders/basicfragment.glsl");
 
 	health.verts.push_back(glm::vec3(.5f, .8f, 0.f));
 	health.verts.push_back(glm::vec3(.5f, .9f, 0.f));
@@ -42,6 +43,30 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	radar.drawMode = GL_TRIANGLE_STRIP;
 	assignBuffers(radar);
 	setBufferData(radar);
+
+	float increment = (2.f*3.1415926536) / 50;
+	glm::vec3 center = glm::vec3(.75f, -.75f, 0.f);
+	glm::vec3 scale = glm::vec3(.125f);
+
+	for (float i = 0; i < 2.f*3.1415926536; i += increment) {
+		speedo.verts.push_back(glm::vec3(std::cos(i), std::sin(i), 0.f)*scale + center);
+		speedo.verts.push_back(glm::vec3(std::cos(i + increment), std::sin(i + increment), 0.f)*scale + center);
+		speedo.verts.push_back(center);
+
+		speedo.uvs.push_back(glm::vec2(std::cos(i), std::sin(i)));
+		speedo.uvs.push_back(glm::vec2(std::cos(i + increment), std::sin(i + increment)));
+		speedo.uvs.push_back(glm::vec2(0, 0));
+	}
+	speedo.drawMode = GL_TRIANGLES;
+	assignBuffers(speedo);
+	setBufferData(speedo);
+
+	needle.verts.push_back(glm::vec3(std::cos(7.f*PI_F / 6.f), std::sin(7.f*PI_F / 6.f), 0.f)*scale + center);
+	needle.verts.push_back(glm::vec3(std::cos(5.f*PI_F / 3.f), std::sin(5.f*PI_F / 3.f), 0.f)*scale + center);
+	needle.verts.push_back(glm::vec3(std::cos(2.f*PI_F / 3.f), std::sin(2.f*PI_F / 3.f), 0.f)*scale + center);
+	needle.drawMode = GL_TRIANGLES;
+	assignBuffers(needle);
+	setBufferData(needle);
 }
 
 RenderingEngine::~RenderingEngine() {
@@ -116,6 +141,25 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	glUniform1f(radar_distGL, game_state->radar_view);
 	glBindVertexArray(radar.vao);
 	glDrawArrays(radar.drawMode, 0, radar.verts.size());
+
+	//render speedometer
+	glUseProgram(basicshaderProgram);
+	GLint istexGL = glGetUniformLocation(basicshaderProgram, "istex");
+	glUniform1i(istexGL, 1);
+	glBindVertexArray(speedo.vao);
+	glDrawArrays(speedo.drawMode, 0, speedo.verts.size());
+	glBindVertexArray(0);
+	glm::vec3 center = glm::vec3(.75f, -.75f, 0.f);
+	glm::vec3 scale = glm::vec3(.125f);
+	float speed = game_state->playerVehicle.speed*.075f;
+	needle.verts[0] = (glm::vec3(std::cos(7.f*PI_F / 6.f - speed), std::sin(7.f*PI_F / 6.f - speed), 0.f)*scale + center);
+	needle.verts[1] = (glm::vec3(std::cos(5.f*PI_F / 3.f - speed), std::sin(5.f*PI_F / 3.f - speed), 0.f)*scale*.0625f + center);
+	needle.verts[2] = (glm::vec3(std::cos(2.f*PI_F / 3.f - speed), std::sin(2.f*PI_F / 3.f - speed), 0.f)*scale*.0625f + center);
+	setBufferData(needle);
+	glUniform1i(istexGL, 0);
+	glBindVertexArray(needle.vao);
+	glDrawArrays(needle.drawMode, 0, needle.verts.size());
+	glBindVertexArray(0);
 
 	glUseProgram(0);
 

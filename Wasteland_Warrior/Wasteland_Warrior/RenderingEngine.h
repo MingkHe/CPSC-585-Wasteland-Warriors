@@ -54,8 +54,11 @@ public:
 	GLuint shaderProgram;
 	GLuint healthshaderProgram;
 	GLuint radarshaderProgram;
+	GLuint basicshaderProgram;
 	Geometry health;
 	Geometry radar;
+	Geometry speedo;
+	Geometry needle;
 };
 
 #endif /* RENDERINGENGINE_H_ */

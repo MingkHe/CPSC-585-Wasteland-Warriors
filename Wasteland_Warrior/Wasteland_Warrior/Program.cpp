@@ -87,10 +87,10 @@ void Program::start() {
 
 	
 	gameState->SpawnMap();
-	gameState->SpawnStaticObject(2,3,0,5);
-	gameState->SpawnStaticObject(1, -3, 0, -25);
+	gameState->SpawnStaticObject(2, -33, 0, 45);
+	gameState->SpawnStaticObject(1, 53, 0, -35);
 	//Spawn Player
-	gameState->SpawnPlayer(0, 3, 0);
+	gameState->SpawnPlayer(0, 0, 0);
 
 	//Spawn Enemies
 	gameState->SpawnEnemy(0, 15, 100, 10000);

@@ -33,10 +33,10 @@ Scene::Scene(RenderingEngine* renderer, Gamestate* newGamestate) : renderer(rend
 	InitializeTexture(&ground.texture, ground.textureFilePath);
 	glBindTexture(GL_TEXTURE_2D, ground.texture.textureID);
 
-	ground.verts.push_back(glm::vec3(-250.f, 0.0f, -250.f));
-	ground.verts.push_back(glm::vec3(250.f, 0.0f, -250.f));
-	ground.verts.push_back(glm::vec3(-250.f, 0.0f, 250.f));
-	ground.verts.push_back(glm::vec3(250.f, 0.0f, 250.f));
+	ground.verts.push_back(glm::vec3(-250.f, -50.0f, -250.f));
+	ground.verts.push_back(glm::vec3(250.f, -50.0f, -250.f));
+	ground.verts.push_back(glm::vec3(-250.f, -50.0f, 250.f));
+	ground.verts.push_back(glm::vec3(250.f, -50.0f, 250.f));
 	for (int i = 0; i < 4; i++) {
 		ground.colors.push_back(glm::vec3(0.5f, 0.5f, 0.5f));
 		ground.normals.push_back(glm::vec3(0.f, 1.f, 0.f));
@@ -54,7 +54,7 @@ Scene::Scene(RenderingEngine* renderer, Gamestate* newGamestate) : renderer(rend
 	RenderingEngine::setBufferData(ground);
 	groundComp.geometry.push_back(ground);
 	objects.push_back(groundComp);
-
+	
 	//loadOBJObject("Objects/testLevel.obj", "Textures/redLines.jpg");
 
 

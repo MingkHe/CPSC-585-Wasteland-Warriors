@@ -63,7 +63,6 @@ public:
 	*/
 
 
-
 	//car engine ignition sound
 	bool carStart_sound;
 	//car engine sound when the car is idle
@@ -146,8 +145,11 @@ public:
 	void DespawnObject(Object object);
 
 	void Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse);
+	void Collision(Vehicle* vehicle, PowerUp* powerUp);
+
 
 	void updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 newTransformationMatrix, float newSpeed);
+	PowerUp* lookupPUUsingPI(int physicsIndex);
 	Vehicle* lookupVUsingPI(int physicsIndex);
 	int lookupGSIUsingPI(int physicsIndex);
 

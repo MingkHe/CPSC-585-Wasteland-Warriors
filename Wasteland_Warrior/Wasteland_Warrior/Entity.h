@@ -13,6 +13,9 @@ public:
 	glm::mat4 transformationMatrix;
 
 	float speed;				//Moved here do to issues confirming vehicle vs general entities
+	float acceleration;
+
+
 
 	int physicsIndex;
 	int sceneObjectIndex;

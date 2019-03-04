@@ -21,6 +21,8 @@ public:
 
 	void setPosition(int actorIndex, glm::vec3 newLocation);
 	int createMap(const PxVec3* verts, const PxU32 numVerts, const PxU32* indices, const PxU32 triCount);
+
+	void resetOrientation(int actorIndex);
 	int createEnemyVehicle();
 	int createPlayerVehicle();
 

@@ -8,6 +8,7 @@ PlayerUnit::PlayerUnit(int newPhysicsIndex, int newSceneObjectIndex)
 {
 	physicsIndex = newPhysicsIndex;
 	sceneObjectIndex = newSceneObjectIndex;
+	health = 300;
 }
 
 

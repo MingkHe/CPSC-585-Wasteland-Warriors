@@ -22,35 +22,41 @@ int AI_Interaction::Update()
 	glm::vec3 EntityPosition = gameState->playerVehicle.position;
 	glm::vec2 targetPosition = { EntityPosition.x, EntityPosition.z};
 
-	//std::cout << 
 
 	for (int i = 0; i < gameState->Enemies.size(); i++) {
+
 		EnemyUnit enemy = gameState->Enemies[i];
-		glm::vec2 enemyHeading = enemy.direction;
+		glm::vec2 enemyHeading = glm::normalize(enemy.direction);
 		glm::vec2 enemyPosition = {enemy.position.x, enemy.position.z};
 
+		//std::cout << "I am at: [" << enemyPosition.x << "," << enemyPosition.y << "] and I would like to get to: [" << targetPosition.x << "," << targetPosition.y << "]" << std::endl;
+
+
 		float enemyRotation = glm::atan(enemyHeading.y / enemyHeading.x);
-		if (enemyHeading.y < 0)
-			enemyRotation += M_PI;
 
-		glm::vec2 targetVector = targetPosition - enemyPosition;
+		//std::cout << "enemyRotation in rad: " << enemyRotation << std::endl;
+
+		glm::vec2 targetVector = normalize(targetPosition - enemyPosition);
 		float targetRotation = glm::atan(targetVector.y / targetVector.x);
-		if (targetVector.y < 0)
-			targetRotation += M_PI;
 
-
+		//std::cout << "targetRotation in rad: " << targetRotation << std::endl;
 
 		float relativeRotation;
 		glm::vec2 controllInput;		//{(Speed -1 -> 1), (Turning -1 (left) -> 1 (right))} 
 		if (enemyRotation == targetRotation) {
 			controllInput = {1.0f, 0.0f};			//Dont turn
 		}
-		else {
-			relativeRotation = targetRotation + ((2 * M_PI)-enemyRotation);
-			if (relativeRotation >= (2 * M_PI))
-				relativeRotation - (2 * M_PI);
+		else {  //target - enemy   or 
+			relativeRotation = targetRotation -enemyRotation;
+			//std::cout << "relativeRotation is: " << relativeRotation << std::endl;
+			if (relativeRotation > (M_PI))
+				relativeRotation -= (2 * M_PI);
 
-			if (relativeRotation < M_PI) {
+			if (relativeRotation <= (-M_PI))
+				relativeRotation += (2 * M_PI);
+
+
+			if (relativeRotation > 0.0f) {
 				controllInput = { 1.0f, -1.0f };	//Turn left
 			}
 			else {

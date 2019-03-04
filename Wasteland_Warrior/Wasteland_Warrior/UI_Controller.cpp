@@ -83,7 +83,30 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 	if (GameState->UIMode == "Game") 
 	{
 		std::string input = GameState->button;
-		GameState->ui_gameplay = true;
+		//GameState->ui_gameplay = true;
+
+		if (GameState->playerVehicle.speed > 0) {
+			GameState->carRunning_sound = true;
+		}
+		else {
+			GameState->carRunning_sound = false;
+		}
+
+		if (GameState->playerVehicle.speed == 0) {
+			GameState->carIdle_sound = true;
+		}
+		else {
+			GameState->carIdle_sound = false;
+		}
+
+		if (GameState->SPACEKey && GameState->playerVehicle.speed > 0)
+		{
+			GameState->carBrake_sound = true;
+		}
+		else
+		{
+			GameState->carBrake_sound = false;
+		}
 
 		if (input == "M")
 		{
@@ -198,6 +221,7 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 		if (pausePointerState == 0 && input == "ENTER") {
 			GameState->UIMode = "Game";
 			GameState->ui_enter = true;
+			GameState->carStart_sound = true;
 			GameState->ui_pauseMenu = false;
 		}
 		else if (pausePointerState == 1 && input == "ENTER") {
@@ -289,6 +313,7 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 		if (pointerState == 0 && input == "ENTER") {
 			GameState->UIMode = "Game";
 			GameState->ui_enter = true;
+			GameState->carStart_sound = true;
 			GameState->ui_menu = false;
 
 		} else if (input == "ENTER") {

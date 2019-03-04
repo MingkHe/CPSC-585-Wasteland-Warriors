@@ -1,8 +1,10 @@
 #include "Camera.h"
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/rotate_vector.hpp>
 #include "Gamestate.h"
 #include <math.h>
 #include <iostream>
+
 
 using namespace std;
 using namespace glm;
@@ -22,23 +24,40 @@ Camera::Camera(Gamestate* newGamestate) {
 
 glm::mat4 Camera::viewMatrix() const {
 
+	glm::mat4 viewMatrix;
+
 	glm::vec3 car = gameState->playerVehicle.position;
-	glm::vec3 cam = gameState->playerVehicle.position;
+	glm::vec3 cam = gameState->playerVehicle.position; 
+	
 	float distanceBehindCar = 12;
 	float distanceAboveCar = 3;
-	//Position behind car
+
+	//rotation angle based on input
+	float angle;
+	if (gameState->rightStickX == 0) {
+		angle = gameState->cameraAngle;
+	}
+	else {
+		angle = gameState->rightStickX;
+	}
+
+	glm::vec2 direction = gameState->playerVehicle.direction;
+	glm::vec2 newDirection;
+
+	newDirection.x = (direction.x * cos(angle)) - (direction.y * sin(angle));
+	newDirection.y = (direction.y * cos(angle)) + (direction.x * sin(angle));
 
 	float lagSensitivity = 0.0;
 
-	//Rotate camera based on direction
-	float xVal = gameState->playerVehicle.direction.x / gameState->playerVehicle.direction.length();
-	float yVal = gameState->playerVehicle.direction.y / gameState->playerVehicle.direction.length();
+	float xVal = newDirection.x / newDirection.length();
+	float yVal = newDirection.y / newDirection.length();
 
-	cam.x = (-distanceBehindCar + (gameState->playerVehicle.acceleration * lagSensitivity)) *xVal+car.x;
-	cam.z = (-distanceBehindCar + (gameState->playerVehicle.acceleration * lagSensitivity)) *yVal+car.z ;
+	cam.x = (-distanceBehindCar + (gameState->playerVehicle.acceleration * lagSensitivity)) *xVal + car.x;
+	cam.z = (-distanceBehindCar + (gameState->playerVehicle.acceleration * lagSensitivity)) *yVal + car.z;
 	cam.y = cam.y + distanceAboveCar;
 
-	glm::mat4 viewMatrix = glm::lookAt(cam, car, up);
+	viewMatrix = glm::lookAt(cam, car, up);
+
 	return viewMatrix;
 }
 

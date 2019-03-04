@@ -16,6 +16,8 @@ Gamestate::Gamestate()
 	ui_switch = false;
 	ui_menu = false;
 	ui_pauseMenu = false;
+
+	cameraAngle = 0.0;
 }
 
 Gamestate::~Gamestate()

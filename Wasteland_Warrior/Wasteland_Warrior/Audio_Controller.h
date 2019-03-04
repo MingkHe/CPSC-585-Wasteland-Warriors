@@ -13,6 +13,7 @@ private:
 	Mix_Music* bgm_pause;
 	Mix_Music* bgm_win;
 	Mix_Music* bgm_lose;
+	Mix_Music* bgm_gamePlay;
 	Mix_Chunk* ui_click;
 	Mix_Chunk* ui_enter;
 	Mix_Chunk* car_start;

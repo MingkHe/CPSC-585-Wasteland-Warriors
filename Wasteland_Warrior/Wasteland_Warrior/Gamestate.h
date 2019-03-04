@@ -84,6 +84,8 @@ public:
 	bool ui_menu;
 	//pause menu
 	bool ui_pauseMenu;
+	//game play
+	bool ui_gameplay;
 	
 	//win bgm
 	bool ui_win;

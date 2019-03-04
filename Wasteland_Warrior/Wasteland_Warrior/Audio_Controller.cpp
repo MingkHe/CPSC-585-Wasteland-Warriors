@@ -39,6 +39,7 @@ Audio_Controller::Audio_Controller()
 	bgm_pause = Mix_LoadMUS("Music/pause.mp3");
 	bgm_win = Mix_LoadMUS("Music/win.mp3");
 	bgm_lose = Mix_LoadMUS("Music/lose.mp3");
+	bgm_gamePlay = Mix_LoadMUS("Music/gamePlay.mp3");
 }
 
 
@@ -159,6 +160,13 @@ int Audio_Controller::playSound(Gamestate* gameState)
 		Mix_VolumeMusic(MIX_MAX_VOLUME);
 		if (!Mix_PlayingMusic()) {
 			Mix_PlayMusic(bgm_lose,-1);
+		}
+	}
+	else if (gameState->ui_gameplay)
+	{
+		Mix_VolumeMusic(MIX_MAX_VOLUME/3);
+		if (!Mix_PlayingMusic()) {
+			Mix_PlayMusic(bgm_gamePlay, -1);
 		}
 	}
 	else 

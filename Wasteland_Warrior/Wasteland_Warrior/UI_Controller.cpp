@@ -83,20 +83,24 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 	if (GameState->UIMode == "Game") 
 	{
 		std::string input = GameState->button;
+		GameState->ui_gameplay = true;
 
 		if (input == "M")
 		{
 			GameState->UIMode = "Pause";
+			GameState->ui_gameplay = false;
 		}
 
 		if (input == "G")
 		{
 			GameState->UIMode = "Win";
+			GameState->ui_gameplay = false;
 		}
 
 		if (input == "H")
 		{
 			GameState->UIMode = "Lose";
+			GameState->ui_gameplay = false;
 		}
 		//render UI elements over already rendered scene.
 		//Based on info from GameState.

@@ -24,7 +24,10 @@ Gamestate::Gamestate()
 
 	cameraAngle = 0.0;
 
+	//Logic
 	wave = 0;
+	restart = false;
+	enemiesLeft = 0;
 }
 
 Gamestate::~Gamestate()

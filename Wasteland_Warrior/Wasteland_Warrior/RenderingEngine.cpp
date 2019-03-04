@@ -83,7 +83,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 
 	//sets uniforms
 
-	glm::mat4 perspectiveMatrix = glm::perspective(PI_F*.4f, 512.f / 512.f, .1f, 200.f);
+	glm::mat4 perspectiveMatrix = glm::perspective(PI_F*.4f, 512.f / 512.f, .1f, 500.f); // last argument changed from 200 to 500 to increase view range
 	glm::mat4 modelViewProjection = perspectiveMatrix * game_state->camera.viewMatrix();
 
 	glUseProgram(shaderProgram);

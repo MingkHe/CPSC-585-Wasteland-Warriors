@@ -61,6 +61,7 @@ void Gamestate::SpawnEnemy2(float x, float y) {
 
 void Gamestate::DespawnEnemy(EnemyUnit enemy) { // Needs to blow up or something cool
 
+
 	//Add to entity system
 	//Enemies.remove(enemy);
 

@@ -33,7 +33,7 @@ void Logic::Update(Gamestate *gameState)
 			//move up 3 enemy AIs
 			pos = gameState->Enemies[0].position;
 			gameState->physics_Controller->setPosition(gameState->Enemies[0].physicsIndex, glm::vec3{ -15, 5, 35});
-			gameState->physics_Controller->setPosition(gameState->Enemies[1].physicsIndex, glm::vec3{ -15, 5, -25});
+			gameState->physics_Controller->setPosition(gameState->Enemies[1].physicsIndex, glm::vec3{ -15, 5, 25});
 			gameState->physics_Controller->setPosition(gameState->Enemies[2].physicsIndex, glm::vec3{ -35, 5, 35});
 
 			gameState->wave = 1;
@@ -49,6 +49,7 @@ void Logic::Update(Gamestate *gameState)
 					enemiesLeft++;
 				}
 			}
+			gameState->enemiesLeft = enemiesLeft;
 			if (enemiesLeft == 0) {
 				gameState->wave = 6;//wave 2
 				//spawn power ups

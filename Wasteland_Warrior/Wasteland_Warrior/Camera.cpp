@@ -47,7 +47,9 @@ glm::mat4 Camera::viewMatrix() const {
 	newDirection.x = (direction.x * cos(angle)) - (direction.y * sin(angle));
 	newDirection.y = (direction.y * cos(angle)) + (direction.x * sin(angle));
 
-	float lagSensitivity = 0.0;
+	float lagSensitivity = 100.0;
+
+	cout << gameState->playerVehicle.acceleration <<endl;
 
 	float xVal = newDirection.x / newDirection.length();
 	float yVal = newDirection.y / newDirection.length();

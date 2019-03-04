@@ -28,11 +28,13 @@ void Logic::Update(Gamestate *gameState)
 		//Initialize
 		if (gameState->wave == 0) {
 
+			gameState->physics_Controller->setPosition(gameState->playerVehicle.physicsIndex, glm::vec3{ 0, 3, 0 });
+
 			//move up 3 enemy AIs
 			pos = gameState->Enemies[0].position;
-			gameState->physics_Controller->setPosition(gameState->Enemies[0].physicsIndex, glm::vec3{ 15, 5, 35});
+			gameState->physics_Controller->setPosition(gameState->Enemies[0].physicsIndex, glm::vec3{ -15, 5, 35});
 			gameState->physics_Controller->setPosition(gameState->Enemies[1].physicsIndex, glm::vec3{ -15, 5, -25});
-			gameState->physics_Controller->setPosition(gameState->Enemies[2].physicsIndex, glm::vec3{ 35, 5, 35});
+			gameState->physics_Controller->setPosition(gameState->Enemies[2].physicsIndex, glm::vec3{ -35, 5, 35});
 
 			gameState->wave = 1;
 			waveBreak = 1;

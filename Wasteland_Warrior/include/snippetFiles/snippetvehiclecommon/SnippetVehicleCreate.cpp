@@ -99,25 +99,29 @@ static PxConvexMesh* createConvexMesh(const PxVec3* verts, const PxU32 numVerts,
 	return convexMesh;
 }
 
-static PxConvexMesh* createTriangleMesh(const PxVec3* verts, const PxU32 numVerts, PxPhysics& physics, PxCooking& cooking)
+/*static PxTriangleMesh* createTriangleMesh(const PxVec3* verts, const PxU32 numVerts, const PxVec3* indices, const PxU32 triCount, PxPhysics& physics, PxCooking& cooking)
 {
 	// Create descriptor for convex mesh
-	PxConvexMeshDesc convexDesc;
-	convexDesc.points.count = numVerts;
-	convexDesc.points.stride = sizeof(PxVec3);
-	convexDesc.points.data = verts;
-	convexDesc.flags = PxConvexFlag::eCOMPUTE_CONVEX;
+	PxTriangleMeshDesc meshDesc;
+	meshDesc.points.count = numVerts;
+	meshDesc.points.stride = sizeof(PxVec3);
+	meshDesc.points.data = verts;
 
-	PxConvexMesh* triangleMesh = NULL;
-	PxDefaultMemoryOutputStream buf;
-	if (cooking.cookConvexMesh(convexDesc, buf))
-	{
-		PxDefaultMemoryInputData id(buf.getData(), buf.getSize());
-		triangleMesh = physics.createConvexMesh(id);
-	}
+	meshDesc.triangles.count = triCount;
+	meshDesc.triangles.stride = 3 * sizeof(PxU32);
+	meshDesc.triangles.data = indices;
 
+	PxTriangleMesh* triangleMesh = NULL;
+	PxDefaultMemoryOutputStream writeBuffer;
+	PxTriangleMeshCookingResult::Enum result;
+	bool status = cooking.cookTriangleMesh(meshDesc, writeBuffer, &result);
+	if (!status)
+		return NULL;
+
+	PxDefaultMemoryInputData readBuffer(writeBuffer.getData(), writeBuffer.getSize());
+	triangleMesh = physics.createTriangleMesh(readBuffer);
 	return triangleMesh;
-}
+}*/
 
 PxConvexMesh* createChassisMesh(const PxVec3 dims, PxPhysics& physics, PxCooking& cooking)
 {

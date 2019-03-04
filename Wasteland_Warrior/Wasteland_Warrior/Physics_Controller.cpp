@@ -475,11 +475,12 @@ void Physics_Controller::initPhysics(bool interactive)
 	startBrakeMode();
 }
 
-int Physics_Controller::createMap(const PxVec3* verts, const PxU32 numVerts){
+int Physics_Controller::createMap(const PxVec3* verts, const PxU32 numVerts, const PxVec3* indices, const PxU32 triCount){
 	//Create a plane to drive on.
-//gMap1Ground = createTriangleMesh(verts, numVerts, gPhysics, gCooking);
-//gScene->addActor(*gMap1Ground);
-	return 1;
+	//gMap1Ground = createTriangleMesh(verts, numVerts, indices,triCount, gPhysics, gCooking);
+   // gScene->addActor(*gMap1Ground);
+	rigidStaticActorIndex++;
+	return rigidStaticActorIndex;
 
 }
 
@@ -806,8 +807,8 @@ void Physics_Controller::cleanupPhysics(bool interactive)
 	gVehicle4W->getRigidDynamicActor()->release();
 	gVehicle4W->free();
 
-	//enemyVehicle->getRigidDynamicActor()->release();
-	//enemyVehicle->free();
+	enemyVehicle->getRigidDynamicActor()->release();
+	enemyVehicle->free();
 
 	//gMap1Ground->release();
 	gBatchQuery->release();

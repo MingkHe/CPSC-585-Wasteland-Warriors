@@ -35,6 +35,8 @@ Audio_Controller::Audio_Controller()
 	ui_click = Mix_LoadWAV("SoundEffect/click.wav");
 	ui_enter = Mix_LoadWAV("SoundEffect/selected.mp3");
 	bgm = Mix_LoadMUS("Music/bgm2.mp3");
+	//Todo: load a different song for the paused menu
+	//bgm_pause = Mix_LoadMUS("Music/")
 }
 
 

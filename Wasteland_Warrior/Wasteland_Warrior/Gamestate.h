@@ -81,6 +81,8 @@ public:
 	bool ui_switch;
 	//menu bgm
 	bool ui_menu;
+	//pause menu
+	bool ui_pauseMenu;
 
 	//----------------------Sound Buffer End-------------------------------
 

@@ -50,11 +50,14 @@ void Gamestate::SpawnMap() {
 	int physicsIndex = physics_Controller->createMap(vertsPhysArray, vertsSize, faceVertsPhys, faceVertsSize/3);
 }
 
-void Gamestate::SpawnStaticObject(int ObjectType) {
+void Gamestate::SpawnStaticObject(int ObjectType, float x, float y, float z) {
 	bool objectExists = true;
-	int sceneObjectIndex;
+	int sceneObjectIndex=0;
 	if (ObjectType == 1) {
-		sceneObjectIndex = scene->loadOBJObject("Objects\Ruined_Brick_Building\ruined building_brick.obj", "Objects\Ruined_Brick_Building\ruined building_brick.jpg");
+		sceneObjectIndex = scene->loadOBJObject("Objects/Ruined_Brick_Building/ruined building_brick.obj", "Objects/Ruined_Brick_Building/ruined building_brick.jpg");
+	}
+	else if (ObjectType == 2) {
+		sceneObjectIndex = scene->loadOBJObject("Objects/Wooden_train_cars/wagon.obj", "Objects/Wooden_train_cars/wagon_tex3.png");
 	}
 	else {
 		objectExists = false;
@@ -78,7 +81,14 @@ void Gamestate::SpawnStaticObject(int ObjectType) {
 			faceVertsPhys[i] = PxU32(faceVertHolder);
 
 		}
-		int physicsIndex = physics_Controller->createMap(vertsPhysArray, vertsSize, faceVertsPhys, faceVertsSize / 3);
+		int physicsIndex = physics_Controller->createStaticObject(vertsPhysArray, vertsSize, faceVertsPhys, faceVertsSize / 3, x, y, z);
+		glm::mat4 transformMatrix = glm::mat4(
+			1.f, 0.f, 0.f, 0.f,
+			0.f, 1.f, 0.f, 0.f,
+			0.f, 0.f, 1.f, 0.f,
+			x, y, z, 1.f
+		);
+		scene->objects[sceneObjectIndex].geometry[0].transform = transformMatrix;
 	}
 	
 }
@@ -100,14 +110,6 @@ void Gamestate::SpawnEnemy(int type, float x, float y, float z) {
 	pathfindingInputs.push_back(glm::vec2{ 0.0f,0.0f });
 }
 
-void Gamestate::SpawnEnemy2(float x, float y) {
-	int physicsIndex = physics_Controller->createEnemyVehicle();
-	physics_Controller->setPosition(physicsIndex, glm::vec3{ x, 5.0f, y });
-	int sceneObjectIndex = scene->loadOBJObject("Objects/BladedDragster/bourak.obj", "Objects/BladedDragster/bourak.jpg");
-	EnemyUnit enemy = EnemyUnit(physicsIndex, sceneObjectIndex);
-	Enemies.push_back(enemy);
-	pathfindingInputs.push_back(glm::vec2{ 0.0f,0.0f });
-}
 
 void Gamestate::DespawnEnemy(EnemyUnit enemy) { // Needs to blow up or something cool
 

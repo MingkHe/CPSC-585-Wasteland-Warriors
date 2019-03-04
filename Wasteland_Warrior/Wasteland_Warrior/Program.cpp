@@ -87,7 +87,8 @@ void Program::start() {
 
 	
 	gameState->SpawnMap();
-	//gameState->SpawnStaticObject(1);
+	gameState->SpawnStaticObject(2,3,0,5);
+	gameState->SpawnStaticObject(1, -3, 0, -25);
 	//Spawn Player
 	gameState->SpawnPlayer(0, 2, 0);
 

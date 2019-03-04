@@ -194,7 +194,7 @@ VehicleDesc initPlayerVehiclePhysicsDesc()
 	//Moment of inertia is just the moment of inertia of a cylinder.
 	const PxF32 wheelMass = 40.0f;
 	const PxF32 wheelRadius = 0.6f;
-	const PxF32 wheelWidth = 0.01f;
+	const PxF32 wheelWidth = 0.01f;		//This became needed after uneven driving terrain was added. On
 	const PxF32 wheelMOI = 0.5f*wheelMass*wheelRadius*wheelRadius*2;
 	const PxU32 nbWheels = 4;
 

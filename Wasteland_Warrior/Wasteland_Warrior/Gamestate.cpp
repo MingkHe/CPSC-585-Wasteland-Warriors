@@ -1,4 +1,5 @@
 #include "Gamestate.h"
+#include "Scene.h"
 #include <iostream>
 
 Gamestate::Gamestate()
@@ -26,14 +27,71 @@ Gamestate::~Gamestate()
 {
 }
 
+void Gamestate::SpawnMap() {
+	int sceneObjectIndex = scene->loadOBJObject("Objects/testLevelFlat.obj", "Textures/sandTexture.jpg");
+	const int vertsSize = scene->objects[sceneObjectIndex].geometry[0].vertsPhys.size();
+	//const int vertsSize = 3;
+	PxVec3* vertsPhysArray = new PxVec3[vertsSize];
+	//PxVec3 vertsPhysArray[100];
+	glm::vec3 vertHolder = { 0,0,0 };
+	//glm::vec3 vertHolder1 = { 1,1,1 };
+	//glm::vec3 vertHolder2 = { 2,2,2 };
+	//glm::vec3 vertHolder3 = { 3,-3,3 };
+	//for (int i = 0; i < 1; i++) {
+	for (int i = 0; i < vertsSize; i++) {
+		vertHolder = scene->objects[sceneObjectIndex].geometry[0].vertsPhys[i];
+		vertsPhysArray[i] = { vertHolder.x, vertHolder.y, vertHolder.z };
+		//std::cout << vertHolder.x << " " << vertHolder.y << " " << vertHolder.z << " " << std::endl;
+		//vertsPhys[i+1] = { vertHolder2.x, vertHolder2.y, vertHolder2.z };
+		//vertsPhys[i+2] = { vertHolder3.x, vertHolder3.y, vertHolder3.z };
+	}
 
+	const int faceVertsSize = scene->objects[sceneObjectIndex].geometry[0].faceVertexIndices.size();
+	//const int faceVertsSize = 3;
+	PxVec3* faceVertsPhys = new PxVec3[faceVertsSize/3]; 
+	//PxVec3 faceVertsPhys[162];
+	std::cout << sizeof(faceVertsPhys)/ sizeof(*faceVertsPhys) << " " << faceVertsSize << std::endl;
+	PxVec3 faceVertsPhysIndividual = PxVec3(0,0,0);
+	std::cout << faceVertsSize << std::endl;
+	float faceVertHolder1 = 1.0f;
+	float faceVertHolder2 = 2.0f;
+	float faceVertHolder3 = 3.0f;
+	float fMax = 0;
+	int index = 0;
+	//for (int i = 0; i < 3; i = i + 3) {
+	for (int i = 0; i < faceVertsSize; i= i+3) {
+		faceVertHolder1 = scene->objects[sceneObjectIndex].geometry[0].faceVertexIndices[i];
+		faceVertHolder2 = scene->objects[sceneObjectIndex].geometry[0].faceVertexIndices[i+1];
+		faceVertHolder3 = scene->objects[sceneObjectIndex].geometry[0].faceVertexIndices[i+2];
+		faceVertHolder1--;
+		if (faceVertHolder1 > fMax) {
+			fMax = faceVertHolder1;
+		}
+		faceVertHolder2--;
+		if (faceVertHolder2 > fMax) {
+			fMax = faceVertHolder2;
+		}
+		faceVertHolder3--;
+		if (faceVertHolder3 > fMax) {
+			fMax = faceVertHolder3;
+		}
+		std::cout << "4.hi" << std::endl;
+		index = i / 3;
+		//std::cout << faceVertHolder1 << " " << faceVertHolder2 << " " << faceVertHolder3 << " " << std::endl;
+		faceVertsPhys[index] = PxVec3{ faceVertHolder1 , faceVertHolder2 , faceVertHolder3 };
+
+	}
+	std::cout << "4.end" << std::endl;
+	std::cout << sizeof(vertsPhysArray)/ sizeof(*vertsPhysArray) << " " << fMax << " " << sizeof(faceVertsPhys) / sizeof(*faceVertsPhys) << " " << std::endl;
+
+	int physicsIndex = physics_Controller->createMap(vertsPhysArray, vertsSize, faceVertsPhys, faceVertsSize/3);
+	physics_Controller->setPosition(physicsIndex, glm::vec3{ 0, 0, 0});
+
+}
 
 void Gamestate::SpawnPlayer(float x, float y, float z) {
 	int physicsIndex = physics_Controller->createPlayerVehicle();
 	physics_Controller->setPosition(physicsIndex, glm::vec3{x, y, z});
-	//int sceneObjectIndex = scene->generateRectPrism(2.4, 1.6, 1.2);
-	//int sceneObjectIndex = scene->loadOBJObject("Objects/BladedDragster/bourak.obj","Objects/BladedDragster/bourak.jpg" );
-	//int sceneObjectIndex = scene->loadOBJObject("Objects/Wooden_train_cars/wagon.obj", "Objects/Wooden_train_cars/wagon_tex3.png");
 	int sceneObjectIndex = scene->loadOBJObject("Objects/BladedDragster/bourak.obj", "Objects/BladedDragster/bourak.jpg");
 	playerVehicle = PlayerUnit(physicsIndex, sceneObjectIndex);
 }
@@ -43,8 +101,6 @@ void Gamestate::SpawnEnemy(int type, float x, float y, float z) {
 	int physicsIndex = physics_Controller->createEnemyVehicle();
 	physics_Controller->setPosition(physicsIndex, glm::vec3{ x, y, z });
 	int sceneObjectIndex = scene->loadOBJObject("Objects/BladedDragster/bourak.obj", "Objects/BladedDragster/bourak.jpg");
-	//int sceneObjectIndex = scene->loadOBJObject("Objects/Wooden_train_cars/wagon.obj", "Objects/Wooden_train_cars/wagon_tex3.png");
-	//int sceneObjectIndex = scene->generateRectPrism(2.4, 1.6, 1.2);
 	EnemyUnit enemy = EnemyUnit(physicsIndex, sceneObjectIndex);
 	Enemies.push_back(enemy);
 	pathfindingInputs.push_back(glm::vec2{ 0.0f,0.0f });
@@ -52,10 +108,8 @@ void Gamestate::SpawnEnemy(int type, float x, float y, float z) {
 
 void Gamestate::SpawnEnemy2(float x, float y) {
 	int physicsIndex = physics_Controller->createEnemyVehicle();
-	physics_Controller->setPosition(physicsIndex, glm::vec3{ x, 2.0f, y });
+	physics_Controller->setPosition(physicsIndex, glm::vec3{ x, 5.0f, y });
 	int sceneObjectIndex = scene->loadOBJObject("Objects/BladedDragster/bourak.obj", "Objects/BladedDragster/bourak.jpg");
-	//int sceneObjectIndex = scene->loadOBJObject("Objects/Wooden_train_cars/wagon.obj", "Objects/Realistic_Box_Model/box_texture_color.jpg");
-	//int sceneObjectIndex = scene->generateRectPrism(2.4, 1.6, 1.2);
 	EnemyUnit enemy = EnemyUnit(physicsIndex, sceneObjectIndex);
 	Enemies.push_back(enemy);
 	pathfindingInputs.push_back(glm::vec2{ 0.0f,0.0f });

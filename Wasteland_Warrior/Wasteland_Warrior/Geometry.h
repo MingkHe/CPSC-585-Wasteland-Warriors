@@ -28,6 +28,8 @@ public:
 	std::vector<glm::vec3> normals;
 	std::vector<glm::vec3> colors;
 	std::vector<glm::vec2> uvs;
+	std::vector<unsigned int> faceVertexIndices;
+	std::vector<glm::vec3> vertsPhys;
 
 	MyTexture texture;
 	const char* textureFilePath;

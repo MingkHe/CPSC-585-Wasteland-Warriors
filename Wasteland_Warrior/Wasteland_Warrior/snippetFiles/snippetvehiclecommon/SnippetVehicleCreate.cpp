@@ -59,6 +59,49 @@ PxRigidStatic* createDrivablePlane(const PxFilterData& simFilterData, PxMaterial
 	return groundPlane;
 }
 
+static PxRigidStatic* createRigidTriangleMesh(const PxVec3* verts, const PxU32 numVerts, const PxVec3* indices, const PxU32 triCount, PxMaterial* material, PxPhysics& physics, PxCooking& cooking, const PxFilterData& simFilterData)
+{
+	// Create descriptor for convex mesh
+	PxTriangleMeshDesc meshDesc;
+	meshDesc.points.count = numVerts;
+	meshDesc.points.stride = sizeof(PxVec3);
+	meshDesc.points.data = verts;
+
+	meshDesc.triangles.count = triCount;
+	meshDesc.triangles.stride = 3 * sizeof(PxU32);
+	meshDesc.triangles.data = indices;
+
+	PxTriangleMesh* triangleMesh = NULL;
+	PxDefaultMemoryOutputStream writeBuffer;
+	PxTriangleMeshCookingResult::Enum result;
+	bool status = cooking.cookTriangleMesh(meshDesc, writeBuffer, &result);
+	if (!status)
+		return NULL;
+
+	PxDefaultMemoryInputData readBuffer(writeBuffer.getData(), writeBuffer.getSize());
+	triangleMesh = physics.createTriangleMesh(readBuffer);
+
+	//Add a plane to the scene.
+	PxTriangleMeshGeometry triGeom;
+	triGeom.triangleMesh = triangleMesh;
+
+
+	PxRigidStatic* rigidStaticMesh = PxCreateStatic(physics, PxTransform(PxIdentity), triGeom, *material);
+	//Get the plane shape so we can set query and simulation filter data.
+	PxShape* shapes[1];
+	rigidStaticMesh->getShapes(shapes, 1);
+
+	//Set the query filter data of the ground plane so that the vehicle raycasts can hit the ground.
+	PxFilterData qryFilterData;
+	setupDrivableSurface(qryFilterData);
+	shapes[0]->setQueryFilterData(qryFilterData);
+
+	//Set the simulation filter data of the ground plane so that it collides with the chassis of a vehicle but not the wheels.
+	shapes[0]->setSimulationFilterData(simFilterData);
+
+	return rigidStaticMesh;
+}
+
 static PxConvexMesh* createConvexMesh(const PxVec3* verts, const PxU32 numVerts, PxPhysics& physics, PxCooking& cooking)
 {
 	// Create descriptor for convex mesh

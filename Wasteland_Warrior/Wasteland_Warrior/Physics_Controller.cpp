@@ -32,6 +32,7 @@ PxDefaultCpuDispatcher*	gDispatcher = NULL;
 PxScene*				gScene = NULL;
 
 PxCooking*				gCooking = NULL;
+PxCooking*				gCookingNoCleaning = NULL;
 
 PxMaterial*				gMaterial = NULL;
 PxMaterial*				tireMaterial;
@@ -455,8 +456,25 @@ void Physics_Controller::initPhysics(bool interactive)
 
 int Physics_Controller::createMap(const PxVec3* verts, const PxU32 numVerts, const PxVec3* indices, const PxU32 triCount){
 	//Create a plane to drive on.
-	//gMap1Ground = createTriangleMesh(verts, numVerts, indices,triCount, gPhysics, gCooking);
-   // gScene->addActor(*gMap1Ground);
+	std::cout << " Yo3" << std::endl;
+	std::cout << sizeof(verts) << " " << " " << sizeof(indices) << " " << std::endl;
+	PxFilterData groundPlaneSimFilterData(COLLISION_FLAG_GROUND, COLLISION_FLAG_GROUND_AGAINST, 0, 0);
+	gCookingNoCleaning = PxCreateCooking(PX_PHYSICS_VERSION, *gFoundation, PxCookingParams(PxTolerancesScale()));
+
+	PxTolerancesScale scale;
+	PxCookingParams params(scale);
+	// disable mesh cleaning - perform mesh validation on development configurations
+	params.meshPreprocessParams |= PxMeshPreprocessingFlag::eDISABLE_CLEAN_MESH;
+	// disable edge precompute, edges are set for each triangle, slows contact generation
+	params.meshPreprocessParams |= PxMeshPreprocessingFlag::eDISABLE_ACTIVE_EDGES_PRECOMPUTE;
+	// lower hierarchy for internal mesh
+	//params.meshCookingHint = PxMeshCookingHint::eCOOKING_PERFORMANCE;
+
+	gCookingNoCleaning->setParams(params);
+
+	gMap1Ground = createRigidTriangleMesh(verts, numVerts, indices, triCount, gMaterial, *gPhysics, *gCookingNoCleaning, groundPlaneSimFilterData);
+	//PX_FORCE_INLINE PxRigidDynamic* getRigidDynamicActor() { return mActor; }
+	gScene->addActor(*gMap1Ground);
 	rigidStaticActorIndex++;
 	return rigidStaticActorIndex;
 

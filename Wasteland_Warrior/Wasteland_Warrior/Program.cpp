@@ -84,6 +84,9 @@ void Program::start() {
 
 	scene = new Scene(renderingEngine, gameState);
 
+	
+	//gameState->SpawnMap();
+
 	//Spawn Player
 	gameState->SpawnPlayer(0, 2, 0);
 
@@ -93,6 +96,7 @@ void Program::start() {
 	gameState->SpawnEnemy(0, 25, 100, 10000);
 	//gameState->SpawnEnemy(0,-25, 2, -15+10000);
 	//gameState->SpawnEnemy(0, 35, 2, 15+10000);
+
 
 	//Main render loop
 	while (!glfwWindowShouldClose(window)) {

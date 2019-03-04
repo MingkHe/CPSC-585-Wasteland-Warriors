@@ -133,6 +133,8 @@ public:
 	bool restart;
 
 	//Spawning/Despawning Entities
+
+	void SpawnMap();
 	void SpawnPlayer(float x, float y, float z);
 	void SpawnEnemy(int type, float x, float y, float z);
 	void SpawnEnemy2(float x, float y);

@@ -42,7 +42,7 @@ using namespace physx;
 ////////////////////////////////////////////////
 
 PxRigidStatic* createDrivablePlane(const PxFilterData& simFilterData, PxMaterial* material, PxPhysics* physics);
-//PxRigidStatic* createTriangleMesh(const PxVec3* verts, const PxU32 numVerts, const PxVec3* indices, const PxU32 triCount, PxPhysics &physics, PxCooking &cooking);
+PxRigidStatic* createRigidTriangleMesh(const PxVec3* verts, const PxU32 numVerts, const PxVec3* indices, const PxU32 triCount, PxMaterial* material, PxPhysics &physics, PxCooking &cooking, const PxFilterData& simFilterData);
 
 ////////////////////////////////////////////////
 
@@ -117,7 +117,6 @@ PxVehicleDriveTank* createVehicleTank(const VehicleDesc& vehDesc, PxPhysics* phy
 PxVehicleNoDrive* createVehicleNoDrive(const VehicleDesc& vehDesc, PxPhysics* physics, PxCooking* cooking);
 
 ////////////////////////////////////////////////
-PxTriangleMesh* createTriangleMesh(const PxVec3* verts, const PxU32 numVerts, const PxVec3* indices, const PxU32 triCount, PxPhysics& physics, PxCooking& cooking);
 PxConvexMesh* createChassisMesh(const PxVec3 dims, PxPhysics& physics, PxCooking& cooking);
 
 PxConvexMesh* createWheelMesh(const PxF32 width, const PxF32 radius, PxPhysics& physics, PxCooking& cooking);

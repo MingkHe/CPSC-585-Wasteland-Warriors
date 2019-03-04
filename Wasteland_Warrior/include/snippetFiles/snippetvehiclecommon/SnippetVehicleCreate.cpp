@@ -34,6 +34,7 @@
 #include "SnippetVehicleTireFriction.h"
 #include "PxPhysicsAPI.h"
 
+#include <iostream>
 namespace snippetvehicle
 {
 
@@ -99,8 +100,10 @@ static PxConvexMesh* createConvexMesh(const PxVec3* verts, const PxU32 numVerts,
 	return convexMesh;
 }
 
-/*static PxTriangleMesh* createTriangleMesh(const PxVec3* verts, const PxU32 numVerts, const PxVec3* indices, const PxU32 triCount, PxPhysics& physics, PxCooking& cooking)
+PxRigidStatic* createRigidTriangleMesh(const PxVec3* verts, const PxU32 numVerts, const PxVec3* indices, const PxU32 triCount, PxMaterial* material, PxPhysics& physics, PxCooking& cooking, const PxFilterData& simFilterData)
 {
+	std::cout << " Yo2" << std::endl;
+	std::cout << sizeof(PxVec3) << " " << " " << sizeof(PxU32) << " " << std::endl;
 	// Create descriptor for convex mesh
 	PxTriangleMeshDesc meshDesc;
 	meshDesc.points.count = numVerts;
@@ -111,17 +114,46 @@ static PxConvexMesh* createConvexMesh(const PxVec3* verts, const PxU32 numVerts,
 	meshDesc.triangles.stride = 3 * sizeof(PxU32);
 	meshDesc.triangles.data = indices;
 
+
+#ifdef _DEBUG
+	// mesh should be validated before cooked without the mesh cleaning
+	bool res = cooking.validateTriangleMesh(meshDesc);
+	PX_ASSERT(res);
+#endif
+
+	PxTriangleMesh* triangleMesh = cooking.createTriangleMesh(meshDesc, physics.getPhysicsInsertionCallback());
+	/*
 	PxTriangleMesh* triangleMesh = NULL;
 	PxDefaultMemoryOutputStream writeBuffer;
 	PxTriangleMeshCookingResult::Enum result;
-	bool status = cooking.cookTriangleMesh(meshDesc, writeBuffer, &result);
-	if (!status)
-		return NULL;
 
+	bool status = cooking.cookTriangleMesh(meshDesc, writeBuffer, &result);
+	if (!status) {
+		return NULL;
+	}
 	PxDefaultMemoryInputData readBuffer(writeBuffer.getData(), writeBuffer.getSize());
 	triangleMesh = physics.createTriangleMesh(readBuffer);
-	return triangleMesh;
-}*/
+	*/
+	//Add a plane to the scene.
+	PxTriangleMeshGeometry triGeom;
+	triGeom.triangleMesh = triangleMesh;
+
+	PxRigidStatic* rigidStaticMesh = PxCreateStatic(physics, PxTransform(PxIdentity), triGeom, *material);
+
+	//Get the plane shape so we can set query and simulation filter data.
+	PxShape* shapes[1];
+	rigidStaticMesh->getShapes(shapes, 1);
+
+	//Set the query filter data of the ground plane so that the vehicle raycasts can hit the ground.
+	PxFilterData qryFilterData;
+	setupDrivableSurface(qryFilterData);
+	shapes[0]->setQueryFilterData(qryFilterData);
+
+	//Set the simulation filter data of the ground plane so that it collides with the chassis of a vehicle but not the wheels.
+	shapes[0]->setSimulationFilterData(simFilterData);
+	
+	return rigidStaticMesh;
+}
 
 PxConvexMesh* createChassisMesh(const PxVec3 dims, PxPhysics& physics, PxCooking& cooking)
 {

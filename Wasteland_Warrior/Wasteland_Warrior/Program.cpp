@@ -90,12 +90,15 @@ void Program::start() {
 	gameState->SpawnStaticObject(2,3,0,5);
 	gameState->SpawnStaticObject(1, -3, 0, -25);
 	//Spawn Player
-	gameState->SpawnPlayer(0, 2, 0);
+	gameState->SpawnPlayer(0, 3, 0);
 
 	//Spawn Enemies
 	gameState->SpawnEnemy(0, 15, 100, 10000);
 	gameState->SpawnEnemy(0,-15, 100, 10000);
 	gameState->SpawnEnemy(0, 25, 100, 10000);
+
+	gameState->SpawnEnemy(0, 25, 0, 10000);
+
 	//gameState->SpawnEnemy(0,-25, 2, -15+10000);
 	//gameState->SpawnEnemy(0, 35, 2, 15+10000);
 

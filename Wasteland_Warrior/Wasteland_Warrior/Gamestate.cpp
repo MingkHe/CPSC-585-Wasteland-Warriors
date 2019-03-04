@@ -17,6 +17,10 @@ Gamestate::Gamestate()
 	ui_switch = false;
 	ui_menu = false;
 	ui_pauseMenu = false;
+	ui_gameplay = false;
+
+	ui_win = false;
+	ui_lose = false;
 
 	cameraAngle = 0.0;
 
@@ -179,6 +183,10 @@ void Gamestate::DespawnObject(Object object) {
 
 void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse) {
 	//Determin who is the attacker
+
+	// play sound when collision happen
+	this->carCrash_sound = true;
+
 	glm::vec2 normalizedImpulse = glm::normalize(impulse);
 	float attackLevelThreshold = 0.9;
 	float entity1AttackLevel = glm::dot(entity1->direction, normalizedImpulse);

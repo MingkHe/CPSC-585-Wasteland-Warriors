@@ -33,9 +33,6 @@ public:
 	//list of objects in the scene
 	std::vector<Geometry> objects;
 	Geometry rectangle;
-
-private:
-	void generateRectPrism(float length, float width, float height);
 };
 
 

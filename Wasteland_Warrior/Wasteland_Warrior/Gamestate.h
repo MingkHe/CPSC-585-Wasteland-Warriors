@@ -94,6 +94,9 @@ public:
 	float leftTrigger;
 	float rightTrigger;
 
+	//camera rotation
+	float cameraAngle;
+
 	//Time
 	std::chrono::time_point<std::chrono::system_clock> time;
 	double timeStep;

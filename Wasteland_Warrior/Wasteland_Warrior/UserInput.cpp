@@ -86,6 +86,16 @@ void UserInput::Update(Gamestate* gameState)
 		gameState->UIMode = "Start";
 	}
 
+	if (UserInput::MouseXpos != oldMouseXpos) {
+
+		float angle = gameState->cameraAngle + (oldMouseXpos - UserInput::MouseXpos) * 0.01;
+		if (angle < 1.4) {
+			if (angle > -1.4) {
+				gameState->cameraAngle = angle;
+			}
+		}
+		oldMouseXpos = UserInput::MouseXpos;
+	}
 }
 
 // Callback for key presses

@@ -28,65 +28,49 @@ Gamestate::~Gamestate()
 }
 
 void Gamestate::SpawnMap() {
-	int sceneObjectIndex = scene->loadOBJObject("Objects/testLevelFlat.obj", "Textures/sandTexture.jpg");
-	const int vertsSize = scene->objects[sceneObjectIndex].geometry[0].vertsPhys.size();
-	//const int vertsSize = 3;
+	int sceneObjectIndex = scene->loadOBJObject("Objects/testLevel.obj", "Textures/sandTexture.jpg");
+	int vertsSize = scene->objects[sceneObjectIndex].geometry[0].vertsPhys.size();
 	PxVec3* vertsPhysArray = new PxVec3[vertsSize];
-	//PxVec3 vertsPhysArray[100];
-	glm::vec3 vertHolder = { 0,0,0 };
-	//glm::vec3 vertHolder1 = { 1,1,1 };
-	//glm::vec3 vertHolder2 = { 2,2,2 };
-	//glm::vec3 vertHolder3 = { 3,-3,3 };
-	//for (int i = 0; i < 1; i++) {
+	glm::vec3 vertHolder = { -1,1,1 };
 	for (int i = 0; i < vertsSize; i++) {
 		vertHolder = scene->objects[sceneObjectIndex].geometry[0].vertsPhys[i];
-		vertsPhysArray[i] = { vertHolder.x, vertHolder.y, vertHolder.z };
-		//std::cout << vertHolder.x << " " << vertHolder.y << " " << vertHolder.z << " " << std::endl;
-		//vertsPhys[i+1] = { vertHolder2.x, vertHolder2.y, vertHolder2.z };
-		//vertsPhys[i+2] = { vertHolder3.x, vertHolder3.y, vertHolder3.z };
+		vertsPhysArray[i] = PxVec3(vertHolder.x, vertHolder.y, vertHolder.z);
 	}
 
-	const int faceVertsSize = scene->objects[sceneObjectIndex].geometry[0].faceVertexIndices.size();
-	//const int faceVertsSize = 3;
-	PxVec3* faceVertsPhys = new PxVec3[faceVertsSize/3]; 
-	//PxVec3 faceVertsPhys[162];
-	std::cout << sizeof(faceVertsPhys)/ sizeof(*faceVertsPhys) << " " << faceVertsSize << std::endl;
-	PxVec3 faceVertsPhysIndividual = PxVec3(0,0,0);
-	std::cout << faceVertsSize << std::endl;
-	float faceVertHolder1 = 1.0f;
-	float faceVertHolder2 = 2.0f;
-	float faceVertHolder3 = 3.0f;
-	float fMax = 0;
+	int faceVertsSize = scene->objects[sceneObjectIndex].geometry[0].faceVertexIndices.size();
+	PxU32* faceVertsPhys = new PxU32[faceVertsSize]; 
+	PxU32 faceVertHolder = 0;
 	int index = 0;
-	//for (int i = 0; i < 3; i = i + 3) {
-	for (int i = 0; i < faceVertsSize; i= i+3) {
-		faceVertHolder1 = scene->objects[sceneObjectIndex].geometry[0].faceVertexIndices[i];
-		faceVertHolder2 = scene->objects[sceneObjectIndex].geometry[0].faceVertexIndices[i+1];
-		faceVertHolder3 = scene->objects[sceneObjectIndex].geometry[0].faceVertexIndices[i+2];
-		faceVertHolder1--;
-		if (faceVertHolder1 > fMax) {
-			fMax = faceVertHolder1;
-		}
-		faceVertHolder2--;
-		if (faceVertHolder2 > fMax) {
-			fMax = faceVertHolder2;
-		}
-		faceVertHolder3--;
-		if (faceVertHolder3 > fMax) {
-			fMax = faceVertHolder3;
-		}
-		std::cout << "4.hi" << std::endl;
-		index = i / 3;
-		//std::cout << faceVertHolder1 << " " << faceVertHolder2 << " " << faceVertHolder3 << " " << std::endl;
-		faceVertsPhys[index] = PxVec3{ faceVertHolder1 , faceVertHolder2 , faceVertHolder3 };
+	for (int i = 0; i < faceVertsSize; i++) {
+		faceVertHolder = scene->objects[sceneObjectIndex].geometry[0].faceVertexIndices[i];
+		faceVertHolder--;
+		faceVertsPhys[i] = PxU32(faceVertHolder);
 
 	}
-	std::cout << "4.end" << std::endl;
-	std::cout << sizeof(vertsPhysArray)/ sizeof(*vertsPhysArray) << " " << fMax << " " << sizeof(faceVertsPhys) / sizeof(*faceVertsPhys) << " " << std::endl;
-
 	int physicsIndex = physics_Controller->createMap(vertsPhysArray, vertsSize, faceVertsPhys, faceVertsSize/3);
-	physics_Controller->setPosition(physicsIndex, glm::vec3{ 0, 0, 0});
+}
 
+void Gamestate::SpawnStaticObject(int ObjectType) {
+	int sceneObjectIndex = scene->loadOBJObject("Objects/testLevel.obj", "Textures/sandTexture.jpg");
+	int vertsSize = scene->objects[sceneObjectIndex].geometry[0].vertsPhys.size();
+	PxVec3* vertsPhysArray = new PxVec3[vertsSize];
+	glm::vec3 vertHolder = { -1,1,1 };
+	for (int i = 0; i < vertsSize; i++) {
+		vertHolder = scene->objects[sceneObjectIndex].geometry[0].vertsPhys[i];
+		vertsPhysArray[i] = PxVec3(vertHolder.x, vertHolder.y, vertHolder.z);
+	}
+
+	int faceVertsSize = scene->objects[sceneObjectIndex].geometry[0].faceVertexIndices.size();
+	PxU32* faceVertsPhys = new PxU32[faceVertsSize];
+	PxU32 faceVertHolder = 0;
+	int index = 0;
+	for (int i = 0; i < faceVertsSize; i++) {
+		faceVertHolder = scene->objects[sceneObjectIndex].geometry[0].faceVertexIndices[i];
+		faceVertHolder--;
+		faceVertsPhys[i] = PxU32(faceVertHolder);
+
+	}
+	int physicsIndex = physics_Controller->createMap(vertsPhysArray, vertsSize, faceVertsPhys, faceVertsSize / 3);
 }
 
 void Gamestate::SpawnPlayer(float x, float y, float z) {

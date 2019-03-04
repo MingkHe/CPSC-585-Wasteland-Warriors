@@ -100,10 +100,10 @@ static PxConvexMesh* createConvexMesh(const PxVec3* verts, const PxU32 numVerts,
 	return convexMesh;
 }
 
-PxRigidStatic* createRigidTriangleMesh(const PxVec3* verts, const PxU32 numVerts, const PxVec3* indices, const PxU32 triCount, PxMaterial* material, PxPhysics& physics, PxCooking& cooking, const PxFilterData& simFilterData)
+PxRigidStatic* createRigidTriangleMesh(const PxVec3* verts, const PxU32 numVerts, const PxU32* indices, const PxU32 triCount, PxMaterial* material, PxPhysics& physics, PxCooking& cooking, const PxFilterData& simFilterData)
 {
-	std::cout << " Yo2" << std::endl;
-	std::cout << sizeof(PxVec3) << " " << " " << sizeof(PxU32) << " " << std::endl;
+	//std::cout << " Yo2" << std::endl;
+	//std::cout << verts.length << " " << " " << sizeof(PxU32) << " " << std::endl;
 	// Create descriptor for convex mesh
 	PxTriangleMeshDesc meshDesc;
 	meshDesc.points.count = numVerts;
@@ -114,7 +114,7 @@ PxRigidStatic* createRigidTriangleMesh(const PxVec3* verts, const PxU32 numVerts
 	meshDesc.triangles.stride = 3 * sizeof(PxU32);
 	meshDesc.triangles.data = indices;
 
-
+	/*
 #ifdef _DEBUG
 	// mesh should be validated before cooked without the mesh cleaning
 	bool res = cooking.validateTriangleMesh(meshDesc);
@@ -122,7 +122,7 @@ PxRigidStatic* createRigidTriangleMesh(const PxVec3* verts, const PxU32 numVerts
 #endif
 
 	PxTriangleMesh* triangleMesh = cooking.createTriangleMesh(meshDesc, physics.getPhysicsInsertionCallback());
-	/*
+	*/
 	PxTriangleMesh* triangleMesh = NULL;
 	PxDefaultMemoryOutputStream writeBuffer;
 	PxTriangleMeshCookingResult::Enum result;
@@ -133,7 +133,7 @@ PxRigidStatic* createRigidTriangleMesh(const PxVec3* verts, const PxU32 numVerts
 	}
 	PxDefaultMemoryInputData readBuffer(writeBuffer.getData(), writeBuffer.getSize());
 	triangleMesh = physics.createTriangleMesh(readBuffer);
-	*/
+	
 	//Add a plane to the scene.
 	PxTriangleMeshGeometry triGeom;
 	triGeom.triangleMesh = triangleMesh;

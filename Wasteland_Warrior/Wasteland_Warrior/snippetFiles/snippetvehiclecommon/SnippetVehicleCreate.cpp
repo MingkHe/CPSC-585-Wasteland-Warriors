@@ -59,7 +59,7 @@ PxRigidStatic* createDrivablePlane(const PxFilterData& simFilterData, PxMaterial
 	return groundPlane;
 }
 
-static PxRigidStatic* createRigidTriangleMesh(const PxVec3* verts, const PxU32 numVerts, const PxVec3* indices, const PxU32 triCount, PxMaterial* material, PxPhysics& physics, PxCooking& cooking, const PxFilterData& simFilterData)
+PxRigidStatic* createRigidTriangleMesh(const PxVec3* verts, const PxU32 numVerts, const PxU32* indices, const PxU32 triCount, PxMaterial* material, PxPhysics& physics, PxCooking& cooking, const PxFilterData& simFilterData)
 {
 	// Create descriptor for convex mesh
 	PxTriangleMeshDesc meshDesc;

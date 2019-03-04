@@ -85,7 +85,7 @@ void Program::start() {
 	scene = new Scene(renderingEngine, gameState);
 
 	
-	//gameState->SpawnMap();
+	gameState->SpawnMap();
 
 	//Spawn Player
 	gameState->SpawnPlayer(0, 2, 0);

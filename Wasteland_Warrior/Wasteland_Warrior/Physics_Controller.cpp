@@ -454,10 +454,10 @@ void Physics_Controller::initPhysics(bool interactive)
 	startBrakeMode();
 }
 
-int Physics_Controller::createMap(const PxVec3* verts, const PxU32 numVerts, const PxVec3* indices, const PxU32 triCount){
+int Physics_Controller::createMap(const PxVec3* verts, const PxU32 numVerts, const PxU32* indices, const PxU32 triCount){
 	//Create a plane to drive on.
-	std::cout << " Yo3" << std::endl;
-	std::cout << sizeof(verts) << " " << " " << sizeof(indices) << " " << std::endl;
+	//std::cout << " Yo3" << std::endl;
+	//std::cout << sizeof(verts) << " " << " " << sizeof(indices) << " " << std::endl;
 	PxFilterData groundPlaneSimFilterData(COLLISION_FLAG_GROUND, COLLISION_FLAG_GROUND_AGAINST, 0, 0);
 	gCookingNoCleaning = PxCreateCooking(PX_PHYSICS_VERSION, *gFoundation, PxCookingParams(PxTolerancesScale()));
 
@@ -475,6 +475,7 @@ int Physics_Controller::createMap(const PxVec3* verts, const PxU32 numVerts, con
 	gMap1Ground = createRigidTriangleMesh(verts, numVerts, indices, triCount, gMaterial, *gPhysics, *gCookingNoCleaning, groundPlaneSimFilterData);
 	//PX_FORCE_INLINE PxRigidDynamic* getRigidDynamicActor() { return mActor; }
 	gScene->addActor(*gMap1Ground);
+
 	rigidStaticActorIndex++;
 	return rigidStaticActorIndex;
 

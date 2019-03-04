@@ -135,6 +135,7 @@ public:
 	//Spawning/Despawning Entities
 
 	void SpawnMap();
+	void SpawnStaticObject(int ObjectType);
 	void SpawnPlayer(float x, float y, float z);
 	void SpawnEnemy(int type, float x, float y, float z);
 	void SpawnEnemy2(float x, float y);

@@ -34,9 +34,11 @@ Audio_Controller::Audio_Controller()
 
 	ui_click = Mix_LoadWAV("SoundEffect/click.wav");
 	ui_enter = Mix_LoadWAV("SoundEffect/selected.mp3");
+
 	bgm = Mix_LoadMUS("Music/bgm2.mp3");
-	//Todo: load a different song for the paused menu
 	bgm_pause = Mix_LoadMUS("Music/pause.mp3");
+	bgm_win = Mix_LoadMUS("Music/win.mp3");
+	bgm_lose = Mix_LoadMUS("Music/lose.mp3");
 }
 
 
@@ -133,15 +135,30 @@ int Audio_Controller::playSound(Gamestate* gameState)
 
 	if (gameState->ui_menu)
 	{
-		Mix_Volume(0, MIX_MAX_VOLUME / 2);
+		Mix_VolumeMusic(MIX_MAX_VOLUME / 2.5);
 		playMusic();
 	}
 	else if (gameState->ui_pauseMenu)
 	{
+		Mix_VolumeMusic(MIX_MAX_VOLUME);
 		if (!Mix_PlayingMusic()) {
 			Mix_RewindMusic();
 			Mix_SetMusicPosition(12.0);
 			Mix_FadeInMusicPos(bgm_pause, -1, 0, 9.5);
+		}
+	}
+	else if (gameState->ui_win)
+	{
+		Mix_VolumeMusic(MIX_MAX_VOLUME);
+		if (!Mix_PlayingMusic()) {
+			Mix_PlayMusic(bgm_win,-1);
+		}
+	}
+	else if (gameState->ui_lose)
+	{
+		Mix_VolumeMusic(MIX_MAX_VOLUME);
+		if (!Mix_PlayingMusic()) {
+			Mix_PlayMusic(bgm_lose,-1);
 		}
 	}
 	else 

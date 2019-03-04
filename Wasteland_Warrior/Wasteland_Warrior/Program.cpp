@@ -56,7 +56,6 @@ void Program::start() {
 	gameState->timeStep = 1.0 / 60.0; //60 fps
 	gameState->button = "";
 	gameState->UIMode = "Start";
-	//gameState->UIMode = "Game";
 
 	SDL_Init(SDL_INIT_AUDIO);
 	
@@ -83,31 +82,21 @@ void Program::start() {
 
 	UI_Controller UICL = UI_Controller(gameState,renderingEngine);
 
-
-	//Create Entities Example
-
 	scene = new Scene(renderingEngine, gameState);
+
 	
 	//gameState->SpawnMap();
 
-	gameState->SpawnPlayer(0, 0);
+	//Spawn Player
+	gameState->SpawnPlayer(0, 2, 0);
 
-	gameState->SpawnEnemy(15, 0);
+	//Spawn Enemies
+	gameState->SpawnEnemy(0, 15, 100, 10000);
+	gameState->SpawnEnemy(0,-15, 100, 10000);
+	gameState->SpawnEnemy(0, 25, 100, 10000);
+	//gameState->SpawnEnemy(0,-25, 2, -15+10000);
+	//gameState->SpawnEnemy(0, 35, 2, 15+10000);
 
-	gameState->SpawnEnemy2(-15, 0);
-
-	gameState->SpawnEnemy(25, 0);
-
-
-	
-	//gameState->SpawnEnemy(25, 0);
-
-
-
-
-	//Test creation
-	//physicsCL.createVehicle();
-	//physicsCL.setPosition(1, { 0.0f, 4.0f,  5.0f });
 
 	//Main render loop
 	while (!glfwWindowShouldClose(window)) {

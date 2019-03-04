@@ -41,6 +41,22 @@ UI_Controller::UI_Controller(Gamestate* gameState, RenderingEngine* render)
 	InitializeTexture(&texture, "Image/bg_pause.jpg", GL_TEXTURE_RECTANGLE);
 	textureArray.push_back(texture);
 
+	//8
+	InitializeTexture(&texture, "Image/win.jpg", GL_TEXTURE_RECTANGLE);
+	textureArray.push_back(texture);
+
+	//9
+	InitializeTexture(&texture, "Image/lose.jpg", GL_TEXTURE_RECTANGLE);
+	textureArray.push_back(texture);
+
+	//10
+	InitializeTexture(&texture, "Image/win.png", GL_TEXTURE_RECTANGLE);
+	textureArray.push_back(texture);
+
+	//11
+	InitializeTexture(&texture, "Image/lose.png", GL_TEXTURE_RECTANGLE);
+	textureArray.push_back(texture);
+
 	mainScene_bg = new SceneMainMenu(renderingEngine);
 	mainScene_start = new SceneMainMenu(renderingEngine);
 	mainScene_quit = new SceneMainMenu(renderingEngine);
@@ -49,6 +65,12 @@ UI_Controller::UI_Controller(Gamestate* gameState, RenderingEngine* render)
 	pauseScene_restart = new SceneMainMenu(renderingEngine);
 	pauseScene_resume = new SceneMainMenu(renderingEngine);
 	pauseScene_menu = new SceneMainMenu(renderingEngine);
+
+	win_bg = new SceneMainMenu(renderingEngine);
+	lose_bg = new SceneMainMenu(renderingEngine);
+
+	win_text = new SceneMainMenu(renderingEngine);
+	lose_text = lose_bg = new SceneMainMenu(renderingEngine);
 }
 
 UI_Controller::~UI_Controller()
@@ -66,6 +88,16 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 		{
 			GameState->UIMode = "Pause";
 		}
+
+		if (input == "G")
+		{
+			GameState->UIMode = "Win";
+		}
+
+		if (input == "H")
+		{
+			GameState->UIMode = "Lose";
+		}
 		//render UI elements over already rendered scene.
 		//Based on info from GameState.
 
@@ -78,7 +110,7 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 		//Should update based on selected menu item.
 		
 		//todo: pause menu sound effect
-		GameState->ui_menu = true;
+		GameState->ui_pauseMenu = true;
 
 		std::string input = GameState->button;
 
@@ -162,7 +194,7 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 		if (pausePointerState == 0 && input == "ENTER") {
 			GameState->UIMode = "Game";
 			GameState->ui_enter = true;
-			GameState->ui_menu = false;
+			GameState->ui_pauseMenu = false;
 		}
 		else if (pausePointerState == 1 && input == "ENTER") {
 			//GameState->UIMode = "Game";
@@ -175,7 +207,7 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 		else if (pausePointerState == 2 && input == "ENTER"){
 			GameState->UIMode = "Start";
 			GameState->ui_enter = true;
-			//GameState->ui_menu = false;
+			GameState->ui_pauseMenu = false;
 		}
 		//glfwSwapBuffers(window);
 	}
@@ -254,10 +286,10 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 			GameState->UIMode = "Game";
 			GameState->ui_enter = true;
 			GameState->ui_menu = false;
-			printf("switch success!\n");
+
 		} else if (input == "ENTER") {
+			GameState->ui_menu = false;
 			glfwSetWindowShouldClose(window, GL_TRUE);
-			printf("quit\n");
 		}
 
 		//glfwSwapBuffers(window);
@@ -266,15 +298,60 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 	//Win scene
 	else if (GameState->UIMode == "Win")
 	{
+		//Display a win screen
+		GameState->ui_win = true;
 
-	//Display a win screen
+		std::string input = GameState->button;
 
-	if (GameState->button == "ENTER") {
-		GameState->UIMode = "Start";
-	}
+		position.push_back(glm::vec3(-1.0f, -1.0f, 1.0f));
+		position.push_back(glm::vec3(1.0f, -1.0f, 1.0f));
+		position.push_back(glm::vec3(1.0f, 1.0f, 1.0f));
+		position.push_back(glm::vec3(-1.0f, 1.0f, 1.0f));
+
+		win_bg->displayTexture(textureArray[8], position);
+		position.clear();
+
+		position.push_back(glm::vec3(-.4f, .2f, 1.0f));
+		position.push_back(glm::vec3(.4f, .2f, 1.0f));
+		position.push_back(glm::vec3(.4f, .4f, 1.0f));
+		position.push_back(glm::vec3(-.4f, .4f, 1.0f));
+
+		win_text->displayTexture(textureArray[10], position);
+		position.clear();
+
+		if (input == "ENTER") {
+			GameState->UIMode = "Start";
+			GameState->ui_win = false;
+		}
 	}
 
 	//Lose scene
-	else if (GameState->UIMode == "Lose"){
+	else if (GameState->UIMode == "Lose")
+	{
+		//Display a lose screen
+		GameState->ui_lose = true;
+
+		std::string input = GameState->button;
+
+		position.push_back(glm::vec3(-1.0f, -1.0f, 1.0f));
+		position.push_back(glm::vec3(1.0f, -1.0f, 1.0f));
+		position.push_back(glm::vec3(1.0f, 1.0f, 1.0f));
+		position.push_back(glm::vec3(-1.0f, 1.0f, 1.0f));
+
+		lose_bg->displayTexture(textureArray[9], position);
+		position.clear();
+
+		position.push_back(glm::vec3(-.4f, -.0f, 1.0f));
+		position.push_back(glm::vec3(.4f, -.0f, 1.0f));
+		position.push_back(glm::vec3(.4f, .2f, 1.0f));
+		position.push_back(glm::vec3(-.4f, .2f, 1.0f));
+
+		lose_text->displayTexture(textureArray[11], position);
+		position.clear();
+
+		if (input == "ENTER") {
+			GameState->UIMode = "Start";
+			GameState->ui_lose = false;
+		}
 	}
 }

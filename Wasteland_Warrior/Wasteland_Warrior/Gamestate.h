@@ -83,7 +83,11 @@ public:
 	bool ui_menu;
 	//pause menu
 	bool ui_pauseMenu;
-
+	
+	//win bgm
+	bool ui_win;
+	//lose bgm
+	bool ui_lose;
 	//----------------------Sound Buffer End-------------------------------
 
 	//Joysticks
@@ -95,6 +99,9 @@ public:
 	//Triggers
 	float leftTrigger;
 	float rightTrigger;
+
+	//camera rotation
+	float cameraAngle;
 
 	//Time
 	std::chrono::time_point<std::chrono::system_clock> time;
@@ -120,10 +127,14 @@ public:
 
 	std::string UIMode;
 
+	int wave;
+	bool restart;
+
 	//Spawning/Despawning Entities
+
 	void SpawnMap();
-	void SpawnPlayer(float x, float y);
-	void SpawnEnemy(float x, float y);
+	void SpawnPlayer(float x, float y, float z);
+	void SpawnEnemy(int type, float x, float y, float z);
 	void SpawnEnemy2(float x, float y);
 	void DespawnEnemy(EnemyUnit enemy);
 	void SpawnPowerUp(int type, float x, float y);

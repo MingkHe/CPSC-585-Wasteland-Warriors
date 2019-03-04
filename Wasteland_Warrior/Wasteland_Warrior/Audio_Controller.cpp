@@ -66,7 +66,7 @@ int Audio_Controller::playSound(Gamestate* gameState)
 	if (gameState->carIdle_sound)
 	{
 		if (!Mix_Playing(1)) {
-			Mix_Volume(0, MIX_MAX_VOLUME);
+			Mix_Volume(1, MIX_MAX_VOLUME);
 			Mix_PlayChannel(1, car_idle, -1);
 		}	
 	}
@@ -79,7 +79,7 @@ int Audio_Controller::playSound(Gamestate* gameState)
 	if (gameState->carRunning_sound)
 	{
 		if (!Mix_Playing(2)) {
-			Mix_Volume(0, MIX_MAX_VOLUME);
+			Mix_Volume(2, MIX_MAX_VOLUME/5);
 			Mix_PlayChannel(2, car_run, -1);
 		}	
 	}
@@ -92,7 +92,7 @@ int Audio_Controller::playSound(Gamestate* gameState)
 	if (gameState->carBrake_sound)
 	{
 		if (!Mix_Playing(3)) {
-			Mix_Volume(0, MIX_MAX_VOLUME);
+			Mix_Volume(3, MIX_MAX_VOLUME/5);
 			Mix_PlayChannel(3, car_brake, -1);
 		}
 	}
@@ -104,7 +104,7 @@ int Audio_Controller::playSound(Gamestate* gameState)
 
 	if (gameState->carCrash_sound)
 	{
-		Mix_Volume(0, MIX_MAX_VOLUME);
+		Mix_Volume(4, MIX_MAX_VOLUME);
 		if (!Mix_Playing(4)) {
 			Mix_PlayChannel(4, car_crash, 0);
 		}		
@@ -113,7 +113,7 @@ int Audio_Controller::playSound(Gamestate* gameState)
 
 	if (gameState->carExpo_sound)
 	{
-		Mix_Volume(0, MIX_MAX_VOLUME);
+		Mix_Volume(5, MIX_MAX_VOLUME);
 		if (!Mix_Playing(5)) {
 			Mix_PlayChannel(5, car_expo, 0);
 		}
@@ -122,14 +122,14 @@ int Audio_Controller::playSound(Gamestate* gameState)
 
 	if (gameState->ui_enter)
 	{
-		Mix_Volume(0, MIX_MAX_VOLUME);
+		//Mix_Volume(0, MIX_MAX_VOLUME);
 		Mix_PlayChannel(-1, ui_enter, 0);
 		gameState->ui_enter = false;
 	}
 
 	if (gameState->ui_switch)
 	{
-		Mix_Volume(0, MIX_MAX_VOLUME);
+		//Mix_Volume(0, MIX_MAX_VOLUME);
 		Mix_PlayChannel(-1, ui_click, 0);
 		gameState->ui_switch = false;
 	}
@@ -164,7 +164,7 @@ int Audio_Controller::playSound(Gamestate* gameState)
 	}
 	else if (gameState->ui_gameplay)
 	{
-		Mix_VolumeMusic(MIX_MAX_VOLUME/3);
+		Mix_VolumeMusic(MIX_MAX_VOLUME/10);
 		if (!Mix_PlayingMusic()) {
 			Mix_PlayMusic(bgm_gamePlay, -1);
 		}

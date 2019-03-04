@@ -100,7 +100,7 @@ static PxConvexMesh* createConvexMesh(const PxVec3* verts, const PxU32 numVerts,
 	return convexMesh;
 }
 
-PxRigidStatic* createRigidTriangleMesh(const PxVec3* verts, const PxU32 numVerts, const PxU32* indices, const PxU32 triCount, PxMaterial* material, PxPhysics& physics, PxCooking& cooking, const PxFilterData& simFilterData)
+PxRigidStatic* createRigidTriangleMeshDrivable(const PxVec3* verts, const PxU32 numVerts, const PxU32* indices, const PxU32 triCount, PxMaterial* material, PxPhysics& physics, PxCooking& cooking, const PxFilterData& simFilterData)
 {
 	//std::cout << " Yo2" << std::endl;
 	//std::cout << verts.length << " " << " " << sizeof(PxU32) << " " << std::endl;
@@ -146,6 +146,38 @@ PxRigidStatic* createRigidTriangleMesh(const PxVec3* verts, const PxU32 numVerts
 	return rigidStaticMesh;
 }
 
+PxRigidStatic* createRigidTriangleMesh(const PxVec3* verts, const PxU32 numVerts, const PxU32* indices, const PxU32 triCount, PxMaterial* material, PxPhysics& physics, PxCooking& cooking)
+{
+	//std::cout << " Yo2" << std::endl;
+	//std::cout << verts.length << " " << " " << sizeof(PxU32) << " " << std::endl;
+	// Create descriptor for convex mesh
+	PxTriangleMeshDesc meshDesc;
+	meshDesc.points.count = numVerts;
+	meshDesc.points.stride = sizeof(PxVec3);
+	meshDesc.points.data = verts;
+
+	meshDesc.triangles.count = triCount;
+	meshDesc.triangles.stride = 3 * sizeof(PxU32);
+	meshDesc.triangles.data = indices;
+
+	PxTriangleMesh* triangleMesh = NULL;
+	PxDefaultMemoryOutputStream writeBuffer;
+	PxTriangleMeshCookingResult::Enum result;
+
+	bool status = cooking.cookTriangleMesh(meshDesc, writeBuffer, &result);
+	if (!status) {
+		return NULL;
+	}
+	PxDefaultMemoryInputData readBuffer(writeBuffer.getData(), writeBuffer.getSize());
+	triangleMesh = physics.createTriangleMesh(readBuffer);
+
+	//Add a plane to the scene.
+	PxTriangleMeshGeometry triGeom;
+	triGeom.triangleMesh = triangleMesh;
+
+	PxRigidStatic* rigidStaticMesh = PxCreateStatic(physics, PxTransform(PxIdentity), triGeom, *material);
+	return rigidStaticMesh;
+}
 
 
 PxConvexMesh* createChassisMesh(const PxVec3 dims, PxPhysics& physics, PxCooking& cooking)

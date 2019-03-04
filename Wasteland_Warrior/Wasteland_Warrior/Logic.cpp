@@ -1,5 +1,6 @@
 #include "Logic.h"
 #include "EnemyUnit.h"
+#include "Physics_Controller.h"
 #include <iostream>
 
 Logic::Logic()
@@ -10,18 +11,21 @@ Logic::~Logic()
 {
 }
 
-void Logic::Update(Gamestate* gameState)
+void Logic::Update(Gamestate *gameState)
 {
-	std::cout << gameState->wave << std::endl;
 	if (gameState->playerVehicle.health > 0.0) {
+
+		std::cout << gameState->Enemies[0].position.z << std::endl;
+		gameState->Enemies[0].position.z = 0;
 
 		//Initialize
 		if (gameState->wave == 0) {
 
-			//create 3 enemy AIs
-			gameState->SpawnEnemy(0, 15, 0, 2);
-			gameState->SpawnEnemy(1,-15, 0, 2);
-			gameState->SpawnEnemy(0,25, 0, 2);
+			//move up 3 enemy AIs
+			
+			//gameState->Enemies[0].position.z = 2;
+			//gameState->Enemies[1].position.z = 2;
+			//gameState->Enemies[2].position.z = 2;
 
 			gameState->wave = 1;
 			waveBreak = 1;
@@ -31,6 +35,7 @@ void Logic::Update(Gamestate* gameState)
 		//WAVE 1
 		else if (gameState->wave == 1) {
 			//if there are no enemy AIs left
+			gameState->Enemies[0].position.z = gameState->Enemies[0].position.z - 1;
 			if (gameState->Enemies.empty()) {
 				gameState->wave = 2;
 				//spawn power ups
@@ -173,4 +178,5 @@ void Logic::Update(Gamestate* gameState)
 	gameState->wave = 0;
 		gameState->UIMode = "lose";
 	}
+
 }

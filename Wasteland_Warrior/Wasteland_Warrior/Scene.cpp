@@ -288,7 +288,7 @@ void Scene::displayScene() {
 		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glUseProgram(renderer->shaderProgram);
 	for (int i = 0; i <= sceneObjectIndex; i++) {
-		if (i >= 2){
+		if (i >= 1){
 			objects[i].geometry[0].transform = gameState->getEntityTransformation(i);
 		}
 		

@@ -13,19 +13,26 @@ Logic::~Logic()
 
 void Logic::Update(Gamestate *gameState)
 {
+	glm::vec3 pos;
+
+	if (gameState->restart) {
+		gameState->wave = 0;
+		gameState->restart = false;
+	}
+
 	if (gameState->playerVehicle.health > 0.0) {
 
+
 		std::cout << gameState->Enemies[0].position.z << std::endl;
-		gameState->Enemies[0].position.z = 0;
 
 		//Initialize
 		if (gameState->wave == 0) {
 
 			//move up 3 enemy AIs
-			
-			//gameState->Enemies[0].position.z = 2;
-			//gameState->Enemies[1].position.z = 2;
-			//gameState->Enemies[2].position.z = 2;
+			pos = gameState->Enemies[0].position;
+			gameState->physics_Controller->setPosition(gameState->Enemies[0].physicsIndex, glm::vec3{ 15, 2, 35});
+			gameState->physics_Controller->setPosition(gameState->Enemies[1].physicsIndex, glm::vec3{ -15, 2, -25});
+			gameState->physics_Controller->setPosition(gameState->Enemies[2].physicsIndex, glm::vec3{ 35, 2, 35});
 
 			gameState->wave = 1;
 			waveBreak = 1;
@@ -35,16 +42,15 @@ void Logic::Update(Gamestate *gameState)
 		//WAVE 1
 		else if (gameState->wave == 1) {
 			//if there are no enemy AIs left
-			gameState->Enemies[0].position.z = gameState->Enemies[0].position.z - 1;
 			if (gameState->Enemies.empty()) {
-				gameState->wave = 2;
+				gameState->wave = 6;
 				//spawn power ups
 			}
 			else {
 				//Despawn/Explode enemies that are dead 
 				for (EnemyUnit const& enemy : gameState->Enemies) {
 					if (enemy.health <= 0.0) {
-						gameState->DespawnEnemy(enemy);
+						gameState->physics_Controller->setPosition(enemy.physicsIndex, glm::vec3{ 10000, 10000, 10000 });
 					}
 				}
 			}
@@ -168,14 +174,14 @@ void Logic::Update(Gamestate *gameState)
 
 		//Player has beaten all five waves
 		else if (gameState->wave == 6) {
-		gameState->wave = 0;
+		//gameState->wave = 0;
 			gameState->UIMode = "Win";
 		}
 	}
 
 	//Player has lost all health
 	else {
-	gameState->wave = 0;
+	//gameState->wave = 0;
 		gameState->UIMode = "lose";
 	}
 

@@ -88,11 +88,11 @@ void Program::start() {
 	gameState->SpawnPlayer(0, 2, 0);
 
 	//Spawn Enemies
-	gameState->SpawnEnemy(0, 15, 2, 35+10000);
-	gameState->SpawnEnemy(0,-15, 2, -25+10000);
-	gameState->SpawnEnemy(0, 25, 2, 25+10000);
-	gameState->SpawnEnemy(0,-25, 2, -15+10000);
-	gameState->SpawnEnemy(0, 35, 2, 15+10000);
+	gameState->SpawnEnemy(0, 15, 100, 10000);
+	gameState->SpawnEnemy(0,-15, 100, 10000);
+	gameState->SpawnEnemy(0, 25, 100, 10000);
+	//gameState->SpawnEnemy(0,-25, 2, -15+10000);
+	//gameState->SpawnEnemy(0, 35, 2, 15+10000);
 
 	//Main render loop
 	while (!glfwWindowShouldClose(window)) {

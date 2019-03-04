@@ -128,6 +128,7 @@ public:
 	std::string UIMode;
 
 	int wave;
+	bool restart;
 
 	//Spawning/Despawning Entities
 	void SpawnPlayer(float x, float y, float z);

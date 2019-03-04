@@ -20,7 +20,7 @@ public:
 	void userDriveInput(bool WKey, bool AKey, bool SKey, bool DKey, bool SPACEKey, bool hello);
 
 	void setPosition(int actorIndex, glm::vec3 newLocation);
-	int createMap(const PxVec3* verts, const PxU32 numVerts);
+	int createMap(const PxVec3* verts, const PxU32 numVerts, const PxVec3* indices, const PxU32 triCount);
 	int createVehicle();
 	int createEnemyVehicle();
 	int createPlayerVehicle();
@@ -28,6 +28,7 @@ public:
 	ContactReportCallback gContactReportCallback;
 
 	int rigidDynamicActorIndex = -1;
+	int rigidStaticActorIndex = -1;
 	Gamestate* gameState;
 
 

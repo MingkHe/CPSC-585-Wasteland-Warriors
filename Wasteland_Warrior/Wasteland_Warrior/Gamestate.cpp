@@ -18,6 +18,8 @@ Gamestate::Gamestate()
 	ui_pauseMenu = false;
 
 	cameraAngle = 0.0;
+
+	wave = 0;
 }
 
 Gamestate::~Gamestate()

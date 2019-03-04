@@ -127,6 +127,8 @@ public:
 
 	std::string UIMode;
 
+	int wave;
+
 	//Spawning/Despawning Entities
 	void SpawnPlayer(float x, float y);
 	void SpawnEnemy(float x, float y);

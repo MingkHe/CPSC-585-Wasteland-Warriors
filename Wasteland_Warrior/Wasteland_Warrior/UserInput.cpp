@@ -85,9 +85,11 @@ void UserInput::Update(Gamestate* gameState)
 		UserInput::restart = false;
 		if (gameState->UIMode == "Game") {
 			gameState->UIMode = "Pause";
+			gameState->ui_gameplay = false;
 		}
 		else {
 			gameState->UIMode = "Start";
+			gameState->ui_menu = true;
 		}
 	}
 
@@ -101,6 +103,16 @@ void UserInput::Update(Gamestate* gameState)
 		}
 		oldMouseXpos = UserInput::MouseXpos;
 	}
+
+	//cout <<
+
+	if (gameState->leftStickY == 1) {
+			UserInput::inputBuffer.push("UP");
+	}
+	if (gameState->leftStickY == -1) {
+		UserInput::inputBuffer.push("DOWN");
+	}
+
 }
 
 // Callback for key presses
@@ -242,7 +254,8 @@ void UserInput::gamepad(int controller, Gamestate* gameState) {
 			UserInput::inputBuffer.push("B"); 
 		};
 		if (GLFW_PRESS == buttons[2]) {
-			UserInput::inputBuffer.push("X"); 
+			UserInput::inputBuffer.push("X");
+			UserInput::inputBuffer.push("ENTER");
 		};
 		if (GLFW_PRESS == buttons[3]) { 
 			UserInput::inputBuffer.push("Y"); 

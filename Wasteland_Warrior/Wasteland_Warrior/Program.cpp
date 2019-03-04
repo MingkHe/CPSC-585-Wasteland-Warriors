@@ -83,6 +83,7 @@ void Program::start() {
 	UI_Controller UICL = UI_Controller(gameState,renderingEngine);
 
 	scene = new Scene(renderingEngine, gameState);
+	gameState->playSound();
 
 	
 	//gameState->SpawnMap();
@@ -100,7 +101,6 @@ void Program::start() {
 
 	//Main render loop
 	while (!glfwWindowShouldClose(window)) {
-
 		//User Input
 		usrInput.Update(gameState);
 

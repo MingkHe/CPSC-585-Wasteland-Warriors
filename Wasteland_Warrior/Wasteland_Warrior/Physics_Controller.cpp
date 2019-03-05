@@ -805,7 +805,7 @@ void Physics_Controller::stepPhysics(bool interactive)
 	}
 	
 	if (powerupGrabbed == false) {
-		std::cout << "Starting Powerup check" << std::endl;
+		//std::cout << "Starting Powerup check" << std::endl;
 		//Check collisions for Player/PowerUp collisions
 		for (int i = 0; i < gContactReportCallback.gContactActor1s.size(); i++) {
 			//std::cout << "..." << std::endl;

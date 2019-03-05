@@ -50,7 +50,6 @@ be compiled using only the x86 Debug mode.
         - restart: restart the game
         - menu: go to start menu
 
-    ESCAPE to quit game
 ## Milestone #2
 
 For this milestone, we have implemented each of the basic subsystems in our game. Our goal was to get each basic system to

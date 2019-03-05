@@ -121,13 +121,13 @@ public:
 
 	//Graphics
 	Camera camera = Camera(this);
-	glm::vec3 light = glm::vec3(0.0f, 1.0f, 0.0f);
+	glm::vec3 light = glm::vec3(0.0f, 150.0f, 0.0f);
 	glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
-	double lightAttenuation = 0.000002f;
+	double lightAttenuation = 0.0000002f;
 	float lightAmbientCoefficient = 0.00f;
 
 	glm::vec3 materialSpecularColor = glm::vec3(1.0f, 1.0f, 1.0f);
-	float materialShininess = 0.2;
+	float materialShininess = 90000;
 
 	unsigned char shading_model = 0;
 	float radar_view = 1.f / 40.f;//this needs to be the inverse of the view distance

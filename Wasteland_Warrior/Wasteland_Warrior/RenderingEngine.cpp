@@ -385,13 +385,13 @@ void RenderingEngine::pushTextObj(std::vector<Geometry>& objects, std::string te
 
 void RenderingEngine::updateText() {
 
-	pushTextObj(texObjects, "wave # " + std::to_string(game_state->wave), 0.01f*game_state->window_width, 0.95*game_state->window_height, 1.0f);
+	pushTextObj(texObjects, "Wave # " + std::to_string(game_state->wave), 0.01f*game_state->window_width, 0.95*game_state->window_height, 1.0f);
 
 	if (game_state->breakSeconds == 0) {
-		pushTextObj(texObjects, "enemies left: " + std::to_string(game_state->enemiesLeft), 0.01f*game_state->window_width, 0.9*game_state->window_height, 1.0f);
+		pushTextObj(texObjects, "Enemies Left: " + std::to_string(game_state->enemiesLeft), 0.01f*game_state->window_width, 0.9*game_state->window_height, 1.0f);
 	}
 	else {
-		pushTextObj(texObjects, "break seconds: " + std::to_string(game_state->breakSeconds), 0.01f*game_state->window_width, 0.85*game_state->window_height, 1.0f);
+		pushTextObj(texObjects, "Break Seconds: " + std::to_string(game_state->breakSeconds), 0.01f*game_state->window_width, 0.85*game_state->window_height, 1.0f);
 	}
 
 	if (game_state->powerText) {

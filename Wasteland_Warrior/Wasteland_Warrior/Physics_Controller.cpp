@@ -677,6 +677,10 @@ void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DK
 		}
 
 		gVehicleInputData.setAnalogSteer(-leftStickX);
+
+		if (gameState->button == "B") {
+			gVehicleInputData.setAnalogHandbrake(1.0f);
+		}
 	}
 
 	//If the mode about to start is eDRIVE_MODE_ACCEL_REVERSE then switch to reverse gears.

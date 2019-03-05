@@ -15,6 +15,10 @@ void Logic::Update(Gamestate *gameState)
 {
 	int enemiesLeft;
 
+	for (int i = 0; i < gameState->Enemies.size(); i++) {
+		std::cout << "enemy at:" << i << " health:" << gameState->Enemies[i].health << std::endl;
+	}
+
 	//Restart
 	if (gameState->restart) {
 		gameState->wave = 0;
@@ -55,7 +59,7 @@ void Logic::Update(Gamestate *gameState)
 		//WAVE 1
 		else if (gameState->wave == 1) {
 			enemiesLeft = 0;
-			for (int i = 1; i < gameState->Enemies.size(); i++) {
+			for (int i = 1; i < 2; i++) {
 				if (gameState->Enemies[i].health >= 0) {
 					enemiesLeft++;
 				}
@@ -97,7 +101,7 @@ void Logic::Update(Gamestate *gameState)
 		//WAVE 2
 		else if (gameState->wave == 2) {
 			enemiesLeft = 0;
-			for (int i = 1; i < gameState->Enemies.size(); i++) {
+			for (int i = 1; i < 4; i++) {
 				if (gameState->Enemies[i].health >= 0) {
 					enemiesLeft++;
 				}

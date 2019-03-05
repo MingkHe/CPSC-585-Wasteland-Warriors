@@ -729,10 +729,7 @@ void Physics_Controller::stepPhysics(bool interactive)
 		//	enemyVehicle->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
 		//enemyVehicle->mDriveDynData.setUseAutoGears(true);
 		if (gameStateIndex != -1) {		//If this is an AI, get its pathfinding computed input
-			
-
-
-
+	
 			glm::vec2 pathfindingInput = gameState->pathfindingInputs[gameStateIndex];
 			enemyInputData.setAnalogAccel(pathfindingInput[0]);
 			enemyInputData.setAnalogSteer(pathfindingInput[1]);

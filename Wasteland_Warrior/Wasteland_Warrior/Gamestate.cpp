@@ -260,14 +260,14 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse)
 }
 
 void Gamestate::Collision(Vehicle* vehicle, PowerUp* powerUp) {
-	std::cout << "You feel more powerfull!" << std::endl;
+	std::cout << "You feel more powerfull!" << std::endl;		//Placeholder
 }
 
 
 
 
 void Gamestate::Collision(Vehicle* vehicle, Object* staticObject) {
-	std::cout << "You ran into a wall, nice driving :P" << std::endl;
+	std::cout << "You ran into a wall, nice driving :P" << std::endl;	//Placeholder
 }
 
 

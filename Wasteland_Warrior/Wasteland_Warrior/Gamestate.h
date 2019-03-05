@@ -98,7 +98,12 @@ public:
 
 	//variable to indicate the engine volumn
 	float engineAccel = 0.0f;
-	//----------------------Sound Buffer End-------------------------------
+	//----------------------Sound Buffer End--------------------------------
+
+	//----------------------UI Buffer Start---------------------------------
+	bool powerText;
+	int textTime;
+	//----------------------UI Buffer End-----------------------------------
 
 	//Joysticks
 	float leftStickX;

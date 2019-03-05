@@ -105,6 +105,7 @@ void Gamestate::SpawnPlayer(float x, float y, float z) {
 	physics_Controller->setPosition(physicsIndex, glm::vec3{x, y, z});
 	int sceneObjectIndex = scene->loadOBJObject("Objects/BladedDragster/bourak.obj", "Objects/BladedDragster/bourak.jpg");
 	playerVehicle = PlayerUnit(physicsIndex, sceneObjectIndex);
+	resetOrientation(physicsIndex);
 }
 
 
@@ -115,6 +116,14 @@ void Gamestate::SpawnEnemy(int type, float x, float y, float z) {
 	EnemyUnit enemy = EnemyUnit(physicsIndex, sceneObjectIndex);
 	Enemies.push_back(enemy);
 	pathfindingInputs.push_back(glm::vec2{ 0.0f,0.0f });
+}
+
+void Gamestate::resetOrientation() {
+	physics_Controller->resetOrientation(playerVehicle.physicsIndex);
+}
+
+void Gamestate::resetOrientation(int physicsIndex) {
+	physics_Controller->resetOrientation(physicsIndex);
 }
 
 
@@ -251,14 +260,14 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse)
 }
 
 void Gamestate::Collision(Vehicle* vehicle, PowerUp* powerUp) {
-	std::cout << "You feel more powerfull!" << std::endl;
+	std::cout << "You feel more powerfull!" << std::endl;		//Placeholder
 }
 
 
 
 
 void Gamestate::Collision(Vehicle* vehicle, Object* staticObject) {
-	std::cout << "You ran into a wall, nice driving :P" << std::endl;
+	std::cout << "You ran into a wall, nice driving :P" << std::endl;	//Placeholder
 }
 
 

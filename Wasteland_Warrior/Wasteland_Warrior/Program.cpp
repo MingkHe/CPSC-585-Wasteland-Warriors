@@ -53,10 +53,6 @@ void Program::start() {
 	gameState->time = currentTime;
 	std::chrono::duration<double> elapsed_seconds = currentTime - currentTime;
 
-	gameState->timeStep = 1.0 / 60.0; //60 fps
-	gameState->button = "";
-	gameState->UIMode = "Start";
-
 	SDL_Init(SDL_INIT_AUDIO);
 
 	UserInput usrInput = UserInput();
@@ -77,18 +73,15 @@ void Program::start() {
 
 	renderingEngine->LoadShaderProgram("menuShader", vertexMenuFile, fragmentMenuFile);
 
-	//scene = new Scene(renderingEngine);
-	gameState->scene = scene; // what is the scene meaning here in the gamestate?
-
 	UI_Controller UICL = UI_Controller(gameState,renderingEngine);
 
 	scene = new Scene(renderingEngine, gameState);
-	//gameState->playSound();
 
-
+	//Spawn Static Entities
 	gameState->SpawnMap();
 	gameState->SpawnStaticObject(2, -35, 0, 45);
 	gameState->SpawnStaticObject(1, -3, 0, -25);
+
 	//Spawn Player
 	gameState->SpawnPlayer(0, 3, 0);
 
@@ -99,6 +92,7 @@ void Program::start() {
 
 	//Main render loop
 	while (!glfwWindowShouldClose(window)) {
+
 		//User Input
 		usrInput.Update(gameState);
 
@@ -141,11 +135,6 @@ void Program::start() {
 		while (elapsed_seconds.count() < gameState->timeStep){
 			currentTime = std::chrono::system_clock::now();
 			elapsed_seconds = currentTime - gameState->time;
-
-			//std::cout << "Time elapsed: " << elapsed_seconds.count() << std::endl; //Test statement, delete it if you want
-			if (elapsed_seconds.count() >= (gameState->timeStep * 2)) {
-				std::cout << "Frame lost" << std::endl; //Test statement, delete it if you want
-			}
 		}
 		elapsed_seconds = currentTime-currentTime;
 		gameState->time = currentTime;
@@ -183,6 +172,7 @@ void Program::setupWindow() {
 	//Input Callbacks
 	glfwSetKeyCallback(window, UserInput::key);
 	glfwSetCursorPosCallback(window, UserInput::cursor);
+	glfwSetMouseButtonCallback(window, UserInput::mouseButton);
 
 	//Bring the new window to the foreground (not strictly necessary but convenient)
 	glfwMakeContextCurrent(window);

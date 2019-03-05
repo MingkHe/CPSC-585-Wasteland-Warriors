@@ -4,6 +4,10 @@
 
 Gamestate::Gamestate()
 {
+	timeStep = 1.0 / 60.0; //60 fps
+	button = "";
+	UIMode = "Start";
+
 	camera.pos = glm::vec3(0.f, 15.f, 0.f);
 
 	carStart_sound = false;

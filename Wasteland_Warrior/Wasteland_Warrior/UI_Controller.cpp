@@ -124,7 +124,6 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 		if (input == "M")
 		{
 			GameState->UIMode = "Pause";
-			GameState->ui_gameplay = false;
 		}
 
 		if (input == "G")
@@ -149,6 +148,8 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 		//Should update based on selected menu item.
 		
 		//todo: pause menu sound effect
+
+		GameState->ui_gameplay = false;
 		GameState->ui_pauseMenu = true;
 
 		std::string input = GameState->button;
@@ -255,6 +256,7 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 
 	//Start Menu
 	else if (GameState->UIMode == "Start") {
+
 		GameState->ui_menu = true;
 		GameState->restart = true;
 		//render start screen image

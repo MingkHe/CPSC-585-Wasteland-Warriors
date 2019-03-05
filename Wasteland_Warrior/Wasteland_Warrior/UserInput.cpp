@@ -99,6 +99,17 @@ void UserInput::Update(Gamestate* gameState)
 			}
 			oldMouseXpos = UserInput::MouseXpos;
 		}
+		else {
+			if (gameState->cameraAngle > 0.05){
+				gameState->cameraAngle = gameState->cameraAngle - 0.02;
+		}
+		else if (gameState->cameraAngle < -0.05) {
+				gameState->cameraAngle = gameState->cameraAngle + 0.02;
+			}
+		else {
+				gameState->cameraAngle = 0;
+			}
+		}
 	}
 }
 

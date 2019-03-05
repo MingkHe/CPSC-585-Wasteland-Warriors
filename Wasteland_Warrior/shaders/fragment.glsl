@@ -27,12 +27,19 @@ in vec3 fragVert;
 out vec4 finalColor;
 
 void main() {
+	//vec3 normal = normalize(transform*vec4(VertexNormal, 0)).xyz;
+	//vec3 surfacePos = (transform*vec4(VertexPosition, 1)).xyz;
+    //fragVert = (transform*vec4(VertexPosition, 1)).xyz;
     vec3 normal = normalize(transpose(inverse(mat3(transform))) *fragNormal);
+	//vec3 normal = normalize(mat3(transform) *fragNormal);
+	//vec3 normal = fragNormal;
     vec3 surfacePos = vec3(transform * vec4(fragVert, 1));
+	//vec3 surfacePos = fragVert;
     vec4 surfaceColor = texture(materialTex, fragTexCoord);
     vec3 surfaceToLight = normalize(lightPosition - surfacePos);
     vec3 surfaceToCamera = normalize(cameraPosition - surfacePos);
-    
+    //vec3 finalColorRGB = (surfaceColor.rgb*(dot(normal,-fragVert)))*0.75*(surfaceToLight);
+	//finalColor = vec4(finalColorXYZ, surfaceColor.a);
     //ambient
     vec3 ambient = lightAmbientCoeff * surfaceColor.rgb * lightColour;
 	//vec3 ambient = 0.002;
@@ -52,8 +59,10 @@ void main() {
 
     //linear color (color before gamma correction)
     vec3 linearColor = ambient + attenuation*(diffuse + specular);
-    
+	
+	//finalColor = vec4(finalColorRGB, surfaceColor.a);
+    finalColor = vec4(linearColor, surfaceColor.a);
     //final color (after gamma correction)
-    vec3 gamma = vec3(1.0/2.2);
-    finalColor = vec4(pow(linearColor, gamma), surfaceColor.a);
+    //vec3 gamma = vec3(1.0/2.2);
+    //finalColor = vec4(pow(linearColor, gamma), surfaceColor.a);
 }

@@ -15,6 +15,7 @@ bool UserInput::WKey;
 bool UserInput::AKey;
 bool UserInput::SKey;
 bool UserInput::DKey;
+bool UserInput::RKey;
 bool UserInput::SPACEKey;
 
 bool UserInput::restart;
@@ -72,6 +73,11 @@ void UserInput::Update(Gamestate* gameState)
 	}
 	else {
 		gameState->DKey = false;
+	}
+	if (UserInput::RKey == true) {
+		std::cout << "R Pressed" << std::endl;
+		gameState->resetOrientation();
+		RKey = false;
 	}
 	if (UserInput::SPACEKey == true) {
 		gameState->SPACEKey = true;
@@ -136,6 +142,9 @@ void UserInput::key(GLFWwindow* window, int key, int scancode, int action, int m
 			break;
 		case GLFW_KEY_D:
 			UserInput::DKey = true;
+			break;
+		case GLFW_KEY_R:
+			UserInput::RKey = true;
 			break;
 		case GLFW_KEY_SPACE:
 			UserInput::SPACEKey = true;

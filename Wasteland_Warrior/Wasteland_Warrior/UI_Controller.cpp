@@ -138,6 +138,7 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 			GameState->UIMode = "Lose";
 			GameState->ui_gameplay = false;
 		}
+
 		//render UI elements over already rendered scene.
 		//Based on info from GameState.
 

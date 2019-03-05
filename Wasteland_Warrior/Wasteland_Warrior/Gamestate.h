@@ -154,6 +154,8 @@ public:
 	void Collision(Vehicle* vehicle, PowerUp* powerUp);
 	void Collision(Vehicle* vehicle, Object* staticObject);
 
+	void resetOrientation();
+	void resetOrientation(int physicsIndex);
 
 	void updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 newTransformationMatrix, float newSpeed);
 	Object* lookupSOUsingPI(int physicsIndex);

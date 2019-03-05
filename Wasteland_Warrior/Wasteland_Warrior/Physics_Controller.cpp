@@ -533,12 +533,22 @@ void Physics_Controller::setPosition(int actorIndex, glm::vec3 newLocation){
 	PxU32 numOfRidgActors = gScene->getActors(PxActorTypeFlag::eRIGID_DYNAMIC, userBuffer, numOfRidg, 0);
 	PxActor *actor = userBuffer[actorIndex];
 	PxRigidActor *rigidActor = actor->is<PxRigidActor>();
-	//PxTransform
 	rigidActor->setGlobalPose({ newLocation.x, newLocation.y, newLocation.z });
 }
 
 void Physics_Controller::resetOrientation(int actorIndex) {
+	PxU32 numOfRidg = gScene->getNbActors(PxActorTypeFlag::eRIGID_DYNAMIC);
+	PxActor *userBuffer[50];
 
+	PxU32 numOfRidgActors = gScene->getActors(PxActorTypeFlag::eRIGID_DYNAMIC, userBuffer, numOfRidg, 0);
+	PxActor *actor = userBuffer[actorIndex];
+	PxRigidActor *rigidActor = actor->is<PxRigidActor>();
+	PxTransform orientation = rigidActor->getGlobalPose();		
+	PxVec3 location = orientation.p;
+
+	PxTransform resetTransform = PxTransform(location, PxIdentity);
+	rigidActor->setGlobalPose(resetTransform);
+	std::cout << "orientation reset" << std::endl;
 }
 
 void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DKey, bool SPACEKey, bool hello, float leftStickX, float leftTrigger, float rightTrigger) {
@@ -715,7 +725,14 @@ void Physics_Controller::stepPhysics(bool interactive)
 			}
 		}
 		
+		//enemyInputData->mDriveDynData.forceGearChange(PxVehicleGearsData::eREVERSE);
+		//	enemyVehicle->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
+		//enemyVehicle->mDriveDynData.setUseAutoGears(true);
 		if (gameStateIndex != -1) {		//If this is an AI, get its pathfinding computed input
+			
+
+
+
 			glm::vec2 pathfindingInput = gameState->pathfindingInputs[gameStateIndex];
 			enemyInputData.setAnalogAccel(pathfindingInput[0]);
 			enemyInputData.setAnalogSteer(pathfindingInput[1]);

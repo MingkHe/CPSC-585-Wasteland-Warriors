@@ -1,6 +1,10 @@
 #pragma once
 #include "Vehicle.h"
-#include <chrono>
+
+//Time stuff
+#include <sys/timeb.h>
+#include <stdio.h>
+#include <errno.h>
 
 class EnemyUnit :
 	public Vehicle
@@ -13,7 +17,7 @@ public:
 	bool CheckForStuck();
 
 	int type;
-	std::chrono::time_point<std::chrono::system_clock> lastMotionTime;
+	int lastMotionTime;
 
 	bool recoveryMode = false;
 };

@@ -108,7 +108,7 @@ void Program::start() {
 
 	//Main render loop
 	while (!glfwWindowShouldClose(window)) {
-
+		//std::cout << "New execution loop started on: " << currentTime.time << "." << currentTime.millitm << std::endl;
 		//User Input
 		usrInput.Update(gameState);
 

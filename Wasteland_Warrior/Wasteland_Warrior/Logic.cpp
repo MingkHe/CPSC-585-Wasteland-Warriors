@@ -33,7 +33,7 @@ void Logic::Update(Gamestate *gameState)
 
 			//reset AI
 			for (int i = 0; i < 5; i++) {
-				gameState->physics_Controller->setPosition(gameState->Enemies[i].physicsIndex, glm::vec3{ 10000, 10000, 10000 });
+				gameState->physics_Controller->setPosition(gameState->Enemies[i].physicsIndex, glm::vec3{ 10000 * i, 10000 * i, 10000 * i });
 			}
 
 			//move up an enemy AI
@@ -53,6 +53,9 @@ void Logic::Update(Gamestate *gameState)
 					enemiesLeft++;
 				}
 			}
+			for (int i = 1; i < 5; i++) {
+				gameState->physics_Controller->setPosition(gameState->Enemies[i].physicsIndex, glm::vec3{ 10000 * i, 10000 * i, 10000 * i });
+			}
 			gameState->enemiesLeft = enemiesLeft;
 			if (enemiesLeft == 0) {
 				gameState->wave = 6;
@@ -66,12 +69,9 @@ void Logic::Update(Gamestate *gameState)
 				//remove powerups
 
 				//move up 3 enemy AIs
-				gameState->physics_Controller->setPosition(gameState->Enemies[0].physicsIndex, glm::vec3{ 10000, 10000, 10000 });
-				gameState->physics_Controller->setPosition(gameState->Enemies[0].physicsIndex, glm::vec3{ -15, 50, 35 });
-				gameState->physics_Controller->setPosition(gameState->Enemies[1].physicsIndex, glm::vec3{ 10000, 10000, 10000 });
-				gameState->physics_Controller->setPosition(gameState->Enemies[1].physicsIndex, glm::vec3{ -15, 50, 25 });
-				gameState->physics_Controller->setPosition(gameState->Enemies[2].physicsIndex, glm::vec3{ 10000, 10000, 10000 });
-				gameState->physics_Controller->setPosition(gameState->Enemies[2].physicsIndex, glm::vec3{ -35, 50, 35 });
+				gameState->physics_Controller->setPosition(gameState->Enemies[0].physicsIndex, glm::vec3{ -15, 5, 35 });
+				gameState->physics_Controller->setPosition(gameState->Enemies[1].physicsIndex, glm::vec3{ -15, 5, 25 });
+				gameState->physics_Controller->setPosition(gameState->Enemies[2].physicsIndex, glm::vec3{ -35, 5, 35 });
 			}
 			breakTime--;
 		}
@@ -84,6 +84,9 @@ void Logic::Update(Gamestate *gameState)
 				if (gameState->Enemies[i].health >= 0) {
 					enemiesLeft++;
 				}
+			}
+			for (int i = 3; i < 5; i++) {
+				gameState->physics_Controller->setPosition(gameState->Enemies[i].physicsIndex, glm::vec3{ 10000 * i, 10000 * i, 10000 * i });
 			}
 			gameState->enemiesLeft = enemiesLeft;
 			if (enemiesLeft == 0) {

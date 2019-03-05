@@ -58,7 +58,7 @@ void Gamestate::SpawnStaticObject(int ObjectType, float x, float y, float z) {
 	bool objectExists = true;
 	int sceneObjectIndex=0;
 	if (ObjectType == 1) {
-		sceneObjectIndex = scene->loadOBJObject("Objects/Ruined_Brick_Building/ruined building_brick.obj", "Objects/Ruined_Brick_Building/ruined building_brick.jpg");
+		sceneObjectIndex = scene->loadOBJObject("Objects/Ruined_Brick_Building/ruined building_brick.obj", "Objects/Ruined_Brick_Building/ruined_building_brick.jpg");
 	}
 	else if (ObjectType == 2) {
 		sceneObjectIndex = scene->loadOBJObject("Objects/Wooden_train_cars/wagon.obj", "Objects/Wooden_train_cars/wagon_tex3.png");

@@ -29,6 +29,7 @@ public:
 
 	ContactReportCallback gContactReportCallback;
 
+
 	int rigidDynamicActorIndex = -1;
 	int rigidStaticActorIndex = -1;
 	Gamestate* gameState;

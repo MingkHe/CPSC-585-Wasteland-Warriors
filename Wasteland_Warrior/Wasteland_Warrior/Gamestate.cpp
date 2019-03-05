@@ -272,7 +272,7 @@ void Gamestate::Collision(Vehicle* vehicle, PowerUp* powerUp) {
 
 	//heal the player to full hp
 	printf("healing full hp!\n");
-	vehicle->health = 200;
+	vehicle->health = 100;
 
 	// play sound when car collect power up
 	this->carPowerUp_sound = true;

@@ -61,6 +61,12 @@ bool					changeToReverseGear = false;
 bool					changeToForwardGear = false;
 
 
+
+
+
+
+
+
 PxFilterFlags contactReportFilterShader(
 	PxFilterObjectAttributes attributes0, PxFilterData filterData0,
 	PxFilterObjectAttributes attributes1, PxFilterData filterData1,
@@ -70,11 +76,11 @@ PxFilterFlags contactReportFilterShader(
 	// let triggers through
 	if (PxFilterObjectIsTrigger(attributes0) || PxFilterObjectIsTrigger(attributes1))
 	{
-		pairFlags = PxPairFlag::eTRIGGER_DEFAULT;
-		return PxFilterFlag::eDEFAULT;
+		//pairFlags = PxPairFlag::eTRIGGER_DEFAULT;
+		//return PxFilterFlag::eDEFAULT;
 	}
 	// generate contacts for all that were not filtered above
-	pairFlags = PxPairFlag::eCONTACT_DEFAULT | PxPairFlag::eNOTIFY_CONTACT_POINTS;
+	pairFlags = PxPairFlag::eCONTACT_DEFAULT | PxPairFlag::eNOTIFY_CONTACT_POINTS | PxPairFlag::eTRIGGER_DEFAULT;
 
 	// trigger the contact callback for pairs (A,B) where
 	// the filtermask of A contains the ID of B and vice versa.
@@ -183,7 +189,7 @@ VehicleDesc initPlayerVehiclePhysicsDesc()
 	//The moment of inertia is just the moment of inertia of a cuboid but modified for easier steering.
 	//Center of mass offset is 0.65m above the base of the chassis and 0.25m towards the front.
 	const PxF32 chassisMass = 1400.0f;
-	const PxVec3 chassisDims(3.0f, 1.2f, 6.0f);
+	const PxVec3 chassisDims(2.0f, 1.0f, 5.2f);
 	const PxVec3 chassisMOI
 	((chassisDims.y*chassisDims.y + chassisDims.z*chassisDims.z)*chassisMass / 12.0f,
 		(chassisDims.x*chassisDims.x + chassisDims.z*chassisDims.z)*0.8f*chassisMass / 12.0f,
@@ -223,19 +229,19 @@ VehicleDesc initEnemyVehiclePhysicsDesc()
 	//Set up the chassis mass, dimensions, moment of inertia, and center of mass offset.
 	//The moment of inertia is just the moment of inertia of a cuboid but modified for easier steering.
 	//Center of mass offset is 0.65m above the base of the chassis and 0.25m towards the front.
-	const PxF32 chassisMass = 1300.0f;
-	const PxVec3 chassisDims(2.5f, 2.0f, 5.0f);
+	const PxF32 chassisMass = 1400.0f;
+	const PxVec3 chassisDims(2.0f, 1.0f, 5.2f);
 	const PxVec3 chassisMOI
 	((chassisDims.y*chassisDims.y + chassisDims.z*chassisDims.z)*chassisMass / 12.0f,
 		(chassisDims.x*chassisDims.x + chassisDims.z*chassisDims.z)*0.8f*chassisMass / 12.0f,
 		(chassisDims.x*chassisDims.x + chassisDims.y*chassisDims.y)*chassisMass / 12.0f);
-	const PxVec3 chassisCMOffset(0.0f, -chassisDims.y*0.5f + 0.0f, -0.05f);
+	const PxVec3 chassisCMOffset(0.0f, -chassisDims.y*0.5f - 0.8f, -0.3f);
 
 	//Set up the wheel mass, radius, width, moment of inertia, and number of wheels.
 	//Moment of inertia is just the moment of inertia of a cylinder.
-	const PxF32 wheelMass = 20.0f;
-	const PxF32 wheelRadius = 0.5f;
-	const PxF32 wheelWidth = 0.4f;
+	const PxF32 wheelMass = 40.0f;
+	const PxF32 wheelRadius = 0.6f;
+	const PxF32 wheelWidth = 0.01f;		//This became needed after uneven driving terrain was added. On
 	const PxF32 wheelMOI = 0.5f*wheelMass*wheelRadius*wheelRadius * 2;
 	const PxU32 nbWheels = 4;
 
@@ -674,23 +680,27 @@ void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DK
 
 void Physics_Controller::stepPhysics(bool interactive)
 {
-
+	//Get set of rigid dynamic actors
 	PxU32 numOfRidg = gScene->getNbActors(PxActorTypeFlag::eRIGID_DYNAMIC);
-	PxActor *userBuffer[50];
-	PxU32 numOfRidgActors = gScene->getActors(PxActorTypeFlag::eRIGID_DYNAMIC, userBuffer, numOfRidg, 0);
+	PxActor *userBufferRD[50];
+	PxU32 numOfRidgDynamicActors = gScene->getActors(PxActorTypeFlag::eRIGID_DYNAMIC, userBufferRD, numOfRidg, 0);
+
+	//Get set of rigid static actors
+	PxU32 numOfStat = gScene->getNbActors(PxActorTypeFlag::eRIGID_STATIC);
+	PxActor *userBufferRS[50];
+	PxU32 numOfRidgStaticActors = gScene->getActors(PxActorTypeFlag::eRIGID_STATIC, userBufferRS, numOfStat, 0);
 
 
 	PX_UNUSED(interactive);
 	const PxF32 timestep = 1.0f / 60.0f;
 
-	userDriveInput(gameState->WKey, gameState->AKey, gameState->SKey, gameState->DKey, gameState->SPACEKey, true, gameState->leftStickX, gameState->leftTrigger, gameState->rightTrigger);
 	//Update the control inputs for the vehicle.
+	userDriveInput(gameState->WKey, gameState->AKey, gameState->SKey, gameState->DKey, gameState->SPACEKey, true, gameState->leftStickX, gameState->leftTrigger, gameState->rightTrigger);
 	
 
 	enemyInputData.setAnalogAccel(1.0f);
-	
 
-
+	//Update each vehicles drive direction based on input values
 	for (int i = 0; i < vehiclesVector.size(); i++) {
 		
 		PxActor *actor = vehiclesVector[i]->getRigidDynamicActor()->is<PxActor>();
@@ -699,25 +709,22 @@ void Physics_Controller::stepPhysics(bool interactive)
 
 
 		for (int index = 0; index <= rigidDynamicActorIndex; index++) {
-			if (actor == userBuffer[index]) {
+			if (actor == userBufferRD[index]) {
 				gameStateIndex = gameState->lookupGSIUsingPI(index);
 				break;
 			}
 		}
 		
-		if (gameStateIndex != -1) {
+		if (gameStateIndex != -1) {		//If this is an AI, get its pathfinding computed input
 			glm::vec2 pathfindingInput = gameState->pathfindingInputs[gameStateIndex];
-			enemyInputData.setAnalogAccel(pathfindingInput[0]);//pathfindingInput[1]
+			enemyInputData.setAnalogAccel(pathfindingInput[0]);
 			enemyInputData.setAnalogSteer(pathfindingInput[1]);
 			PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, gSteerVsForwardSpeedTable, enemyInputData, timestep, gIsVehicleInAir, *vehiclesVector[i]);
 		}
-		else {
+		else {							//If this is the player, record as normal
 			PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, gSteerVsForwardSpeedTable, gVehicleInputData, timestep, gIsVehicleInAir, *vehiclesVector[i]);
-			//if (gVehicleInputData.getAnalogAccel >= -10.f)
-				//gameState->carRunning_sound = true;
 		}
 		
-
 
 		//Raycasts.
 		PxVehicleWheels* vehicles[1] = { vehiclesVector[i] };
@@ -733,7 +740,6 @@ void Physics_Controller::stepPhysics(bool interactive)
 
 		//Work out if the vehicle is in the air.
 		gIsVehicleInAir = gVehicle4W->getRigidDynamicActor()->isSleeping() ? false : PxVehicleIsInAir(vehicleQueryResults[0]);
-		//std::cout << "Wheel friction: " << vehicleQueryResults[0].wheelQueryResults->tireFriction << std::endl;*/
 	}
 
 
@@ -745,54 +751,91 @@ void Physics_Controller::stepPhysics(bool interactive)
 
 
 
-	//Efficency of this could be improved but not critical
-	if (gContactReportCallback.gContactActor1s.size() >= 1) {
+	//Check collisions for Vehicle/Vehicle collisions
+	for (int i = 0; i < gContactReportCallback.gContactActor1s.size(); i++) {
 		Vehicle* vehicle1 = NULL;
 		Vehicle* vehicle2 = NULL;
+		//std::cout << "gContactReportCallback contact: " << i << "/" << gContactReportCallback.gContactActor1s.size() << std::endl;
+
 
 		for (int index = 0; index <= rigidDynamicActorIndex; index++) {
-			PxActor *actor = userBuffer[index];
-			if (gContactReportCallback.gContactActor1s[0] == actor) {
+			PxActor *actor = userBufferRD[index];
+			if (gContactReportCallback.gContactActor1s[i] == actor) {
 				vehicle1 = gameState->lookupVUsingPI(index);
 			}
-			if (gContactReportCallback.gContactActor2s[0] == actor) {
+			if (gContactReportCallback.gContactActor2s[i] == actor) {
 				vehicle2 = gameState->lookupVUsingPI(index);
 			}
 		}
-
-		if (vehicle1 != NULL && vehicle2 != NULL) {
-			glm::vec2 impulse = (glm::vec2{ gContactReportCallback.gContactImpulses[0].x, gContactReportCallback.gContactImpulses[0].z });
+		
+		if (vehicle1 != NULL && vehicle2 != NULL && (gContactReportCallback.gContactImpulses[i] != PxVec3{ 0.0f,0.0f,0.0f })) {
+			//std::cout << "Found 2 vehicles, Contact Impule Vector length is : " << gContactReportCallback.gContactImpulses.size() << std::endl;
+			glm::vec2 impulse = (glm::vec2{ gContactReportCallback.gContactImpulses[i].x, gContactReportCallback.gContactImpulses[i].z });
 			gameState->Collision(vehicle1, vehicle2, impulse);
 		}
 	}
-
-	//Efficency of this could be improved but not critical
-	if (gContactReportCallback.gContactActor1s.size() >= 1) {
+	
+	//Check collisions for Player/PowerUp collisions
+	for (int i = 0; i < gContactReportCallback.gContactActor1s.size(); i++) {
 		Vehicle* vehicle1 = NULL;
 		PowerUp* powerUp = NULL;
 
 		for (int index = 0; index <= rigidDynamicActorIndex; index++) {
-			PxActor *actor = userBuffer[index];
+			PxActor *actor = userBufferRD[index];
 
-			if (index == gameState->playerVehicle.physicsIndex) {				// Only for the player index
+			if (index == gameState->playerVehicle.physicsIndex) {	
 
-				//!!Causing Crash so Commented out
-				/*if (gContactReportCallback.gContactActor1s[0] == actor || gContactReportCallback.gContactActor1s[1] == actor) {
-					//If either actor is the player, ready it
-					//vehicle1 = gameState->lookupVUsingPI(index);
-				}*/
+				if (gContactReportCallback.gContactActor1s[i] == actor || gContactReportCallback.gContactActor2s[i] == actor) {
+					vehicle1 = gameState->lookupVUsingPI(index);
+				}
 			}
 
-			/*if (gContactReportCallback.gContactActor1s[0] == actor || gContactReportCallback.gContactActor1s[1] == actor) {
+			if (gContactReportCallback.gContactActor1s[i] == actor || gContactReportCallback.gContactActor2s[i] == actor) {
 				powerUp = gameState->lookupPUUsingPI(index);
-			}*/
+			}
 		}
 
 		if (vehicle1 != NULL && powerUp != NULL) {
 			gameState->Collision(vehicle1, powerUp);
 		}
-
 	}
+	
+	
+	//Check collisions for Player/Static Object collisions
+	for (int i = 0; i < gContactReportCallback.gContactActor1s.size(); i++) {
+		Vehicle* vehicle1 = NULL;
+		Object* object = NULL;
+
+		//Try to find player vehicle
+		for (int index = 0; index <= rigidDynamicActorIndex; index++) {
+			PxActor *actor = userBufferRD[index];
+			if (index == gameState->playerVehicle.physicsIndex) {				
+				if (gContactReportCallback.gContactActor1s[i] == actor || gContactReportCallback.gContactActor2s[i] == actor) {
+					vehicle1 = gameState->lookupVUsingPI(index);
+				}
+			}
+		}
+
+		//Try to find static object
+		for (int index = 0; index <= rigidStaticActorIndex; index++) {
+			PxActor *actor = userBufferRS[index];
+
+			if (index != gameState->map.physicsIndex) {
+				if (gContactReportCallback.gContactActor1s[i] == actor || gContactReportCallback.gContactActor2s[i] == actor) {
+					object = new Object();	//Since it does not matter at this point, object refrence is not accurate
+					//std::cout << "Collision with object with index: " << index << std::endl;
+				}
+			}
+		}
+
+		if (vehicle1 != NULL && object != NULL) {
+			gameState->Collision(vehicle1, object);
+		}
+	}
+
+
+
+
 
 
 	//Clear contact report
@@ -801,6 +844,7 @@ void Physics_Controller::stepPhysics(bool interactive)
 	gContactReportCallback.gContactPositions.clear();
 	gContactReportCallback.gContactImpulses.clear();
 
+	//Update each vehicle's location, transformation matrix, etc.
 	updateEntities();
 }
 

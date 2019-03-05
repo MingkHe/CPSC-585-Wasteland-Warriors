@@ -23,6 +23,7 @@ void Logic::Update(Gamestate *gameState)
 
 	if (gameState->playerVehicle.health > 0.0) {
 
+
 		//Initialize/Restart Game
 		if (gameState->wave == 0) {
 

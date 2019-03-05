@@ -15,15 +15,15 @@ be compiled using only the x86 Debug mode.
 ### Input Controls:
 
     Driving:
-        W to accelerate forward
-        S to Brake and Reverse
-        A/D for steering left and right respectively
-        SPACE for Handbrake
+        W or Right Trigger to accelerate forward
+        S or Left Trigger to Brake and Reverse
+        A/D or Left Stick for steering left and right respectively
+        SPACE or B on gamepad for Handbrake
         
-        R to Reset your vehicle after being flipped or stuck
+        R or Y on gamepad to Reset your vehicle after being flipped or stuck
 
     Camera:
-        Move Mouse while Holding the Left Mouse Button to move the camera around the vehicle
+        Move Mouse while Holding the Left Mouse Button or move the Right Stick to move the camera around the vehicle
 
     Screen:
     In the start Menu:
@@ -31,14 +31,14 @@ be compiled using only the x86 Debug mode.
         - start: start the game
         - quit: exit the game
 
-        UP Arrow to move up
-        DOWN Arrow to move down
-        ENTER to select option
+        UP Arrow or UP on Dpad to move up
+        DOWN Arrow or DOWN on Dpad to move down
+        ENTER or X on gamepad to select option
         
 
         
-    In the game play:
-        M to enter paused menu
+    In the gameplay:
+        M or Right option on gamepad to enter paused menu
         G to ener win screen (for testing)
         H to enter lose screen (for testing)
         

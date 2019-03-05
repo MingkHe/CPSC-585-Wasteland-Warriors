@@ -139,6 +139,9 @@ public:
 	int enemiesLeft;
 	int breakSeconds;
 
+	int window_width;
+	int window_height;
+
 	//Spawning/Despawning Entities
 
 	void SpawnMap();

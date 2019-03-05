@@ -89,7 +89,7 @@ void Program::start() {
 
 	gameState->SpawnStaticObject(0, 0, 0, 0);
 	gameState->SpawnStaticObject(2, -33, 0, 45);
-	//gameState->SpawnStaticObject(1, 53, 0, -35);
+	gameState->SpawnStaticObject(3, 63, 0, -25);
 
 	//gameState->SpawnDynamicObject(1, 53, 1, -35);
 	//Spawn Power Ups

@@ -252,17 +252,16 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse)
 
 void Gamestate::Collision(Vehicle* vehicle, PowerUp* powerUp) {
 	std::cout << "You feel more powerfull!" << std::endl;		//Placeholder
-
-
+	
 	glm::mat4 transformMatrix = glm::mat4(
 		2.f, 0.f, 0.f, 0.f,
 		0.f, 2.f, 0.f, 0.f,
 		0.f, 0.f, 2.f, 0.f,
-		0.f, -2.0f, 0.f, 1.f
+		0.f, -3.0f, 0.f, 1.f
 	);
 
-	scene->objects[powerUp->sceneObjectIndex].geometry[0].transform = transformMatrix;
-	physics_Controller->setPosition(powerUp->physicsIndex, glm::vec3{ 0, -5, 0 });
+	scene->objects[powerUp->sceneObjectIndex].geometry[0].transform = transformMatrix;  //Change location of graphic to out of sight
+	physics_Controller->setPosition(powerUp->physicsIndex, glm::vec3{ 0, -10, 0 });     //Change location of physics to out of way
 
 	// play sound when car collect power up
 	this->carPowerUp_sound = true;

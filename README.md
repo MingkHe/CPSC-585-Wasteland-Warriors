@@ -20,7 +20,7 @@ be compiled using only the x86 Debug mode.
         A/D for steering left and right respectively
         SPACE for Handbrake
         
-        R to reposition the car
+        R to get back up after being flipped
 
     Camera:
         Mouse with left click to move camera

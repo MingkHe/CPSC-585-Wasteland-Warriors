@@ -91,11 +91,8 @@ void Program::start() {
 	gameState->SpawnStaticObject(2, -33, 0, 45);
 	gameState->SpawnStaticObject(3, 63, 0, -25);
 
-	//gameState->SpawnDynamicObject(1, 53, 1, -35);
 	//Spawn Power Ups
-	for (int i = 0; i < 3; i++) {
-		//gameState->SpawnDynamicObject(1, 20000 * i, 20000 * i, 20000 * i);
-	}
+	gameState->SpawnDynamicObject(1, 53, 1, -35);
 
 	//Spawn Player
 	gameState->SpawnPlayer(0, 0, 0);

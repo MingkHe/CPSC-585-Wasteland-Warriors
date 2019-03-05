@@ -1,6 +1,10 @@
 #include <list>
 #include <string>
-#include <chrono>
+
+#include <sys/timeb.h>
+#include <stdio.h>
+#include <errno.h>
+
 #include "Entity.h"
 #include "Camera.h"
 #include "Scene.h"
@@ -119,8 +123,8 @@ public:
 	float cameraAngle;
 
 	//Time
-	std::chrono::time_point<std::chrono::system_clock> time;
-	double timeStep;
+	int time;
+	int timeStep;
 
 	int gstest = 5;
 

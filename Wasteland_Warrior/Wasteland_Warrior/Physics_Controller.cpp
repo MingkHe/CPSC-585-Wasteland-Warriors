@@ -723,8 +723,6 @@ void Physics_Controller::stepPhysics(bool interactive)
 	userDriveInput(gameState->WKey, gameState->AKey, gameState->SKey, gameState->DKey, gameState->SPACEKey, true, gameState->leftStickX, gameState->leftTrigger, gameState->rightTrigger);
 	
 
-	enemyInputData.setAnalogAccel(1.0f);
-
 	//Update each vehicles drive direction based on input values
 	for (int i = 0; i < vehiclesVector.size(); i++) {
 		

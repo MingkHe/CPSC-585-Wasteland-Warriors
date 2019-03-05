@@ -4,7 +4,7 @@
 
 Gamestate::Gamestate()
 {
-	timeStep = 1.0 / 60.0; //60 fps
+	timeStep = (1.0 / 60.0) * 1000; //60 fps
 	button = "";
 	UIMode = "Start";
 

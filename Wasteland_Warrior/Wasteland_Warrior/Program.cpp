@@ -113,11 +113,13 @@ void Program::start() {
 			physicsCL.Update();
 		}
 
+		//Audio Engine
+		audioCL.playSound(gameState);
+
 		//UI System
 		UICL.Update(gameState, window);
 
-		//Audio Engine
-		audioCL.playSound(gameState);
+		
 
 		//Render Engine
 		if (gameState->UIMode == "Game") {

@@ -239,10 +239,10 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse)
 
 
 	if (entity1->health <= 0)
-		physics_Controller->setPosition(entity1->physicsIndex, glm::vec3{ 300.0f, 4.0f, 300.0f });
+		physics_Controller->setPosition(entity1->physicsIndex, glm::vec3{ 10000, 10000, 10000 });
 
 	if(entity2->health <= 0)
-		physics_Controller->setPosition(entity2->physicsIndex, glm::vec3{ 300.0f, 4.0f, 300.0f});
+		physics_Controller->setPosition(entity2->physicsIndex, glm::vec3{ 10000, 10000, 10000 });
 
 
 	std::cout << "New health values: " << entity1->health << " | " << entity2->health << std::endl;

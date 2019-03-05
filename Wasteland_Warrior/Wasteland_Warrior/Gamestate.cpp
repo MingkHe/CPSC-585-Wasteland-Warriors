@@ -357,15 +357,6 @@ int Gamestate::lookupGSIUsingPI(int physicsIndex) {
 	return gameStateIndex;
 }
 
-
-
-
-
-
-
-
-
-
 glm::mat4 Gamestate::getEntityTransformation(int sceneObjectIndex) {
 	//sceneObjectIndex--;   //SceneObjectIndex is different than the dynamicObjectIndex. Currently 1 smaller.
 	if (sceneObjectIndex == playerVehicle.sceneObjectIndex) {

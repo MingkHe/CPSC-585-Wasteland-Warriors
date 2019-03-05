@@ -101,6 +101,7 @@ void Program::start() {
 	gameState->SpawnStaticObject(3, 73, 0, -125);
 	gameState->SpawnStaticObject(4, -150, 4.25, -120);
 
+	//Spawn Power Ups
 	gameState->SpawnDynamicObject(1, 53, 1, -35);
 	gameState->SpawnDynamicObject(1, -100, 5.25, -100);
 	gameState->SpawnDynamicObject(1, 100, -5.25, 100);
@@ -109,14 +110,15 @@ void Program::start() {
 	//Spawn Player
 	gameState->SpawnPlayer(0, 0, 0);
 
-	//Spawn Enemies
-	for (int i = 0; i < 5; i++) {
-		gameState->SpawnEnemy(0, 10000 * i, 10000 * i, 10000 * i);
-	}
+	//Initialize Enemies
+	gameState->SpawnEnemy(0, 10000, 10000, 10000);
+
+	int waveBreak = 0;
+	int breakTime = 30 * 60;
 
 	//Main render loop
 	while (!glfwWindowShouldClose(window)) {
-
+		//std::cout << "New execution loop started on: " << currentTime.time << "." << currentTime.millitm << std::endl;
 		//User Input
 		usrInput.Update(gameState);
 
@@ -191,8 +193,8 @@ void Program::setupWindow() {
 	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 	int width = mode->width;//1280;
 	int height = mode->height;//960;
-	window = glfwCreateWindow(width, height, "Wasteland Warrior", NULL, NULL);
-	//window = glfwCreateWindow(width, height, "Wasteland Warrior", glfwGetPrimaryMonitor(), NULL);
+	//window = glfwCreateWindow(width, height, "Wasteland Warrior", NULL, NULL);
+	window = glfwCreateWindow(width, height, "Wasteland Warrior", glfwGetPrimaryMonitor(), NULL);
 	if (!window) {
 		std::cout << "Program failed to create GLFW window, TERMINATING" << std::endl;
 		glfwTerminate();

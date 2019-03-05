@@ -698,7 +698,7 @@ void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DK
 	if (changeToReverseGear)
 	{
 		changeToReverseGear = false;
-		gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eREVERSE);
+		gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
 	}
 
 }
@@ -739,13 +739,25 @@ void Physics_Controller::stepPhysics(bool interactive)
 		}
 		
 		//enemyInputData->mDriveDynData.forceGearChange(PxVehicleGearsData::eREVERSE);
-		//	enemyVehicle->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
+		//enemyVehicle->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
 		//enemyVehicle->mDriveDynData.setUseAutoGears(true);
 		if (gameStateIndex != -1) {		//If this is an AI, get its pathfinding computed input
-	
 			glm::vec2 pathfindingInput = gameState->pathfindingInputs[gameStateIndex];
-			enemyInputData.setAnalogAccel(pathfindingInput[0]);
-			enemyInputData.setAnalogSteer(pathfindingInput[1]);
+
+			if (gameState->Enemies[gameStateIndex].CheckForStuck()) {
+				vehiclesVector[i]->mDriveDynData.forceGearChange(PxVehicleGearsData::eREVERSE);
+				
+				enemyInputData.setAnalogAccel(pathfindingInput[0]);
+				enemyInputData.setAnalogSteer(-pathfindingInput[1]);
+			}
+
+			else {
+				vehiclesVector[i]->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
+				vehiclesVector[i]->mDriveDynData.setUseAutoGears(true);
+				enemyInputData.setAnalogAccel(pathfindingInput[0]);
+				enemyInputData.setAnalogSteer(pathfindingInput[1]);
+			}
+	
 			PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, gSteerVsForwardSpeedTable, enemyInputData, timestep, gIsVehicleInAir, *vehiclesVector[i]);
 		}
 		else {							//If this is the player, record as normal

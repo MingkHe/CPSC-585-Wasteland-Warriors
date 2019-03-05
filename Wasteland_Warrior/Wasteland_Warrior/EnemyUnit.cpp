@@ -1,4 +1,7 @@
 #include "EnemyUnit.h"
+#include <iostream>
+
+
 
 EnemyUnit::EnemyUnit()
 {
@@ -9,7 +12,9 @@ EnemyUnit::EnemyUnit(int newPhysicsIndex, int newSceneObjectIndex) {
 	physicsIndex = newPhysicsIndex;
 	sceneObjectIndex = newSceneObjectIndex;
 
-	lastMotionTime = std::chrono::system_clock::now();
+	struct timeb currentTime;
+	ftime(&currentTime);
+	lastMotionTime = currentTime.time;
 }
 
 EnemyUnit::~EnemyUnit()
@@ -17,17 +22,26 @@ EnemyUnit::~EnemyUnit()
 }
 
 bool EnemyUnit::CheckForStuck(){
-	if (recoveryMode = false) {			//Car is not currently marked as stuck
-		if (speed > 0.1) {				//Check if car is moving
-			lastMotionTime = std::chrono::system_clock::now();
+	struct timeb currentTime;
+	ftime(&currentTime);
+	double elapsed_seconds = currentTime.time - lastMotionTime;
+
+	//std::cout << "Current time: " << currentTime.time << "     and last movement was at: " << lastMotionTime << std::endl;
+	//std::cout << "Elapsed stuck seconds = " << elapsed_seconds << std::endl;
+
+	
+	
+	if (recoveryMode == false) {			//Car is not currently marked as stuck
+		//std::cout << "Recovery mode OFF" << std::endl;
+		if (speed > 1) {				//Check if car is moving
+			lastMotionTime = currentTime.time;
+			//std::cout << "lastMotionTime updated to: " << lastMotionTime << std::endl;
 			return false;
 		}
 
-		auto currentTime = std::chrono::system_clock::now();
-		std::chrono::duration<double> elapsed_seconds = currentTime - lastMotionTime;
-
-		if (elapsed_seconds.count() > 2) {	//Car is moving so check if stuck for more than 2 seconds
+		if (elapsed_seconds >= 2) {	//Car is moving so check if stuck for more than 2 seconds
 			recoveryMode = true;
+			//std::cout << "Recovery mode turned ON" << std::endl;
 			return true;
 		}
 
@@ -35,15 +49,17 @@ bool EnemyUnit::CheckForStuck(){
 	}
 
 	else {
-		auto currentTime = std::chrono::system_clock::now();
-		std::chrono::duration<double> elapsed_seconds = currentTime - lastMotionTime;
-
-		if (elapsed_seconds.count() > 4) {	//For 2 more seconds remain in recovery mode
+		//std::cout << "Recovery mode ON" << std::endl;
+		if (elapsed_seconds >= 4) {	//For 2 more seconds remain in recovery mode
 			recoveryMode = false;
-			lastMotionTime = currentTime;
+			//std::cout << "Recovery mode turned OFF" << std::endl;
+			lastMotionTime = currentTime.time;
+			//std::cout << "lastMotionTime updated to: " << lastMotionTime << std::endl;
 			return false;
 		}
 
 		return true;
 	}
+
+	return false;
 }

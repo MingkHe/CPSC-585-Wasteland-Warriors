@@ -742,21 +742,22 @@ void Physics_Controller::stepPhysics(bool interactive)
 		//enemyVehicle->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
 		//enemyVehicle->mDriveDynData.setUseAutoGears(true);
 		if (gameStateIndex != -1) {		//If this is an AI, get its pathfinding computed input
+			glm::vec2 pathfindingInput = gameState->pathfindingInputs[gameStateIndex];
+
 			if (gameState->Enemies[gameStateIndex].CheckForStuck()) {
-				/*for(int i = 0; )
-				Vehicle test = vehiclesVector
-				enemyVehicle->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
-				enemyVehicle->mDriveDynData.setUseAutoGears(true);*/
+				vehiclesVector[i]->mDriveDynData.forceGearChange(PxVehicleGearsData::eREVERSE);
+				
+				enemyInputData.setAnalogAccel(pathfindingInput[0]);
+				enemyInputData.setAnalogSteer(-pathfindingInput[1]);
 			}
 
 			else {
-				//enemyVehicle->mDriveDynData.forceGearChange(PxVehicleGearsData::e);
+				vehiclesVector[i]->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
+				vehiclesVector[i]->mDriveDynData.setUseAutoGears(true);
+				enemyInputData.setAnalogAccel(pathfindingInput[0]);
+				enemyInputData.setAnalogSteer(pathfindingInput[1]);
 			}
 	
-
-			glm::vec2 pathfindingInput = gameState->pathfindingInputs[gameStateIndex];
-			enemyInputData.setAnalogAccel(pathfindingInput[0]);
-			enemyInputData.setAnalogSteer(pathfindingInput[1]);
 			PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, gSteerVsForwardSpeedTable, enemyInputData, timestep, gIsVehicleInAir, *vehiclesVector[i]);
 		}
 		else {							//If this is the player, record as normal

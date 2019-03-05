@@ -4,7 +4,7 @@
 
 Gamestate::Gamestate()
 {
-	timeStep = 1.0 / 60.0; //60 fps
+	timeStep = (1.0 / 60.0) * 1000; //60 fps
 	button = "";
 	UIMode = "Start";
 
@@ -69,7 +69,10 @@ void Gamestate::SpawnMap() {
 void Gamestate::SpawnStaticObject(int ObjectType, float x, float y, float z) {
 	bool objectExists = true;
 	int sceneObjectIndex=0;
-	if (ObjectType == 1) {
+	if (ObjectType == 0) {
+		sceneObjectIndex = scene->loadOBJObject("Objects/SkyBox/skySphere.obj", "Objects/SkyBox/skySphere_texture.jpg");
+	}
+	else if (ObjectType == 1) {
 		sceneObjectIndex = scene->loadOBJObject("Objects/Ruined_Brick_Building/ruined building_brick.obj", "Objects/Ruined_Brick_Building/ruined_building_brick.jpg");
 	}
 	else if (ObjectType == 2) {
@@ -247,6 +250,10 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse)
 	if(entity2->health <= 0)
 		physics_Controller->setPosition(entity2->physicsIndex, glm::vec3{ 10000 * entity1->health, 10000 * entity1->health, 10000 * entity1->health });
 
+	//explosion sound
+	if (entity1->health <= 0 || entity2->health <= 0)
+		this->carExpo_sound = true;
+
 
 	std::cout << "New health values: " << entity1->health << " | " << entity2->health << std::endl;
 }
@@ -265,6 +272,10 @@ void Gamestate::Collision(Vehicle* vehicle, PowerUp* powerUp) {
 
 	scene->objects[powerUp->sceneObjectIndex].geometry[0].transform = transformMatrix;  //Change location of graphic to out of sight
 	physics_Controller->setPosition(powerUp->physicsIndex, glm::vec3{ 0, -10, 0 });     //Change location of physics to out of way
+
+	//heal the player to full hp
+	printf("healing full hp!\n");
+	vehicle->health = 100;
 
 	// play sound when car collect power up
 	this->carPowerUp_sound = true;

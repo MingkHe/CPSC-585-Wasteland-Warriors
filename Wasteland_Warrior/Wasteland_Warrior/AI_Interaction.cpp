@@ -45,7 +45,6 @@ int AI_Interaction::Update()
 
 		if (targetVector.x < 0 && targetRotation > 0) {
 			targetRotation = targetRotation-M_PI;
-			std::cout << targetRotation << std::endl;
 		}
 
 		else if (targetVector.x < 0 && targetRotation < 0)

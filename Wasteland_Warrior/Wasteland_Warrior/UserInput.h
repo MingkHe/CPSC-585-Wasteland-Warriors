@@ -24,6 +24,7 @@ public:
 	static bool AKey;
 	static bool SKey;
 	static bool DKey;
+	static bool RKey;
 	static bool SPACEKey;
 
 	static bool restart;

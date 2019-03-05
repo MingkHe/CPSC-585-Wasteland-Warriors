@@ -54,7 +54,7 @@ void Gamestate::SpawnMap() {
 		faceVertsPhys[i] = PxU32(faceVertHolder);
 
 	}
-	int physicsIndex = physics_Controller->createMap(vertsPhysArray, vertsSize, faceVertsPhys, faceVertsSize/3);
+	map.physicsIndex = physics_Controller->createMap(vertsPhysArray, vertsSize, faceVertsPhys, faceVertsSize/3);
 }
 
 void Gamestate::SpawnStaticObject(int ObjectType, float x, float y, float z) {
@@ -105,6 +105,7 @@ void Gamestate::SpawnPlayer(float x, float y, float z) {
 	physics_Controller->setPosition(physicsIndex, glm::vec3{x, y, z});
 	int sceneObjectIndex = scene->loadOBJObject("Objects/BladedDragster/bourak.obj", "Objects/BladedDragster/bourak.jpg");
 	playerVehicle = PlayerUnit(physicsIndex, sceneObjectIndex);
+	resetOrientation(physicsIndex);
 }
 
 
@@ -115,6 +116,14 @@ void Gamestate::SpawnEnemy(int type, float x, float y, float z) {
 	EnemyUnit enemy = EnemyUnit(physicsIndex, sceneObjectIndex);
 	Enemies.push_back(enemy);
 	pathfindingInputs.push_back(glm::vec2{ 0.0f,0.0f });
+}
+
+void Gamestate::resetOrientation() {
+	physics_Controller->resetOrientation(playerVehicle.physicsIndex);
+}
+
+void Gamestate::resetOrientation(int physicsIndex) {
+	physics_Controller->resetOrientation(physicsIndex);
 }
 
 
@@ -239,10 +248,10 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse)
 
 
 	if (entity1->health <= 0)
-		physics_Controller->setPosition(entity1->physicsIndex, glm::vec3{ 300.0f, 4.0f, 300.0f });\
+		physics_Controller->setPosition(entity1->physicsIndex, glm::vec3{ -20000, -20000, -20000 });
 
 	if(entity2->health <= 0)
-		physics_Controller->setPosition(entity2->physicsIndex, glm::vec3{ 300.0f, 4.0f, 300.0f});
+		physics_Controller->setPosition(entity2->physicsIndex, glm::vec3{ -10000, -10000, -10000 });
 
 
 	std::cout << "New health values: " << entity1->health << " | " << entity2->health << std::endl;
@@ -251,12 +260,29 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse)
 }
 
 void Gamestate::Collision(Vehicle* vehicle, PowerUp* powerUp) {
-	//Make powerup affect user
+	std::cout << "You feel more powerfull!" << std::endl;		//Placeholder
 }
 
 
+
+
+void Gamestate::Collision(Vehicle* vehicle, Object* staticObject) {
+	std::cout << "You ran into a wall, nice driving :P" << std::endl;	//Placeholder
+}
+
+
+
+
+
+
+
+
+
+
+
+
 void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 newTransformationMatrix, float newSpeed) {
-	Entity* entityToUpdate = NULL;
+	Entity* entityToUpdate = &Entity();
 	glm::vec4 newDirection = glm::vec4{ 0.0f, 0.0f, 1.0f, 0.0f } *newTransformationMatrix;
 
 	bool found = false;
@@ -278,34 +304,13 @@ void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 
 		}
 	}
 
-	for (int i = 0; i < (int)PowerUps.size(); i++) {
-		if (physicsIndex == PowerUps[i].physicsIndex) {
-			entityToUpdate = &PowerUps[i];
-			found = true;
-		}
-	}
 
-	for (int i = 0; i < (int)StaticObjects.size(); i++) {
-		if (physicsIndex == StaticObjects[i].physicsIndex) {
-			entityToUpdate = &StaticObjects[i];
-			found = true;
-		}
-	}
-
-	for (int i = 0; i < (int)DynamicObjects.size(); i++) {
-		if (physicsIndex == DynamicObjects[i].physicsIndex) {
-			entityToUpdate = &DynamicObjects[i];
-			found = true;
-		}
-	}
-
-	if (entityToUpdate ==NULL){
-		entityToUpdate = &Entity();	//If no entity was found, update is waisted
+	if (!found){
 		std::cout << "Gamestate failed to locate the physicsIndex, entity not updated" << std::endl;
 	}
 
 	if (found) {
-		entityToUpdate->acceleration = ((newSpeed - entityToUpdate->speed)/60);			//<--Minimal testing done, assume this is the issue if a problem arrises
+		entityToUpdate->acceleration = ((newSpeed - entityToUpdate->speed)/60);
 		entityToUpdate->speed = newSpeed;
 		entityToUpdate->position = newPosition;
 		entityToUpdate->transformationMatrix = newTransformationMatrix;
@@ -317,7 +322,7 @@ void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 
 
 
 PowerUp* Gamestate::lookupPUUsingPI(int physicsIndex) {
-	PowerUp* powerUp = new PowerUp();
+	PowerUp* powerUp = NULL;
 	for (int i = 0; i < (int)PowerUps.size(); i++) {
 		if (physicsIndex == PowerUps[i].physicsIndex) {
 			powerUp = &PowerUps[i];
@@ -327,18 +332,25 @@ PowerUp* Gamestate::lookupPUUsingPI(int physicsIndex) {
 }
 
 
+Object* Gamestate::lookupSOUsingPI(int physicsIndex) {
+	Object* object = NULL;
+	for (int i = 0; i < (int)StaticObjects.size(); i++) {
+		if (physicsIndex == StaticObjects[i].physicsIndex) {
+			object = &StaticObjects[i];
+		}
+	}
+	return object;
+}
+
 Vehicle* Gamestate::lookupVUsingPI(int physicsIndex) {
-	Vehicle* vehicle = new Vehicle();
-	bool found = false;
+	Vehicle* vehicle = NULL;
 	if (physicsIndex == playerVehicle.physicsIndex) {
-		found = true;
 		vehicle = &playerVehicle;
 	}
 
 	for (int i = 0; i < (int)Enemies.size(); i++) {
 		if (physicsIndex == Enemies[i].physicsIndex) {
 			vehicle = &Enemies[i];
-			found = true;
 		}
 	}
 	return vehicle;

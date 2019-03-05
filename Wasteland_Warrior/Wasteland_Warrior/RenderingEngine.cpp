@@ -393,6 +393,10 @@ void RenderingEngine::updateText() {
 	else {
 		pushTextObj(texObjects, "break seconds: " + std::to_string(game_state->breakSeconds), 0.01f*game_state->window_width, 0.85*game_state->window_height, 1.0f);
 	}
+
+	if (game_state->powerText) {
+		pushTextObj(texObjects, "You are more powerful!", 0.3f*game_state->window_width, 0.8*game_state->window_height, 1.0f);
+	}
 }
 
 void RenderingEngine::LoadShaderProgram(std::string name, const char* vertexFile, const char* fragmentFile) {

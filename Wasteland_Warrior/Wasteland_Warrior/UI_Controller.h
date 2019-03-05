@@ -36,8 +36,6 @@ public:
 
 	int pausePointerState = 0;
 
-
-
 	void Update(Gamestate* GameState, GLFWwindow* window);
 };
 

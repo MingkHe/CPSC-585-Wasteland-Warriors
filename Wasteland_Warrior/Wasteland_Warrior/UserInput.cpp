@@ -79,20 +79,6 @@ void UserInput::Update(Gamestate* gameState)
 		gameState->SPACEKey = false;
 	}
 
-	//Restart game
-	if (gameState->button == "ESC") {
-		
-		//disable the ESC key, since all this switching is implemented in UI
-		/*
-		if (gameState->UIMode == "Game") {
-			gameState->UIMode = "Pause";
-		}
-		else {
-			gameState->UIMode = "Start";
-		}
-		*/
-	}
-
 	//reset orentation
 	if (gameState->button == "R" || gameState->button == "Y") {
 		gameState->resetOrientation();
@@ -112,6 +98,17 @@ void UserInput::Update(Gamestate* gameState)
 				gameState->cameraAngle = angle;
 			}
 			oldMouseXpos = UserInput::MouseXpos;
+		}
+		else {
+			if (gameState->cameraAngle > 0.05){
+				gameState->cameraAngle = gameState->cameraAngle - 0.02;
+		}
+		else if (gameState->cameraAngle < -0.05) {
+				gameState->cameraAngle = gameState->cameraAngle + 0.02;
+			}
+		else {
+				gameState->cameraAngle = 0;
+			}
 		}
 	}
 }
@@ -289,7 +286,7 @@ void UserInput::gamepad(int controller, Gamestate* gameState) {
 		};
 		if (GLFW_PRESS == buttons[7]) { 
 			UserInput::inputBuffer.push("RO");
-			UserInput::inputBuffer.push("ESC");
+			UserInput::inputBuffer.push("M");
 		};
 		if (GLFW_PRESS == buttons[8]) { 
 			UserInput::inputBuffer.push("LS");

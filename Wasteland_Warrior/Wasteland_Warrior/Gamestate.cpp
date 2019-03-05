@@ -28,6 +28,9 @@ Gamestate::Gamestate()
 	ui_win = false;
 	ui_lose = false;
 
+	powerText = false;
+	textTime = 0;
+
 	cameraAngle = 0.0;
 
 	//Logic
@@ -239,10 +242,14 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse)
 
 
 	if (entity1->health <= 0)
-		physics_Controller->setPosition(entity1->physicsIndex, glm::vec3{ -20000, -20000, -20000 });
+		physics_Controller->setPosition(entity1->physicsIndex, glm::vec3{ 10050*entity1->health, 10050*entity1->health, 10050*entity1->health });
 
 	if(entity2->health <= 0)
-		physics_Controller->setPosition(entity2->physicsIndex, glm::vec3{ -10000, -10000, -10000 });
+		physics_Controller->setPosition(entity2->physicsIndex, glm::vec3{ 10000 * entity1->health, 10000 * entity1->health, 10000 * entity1->health });
+
+	//explosion sound
+	if (entity1->health <= 0 || entity2->health <= 0)
+		this->carExpo_sound = true;
 
 
 	std::cout << "New health values: " << entity1->health << " | " << entity2->health << std::endl;
@@ -265,6 +272,8 @@ void Gamestate::Collision(Vehicle* vehicle, PowerUp* powerUp) {
 
 	// play sound when car collect power up
 	this->carPowerUp_sound = true;
+	// start counter for display the power up text
+	this->textTime = 3 * 60; // borrow the code from loghic.h counting the break time
 }
 
 

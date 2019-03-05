@@ -223,12 +223,14 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse)
 	std::cout << "with force: " << totalForce << std::endl;
 
 
-	float damageScaling = 300;		//Smaller number means more damage
+	float damageScaling = 700;		//Smaller number means more damage
 
+
+	float damage = totalForce / damageScaling;
 
 	//If both vehicles align 
 	if ((entity1AttackLevel >= attackLevelThreshold && entity2AttackLevel >= attackLevelThreshold) ||
-		(entity2AttackLevel <= -attackLevelThreshold && entity1AttackLevel <= -attackLevelThreshold)) {
+		(entity2AttackLevel <= -attackLevelThreshold && entity1AttackLevel <= -attackLevelThreshold) && damage > 5.0f) {
 
 		if (entity1->speed > entity2->speed) {
 			entity2->health -= totalForce / damageScaling;
@@ -239,10 +241,10 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse)
 	}
 
 
-	if (entity1AttackLevel >= attackLevelThreshold || entity1AttackLevel <= -attackLevelThreshold)
+	if (entity1AttackLevel >= attackLevelThreshold || entity1AttackLevel <= -attackLevelThreshold && damage > 5.0f)
 		entity2->health -= totalForce/ damageScaling;
 
-	if (entity2AttackLevel >= attackLevelThreshold || entity1AttackLevel <= -attackLevelThreshold)
+	if (entity2AttackLevel >= attackLevelThreshold || entity1AttackLevel <= -attackLevelThreshold && damage > 5.0f)
 		entity1->health -= totalForce/ damageScaling;
 
 

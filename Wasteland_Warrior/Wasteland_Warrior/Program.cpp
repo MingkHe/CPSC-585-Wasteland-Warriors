@@ -180,8 +180,8 @@ void Program::setupWindow() {
 	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 	int width = mode->width;//1280;
 	int height = mode->height;//960;
-	window = glfwCreateWindow(width, height, "Wasteland Warrior", NULL, NULL);
-	//window = glfwCreateWindow(width, height, "Wasteland Warrior", glfwGetPrimaryMonitor(), NULL);
+	//window = glfwCreateWindow(width, height, "Wasteland Warrior", NULL, NULL);
+	window = glfwCreateWindow(width, height, "Wasteland Warrior", glfwGetPrimaryMonitor(), NULL);
 	if (!window) {
 		std::cout << "Program failed to create GLFW window, TERMINATING" << std::endl;
 		glfwTerminate();

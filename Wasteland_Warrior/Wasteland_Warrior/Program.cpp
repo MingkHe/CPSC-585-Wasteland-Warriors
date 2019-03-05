@@ -96,8 +96,8 @@ void Program::start() {
 	gameState->SpawnEnemy(0, 10000, 10000, 10000);
 	gameState->SpawnEnemy(0, 10000, 10000, 10000);
 	gameState->SpawnEnemy(0, 10000, 10000, 10000);
-	//gameState->SpawnEnemy(0,-25, 2, -15+10000);
-	//gameState->SpawnEnemy(0, 35, 2, 15+10000);
+	gameState->SpawnEnemy(0, 10000, 10000, 10000);
+	gameState->SpawnEnemy(0, 10000, 10000, 10000);
 
 
 	//Main render loop

@@ -130,13 +130,11 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 		if (input == "G")
 		{
 			GameState->UIMode = "Win";
-			GameState->ui_gameplay = false;
 		}
 
 		if (input == "H")
 		{
 			GameState->UIMode = "Lose";
-			GameState->ui_gameplay = false;
 		}
 
 		//render UI elements over already rendered scene.
@@ -339,6 +337,7 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 	else if (GameState->UIMode == "Win")
 	{
 		//Display a win screen
+		GameState->ui_gameplay = false;
 		GameState->ui_win = true;
 
 		std::string input = GameState->button;
@@ -369,6 +368,7 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 	else if (GameState->UIMode == "Lose")
 	{
 		//Display a lose screen
+		GameState->ui_gameplay = false;
 		GameState->ui_lose = true;
 
 		std::string input = GameState->button;

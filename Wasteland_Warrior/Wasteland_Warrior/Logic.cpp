@@ -17,27 +17,35 @@ void Logic::Update(Gamestate *gameState)
 	int enemiesLeft;
 	gameState->breakSeconds = breakTime;
 
+	//Restart
 	if (gameState->restart) {
 		gameState->wave = 0;
 		gameState->restart = false;
+
+		//reset Car
+		gameState->physics_Controller->setPosition(gameState->playerVehicle.physicsIndex, glm::vec3{ 0, 3, 0 });
+		gameState->playerVehicle.health = 100;
+
+		//reset AI
+		for (int i = 0; i < 5; i++) {
+			gameState->physics_Controller->setPosition(gameState->Enemies[i].physicsIndex, glm::vec3{ -10000 * i, -10000 * i, -10000 * i });
+			gameState->Enemies[i].health = 100;
+		}
 	}
 
-	if (gameState->playerVehicle.health > 0.0) {
+
+	//Player has lost all health
+	if ((gameState->playerVehicle.health <= 0)) {
+		gameState->UIMode = "Lose";
+	} 
+	else {
 
 
-		//Initialize/Restart Game
+		//Initialize
 		if (gameState->wave == 0) {
 
-			//reset Car
-			gameState->physics_Controller->setPosition(gameState->playerVehicle.physicsIndex, glm::vec3{ 0, 3, 0 });
-
-			//reset AI
-			for (int i = 0; i < 5; i++) {
-				gameState->physics_Controller->setPosition(gameState->Enemies[i].physicsIndex, glm::vec3{ 10000 * i, 10000 * i, 10000 * i });
-			}
-
 			//move up an enemy AI
-			gameState->physics_Controller->setPosition(gameState->Enemies[0].physicsIndex, glm::vec3{ -15, 5, 35 });
+			gameState->physics_Controller->setPosition(gameState->Enemies[0].physicsIndex, glm::vec3{ -35, 5, 35 });
 
 			gameState->wave = 1;
 			waveBreak = 1;
@@ -54,7 +62,7 @@ void Logic::Update(Gamestate *gameState)
 				}
 			}
 			for (int i = 1; i < 5; i++) {
-				gameState->physics_Controller->setPosition(gameState->Enemies[i].physicsIndex, glm::vec3{ 10000 * i, 10000 * i, 10000 * i });
+				gameState->physics_Controller->setPosition(gameState->Enemies[i].physicsIndex, glm::vec3{-10000 * i, -10000 * i, -10000 * i });
 			}
 			gameState->enemiesLeft = enemiesLeft;
 			if (enemiesLeft == 0) {
@@ -186,14 +194,7 @@ void Logic::Update(Gamestate *gameState)
 		//Player has beaten all five waves
 		else if (gameState->wave == 6) {
 			gameState->UIMode = "Win";
-			gameState->ui_gameplay = false;
+			gameState->restart = true;
 		}
 	}
-
-	//Player has lost all health
-	else {
-		gameState->UIMode = "lose";
-		gameState->ui_gameplay = false;
-	}
-
 }

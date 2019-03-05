@@ -81,16 +81,20 @@ void UserInput::Update(Gamestate* gameState)
 
 	//Restart game
 	if (gameState->button == "ESC") {
+		
+		//disable the ESC key, since all this switching is implemented in UI
+		/*
 		if (gameState->UIMode == "Game") {
 			gameState->UIMode = "Pause";
 		}
 		else {
 			gameState->UIMode = "Start";
 		}
+		*/
 	}
 
 	//reset orentation
-	if (gameState->button == "R") {
+	if (gameState->button == "R" || gameState->button == "Y") {
 		gameState->resetOrientation();
 	}
 
@@ -239,7 +243,9 @@ void UserInput::gamepad(int controller, Gamestate* gameState) {
 	if (controller == 1) {
 
 
-		//get joystick for mapping***
+		//get Joystick for Mapping
+		const char* name = glfwGetJoystickName(GLFW_JOYSTICK_1);
+		std::cout << name << std::endl;
 
 		//Gamepad joystick and triggers 
 		int axesCount;
@@ -267,6 +273,7 @@ void UserInput::gamepad(int controller, Gamestate* gameState) {
 		};
 		if (GLFW_PRESS == buttons[2]) {
 			UserInput::inputBuffer.push("X");
+			UserInput::inputBuffer.push("ENTER");
 		};
 		if (GLFW_PRESS == buttons[3]) { 
 			UserInput::inputBuffer.push("Y"); 
@@ -282,6 +289,7 @@ void UserInput::gamepad(int controller, Gamestate* gameState) {
 		};
 		if (GLFW_PRESS == buttons[7]) { 
 			UserInput::inputBuffer.push("RO");
+			UserInput::inputBuffer.push("ESC");
 		};
 		if (GLFW_PRESS == buttons[8]) { 
 			UserInput::inputBuffer.push("LS");
@@ -302,5 +310,15 @@ void UserInput::gamepad(int controller, Gamestate* gameState) {
 			UserInput::inputBuffer.push("LEFT");
 		};
 
+		//PS4 Controller mapping
+		/*if (name == "Wireless Controller") {
+			float lt = gameState->rightStickY;
+			float rt = gameState->leftTrigger;
+			float ry = gameState->rightTrigger;
+
+			gameState->rightStickY = ry;
+			gameState->leftTrigger = lt;
+			gameState->rightTrigger = rt;
+		}*/
 	}
 }

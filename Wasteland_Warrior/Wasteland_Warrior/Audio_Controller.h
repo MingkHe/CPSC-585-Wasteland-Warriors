@@ -22,6 +22,8 @@ private:
 	Mix_Chunk* car_brake;
 	Mix_Chunk* car_crash;
 	Mix_Chunk* car_expo;
+	Mix_Chunk* car_crash_static;
+	Mix_Chunk* car_powerUp;
 	std::string currentMusic;
 	
 public:

@@ -200,7 +200,7 @@ VehicleDesc initPlayerVehiclePhysicsDesc()
 	//Set up the wheel mass, radius, width, moment of inertia, and number of wheels.
 	//Moment of inertia is just the moment of inertia of a cylinder.
 	const PxF32 wheelMass = 40.0f;
-	const PxF32 wheelRadius = 0.3f;
+	const PxF32 wheelRadius = 0.6f;
 	const PxF32 wheelWidth = 0.01f;		//This became needed after uneven driving terrain was added. On
 	const PxF32 wheelMOI = 0.5f*wheelMass*wheelRadius*wheelRadius*2;
 	const PxU32 nbWheels = 4;
@@ -804,8 +804,10 @@ void Physics_Controller::stepPhysics(bool interactive)
 		}
 	}
 	
+	//std::cout << "Starting Powerup check" << std::endl;
 	//Check collisions for Player/PowerUp collisions
 	for (int i = 0; i < gContactReportCallback.gContactActor1s.size(); i++) {
+		//std::cout << "..." << std::endl;
 		Vehicle* vehicle1 = NULL;
 		PowerUp* powerUp = NULL;
 
@@ -813,19 +815,19 @@ void Physics_Controller::stepPhysics(bool interactive)
 			PxActor *actor = userBufferRD[index];
 
 			if (index == gameState->playerVehicle.physicsIndex) {	
-				std::cout << "Checking if either actor is the player" << std::endl;
-				if (gContactReportCallback.gContactActor1s[i] == actor || gContactReportCallback.gContactActor2s[i] == actor) {
+				//std::cout << "Checking if either actor is the player" << std::endl;
+				if ((gContactReportCallback.gContactActor1s[i] == actor || gContactReportCallback.gContactActor2s[i] == actor) && vehicle1 == NULL) {
 					vehicle1 = gameState->lookupVUsingPI(index);
-					std::cout << "Player was involved with contact!!!!!!!!!!!!!!!!!!!" << std::endl;
+					//std::cout << "Player was involved with contact!!!!!!!!!!!!!!!!!!!" << std::endl;
 				}
 			}
 
-			std::cout << "Checking rigidDynamicActorIndex of: " << index << std::endl;
-			if (gContactReportCallback.gContactActor1s[i] == actor || gContactReportCallback.gContactActor2s[i] == actor) {
+			//std::cout << "Checking rigidDynamicActorIndex of: " << index << std::endl;
+			if ((gContactReportCallback.gContactActor1s[i] == actor || gContactReportCallback.gContactActor2s[i] == actor) && powerUp == NULL) {
 				powerUp = gameState->lookupPUUsingPI(index);
-				std::cout << "Found powerup" << std::endl;
+				//std::cout << "Found powerup" << std::endl;
 				if (vehicle1 != NULL && powerUp != NULL) {
-					std::cout << "And the player hit it!" << std::endl;
+					//std::cout << "And the player hit it!" << std::endl;
 				}
 			}
 		}
@@ -833,6 +835,7 @@ void Physics_Controller::stepPhysics(bool interactive)
 		if (vehicle1 != NULL && powerUp != NULL) {
 			std::cout << "Powerup activating" << std::endl;
 			gameState->Collision(vehicle1, powerUp);
+			break;
 		}
 	}
 	

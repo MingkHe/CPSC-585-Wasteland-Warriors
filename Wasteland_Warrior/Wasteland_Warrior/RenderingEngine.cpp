@@ -76,21 +76,6 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 
 	loadFont("Fonts/lora/Lora-Bold.ttf");
 
-	std::stringstream wave;
-	wave << gameState->wave;
-
-	pushTextObj(texObjects, "wave # "+ wave.str(), 0.01f*gameState->window_width, 0.95*gameState->window_height, 1.0f);
-
-	std::stringstream enemies;
-	enemies << gameState->enemiesLeft;
-
-	pushTextObj(texObjects, "enemies left: " + enemies.str(), 0.01f*gameState->window_width, 0.9*gameState->window_height, 1.0f);
-
-	std::stringstream breakTime;
-	breakTime << gameState->breakSeconds;
-
-	pushTextObj(texObjects, "break seconds: " + breakTime.str(), 0.01f*gameState->window_width, 0.85*gameState->window_height, 1.0f);
-
 	glm::mat4 projection = glm::ortho(0.0f, static_cast<GLfloat>(gameState->window_width), 0.0f, static_cast<GLfloat>(gameState->window_height));
 	glUseProgram(textShaderProgram);
 	glUniformMatrix4fv(glGetUniformLocation(textShaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
@@ -193,6 +178,8 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	//glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	updateText();
+
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -217,6 +204,8 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 		printf("working, size: %d\n", texObjects.size());
 	}
 	
+	texObjects.clear();
+
 	glDisable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
 
@@ -395,6 +384,23 @@ void RenderingEngine::pushTextObj(std::vector<Geometry>& objects, std::string te
 		// Now advance cursors for next glyph (note that advance is number of 1/64 pixels)
 		x += (ch.Advance >> 6) * scale; // Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
 	}
+}
+
+void RenderingEngine::updateText() {
+	std::stringstream wave;
+	wave << game_state->wave;
+
+	pushTextObj(texObjects, "wave # " + wave.str(), 0.01f*game_state->window_width, 0.95*game_state->window_height, 1.0f);
+
+	std::stringstream enemies;
+	enemies << game_state->enemiesLeft;
+
+	pushTextObj(texObjects, "enemies left: " + enemies.str(), 0.01f*game_state->window_width, 0.9*game_state->window_height, 1.0f);
+
+	std::stringstream breakTime;
+	breakTime << game_state->breakSeconds;
+
+	pushTextObj(texObjects, "break seconds: " + breakTime.str(), 0.01f*game_state->window_width, 0.85*game_state->window_height, 1.0f);
 }
 
 void RenderingEngine::LoadShaderProgram(std::string name, const char* vertexFile, const char* fragmentFile) {

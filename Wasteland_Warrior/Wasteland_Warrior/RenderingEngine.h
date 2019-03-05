@@ -47,6 +47,8 @@ public:
 	void loadFont(const char* ttfFile);
 	//push render text into geometry array
 	void pushTextObj(std::vector<Geometry>& objects, std::string text, float x, float y, float scale);
+	//update text information
+	void updateText();
 
 	//Renders each object
 	void SwitchShaderProgram(GLuint shader);

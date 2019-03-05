@@ -16,6 +16,8 @@ Gamestate::Gamestate()
 	carBrake_sound = false;
 	carCrash_sound = false;
 	carExpo_sound = false;
+	carCrashStatic_sound = false;
+	carPowerUp_sound = false;
 
 	ui_enter = false;
 	ui_switch = false;
@@ -202,6 +204,8 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse)
 
 	// play sound when collision happen
 	this->carCrash_sound = true;
+	//this->carCrashStatic_sound = true; // testing purpose
+	//this->carPowerUp_sound = true; // testing purpose
 
 	glm::vec2 normalizedImpulse = glm::normalize(impulse);
 	float attackLevelThreshold = 0.9;
@@ -209,7 +213,6 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse)
 	std::cout << "Entity 1 attack level: " << entity1AttackLevel << std::endl;
 	float entity2AttackLevel = glm::dot(entity2->direction, normalizedImpulse);
 	std::cout << "Entity 2 attack level: " << entity2AttackLevel << std::endl;
-	carCrash_sound = true;
 
 	if (entity1 == &playerVehicle)
 		std::cout << "Player and ";
@@ -265,6 +268,9 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse)
 
 void Gamestate::Collision(Vehicle* vehicle, PowerUp* powerUp) {
 	std::cout << "You feel more powerfull!" << std::endl;		//Placeholder
+
+	// play sound when car collect power up
+	this->carPowerUp_sound = true;
 }
 
 
@@ -272,6 +278,9 @@ void Gamestate::Collision(Vehicle* vehicle, PowerUp* powerUp) {
 
 void Gamestate::Collision(Vehicle* vehicle, Object* staticObject) {
 	std::cout << "You ran into a wall, nice driving :P" << std::endl;	//Placeholder
+
+	// play sound when car crash to static object
+	this->carCrashStatic_sound = true;
 }
 
 

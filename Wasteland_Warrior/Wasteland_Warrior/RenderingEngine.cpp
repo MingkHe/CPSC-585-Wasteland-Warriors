@@ -201,7 +201,6 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 
 		// reset state to default (no shader or geometry bound)
 		glBindVertexArray(0);
-		printf("working, size: %d\n", texObjects.size());
 	}
 	
 	texObjects.clear();

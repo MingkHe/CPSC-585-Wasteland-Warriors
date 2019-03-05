@@ -554,10 +554,28 @@ void Physics_Controller::resetOrientation(int actorIndex) {
 	PxU32 numOfRidgActors = gScene->getActors(PxActorTypeFlag::eRIGID_DYNAMIC, userBuffer, numOfRidg, 0);
 	PxActor *actor = userBuffer[actorIndex];
 	PxRigidActor *rigidActor = actor->is<PxRigidActor>();
-	PxTransform orientation = rigidActor->getGlobalPose();		
+	PxTransform orientation = rigidActor->getGlobalPose();	
 	PxVec3 location = orientation.p;
+	PxQuat rotation = orientation.q;
 
-	PxTransform resetTransform = PxTransform(location, PxIdentity);
+	PxVec3 xRotation = rotation.getBasisVector0();
+	PxVec3 yRotation = rotation.getBasisVector1();
+	PxVec3 zRotation = rotation.getBasisVector2();
+
+
+	//int gsi = gameState->lookupGSIUsingPI(actorIndex);
+	
+	glm::vec2 heading = gameState->playerVehicle.direction;
+
+	float angle = atan2(heading.x, heading.y); // Note: I expected atan2(z,x) but OP reported success with atan2(x,z) instead! Switch around if you see 90° off.
+	float qx = 0;
+	float qy = 1 * sin(angle / 2);
+	float qz = 0;
+	float qw = cos(angle / 2);
+
+	PxQuat relativeQuatReset = PxQuat(qx, qy, qz, qw);
+
+	PxTransform resetTransform = PxTransform(location, relativeQuatReset);
 	rigidActor->setGlobalPose(resetTransform);
 	std::cout << "orientation reset" << std::endl;
 }
@@ -746,7 +764,7 @@ void Physics_Controller::stepPhysics(bool interactive)
 
 			if (gameState->Enemies[gameStateIndex].CheckForStuck()) {
 				vehiclesVector[i]->mDriveDynData.forceGearChange(PxVehicleGearsData::eREVERSE);
-				
+
 				enemyInputData.setAnalogAccel(pathfindingInput[0]);
 				enemyInputData.setAnalogSteer(-pathfindingInput[1]);
 			}

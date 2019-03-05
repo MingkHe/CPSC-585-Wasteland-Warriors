@@ -137,6 +137,7 @@ public:
 	int wave;
 	bool restart;
 	int enemiesLeft;
+	int breakSeconds;
 
 	//Spawning/Despawning Entities
 

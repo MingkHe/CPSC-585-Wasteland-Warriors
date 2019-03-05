@@ -76,7 +76,20 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 
 	loadFont("Fonts/lora/Lora-Bold.ttf");
 
-	pushTextObj(texObjects, "wave #", 0.01f*gameState->window_width, 0.95*gameState->window_height, 1.0f);
+	std::stringstream wave;
+	wave << gameState->wave;
+
+	pushTextObj(texObjects, "wave # "+ wave.str(), 0.01f*gameState->window_width, 0.95*gameState->window_height, 1.0f);
+
+	std::stringstream enemies;
+	enemies << gameState->enemiesLeft;
+
+	pushTextObj(texObjects, "enemies left: " + enemies.str(), 0.01f*gameState->window_width, 0.9*gameState->window_height, 1.0f);
+
+	std::stringstream breakTime;
+	breakTime << gameState->breakSeconds;
+
+	pushTextObj(texObjects, "break seconds: " + breakTime.str(), 0.01f*gameState->window_width, 0.85*gameState->window_height, 1.0f);
 
 	glm::mat4 projection = glm::ortho(0.0f, static_cast<GLfloat>(gameState->window_width), 0.0f, static_cast<GLfloat>(gameState->window_height));
 	glUseProgram(textShaderProgram);

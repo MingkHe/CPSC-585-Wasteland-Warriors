@@ -15,6 +15,7 @@
 
 #include "Geometry.h"
 #include "Gamestate.h"
+#include <sstream>
 #include <map>
 
 #include <ft2build.h>

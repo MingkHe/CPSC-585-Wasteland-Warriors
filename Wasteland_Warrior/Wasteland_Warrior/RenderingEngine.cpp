@@ -387,20 +387,15 @@ void RenderingEngine::pushTextObj(std::vector<Geometry>& objects, std::string te
 }
 
 void RenderingEngine::updateText() {
-	std::stringstream wave;
-	wave << game_state->wave;
 
-	pushTextObj(texObjects, "wave # " + wave.str(), 0.01f*game_state->window_width, 0.95*game_state->window_height, 1.0f);
+	pushTextObj(texObjects, "wave # " + std::to_string(game_state->wave), 0.01f*game_state->window_width, 0.95*game_state->window_height, 1.0f);
 
-	std::stringstream enemies;
-	enemies << game_state->enemiesLeft;
-
-	pushTextObj(texObjects, "enemies left: " + enemies.str(), 0.01f*game_state->window_width, 0.9*game_state->window_height, 1.0f);
-
-	std::stringstream breakTime;
-	breakTime << game_state->breakSeconds;
-
-	pushTextObj(texObjects, "break seconds: " + breakTime.str(), 0.01f*game_state->window_width, 0.85*game_state->window_height, 1.0f);
+	if (game_state->breakSeconds == 0) {
+		pushTextObj(texObjects, "enemies left: " + std::to_string(game_state->enemiesLeft), 0.01f*game_state->window_width, 0.9*game_state->window_height, 1.0f);
+	}
+	else {
+		pushTextObj(texObjects, "break seconds: " + std::to_string(game_state->breakSeconds), 0.01f*game_state->window_width, 0.85*game_state->window_height, 1.0f);
+	}
 }
 
 void RenderingEngine::LoadShaderProgram(std::string name, const char* vertexFile, const char* fragmentFile) {

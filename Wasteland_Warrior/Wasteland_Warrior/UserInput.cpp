@@ -94,7 +94,7 @@ void UserInput::Update(Gamestate* gameState)
 	}
 
 	//reset orentation
-	if (gameState->button == "R") {
+	if (gameState->button == "R" || gameState->button == "Y") {
 		gameState->resetOrientation();
 	}
 

@@ -28,6 +28,9 @@ Gamestate::Gamestate()
 	ui_win = false;
 	ui_lose = false;
 
+	powerText = false;
+	textTime = 0;
+
 	cameraAngle = 0.0;
 
 	//Logic
@@ -265,6 +268,8 @@ void Gamestate::Collision(Vehicle* vehicle, PowerUp* powerUp) {
 
 	// play sound when car collect power up
 	this->carPowerUp_sound = true;
+	// start counter for display the power up text
+	this->textTime = 3 * 60; // borrow the code from loghic.h counting the break time
 }
 
 

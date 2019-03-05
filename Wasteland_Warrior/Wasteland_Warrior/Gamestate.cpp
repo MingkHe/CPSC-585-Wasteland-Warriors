@@ -109,6 +109,7 @@ void Gamestate::SpawnStaticObject(int ObjectType, float x, float y, float z) {
 }
 
 void Gamestate::SpawnDynamicObject(int ObjectType, float x, float y, float z) {
+	std::cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Created Powerup!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
 	bool objectExists = true;
 	int sceneObjectIndex = 0;
 	PxReal density = 1;
@@ -133,6 +134,7 @@ void Gamestate::SpawnDynamicObject(int ObjectType, float x, float y, float z) {
 		);
 		scene->objects[sceneObjectIndex].geometry[0].transform = transformMatrix;
 		PowerUps.push_back(PowerUp(1, physicsIndex, sceneObjectIndex,  x, y, z));
+		std::cout << "physics index: " << physicsIndex << " assigned to the powerup" << std::endl;
 		//DynamicObjects.push_back(Object(physicsIndex, sceneObjectIndex , x, y, z));
 		
 	}

@@ -78,7 +78,7 @@ int Audio_Controller::playSound(Gamestate* gameState)
 
 	if (gameState->carRunning_sound)
 	{
-		printf("speed volumn: %f\n", 20+MIX_MAX_VOLUME*gameState->playerVehicle.speed/10.0f);
+		//printf("speed volumn: %f\n", 20+MIX_MAX_VOLUME*gameState->playerVehicle.speed/10.0f);
 		Mix_Volume(2, MIX_MAX_VOLUME*gameState->playerVehicle.speed/10.0f);
 		if (!Mix_Playing(2)) {	
 			Mix_PlayChannel(2, car_run, -1);

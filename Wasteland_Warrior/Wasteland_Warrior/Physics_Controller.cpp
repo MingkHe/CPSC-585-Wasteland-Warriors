@@ -61,6 +61,12 @@ bool					changeToReverseGear = false;
 bool					changeToForwardGear = false;
 
 
+
+
+
+
+
+
 PxFilterFlags contactReportFilterShader(
 	PxFilterObjectAttributes attributes0, PxFilterData filterData0,
 	PxFilterObjectAttributes attributes1, PxFilterData filterData1,
@@ -74,7 +80,7 @@ PxFilterFlags contactReportFilterShader(
 		//return PxFilterFlag::eDEFAULT;
 	}
 	// generate contacts for all that were not filtered above
-	pairFlags = PxPairFlag::eCONTACT_DEFAULT | PxPairFlag::eNOTIFY_CONTACT_POINTS;
+	pairFlags = PxPairFlag::eCONTACT_DEFAULT | PxPairFlag::eNOTIFY_CONTACT_POINTS | PxPairFlag::eTRIGGER_DEFAULT;
 
 	// trigger the contact callback for pairs (A,B) where
 	// the filtermask of A contains the ID of B and vice versa.
@@ -746,28 +752,31 @@ void Physics_Controller::stepPhysics(bool interactive)
 
 
 	//Check collisions for Vehicle/Vehicle collisions
-	if (gContactReportCallback.gContactActor1s.size() >= 1) {
+	for (int i = 0; i < gContactReportCallback.gContactActor1s.size(); i++) {
 		Vehicle* vehicle1 = NULL;
 		Vehicle* vehicle2 = NULL;
+		//std::cout << "gContactReportCallback contact: " << i << "/" << gContactReportCallback.gContactActor1s.size() << std::endl;
+
 
 		for (int index = 0; index <= rigidDynamicActorIndex; index++) {
 			PxActor *actor = userBufferRD[index];
-			if (gContactReportCallback.gContactActor1s[0] == actor) {
+			if (gContactReportCallback.gContactActor1s[i] == actor) {
 				vehicle1 = gameState->lookupVUsingPI(index);
 			}
-			if (gContactReportCallback.gContactActor2s[0] == actor) {
+			if (gContactReportCallback.gContactActor2s[i] == actor) {
 				vehicle2 = gameState->lookupVUsingPI(index);
 			}
 		}
-
-		if (vehicle1 != NULL && vehicle2 != NULL) {
-			glm::vec2 impulse = (glm::vec2{ gContactReportCallback.gContactImpulses[0].x, gContactReportCallback.gContactImpulses[0].z });
+		
+		if (vehicle1 != NULL && vehicle2 != NULL && (gContactReportCallback.gContactImpulses[i] != PxVec3{ 0.0f,0.0f,0.0f })) {
+			//std::cout << "Found 2 vehicles, Contact Impule Vector length is : " << gContactReportCallback.gContactImpulses.size() << std::endl;
+			glm::vec2 impulse = (glm::vec2{ gContactReportCallback.gContactImpulses[i].x, gContactReportCallback.gContactImpulses[i].z });
 			gameState->Collision(vehicle1, vehicle2, impulse);
 		}
 	}
-
+	
 	//Check collisions for Player/PowerUp collisions
-	if (gContactReportCallback.gContactActor1s.size() >= 1) {
+	for (int i = 0; i < gContactReportCallback.gContactActor1s.size(); i++) {
 		Vehicle* vehicle1 = NULL;
 		PowerUp* powerUp = NULL;
 
@@ -776,12 +785,12 @@ void Physics_Controller::stepPhysics(bool interactive)
 
 			if (index == gameState->playerVehicle.physicsIndex) {	
 
-				if (gContactReportCallback.gContactActor1s[0] == actor || gContactReportCallback.gContactActor2s[0] == actor) {
+				if (gContactReportCallback.gContactActor1s[i] == actor || gContactReportCallback.gContactActor2s[i] == actor) {
 					vehicle1 = gameState->lookupVUsingPI(index);
 				}
 			}
 
-			if (gContactReportCallback.gContactActor1s[0] == actor || gContactReportCallback.gContactActor2s[0] == actor) {
+			if (gContactReportCallback.gContactActor1s[i] == actor || gContactReportCallback.gContactActor2s[i] == actor) {
 				powerUp = gameState->lookupPUUsingPI(index);
 			}
 		}
@@ -790,10 +799,10 @@ void Physics_Controller::stepPhysics(bool interactive)
 			gameState->Collision(vehicle1, powerUp);
 		}
 	}
-
-
+	
+	
 	//Check collisions for Player/Static Object collisions
-	if (gContactReportCallback.gContactActor1s.size() >= 1) {
+	for (int i = 0; i < gContactReportCallback.gContactActor1s.size(); i++) {
 		Vehicle* vehicle1 = NULL;
 		Object* object = NULL;
 
@@ -801,18 +810,21 @@ void Physics_Controller::stepPhysics(bool interactive)
 		for (int index = 0; index <= rigidDynamicActorIndex; index++) {
 			PxActor *actor = userBufferRD[index];
 			if (index == gameState->playerVehicle.physicsIndex) {				
-				if (gContactReportCallback.gContactActor1s[0] == actor || gContactReportCallback.gContactActor2s[0] == actor) {
+				if (gContactReportCallback.gContactActor1s[i] == actor || gContactReportCallback.gContactActor2s[i] == actor) {
 					vehicle1 = gameState->lookupVUsingPI(index);
 				}
 			}
 		}
 
-		//Try to find PowerUp
+		//Try to find static object
 		for (int index = 0; index <= rigidStaticActorIndex; index++) {
 			PxActor *actor = userBufferRS[index];
 
-			if (gContactReportCallback.gContactActor1s[0] == actor || gContactReportCallback.gContactActor2s[0] == actor) {
-				object = gameState->lookupSOUsingPI(index);
+			if (index != gameState->map.physicsIndex) {
+				if (gContactReportCallback.gContactActor1s[i] == actor || gContactReportCallback.gContactActor2s[i] == actor) {
+					object = new Object();	//Since it does not matter at this point, object refrence is not accurate
+					//std::cout << "Collision with object with index: " << index << std::endl;
+				}
 			}
 		}
 

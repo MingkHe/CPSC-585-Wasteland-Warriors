@@ -54,7 +54,7 @@ void Gamestate::SpawnMap() {
 		faceVertsPhys[i] = PxU32(faceVertHolder);
 
 	}
-	int physicsIndex = physics_Controller->createMap(vertsPhysArray, vertsSize, faceVertsPhys, faceVertsSize/3);
+	map.physicsIndex = physics_Controller->createMap(vertsPhysArray, vertsSize, faceVertsPhys, faceVertsSize/3);
 }
 
 void Gamestate::SpawnStaticObject(int ObjectType, float x, float y, float z) {
@@ -239,7 +239,7 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse)
 
 
 	if (entity1->health <= 0)
-		physics_Controller->setPosition(entity1->physicsIndex, glm::vec3{ 300.0f, 4.0f, 300.0f });\
+		physics_Controller->setPosition(entity1->physicsIndex, glm::vec3{ 300.0f, 4.0f, 300.0f });
 
 	if(entity2->health <= 0)
 		physics_Controller->setPosition(entity2->physicsIndex, glm::vec3{ 300.0f, 4.0f, 300.0f});
@@ -313,7 +313,7 @@ void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 
 
 
 PowerUp* Gamestate::lookupPUUsingPI(int physicsIndex) {
-	PowerUp* powerUp = new PowerUp();
+	PowerUp* powerUp = NULL;
 	for (int i = 0; i < (int)PowerUps.size(); i++) {
 		if (physicsIndex == PowerUps[i].physicsIndex) {
 			powerUp = &PowerUps[i];
@@ -324,7 +324,7 @@ PowerUp* Gamestate::lookupPUUsingPI(int physicsIndex) {
 
 
 Object* Gamestate::lookupSOUsingPI(int physicsIndex) {
-	Object* object = new Object();
+	Object* object = NULL;
 	for (int i = 0; i < (int)StaticObjects.size(); i++) {
 		if (physicsIndex == StaticObjects[i].physicsIndex) {
 			object = &StaticObjects[i];
@@ -334,17 +334,14 @@ Object* Gamestate::lookupSOUsingPI(int physicsIndex) {
 }
 
 Vehicle* Gamestate::lookupVUsingPI(int physicsIndex) {
-	Vehicle* vehicle = new Vehicle();
-	bool found = false;
+	Vehicle* vehicle = NULL;
 	if (physicsIndex == playerVehicle.physicsIndex) {
-		found = true;
 		vehicle = &playerVehicle;
 	}
 
 	for (int i = 0; i < (int)Enemies.size(); i++) {
 		if (physicsIndex == Enemies[i].physicsIndex) {
 			vehicle = &Enemies[i];
-			found = true;
 		}
 	}
 	return vehicle;

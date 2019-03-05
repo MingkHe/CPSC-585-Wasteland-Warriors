@@ -118,7 +118,7 @@ void Gamestate::SpawnDynamicObject(int ObjectType, float x, float y, float z) {
 		sceneObjectIndex = scene->loadOBJObject("Objects/Realistic_Box_Model/box_realistic.obj", "Objects/Realistic_Box_Model/box_texture_color.jpg");
 
 		density = 1;
-		PxVec3 dimensions = { 1,1,1 };
+		PxVec3 dimensions = { 2,2,2 };
 		PxU32 mass = 1;
 		PxVec3 objectMOI
 		((dimensions.y*dimensions.y + dimensions.z*dimensions.z)*mass / 12.0f,
@@ -126,10 +126,10 @@ void Gamestate::SpawnDynamicObject(int ObjectType, float x, float y, float z) {
 			(dimensions.x*dimensions.x + dimensions.y*dimensions.y)*mass / 12.0f);
 		int physicsIndex = physics_Controller->createDynamicObject(ObjectType, dimensions, objectMOI, mass, density, x, y, z);
 		glm::mat4 transformMatrix = glm::mat4(
-			1.f, 0.f, 0.f, 0.f,
-			0.f, 1.f, 0.f, 0.f,
-			0.f, 0.f, 1.f, 0.f,
-			x, y, z, 1.f
+			2.f, 0.f, 0.f, 0.f,
+			0.f, 2.f, 0.f, 0.f,
+			0.f, 0.f, 2.f, 0.f,
+			x, y+1.0f, z, 1.f
 		);
 		scene->objects[sceneObjectIndex].geometry[0].transform = transformMatrix;
 		PowerUps.push_back(PowerUp(1, physicsIndex, sceneObjectIndex,  x, y, z));
@@ -214,7 +214,7 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse)
 	std::cout << "with force: " << totalForce << std::endl;
 
 
-	float damageScaling = 200;		//Smaller number means more damage
+	float damageScaling = 300;		//Smaller number means more damage
 
 
 	//If both vehicles align 
@@ -246,12 +246,23 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse)
 
 
 	std::cout << "New health values: " << entity1->health << " | " << entity2->health << std::endl;
-
-
 }
+
+
 
 void Gamestate::Collision(Vehicle* vehicle, PowerUp* powerUp) {
 	std::cout << "You feel more powerfull!" << std::endl;		//Placeholder
+
+
+	glm::mat4 transformMatrix = glm::mat4(
+		2.f, 0.f, 0.f, 0.f,
+		0.f, 2.f, 0.f, 0.f,
+		0.f, 0.f, 2.f, 0.f,
+		0.f, -2.0f, 0.f, 1.f
+	);
+
+	scene->objects[powerUp->sceneObjectIndex].geometry[0].transform = transformMatrix;
+	physics_Controller->setPosition(powerUp->physicsIndex, glm::vec3{ 0, -5, 0 });
 
 	// play sound when car collect power up
 	this->carPowerUp_sound = true;

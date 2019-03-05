@@ -7,7 +7,6 @@
 */
 #define PI_F 3.14159265359f
 #include "RenderingEngine.h"
-
 #include <iostream>
 
 
@@ -110,20 +109,21 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	glUniform3fv(glGetUniformLocation(shaderProgram, "materialSpecularColor"), 1, glm::value_ptr(game_state->materialSpecularColor));
 	glUniform1f(glGetUniformLocation(shaderProgram, "materialShininess"), game_state->materialShininess);
 	glUniform1i(glGetUniformLocation(shaderProgram, "materialTex"), 0);
-	
 
-	for (const CompositeWorldObject& g : objects) {
-		glUniformMatrix4fv(transformGL, 1, false, glm::value_ptr(g.geometry[0].transform));
+	int objectNum = objects.size();
+	for (int i = 0; i < objectNum; i++) {
+		glUniformMatrix4fv(transformGL, 1, false, glm::value_ptr(objects[i].geometry[0].transform));
 		//bind the texture
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, g.geometry[0].texture.textureID);
+		glBindTexture(GL_TEXTURE_2D, objects[i].geometry[0].texture.textureID);
 
-		glBindVertexArray(g.geometry[0].vao);
-		glDrawArrays(g.geometry[0].drawMode, 0, g.geometry[0].verts.size());
+		glBindVertexArray(objects[i].geometry[0].vao);
+		glDrawArrays(objects[i].geometry[0].drawMode, 0, objects[i].geometry[0].verts.size());
 
 		// reset state to default (no shader or geometry bound)
-		glBindVertexArray(0);
 	}
+	glBindVertexArray(0);
+	//}
 
 	//render health bar
 	GLint healthGL = glGetUniformLocation(healthshaderProgram, "health");

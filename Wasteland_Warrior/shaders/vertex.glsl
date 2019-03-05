@@ -27,9 +27,12 @@ void main()
     gl_Position = modelViewProjection*transform*vec4(VertexPosition, 1.0);
 
     // assign output colour to be interpolated
+	
 	fragTexCoord = VertexUV;
-	fragNormal = VertexNormal;
-	fragVert = VertexPosition;
+	//fragNormal = VertexNormal;
+	//fragVert = VertexPosition;
+	fragNormal = normalize((transform*vec4(VertexNormal, 0)).xyz);
+	fragVert = (transform*vec4(VertexPosition, 1)).xyz;
 	
 	
 }

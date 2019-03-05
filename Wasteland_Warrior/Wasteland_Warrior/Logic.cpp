@@ -15,9 +15,9 @@ void Logic::Update(Gamestate *gameState)
 {
 	int enemiesLeft;
 
-	for (int i = 0; i < gameState->Enemies.size(); i++) {
-		std::cout << "enemy at:" << i << " health:" << gameState->Enemies[i].health << std::endl;
-	}
+	//for (int i = 0; i < gameState->Enemies.size(); i++) {
+	//	std::cout << "enemy at:" << i << " health:" << gameState->Enemies[i].health << std::endl;
+	//}
 
 	//Restart
 	if (gameState->restart) {

@@ -11,5 +11,5 @@ public:
 
 	int type;//Health Boost/ Accelereration Boost/ Max Speed Boost
 
-	PowerUp(int type, float x, float y);
+	PowerUp(int type, int newPhysicsIndex, int newSceneObjectIndex, float x, float y, float z);
 };

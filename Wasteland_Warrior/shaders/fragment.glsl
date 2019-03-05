@@ -20,7 +20,6 @@ uniform vec3 lightPosition;
 uniform vec3 lightColour;
 uniform float lightAttenuation;
 uniform float lightAmbientCoeff;
-uniform vec2 uvTest;
 in vec2 fragTexCoord;
 in vec3 fragNormal;
 in vec3 fragVert;
@@ -28,16 +27,15 @@ in vec3 fragVert;
 out vec4 finalColor;
 
 void main() {
-    vec3 normal = normalize(transpose(inverse(mat3(transform))) * fragNormal);
+    vec3 normal = normalize(transpose(inverse(mat3(transform))) *fragNormal);
     vec3 surfacePos = vec3(transform * vec4(fragVert, 1));
     vec4 surfaceColor = texture(materialTex, fragTexCoord);
-	//vec4 surfaceColor = texture(materialTex, uvTest);
     vec3 surfaceToLight = normalize(lightPosition - surfacePos);
     vec3 surfaceToCamera = normalize(cameraPosition - surfacePos);
     
     //ambient
     vec3 ambient = lightAmbientCoeff * surfaceColor.rgb * lightColour;
-
+	//vec3 ambient = 0.002;
     //diffuse
     float diffuseCoefficient = max(0.0, dot(normal, surfaceToLight));
     vec3 diffuse = diffuseCoefficient * surfaceColor.rgb * lightColour;

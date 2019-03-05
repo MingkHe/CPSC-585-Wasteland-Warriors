@@ -48,14 +48,12 @@ Program::~Program() {
 void Program::start() {
 	//Initialization
 	Gamestate* gameState = new Gamestate();
+	gameState->window_width = glfwGetVideoMode(glfwGetPrimaryMonitor())->width;
+	gameState->window_height = glfwGetVideoMode(glfwGetPrimaryMonitor())->height;
 
 	auto currentTime = std::chrono::system_clock::now();
 	gameState->time = currentTime;
 	std::chrono::duration<double> elapsed_seconds = currentTime - currentTime;
-
-	gameState->timeStep = 1.0 / 60.0; //60 fps
-	gameState->button = "";
-	gameState->UIMode = "Start";
 
 	SDL_Init(SDL_INIT_AUDIO);
 
@@ -77,31 +75,28 @@ void Program::start() {
 
 	renderingEngine->LoadShaderProgram("menuShader", vertexMenuFile, fragmentMenuFile);
 
-	//scene = new Scene(renderingEngine);
-	gameState->scene = scene; // what is the scene meaning here in the gamestate?
-
 	UI_Controller UICL = UI_Controller(gameState,renderingEngine);
 
 	scene = new Scene(renderingEngine, gameState);
-	//gameState->playSound();
 
-
+	//Spawn Static Entities
 	gameState->SpawnMap();
+
 	gameState->SpawnStaticObject(2, -33, 0, 45);
-	gameState->SpawnStaticObject(1, 53, 0, -35);
+	//gameState->SpawnStaticObject(1, 53, 0, -35);
+
+	gameState->SpawnDynamicObject(1, 53, 1, -35);
 	//Spawn Player
 	gameState->SpawnPlayer(0, 0, 0);
 
 	//Spawn Enemies
-	gameState->SpawnEnemy(0, 10000, 10000, 10000);
-	gameState->SpawnEnemy(0, 10000, 10000, 10000);
-	gameState->SpawnEnemy(0, 10000, 10000, 10000);
-	//gameState->SpawnEnemy(0,-25, 2, -15+10000);
-	//gameState->SpawnEnemy(0, 35, 2, 15+10000);
-
+	for (int i = 0; i < 5; i++) {
+		gameState->SpawnEnemy(0, -10000 * i, -10000 * i, -10000 * i);
+	}
 
 	//Main render loop
 	while (!glfwWindowShouldClose(window)) {
+
 		//User Input
 		usrInput.Update(gameState);
 
@@ -144,11 +139,6 @@ void Program::start() {
 		while (elapsed_seconds.count() < gameState->timeStep){
 			currentTime = std::chrono::system_clock::now();
 			elapsed_seconds = currentTime - gameState->time;
-
-			//std::cout << "Time elapsed: " << elapsed_seconds.count() << std::endl; //Test statement, delete it if you want
-			if (elapsed_seconds.count() >= (gameState->timeStep * 2)) {
-				std::cout << "Frame lost" << std::endl; //Test statement, delete it if you want
-			}
 		}
 		elapsed_seconds = currentTime-currentTime;
 		gameState->time = currentTime;
@@ -186,6 +176,7 @@ void Program::setupWindow() {
 	//Input Callbacks
 	glfwSetKeyCallback(window, UserInput::key);
 	glfwSetCursorPosCallback(window, UserInput::cursor);
+	glfwSetMouseButtonCallback(window, UserInput::mouseButton);
 
 	//Bring the new window to the foreground (not strictly necessary but convenient)
 	glfwMakeContextCurrent(window);

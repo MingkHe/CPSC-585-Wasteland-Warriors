@@ -8,8 +8,9 @@ Object::~Object()
 {
 }
 
-Object::Object(int type, float x, float y)
+Object::Object(int newPhysicsIndex, int newSceneObjectIndex, float x, float y, float z)
 {
-	this->type = type;
-	this->position = glm::vec3(x, y, 0.0);
+	physicsIndex = newPhysicsIndex;
+	sceneObjectIndex = newSceneObjectIndex;
+	this->position = glm::vec3(x, y, z);
 }

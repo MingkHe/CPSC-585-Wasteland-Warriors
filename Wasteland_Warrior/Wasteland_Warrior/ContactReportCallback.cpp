@@ -32,7 +32,7 @@ void ContactReportCallback::onContact(const PxContactPairHeader& pairHeader, con
 	for (PxU32 i = 0; i < nbPairs; i++)
 	{
 
-		std::cout << "----------------Collision---------------" << std::endl;
+		//std::cout << "----------------Collision---------------" << std::endl;
 
 		PxActor* actor1 = pairHeader.actors[0]->is<PxActor>();
 		PxActor* actor2 = pairHeader.actors[1]->is<PxActor>();
@@ -52,11 +52,13 @@ void ContactReportCallback::onContact(const PxContactPairHeader& pairHeader, con
 			contactPoints.resize(contactCount);
 			pairs[i].extractContacts(&contactPoints[0], contactCount);
 
-			for (PxU32 j = 0; j < 1; j++)
-			{
-				gContactPositions.push_back(contactPoints[j].position);
-				gContactImpulses.push_back(contactPoints[j].impulse);
-			}
+			gContactPositions.push_back(contactPoints[0].position);
+			gContactImpulses.push_back(contactPoints[0].impulse);
+		}
+
+		else {
+			gContactPositions.push_back(PxVec3{0.0f,0.0f,0.0f});
+			gContactImpulses.push_back(PxVec3{ 0.0f,0.0f,0.0f });
 		}
 	}
 }

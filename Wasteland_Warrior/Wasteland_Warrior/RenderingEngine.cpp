@@ -395,7 +395,7 @@ void RenderingEngine::updateText() {
 	}
 
 	if (game_state->powerText) {
-		pushTextObj(texObjects, "You are more powerful!", 0.3f*game_state->window_width, 0.8*game_state->window_height, 1.0f);
+		pushTextObj(texObjects, "You are healing to full health!", 0.25f*game_state->window_width, 0.8*game_state->window_height, 1.0f);
 	}
 }
 

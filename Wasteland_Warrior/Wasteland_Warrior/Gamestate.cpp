@@ -270,6 +270,10 @@ void Gamestate::Collision(Vehicle* vehicle, PowerUp* powerUp) {
 	scene->objects[powerUp->sceneObjectIndex].geometry[0].transform = transformMatrix;  //Change location of graphic to out of sight
 	physics_Controller->setPosition(powerUp->physicsIndex, glm::vec3{ 0, -10, 0 });     //Change location of physics to out of way
 
+	//heal the player to full hp
+	printf("healing full hp!\n");
+	vehicle->health = 200;
+
 	// play sound when car collect power up
 	this->carPowerUp_sound = true;
 	// start counter for display the power up text

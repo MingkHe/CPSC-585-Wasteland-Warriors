@@ -17,9 +17,19 @@
 #include "Gamestate.h"
 #include <map>
 
+#include <ft2build.h>
+#include FT_FREETYPE_H
+
 //Forward declaration of classes
 //(note this is necessary because these are pointers and it allows the #include to appear in the .cpp file)
 struct GLFWwindow;
+
+struct Character {
+	GLuint TextureID;   // ID handle of the glyph texture
+	glm::ivec2 Size;    // Size of glyph
+	glm::ivec2 Bearing;  // Offset from baseline to left/top of glyph
+	GLuint Advance;    // Horizontal offset to advance to next glyph
+};
 
 class RenderingEngine {
 public:
@@ -29,6 +39,13 @@ public:
 	//std::vector<GLuint> shaderProgramList;
 
 	std::map<std::string, GLuint> shaderProgramList;
+
+	std::map<GLchar, Character> Characters;
+
+	//load font [normal use 128 font]
+	void loadFont(const char* ttfFile);
+	//push render text into geometry array
+	void pushTextObj(std::vector<Geometry>& objects, std::string text, float x, float y, float scale);
 
 	//Renders each object
 	void SwitchShaderProgram(GLuint shader);
@@ -59,6 +76,10 @@ public:
 	Geometry radar;
 	Geometry speedo;
 	Geometry needle;
+
+	GLuint textShaderProgram;
+
+	std::vector<Geometry> texObjects;
 };
 
 #endif /* RENDERINGENGINE_H_ */

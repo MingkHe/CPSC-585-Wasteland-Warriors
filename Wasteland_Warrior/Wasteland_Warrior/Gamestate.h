@@ -138,6 +138,9 @@ public:
 	bool restart;
 	int enemiesLeft;
 
+	int window_width;
+	int window_height;
+
 	//Spawning/Despawning Entities
 
 	void SpawnMap();

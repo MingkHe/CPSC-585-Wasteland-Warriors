@@ -89,6 +89,8 @@
     <None Include="libvorbisfile-3.dll" />
     <None Include="SDL2.dll" />
     <None Include="SDL2_mixer.dll" />
+    <None Include="..\shaders\texFragment.glsl" />
+    <None Include="..\shaders\texVertex.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Wasteland_Warrior.vcxproj.filters.txt" />

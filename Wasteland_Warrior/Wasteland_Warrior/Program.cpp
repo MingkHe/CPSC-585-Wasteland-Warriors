@@ -48,6 +48,8 @@ Program::~Program() {
 void Program::start() {
 	//Initialization
 	Gamestate* gameState = new Gamestate();
+	gameState->window_width = glfwGetVideoMode(glfwGetPrimaryMonitor())->width;
+	gameState->window_height = glfwGetVideoMode(glfwGetPrimaryMonitor())->height;
 
 	auto currentTime = std::chrono::system_clock::now();
 	gameState->time = currentTime;

@@ -723,8 +723,6 @@ void Physics_Controller::stepPhysics(bool interactive)
 	userDriveInput(gameState->WKey, gameState->AKey, gameState->SKey, gameState->DKey, gameState->SPACEKey, true, gameState->leftStickX, gameState->leftTrigger, gameState->rightTrigger);
 	
 
-	enemyInputData.setAnalogAccel(1.0f);
-
 	//Update each vehicles drive direction based on input values
 	for (int i = 0; i < vehiclesVector.size(); i++) {
 		
@@ -804,29 +802,42 @@ void Physics_Controller::stepPhysics(bool interactive)
 		}
 	}
 	
-	//Check collisions for Player/PowerUp collisions
-	for (int i = 0; i < gContactReportCallback.gContactActor1s.size(); i++) {
-		Vehicle* vehicle1 = NULL;
-		PowerUp* powerUp = NULL;
+	if (powerupGrabbed == false) {
+		//std::cout << "Starting Powerup check" << std::endl;
+		//Check collisions for Player/PowerUp collisions
+		for (int i = 0; i < gContactReportCallback.gContactActor1s.size(); i++) {
+			//std::cout << "..." << std::endl;
+			Vehicle* vehicle1 = NULL;
+			PowerUp* powerUp = NULL;
 
-		for (int index = 0; index <= rigidDynamicActorIndex; index++) {
-			PxActor *actor = userBufferRD[index];
+			for (int index = 0; index <= rigidDynamicActorIndex; index++) {
+				PxActor *actor = userBufferRD[index];
 
-			if (index == gameState->playerVehicle.physicsIndex) {	
+				if (index == gameState->playerVehicle.physicsIndex) {
+					//std::cout << "Checking if either actor is the player" << std::endl;
+					if ((gContactReportCallback.gContactActor1s[i] == actor || gContactReportCallback.gContactActor2s[i] == actor) && vehicle1 == NULL) {
+						vehicle1 = gameState->lookupVUsingPI(index);
+						//std::cout << "Player was involved with contact!!!!!!!!!!!!!!!!!!!" << std::endl;
+					}
+				}
 
-				if (gContactReportCallback.gContactActor1s[i] == actor || gContactReportCallback.gContactActor2s[i] == actor) {
-					vehicle1 = gameState->lookupVUsingPI(index);
+				//std::cout << "Checking rigidDynamicActorIndex of: " << index << std::endl;
+				if ((gContactReportCallback.gContactActor1s[i] == actor || gContactReportCallback.gContactActor2s[i] == actor) && powerUp == NULL) {
+					powerUp = gameState->lookupPUUsingPI(index);
+					//std::cout << "Found powerup" << std::endl;
 				}
 			}
 
-			if (gContactReportCallback.gContactActor1s[i] == actor || gContactReportCallback.gContactActor2s[i] == actor) {
-				powerUp = gameState->lookupPUUsingPI(index);
+			if (vehicle1 != NULL && powerUp != NULL) {
+				std::cout << "Powerup activating" << std::endl;
+				gameState->Collision(vehicle1, powerUp);
+				powerupGrabbed = true;
+				break;
 			}
 		}
-
-		if (vehicle1 != NULL && powerUp != NULL) {
-			gameState->Collision(vehicle1, powerUp);
-		}
+	}
+	else {
+		powerupGrabbed = false;
 	}
 	
 	

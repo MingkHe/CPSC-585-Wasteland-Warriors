@@ -4,7 +4,7 @@
 
 Gamestate::Gamestate()
 {
-	timeStep = 1.0 / 60.0; //60 fps
+	timeStep = (1.0 / 60.0) * 1000; //60 fps
 	button = "";
 	UIMode = "Start";
 
@@ -27,6 +27,9 @@ Gamestate::Gamestate()
 
 	ui_win = false;
 	ui_lose = false;
+
+	powerText = false;
+	textTime = 0;
 
 	cameraAngle = 0.0;
 
@@ -121,7 +124,7 @@ void Gamestate::SpawnDynamicObject(int ObjectType, float x, float y, float z) {
 		sceneObjectIndex = scene->loadOBJObject("Objects/Realistic_Box_Model/box_realistic.obj", "Objects/Realistic_Box_Model/box_texture_color.jpg");
 
 		density = 1;
-		PxVec3 dimensions = { 1,1,1 };
+		PxVec3 dimensions = { 2,2,2 };
 		PxU32 mass = 1;
 		PxVec3 objectMOI
 		((dimensions.y*dimensions.y + dimensions.z*dimensions.z)*mass / 12.0f,
@@ -129,10 +132,10 @@ void Gamestate::SpawnDynamicObject(int ObjectType, float x, float y, float z) {
 			(dimensions.x*dimensions.x + dimensions.y*dimensions.y)*mass / 12.0f);
 		int physicsIndex = physics_Controller->createDynamicObject(ObjectType, dimensions, objectMOI, mass, density, x, y, z);
 		glm::mat4 transformMatrix = glm::mat4(
-			1.f, 0.f, 0.f, 0.f,
-			0.f, 1.f, 0.f, 0.f,
-			0.f, 0.f, 1.f, 0.f,
-			x, y, z, 1.f
+			2.f, 0.f, 0.f, 0.f,
+			0.f, 2.f, 0.f, 0.f,
+			0.f, 0.f, 2.f, 0.f,
+			x, y+1.0f, z, 1.f
 		);
 		scene->objects[sceneObjectIndex].geometry[0].transform = transformMatrix;
 		PowerUps.push_back(PowerUp(1, physicsIndex, sceneObjectIndex,  x, y, z));
@@ -217,7 +220,7 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse)
 	std::cout << "with force: " << totalForce << std::endl;
 
 
-	float damageScaling = 200;		//Smaller number means more damage
+	float damageScaling = 300;		//Smaller number means more damage
 
 
 	//If both vehicles align 
@@ -242,22 +245,38 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse)
 
 
 	if (entity1->health <= 0)
-		physics_Controller->setPosition(entity1->physicsIndex, glm::vec3{ -20000, -20000, -20000 });
+		physics_Controller->setPosition(entity1->physicsIndex, glm::vec3{ 10050*entity1->health, 10050*entity1->health, 10050*entity1->health });
 
 	if(entity2->health <= 0)
-		physics_Controller->setPosition(entity2->physicsIndex, glm::vec3{ -10000, -10000, -10000 });
+		physics_Controller->setPosition(entity2->physicsIndex, glm::vec3{ 10000 * entity1->health, 10000 * entity1->health, 10000 * entity1->health });
+
+	//explosion sound
+	if (entity1->health <= 0 || entity2->health <= 0)
+		this->carExpo_sound = true;
 
 
 	std::cout << "New health values: " << entity1->health << " | " << entity2->health << std::endl;
-
-
 }
+
+
 
 void Gamestate::Collision(Vehicle* vehicle, PowerUp* powerUp) {
 	std::cout << "You feel more powerfull!" << std::endl;		//Placeholder
+	
+	glm::mat4 transformMatrix = glm::mat4(
+		2.f, 0.f, 0.f, 0.f,
+		0.f, 2.f, 0.f, 0.f,
+		0.f, 0.f, 2.f, 0.f,
+		0.f, -3.0f, 0.f, 1.f
+	);
+
+	scene->objects[powerUp->sceneObjectIndex].geometry[0].transform = transformMatrix;  //Change location of graphic to out of sight
+	physics_Controller->setPosition(powerUp->physicsIndex, glm::vec3{ 0, -10, 0 });     //Change location of physics to out of way
 
 	// play sound when car collect power up
 	this->carPowerUp_sound = true;
+	// start counter for display the power up text
+	this->textTime = 3 * 60; // borrow the code from loghic.h counting the break time
 }
 
 

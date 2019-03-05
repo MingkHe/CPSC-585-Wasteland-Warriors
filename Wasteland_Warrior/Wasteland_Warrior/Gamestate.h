@@ -1,6 +1,10 @@
 #include <list>
 #include <string>
-#include <chrono>
+
+#include <sys/timeb.h>
+#include <stdio.h>
+#include <errno.h>
+
 #include "Entity.h"
 #include "Camera.h"
 #include "Scene.h"
@@ -98,7 +102,12 @@ public:
 
 	//variable to indicate the engine volumn
 	float engineAccel = 0.0f;
-	//----------------------Sound Buffer End-------------------------------
+	//----------------------Sound Buffer End--------------------------------
+
+	//----------------------UI Buffer Start---------------------------------
+	bool powerText;
+	int textTime;
+	//----------------------UI Buffer End-----------------------------------
 
 	//Joysticks
 	float leftStickX;
@@ -114,8 +123,8 @@ public:
 	float cameraAngle;
 
 	//Time
-	std::chrono::time_point<std::chrono::system_clock> time;
-	double timeStep;
+	int time;
+	int timeStep;
 
 	int gstest = 5;
 

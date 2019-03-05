@@ -87,17 +87,24 @@ void Program::start() {
 	//Spawn Static Entities
 	gameState->SpawnMap();
 
+	gameState->SpawnStaticObject(0, 0, 0, 0);
 	gameState->SpawnStaticObject(2, -33, 0, 45);
-	//gameState->SpawnStaticObject(1, 53, 0, -35);
+	gameState->SpawnStaticObject(3, 63, 0, -25);
 
-	gameState->SpawnDynamicObject(1, 53, 1, -35);
+	//gameState->SpawnDynamicObject(1, 53, 1, -35);
+	//Spawn Power Ups
+	for (int i = 0; i < 3; i++) {
+		//gameState->SpawnDynamicObject(1, 20000 * i, 20000 * i, 20000 * i);
+	}
+
 	//Spawn Player
 	gameState->SpawnPlayer(0, 0, 0);
 
-	//Spawn Enemies
-	for (int i = 0; i < 5; i++) {
-		gameState->SpawnEnemy(0, 10000 * i, 10000 * i, 10000 * i);
-	}
+	//Initialize Enemies
+	gameState->SpawnEnemy(0, 10000, 10000, 10000);
+
+	int waveBreak = 0;
+	int breakTime = 30 * 60;
 
 	//Main render loop
 	while (!glfwWindowShouldClose(window)) {

@@ -91,7 +91,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	//sets uniforms
 
-	glm::mat4 perspectiveMatrix = glm::perspective(PI_F*.4f, 512.f / 512.f, .1f, 500.f); // last argument changed from 200 to 500 to increase view range
+	glm::mat4 perspectiveMatrix = glm::perspective(PI_F*.4f, 512.f / 512.f, .1f, 750.f); // last argument changed from 200 to 500 to increase view range
 	glm::mat4 modelViewProjection = perspectiveMatrix * game_state->camera.viewMatrix();
 
 	glUseProgram(shaderProgram);
@@ -385,17 +385,17 @@ void RenderingEngine::pushTextObj(std::vector<Geometry>& objects, std::string te
 
 void RenderingEngine::updateText() {
 
-	pushTextObj(texObjects, "wave # " + std::to_string(game_state->wave), 0.01f*game_state->window_width, 0.95*game_state->window_height, 1.0f);
+	pushTextObj(texObjects, "Wave # " + std::to_string(game_state->wave), 0.01f*game_state->window_width, 0.95*game_state->window_height, 1.0f);
 
 	if (game_state->breakSeconds == 0) {
-		pushTextObj(texObjects, "enemies left: " + std::to_string(game_state->enemiesLeft), 0.01f*game_state->window_width, 0.9*game_state->window_height, 1.0f);
+		pushTextObj(texObjects, "Enemies Left: " + std::to_string(game_state->enemiesLeft), 0.01f*game_state->window_width, 0.9*game_state->window_height, 1.0f);
 	}
 	else {
-		pushTextObj(texObjects, "break seconds: " + std::to_string(game_state->breakSeconds), 0.01f*game_state->window_width, 0.85*game_state->window_height, 1.0f);
+		pushTextObj(texObjects, "Break Seconds: " + std::to_string(game_state->breakSeconds), 0.01f*game_state->window_width, 0.85*game_state->window_height, 1.0f);
 	}
 
 	if (game_state->powerText) {
-		pushTextObj(texObjects, "You are more powerful!", 0.3f*game_state->window_width, 0.8*game_state->window_height, 1.0f);
+		pushTextObj(texObjects, "You are heal to full health!", 0.3f*game_state->window_width, 0.8*game_state->window_height, 1.0f);
 	}
 }
 

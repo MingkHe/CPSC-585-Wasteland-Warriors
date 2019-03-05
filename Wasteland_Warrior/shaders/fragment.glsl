@@ -54,7 +54,7 @@ void main() {
     //attenuation
     float distanceToLight = length(lightPosition - surfacePos);
 	//float attenuation = 1.0/(1.0 + lightAttenuation * distanceToLight);
-   float attenuation = 1.0 / (1.0 + lightAttenuation * pow(distanceToLight, 2));
+    float attenuation = 1.0 / (1.0 + lightAttenuation * pow(distanceToLight, 2));
 
     //linear color (color before gamma correction)
     vec3 linearColor = ambient + attenuation*(diffuse + specular);

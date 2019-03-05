@@ -69,11 +69,17 @@ void Gamestate::SpawnMap() {
 void Gamestate::SpawnStaticObject(int ObjectType, float x, float y, float z) {
 	bool objectExists = true;
 	int sceneObjectIndex=0;
-	if (ObjectType == 1) {
+	if (ObjectType == 0) {
+		sceneObjectIndex = scene->loadOBJObject("Objects/SkyBox/skySphere.obj", "Objects/SkyBox/skySphere_texture.jpg");
+	}
+	else if (ObjectType == 1) {
 		sceneObjectIndex = scene->loadOBJObject("Objects/Ruined_Brick_Building/ruined building_brick.obj", "Objects/Ruined_Brick_Building/ruined_building_brick.jpg");
 	}
 	else if (ObjectType == 2) {
 		sceneObjectIndex = scene->loadOBJObject("Objects/Wooden_train_cars/wagon.obj", "Objects/Wooden_train_cars/wagon_tex3.png");
+	}
+	else if (ObjectType == 3) {
+		sceneObjectIndex = scene->loadOBJObject("Objects/Truck/truck.obj", "Objects/Truck/truck_tex1.png");
 	}
 	else {
 		objectExists = false;
@@ -118,7 +124,7 @@ void Gamestate::SpawnDynamicObject(int ObjectType, float x, float y, float z) {
 	if (ObjectType == 1) {
 
 		//CreateBoxObject
-		sceneObjectIndex = scene->loadOBJObject("Objects/Realistic_Box_Model/box_realistic.obj", "Objects/Realistic_Box_Model/box_texture_color.jpg");
+		sceneObjectIndex = scene->loadOBJObject("Objects/Realistic_Box_Model/box_realistic.obj", "Objects/Realistic_Box_Model/box_texture_color_red.png");
 
 		density = 1;
 		PxVec3 dimensions = { 2,2,2 };
@@ -220,9 +226,11 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse)
 	float damageScaling = 500;		//Smaller number means more damage
 
 
+	float damage = totalForce / damageScaling;
+
 	//If both vehicles align 
 	if ((entity1AttackLevel >= attackLevelThreshold && entity2AttackLevel >= attackLevelThreshold) ||
-		(entity2AttackLevel <= -attackLevelThreshold && entity1AttackLevel <= -attackLevelThreshold)) {
+		(entity2AttackLevel <= -attackLevelThreshold && entity1AttackLevel <= -attackLevelThreshold) && damage > 5.0f) {
 
 		if (entity1->speed > entity2->speed) {
 			entity2->health -= totalForce / damageScaling;
@@ -233,10 +241,10 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse)
 	}
 
 
-	if (entity1AttackLevel >= attackLevelThreshold || entity1AttackLevel <= -attackLevelThreshold)
+	if (entity1AttackLevel >= attackLevelThreshold || entity1AttackLevel <= -attackLevelThreshold && damage > 5.0f)
 		entity2->health -= totalForce/ damageScaling;
 
-	if (entity2AttackLevel >= attackLevelThreshold || entity1AttackLevel <= -attackLevelThreshold)
+	if (entity2AttackLevel >= attackLevelThreshold || entity1AttackLevel <= -attackLevelThreshold && damage > 5.0f)
 		entity1->health -= totalForce/ damageScaling;
 
 
@@ -269,6 +277,10 @@ void Gamestate::Collision(Vehicle* vehicle, PowerUp* powerUp) {
 
 	scene->objects[powerUp->sceneObjectIndex].geometry[0].transform = transformMatrix;  //Change location of graphic to out of sight
 	physics_Controller->setPosition(powerUp->physicsIndex, glm::vec3{ 0, -10, 0 });     //Change location of physics to out of way
+
+	//heal the player to full hp
+	printf("healing full hp!\n");
+	vehicle->health = 100;
 
 	// play sound when car collect power up
 	this->carPowerUp_sound = true;

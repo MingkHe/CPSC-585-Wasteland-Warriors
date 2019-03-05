@@ -78,6 +78,9 @@ void Gamestate::SpawnStaticObject(int ObjectType, float x, float y, float z) {
 	else if (ObjectType == 2) {
 		sceneObjectIndex = scene->loadOBJObject("Objects/Wooden_train_cars/wagon.obj", "Objects/Wooden_train_cars/wagon_tex3.png");
 	}
+	else if (ObjectType == 3) {
+		sceneObjectIndex = scene->loadOBJObject("Objects/Truck/truck.obj", "Objects/Truck/truck_tex1.png");
+	}
 	else {
 		objectExists = false;
 	}
@@ -121,7 +124,7 @@ void Gamestate::SpawnDynamicObject(int ObjectType, float x, float y, float z) {
 	if (ObjectType == 1) {
 
 		//CreateBoxObject
-		sceneObjectIndex = scene->loadOBJObject("Objects/Realistic_Box_Model/box_realistic.obj", "Objects/Realistic_Box_Model/box_texture_color.jpg");
+		sceneObjectIndex = scene->loadOBJObject("Objects/Realistic_Box_Model/box_realistic.obj", "Objects/Realistic_Box_Model/box_texture_color_red.png");
 
 		density = 1;
 		PxVec3 dimensions = { 2,2,2 };

@@ -15,7 +15,6 @@ void Logic::Update(Gamestate *gameState)
 {
 	glm::vec3 pos;
 	int enemiesLeft;
-	gameState->breakSeconds = breakTime / 60;
 
 	//Restart
 	if (gameState->restart) {
@@ -71,6 +70,7 @@ void Logic::Update(Gamestate *gameState)
 			}
 		}
 		else if (waveBreak == 1) {
+			gameState->breakSeconds = breakTime / 60;
 			if (breakTime <= 0) {
 				waveBreak = 6;
 				breakTime = 30 * 60;

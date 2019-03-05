@@ -67,10 +67,10 @@ int AI_Interaction::Update()
 
 
 			if (relativeRotation > 0.0f) {
-				controllInput = { 0.7f, -1.0f };	//Turn left
+				controllInput = { 0.8f, -0.9f };	//Turn left
 			}
 			else {
-				controllInput = { 0.7f, 1.0f };		//Turn right
+				controllInput = { 0.8f, 0.9f };		//Turn right
 			}
 		}
 

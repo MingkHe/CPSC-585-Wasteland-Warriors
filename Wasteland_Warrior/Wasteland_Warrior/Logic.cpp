@@ -22,12 +22,12 @@ void Logic::Update(Gamestate *gameState)
 		gameState->restart = false;
 
 		//reset Car
-		gameState->physics_Controller->setPosition(gameState->playerVehicle.physicsIndex, glm::vec3{ 0, 3, 0 });
+		gameState->physics_Controller->setPosition(gameState->playerVehicle.physicsIndex, glm::vec3{ 0, 2, 0 });
 		gameState->playerVehicle.health = 100;
 
 		//reset AI
 		for (int i = 0; i < 5; i++) {
-			gameState->physics_Controller->setPosition(gameState->Enemies[i].physicsIndex, glm::vec3{ -10000 * i, -10000 * i, -10000 * i });
+			gameState->physics_Controller->setPosition(gameState->Enemies[i].physicsIndex, glm::vec3{ 10000 * i, 10000 * i, 10000 * i });
 			gameState->Enemies[i].health = 100;
 		}
 	}
@@ -37,6 +37,7 @@ void Logic::Update(Gamestate *gameState)
 	if ((gameState->playerVehicle.health <= 0)) {
 		gameState->UIMode = "Lose";
 		gameState->ui_gameplay = false;
+		gameState->restart = true;
 	} 
 	else {
 
@@ -45,7 +46,7 @@ void Logic::Update(Gamestate *gameState)
 		if (gameState->wave == 0) {
 
 			//move up an enemy AI
-			gameState->physics_Controller->setPosition(gameState->Enemies[0].physicsIndex, glm::vec3{ -35, 5, 35 });
+			gameState->physics_Controller->setPosition(gameState->Enemies[0].physicsIndex, glm::vec3{ 35, 5, 35 });
 
 			gameState->wave = 1;
 			waveBreak = 1;
@@ -61,26 +62,43 @@ void Logic::Update(Gamestate *gameState)
 					enemiesLeft++;
 				}
 			}
-			for (int i = 1; i < 5; i++) {
-				gameState->physics_Controller->setPosition(gameState->Enemies[i].physicsIndex, glm::vec3{-10000 * i, -10000 * i, -10000 * i });
-			}
 			gameState->enemiesLeft = enemiesLeft;
+
+			//keep suspended
+			for (int i = 1; i < 5; i++) {
+				gameState->physics_Controller->setPosition(gameState->Enemies[i].physicsIndex, glm::vec3{ 10000 * i, 10000 * i, 10000 * i });
+			}
+
 			if (enemiesLeft == 0) {
-				gameState->wave = 6;
+				gameState->wave = 2;
+
 				//spawn power ups
 			}
 		}
 		else if (waveBreak == 1) {
+
+			//keep suspended
+			for (int i = 0; i < 5; i++) {
+				gameState->physics_Controller->setPosition(gameState->Enemies[i].physicsIndex, glm::vec3{ 10000 * i, 10000 * i, 10000 * i });
+			}
+
 			gameState->breakSeconds = breakTime / 60;
 			if (breakTime <= 0) {
-				waveBreak = 6;
-				breakTime = 30 * 60;
+				waveBreak = 2;
+				breakTime = 10 * 60;
+
 				//remove powerups
 
+				//reset AI
+				for (int i = 0; i < 5; i++) {
+					gameState->physics_Controller->setPosition(gameState->Enemies[i].physicsIndex, glm::vec3{ 10000 * i, 10000 * i, 10000 * i });
+					gameState->Enemies[i].health = 100;
+				}
+
 				//move up 3 enemy AIs
-				gameState->physics_Controller->setPosition(gameState->Enemies[0].physicsIndex, glm::vec3{ -15, 5, 35 });
-				gameState->physics_Controller->setPosition(gameState->Enemies[1].physicsIndex, glm::vec3{ -15, 5, 25 });
-				gameState->physics_Controller->setPosition(gameState->Enemies[2].physicsIndex, glm::vec3{ -35, 5, 35 });
+				gameState->physics_Controller->setPosition(gameState->Enemies[0].physicsIndex, glm::vec3{ 15, 5, 35 });
+				gameState->physics_Controller->setPosition(gameState->Enemies[1].physicsIndex, glm::vec3{ 25, 5, 35 });
+				gameState->physics_Controller->setPosition(gameState->Enemies[2].physicsIndex, glm::vec3{ 35, 5, 35 });
 			}
 			breakTime--;
 		}
@@ -94,31 +112,48 @@ void Logic::Update(Gamestate *gameState)
 					enemiesLeft++;
 				}
 			}
+			gameState->enemiesLeft = enemiesLeft;
+
+			//keep suspended
 			for (int i = 3; i < 5; i++) {
 				gameState->physics_Controller->setPosition(gameState->Enemies[i].physicsIndex, glm::vec3{ 10000 * i, 10000 * i, 10000 * i });
 			}
-			gameState->enemiesLeft = enemiesLeft;
+
 			if (enemiesLeft == 0) {
-				gameState->wave = 3;
+				gameState->wave = -1; //End here for now
+
 				//spawn power ups
 			}
 		}
 		else if (waveBreak == 2) {
+
+			//keep suspended
+			for (int i = 0; i < 5; i++) {
+				gameState->physics_Controller->setPosition(gameState->Enemies[i].physicsIndex, glm::vec3{ 10000 * i, 10000 * i, 10000 * i });
+			}
+
+			gameState->breakSeconds = breakTime / 60;
 			if (breakTime <= 0) {
-				waveBreak = 6; //End here for now
+				waveBreak = -1; //End here for now
 				breakTime = 30 * 60;
 				//remove powerups
 
+								//reset AI
+				//for (int i = 0; i < 5; i++) {
+				//	gameState->physics_Controller->setPosition(gameState->Enemies[i].physicsIndex, glm::vec3{ 10000 * i, 10000 * i, 10000 * i });
+				//	gameState->Enemies[i].health = 100;
+				//}
+
 				//move up 5 enemy AIs
-				gameState->physics_Controller->setPosition(gameState->Enemies[0].physicsIndex, glm::vec3{ -15, 5, 35 });
-				gameState->physics_Controller->setPosition(gameState->Enemies[1].physicsIndex, glm::vec3{ -15, 5, 25 });
-				gameState->physics_Controller->setPosition(gameState->Enemies[2].physicsIndex, glm::vec3{ -35, 5, 35 });
-				gameState->physics_Controller->setPosition(gameState->Enemies[3].physicsIndex, glm::vec3{ -15, 5, 15 });
-				gameState->physics_Controller->setPosition(gameState->Enemies[4].physicsIndex, glm::vec3{ -35, 5, 15 });
+				//gameState->physics_Controller->setPosition(gameState->Enemies[0].physicsIndex, glm::vec3{ -15, 5, 35 });
+				//gameState->physics_Controller->setPosition(gameState->Enemies[1].physicsIndex, glm::vec3{ -15, 5, 25 });
+				//gameState->physics_Controller->setPosition(gameState->Enemies[2].physicsIndex, glm::vec3{ -35, 5, 35 });
+				//gameState->physics_Controller->setPosition(gameState->Enemies[3].physicsIndex, glm::vec3{ -15, 5, 15 });
+				//gameState->physics_Controller->setPosition(gameState->Enemies[4].physicsIndex, glm::vec3{ -35, 5, 15 });
 			}
 			breakTime--;
 		}
-
+		/*
 		//WAVE 3
 		else if (gameState->wave == 3) {
 			enemiesLeft = 0;
@@ -191,7 +226,7 @@ void Logic::Update(Gamestate *gameState)
 			}
 		}
 		}
-
+		*/
 		//Player has beaten all five waves
 		else if (gameState->wave == 6) {
 			gameState->UIMode = "Win";

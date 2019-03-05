@@ -15,7 +15,7 @@ void Logic::Update(Gamestate *gameState)
 {
 	glm::vec3 pos;
 	int enemiesLeft;
-	gameState->breakSeconds = breakTime;
+	gameState->breakSeconds = breakTime / 60;
 
 	//Restart
 	if (gameState->restart) {

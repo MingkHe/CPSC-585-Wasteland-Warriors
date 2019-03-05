@@ -247,6 +247,10 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse)
 	if(entity2->health <= 0)
 		physics_Controller->setPosition(entity2->physicsIndex, glm::vec3{ 10000 * entity1->health, 10000 * entity1->health, 10000 * entity1->health });
 
+	//explosion sound
+	if (entity1->health <= 0 || entity2->health <= 0)
+		this->carExpo_sound = true;
+
 
 	std::cout << "New health values: " << entity1->health << " | " << entity2->health << std::endl;
 }

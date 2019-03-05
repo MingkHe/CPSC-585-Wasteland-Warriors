@@ -75,6 +75,10 @@ public:
 	bool carCrash_sound;
 	//car explosion sound
 	bool carExpo_sound;
+	//car crash with static object
+	bool carCrashStatic_sound;
+	//car collects power up
+	bool carPowerUp_sound;
 
 	//the sound for select the start button
 	bool ui_enter;

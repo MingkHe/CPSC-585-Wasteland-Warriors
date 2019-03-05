@@ -81,12 +81,16 @@ void UserInput::Update(Gamestate* gameState)
 
 	//Restart game
 	if (gameState->button == "ESC") {
+		
+		//disable the ESC key, since all this switching is implemented in UI
+		/*
 		if (gameState->UIMode == "Game") {
 			gameState->UIMode = "Pause";
 		}
 		else {
 			gameState->UIMode = "Start";
 		}
+		*/
 	}
 
 	//reset orentation

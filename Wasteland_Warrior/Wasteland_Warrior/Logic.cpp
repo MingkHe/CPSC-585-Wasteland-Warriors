@@ -36,6 +36,7 @@ void Logic::Update(Gamestate *gameState)
 	//Player has lost all health
 	if ((gameState->playerVehicle.health <= 0)) {
 		gameState->UIMode = "Lose";
+		gameState->ui_gameplay = false;
 	} 
 	else {
 
@@ -194,6 +195,7 @@ void Logic::Update(Gamestate *gameState)
 		//Player has beaten all five waves
 		else if (gameState->wave == 6) {
 			gameState->UIMode = "Win";
+			gameState->ui_gameplay = false;
 			gameState->restart = true;
 		}
 	}

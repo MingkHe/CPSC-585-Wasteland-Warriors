@@ -124,16 +124,19 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 		if (input == "M")
 		{
 			GameState->UIMode = "Pause";
+			GameState->ui_gameplay = false;
 		}
 
 		if (input == "G")
 		{
 			GameState->UIMode = "Win";
+			GameState->ui_gameplay = false;
 		}
 
 		if (input == "H")
 		{
 			GameState->UIMode = "Lose";
+			GameState->ui_gameplay = false;
 		}
 
 		//render UI elements over already rendered scene.
@@ -146,10 +149,6 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 
 		//render pause game image. 
 		//Should update based on selected menu item.
-		
-		//todo: pause menu sound effect
-
-		GameState->ui_gameplay = false;
 		GameState->ui_pauseMenu = true;
 
 		std::string input = GameState->button;
@@ -240,11 +239,8 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 		else if (pausePointerState == 1 && input == "ENTER") {
 			GameState->UIMode = "Game";
 			GameState->restart = true;
-
-			//todo unknow sound effect bug when the next line call
 			GameState->ui_enter = true;
-
-			//GameState->ui_menu = false;
+			GameState->ui_pauseMenu = false;
 		}
 		else if (pausePointerState == 2 && input == "ENTER"){
 			GameState->UIMode = "Start";
@@ -339,7 +335,6 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 	else if (GameState->UIMode == "Win")
 	{
 		//Display a win screen
-		GameState->ui_gameplay = false;
 		GameState->ui_win = true;
 
 		std::string input = GameState->button;
@@ -370,7 +365,6 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 	else if (GameState->UIMode == "Lose")
 	{
 		//Display a lose screen
-		GameState->ui_gameplay = false;
 		GameState->ui_lose = true;
 
 		std::string input = GameState->button;

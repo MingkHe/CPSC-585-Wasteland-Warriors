@@ -4,7 +4,7 @@
 
 Gamestate::Gamestate()
 {
-	timeStep = 1.0 / 60.0; //60 fps
+	timeStep = (1.0 / 60.0) * 1000; //60 fps
 	button = "";
 	UIMode = "Start";
 
@@ -69,7 +69,10 @@ void Gamestate::SpawnMap() {
 void Gamestate::SpawnStaticObject(int ObjectType, float x, float y, float z) {
 	bool objectExists = true;
 	int sceneObjectIndex=0;
-	if (ObjectType == 1) {
+	if (ObjectType == 0) {
+		sceneObjectIndex = scene->loadOBJObject("Objects/SkyBox/skySphere.obj", "Objects/SkyBox/skySphere_texture.jpg");
+	}
+	else if (ObjectType == 1) {
 		sceneObjectIndex = scene->loadOBJObject("Objects/Ruined_Brick_Building/ruined building_brick.obj", "Objects/Ruined_Brick_Building/ruined_building_brick.jpg");
 	}
 	else if (ObjectType == 2) {

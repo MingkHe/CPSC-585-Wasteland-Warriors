@@ -11,7 +11,11 @@
 //**Must include glad and GLFW in this order or it breaks**
 #include "glad/glad.h"
 #include <GLFW/glfw3.h>
-#include <chrono>
+
+//Time stuff
+#include <sys/timeb.h>
+#include <stdio.h>
+#include <errno.h>
 
 #include "Program.h"
 #include "RenderingEngine.h"
@@ -51,9 +55,10 @@ void Program::start() {
 	gameState->window_width = glfwGetVideoMode(glfwGetPrimaryMonitor())->width;
 	gameState->window_height = glfwGetVideoMode(glfwGetPrimaryMonitor())->height;
 
-	auto currentTime = std::chrono::system_clock::now();
-	gameState->time = currentTime;
-	std::chrono::duration<double> elapsed_seconds = currentTime - currentTime;
+	struct timeb currentTime;
+	ftime(&currentTime);
+	gameState->time = currentTime.millitm;
+	int elapsed_seconds = 0;
 
 	SDL_Init(SDL_INIT_AUDIO);
 
@@ -82,6 +87,7 @@ void Program::start() {
 	//Spawn Static Entities
 	gameState->SpawnMap();
 
+	gameState->SpawnStaticObject(0, 0, 0, 0);
 	gameState->SpawnStaticObject(2, -33, 0, 45);
 	//gameState->SpawnStaticObject(1, 53, 0, -35);
 
@@ -137,13 +143,17 @@ void Program::start() {
 		glfwPollEvents();
 
 		//Fixed Timestep
-
-		while (elapsed_seconds.count() < gameState->timeStep){
-			currentTime = std::chrono::system_clock::now();
-			elapsed_seconds = currentTime - gameState->time;
+		while (elapsed_seconds < gameState->timeStep){
+			ftime(&currentTime);
+			//std::cout << "Elapsed time: " << elapsed_seconds << std::endl;
+			//std::cout << "Last time was: " << gameState->time << "   Current time is: " << currentTime.millitm << std::endl;
+			
+			if (currentTime.millitm > gameState->time) { elapsed_seconds = currentTime.millitm - gameState->time; }
+			else { elapsed_seconds = (1000 - currentTime.millitm) + gameState->time; }
 		}
-		elapsed_seconds = currentTime-currentTime;
-		gameState->time = currentTime;
+		//std::cout << "Frame"  << std::endl;
+		elapsed_seconds = 0;
+		gameState->time = currentTime.millitm;
 	}
 
 }

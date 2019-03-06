@@ -1,11 +1,7 @@
 # --Wasteland Warrior--
-## Milestone #2
+## Milestone #3
 
-For this milestone, we have implemented each of the basic subsystems in our game. Our goal was to get each basic system to
-comunicate within in our framework. The input system is capturing input from the keyboard and controller. The audio system 
-is able to start/stop and pause/play music files. The physics system is monitoring collisions for objects and the ground plane.
-The physics engine is also handling the movement of the car on the ground plane. The rendering system is handling the rendering
-of the red box and the ground plane.
+For this milestone, we have implemented the game rules, opponent driving AI, 3D rendering engine, audio engine and refine gameplay. Our goal was to connect each system together to create a first playable of our game.
 
 ### To Build and Run:
 To build, download or clone the Wasteland Warrior files from https://github.com/MingkHe/CPSC-585-Wasteland-Warriors/tree/Wasteland_Warrior
@@ -16,20 +12,45 @@ Please note that you may need to change the Windows SDK version first depending 
 be compiled using only the x86 Debug mode.
 
 
-### Input Controls: (currently keyboard only)
+### Input Controls:
 
     Driving:
-        W to accelerate forward
-        S to Brake and Reverse
-        A/D for steering left and right respectively
-        SPACE for Handbrake
+        W or Right Trigger to accelerate forward
+        S or Left Trigger to Brake and Reverse
+        A/D or Left Stick for steering left and right respectively
+        SPACE or B on gamepad for Handbrake
+        
+        R or Y on gamepad to Reset your vehicle after being flipped or stuck
 
     Camera:
-        Mouse to move camera
+        Move Mouse while Holding the Left Mouse Button or move the Right Stick to move the camera around the vehicle
 
-    Music:
-        N to start/pause/resume music
-        M to stop music
-        Left Shift to switch music
+    Screen:
+    In the start Menu:
+        Menu options:
+        - start: start the game
+        - quit: exit the game
 
-    ESCAPE to quit game
+        UP Arrow or UP on Dpad to move up
+        DOWN Arrow or DOWN on Dpad to move down
+        ENTER or X on gamepad to select option
+        
+
+        
+    In the gameplay:
+        M or Right option on gamepad to enter paused menu
+        G to ener win screen (for testing)
+        H to enter lose screen (for testing)
+        
+    In the pause menu:
+
+        Menu options:
+        - resume: resume the game
+        - restart: restart the game
+        - menu: go to start menu
+
+        UP Arrow to move up
+        DOWN Arrow to move down
+        ENTER to select option
+        
+

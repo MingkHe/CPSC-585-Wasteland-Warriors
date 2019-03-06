@@ -9,6 +9,7 @@ std::queue<std::string> UserInput::inputBuffer;
 
 double UserInput::MouseXpos;
 double UserInput::MouseYpos;
+bool UserInput::MousePressed;
 
 //WASD
 bool UserInput::WKey;
@@ -16,8 +17,6 @@ bool UserInput::AKey;
 bool UserInput::SKey;
 bool UserInput::DKey;
 bool UserInput::SPACEKey;
-
-bool UserInput::restart;
 
 UserInput::UserInput()
 {
@@ -36,7 +35,7 @@ void UserInput::Update(Gamestate* gameState)
 	gameState->rightStickX = 0.0;
 	gameState->rightStickY = 0.0;
 	gameState->leftTrigger = 0.0;
-	gameState->rightTrigger = 0.0; // is the intial value in the game pad is -1.0 or 1.0?
+	gameState->rightTrigger = 0.0; 
 	gamepad(glfwJoystickPresent(GLFW_JOYSTICK_1), gameState);
 
 	//Get input from buffer
@@ -80,39 +79,38 @@ void UserInput::Update(Gamestate* gameState)
 		gameState->SPACEKey = false;
 	}
 
-	//Restart game
-	if (UserInput::restart == true) {
-		UserInput::restart = false;
-		if (gameState->UIMode == "Game") {
-			gameState->UIMode = "Pause";
-			gameState->ui_gameplay = false;
-		}
-		else {
-			gameState->UIMode = "Start";
-			gameState->ui_menu = true;
-		}
+	//reset orentation
+	if (gameState->button == "R" || gameState->button == "Y") {
+		gameState->resetOrientation();
 	}
-
-	if (UserInput::MouseXpos != oldMouseXpos) {
-
-		float angle = gameState->cameraAngle + (oldMouseXpos - UserInput::MouseXpos) * 0.01;
-		if (angle < 1.4) {
-			if (angle > -1.4) {
-				gameState->cameraAngle = angle;
-			}
-		}
-		oldMouseXpos = UserInput::MouseXpos;
-	}
-
-	//cout <<
 
 	if (gameState->leftStickY == 1) {
-			UserInput::inputBuffer.push("UP");
+		UserInput::inputBuffer.push("UP");
 	}
 	if (gameState->leftStickY == -1) {
 		UserInput::inputBuffer.push("DOWN");
 	}
 
+	if (UserInput::MouseXpos != oldMouseXpos) {
+		if (UserInput::MousePressed) {
+			float angle = gameState->cameraAngle + (oldMouseXpos - UserInput::MouseXpos) * 0.01;
+			if (angle < 1.5 && angle > -1.5) {
+				gameState->cameraAngle = angle;
+			}
+			oldMouseXpos = UserInput::MouseXpos;
+		}
+		else {
+			if (gameState->cameraAngle > 0.05){
+				gameState->cameraAngle = gameState->cameraAngle - 0.02;
+		}
+		else if (gameState->cameraAngle < -0.05) {
+				gameState->cameraAngle = gameState->cameraAngle + 0.02;
+			}
+		else {
+				gameState->cameraAngle = 0;
+			}
+		}
+	}
 }
 
 // Callback for key presses
@@ -143,10 +141,10 @@ void UserInput::key(GLFWwindow* window, int key, int scancode, int action, int m
 
 			//Escape
 		case GLFW_KEY_ESCAPE:
-
-			UserInput::restart = true;
+			UserInput::inputBuffer.push("ESC");
 			break;
 
+			//Testing Letters
 		case GLFW_KEY_T:
 			UserInput::inputBuffer.push("T");
 			break;
@@ -164,6 +162,9 @@ void UserInput::key(GLFWwindow* window, int key, int scancode, int action, int m
 			break;
 		case GLFW_KEY_N:
 			UserInput::inputBuffer.push("N");
+			break;
+		case GLFW_KEY_R:
+			UserInput::inputBuffer.push("R");
 			break;
 
 			//Arrows
@@ -224,10 +225,24 @@ void UserInput::cursor(GLFWwindow* window, double xpos, double ypos)
 	UserInput::MouseYpos = ypos;
 }
 
+void UserInput::mouseButton(GLFWwindow* window, int button, int action, int mods)
+{
+	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+		UserInput::MousePressed = true;
+	} else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
+		UserInput::MousePressed = false;
+	}
+}
+
 void UserInput::gamepad(int controller, Gamestate* gameState) {
 
 	//Controller 1
 	if (controller == 1) {
+
+
+		//get Joystick for Mapping
+		const char* name = glfwGetJoystickName(GLFW_JOYSTICK_1);
+		std::cout << name << std::endl;
 
 		//Gamepad joystick and triggers 
 		int axesCount;
@@ -271,6 +286,7 @@ void UserInput::gamepad(int controller, Gamestate* gameState) {
 		};
 		if (GLFW_PRESS == buttons[7]) { 
 			UserInput::inputBuffer.push("RO");
+			UserInput::inputBuffer.push("M");
 		};
 		if (GLFW_PRESS == buttons[8]) { 
 			UserInput::inputBuffer.push("LS");
@@ -291,5 +307,15 @@ void UserInput::gamepad(int controller, Gamestate* gameState) {
 			UserInput::inputBuffer.push("LEFT");
 		};
 
+		//PS4 Controller mapping
+		/*if (name == "Wireless Controller") {
+			float lt = gameState->rightStickY;
+			float rt = gameState->leftTrigger;
+			float ry = gameState->rightTrigger;
+
+			gameState->rightStickY = ry;
+			gameState->leftTrigger = lt;
+			gameState->rightTrigger = rt;
+		}*/
 	}
 }

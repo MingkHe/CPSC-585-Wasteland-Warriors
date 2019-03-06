@@ -45,7 +45,6 @@ int AI_Interaction::Update()
 
 		if (targetVector.x < 0 && targetRotation > 0) {
 			targetRotation = targetRotation-M_PI;
-			std::cout << targetRotation << std::endl;
 		}
 
 		else if (targetVector.x < 0 && targetRotation < 0)
@@ -68,10 +67,10 @@ int AI_Interaction::Update()
 
 
 			if (relativeRotation > 0.0f) {
-				controllInput = { 1.0f, -1.0f };	//Turn left
+				controllInput = { 0.8f, -0.9f };	//Turn left
 			}
 			else {
-				controllInput = { 1.0f, 1.0f };		//Turn right
+				controllInput = { 0.8f, 0.9f };		//Turn right
 			}
 		}
 

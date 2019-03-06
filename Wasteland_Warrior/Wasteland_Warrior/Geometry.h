@@ -32,6 +32,7 @@ public:
 	std::vector<glm::vec3> vertsPhys;
 
 	MyTexture texture;
+	GLuint textureID;
 	const char* textureFilePath;
 	glm::mat4 transform;
 	glm::vec3 center;

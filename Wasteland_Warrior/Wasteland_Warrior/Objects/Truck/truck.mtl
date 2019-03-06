@@ -1,0 +1,35 @@
+# Blender MTL File: 'None'
+# Material Count: 3
+
+newmtl 01___Default
+Ns 96.078431
+Ka 0.250000 0.250000 0.250000
+Kd 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 0.000000
+illum 6
+map_Kd C:\Users\Bryson\Documents\School\Video Game Design\Objects\Downloaded Objects\rd0lq7vjxv-BM23\tex_0075_1.png
+
+newmtl 02___Default
+Ns 96.078431
+Ka 0.250000 0.250000 0.250000
+Kd 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 0.000000
+illum 6
+map_Kd C:\Users\Bryson\Documents\School\Video Game Design\Objects\Downloaded Objects\rd0lq7vjxv-BM23\tex_0077_1.png
+
+newmtl New_Material
+Ns 96.078431
+Ka 0.200000 0.200000 0.200000
+Kd 0.800000 0.800000 0.800000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Bryson\Documents\School\Video Game Design\Objects\Downloaded Objects\rd0lq7vjxv-BM23\tex_0078_1.png

@@ -1,6 +1,10 @@
 #include <list>
 #include <string>
-#include <chrono>
+
+#include <sys/timeb.h>
+#include <stdio.h>
+#include <errno.h>
+
 #include "Entity.h"
 #include "Camera.h"
 #include "Scene.h"
@@ -75,6 +79,10 @@ public:
 	bool carCrash_sound;
 	//car explosion sound
 	bool carExpo_sound;
+	//car crash with static object
+	bool carCrashStatic_sound;
+	//car collects power up
+	bool carPowerUp_sound;
 
 	//the sound for select the start button
 	bool ui_enter;
@@ -94,7 +102,12 @@ public:
 
 	//variable to indicate the engine volumn
 	float engineAccel = 0.0f;
-	//----------------------Sound Buffer End-------------------------------
+	//----------------------Sound Buffer End--------------------------------
+
+	//----------------------UI Buffer Start---------------------------------
+	bool powerText;
+	int textTime;
+	//----------------------UI Buffer End-----------------------------------
 
 	//Joysticks
 	float leftStickX;
@@ -110,20 +123,20 @@ public:
 	float cameraAngle;
 
 	//Time
-	std::chrono::time_point<std::chrono::system_clock> time;
-	double timeStep;
+	int time;
+	int timeStep;
 
 	int gstest = 5;
 
 	//Graphics
 	Camera camera = Camera(this);
-	glm::vec3 light = glm::vec3(0.0f, 1000.0f, 0.0f);
+	glm::vec3 light = glm::vec3(0.0f, 100.0f, 0.0f);
 	glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
-	double lightAttenuation = 0.000001;
-	float lightAmbientCoefficient = 0.05;
+	double lightAttenuation = 0.000000002f;
+	float lightAmbientCoefficient = 0.00f;
 
 	glm::vec3 materialSpecularColor = glm::vec3(1.0f, 1.0f, 1.0f);
-	float materialShininess = 0.2;
+	float materialShininess = 90000;
 
 	unsigned char shading_model = 0;
 	float radar_view = 1.f / 40.f;//this needs to be the inverse of the view distance
@@ -137,24 +150,29 @@ public:
 	int wave;
 	bool restart;
 	int enemiesLeft;
+	int breakSeconds;
+
+	int window_width;
+	int window_height;
 
 	//Spawning/Despawning Entities
 
 	void SpawnMap();
 	void SpawnStaticObject(int ObjectType, float x, float y, float z);
+	void SpawnDynamicObject(int ObjectType, float x, float y, float z);
 	void SpawnPlayer(float x, float y, float z);
 	void SpawnEnemy(int type, float x, float y, float z);
 	void DespawnEnemy(EnemyUnit enemy);
-	void SpawnPowerUp(int type, float x, float y);
-	void DespawnPowerUp(PowerUp powerUp);
-	void SpawnObject(int type, float x, float y);
-	void DespawnObject(Object object);
 
 	void Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse);
 	void Collision(Vehicle* vehicle, PowerUp* powerUp);
+	void Collision(Vehicle* vehicle, Object* staticObject);
 
+	void resetOrientation();
+	void resetOrientation(int physicsIndex);
 
 	void updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 newTransformationMatrix, float newSpeed);
+	Object* lookupSOUsingPI(int physicsIndex);
 	PowerUp* lookupPUUsingPI(int physicsIndex);
 	Vehicle* lookupVUsingPI(int physicsIndex);
 	int lookupGSIUsingPI(int physicsIndex);

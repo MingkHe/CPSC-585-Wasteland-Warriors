@@ -286,7 +286,17 @@ void Scene::displayScene() {
 		index = gameState->Enemies[i].sceneObjectIndex;
 		objects[index].geometry[0].transform = gameState->getEntityTransformation(index);
 		
+
 	}
+	/*int numOfPowerUps = gameState->DynamicObjects.size();
+	index = 0;
+	for (int i = 0; i < numOfPowerUps; i++) {
+		index = gameState->DynamicObjects[i].sceneObjectIndex;
+		std::cout << index << std::endl;
+		objects[index].geometry[0].transform = gameState->getEntityTransformation(index);
+		std::cout << objects[index].geometry[0].transform[0][3] << " " << objects[index].geometry[0].transform[1][3] << " " << objects[index].geometry[0].transform[2][3] << " " <<std::endl;
+
+	}*/
 	renderer->RenderScene(objects);
 	
 

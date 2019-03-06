@@ -102,9 +102,6 @@ static PxConvexMesh* createConvexMesh(const PxVec3* verts, const PxU32 numVerts,
 
 PxRigidStatic* createRigidTriangleMeshDrivable(const PxVec3* verts, const PxU32 numVerts, const PxU32* indices, const PxU32 triCount, PxMaterial* material, PxPhysics& physics, PxCooking& cooking, const PxFilterData& simFilterData)
 {
-	//std::cout << " Yo2" << std::endl;
-	//std::cout << verts.length << " " << " " << sizeof(PxU32) << " " << std::endl;
-	// Create descriptor for convex mesh
 	PxTriangleMeshDesc meshDesc;
 	meshDesc.points.count = numVerts;
 	meshDesc.points.stride = sizeof(PxVec3);
@@ -146,11 +143,8 @@ PxRigidStatic* createRigidTriangleMeshDrivable(const PxVec3* verts, const PxU32 
 	return rigidStaticMesh;
 }
 
-PxRigidStatic* createRigidTriangleMesh(const PxVec3* verts, const PxU32 numVerts, const PxU32* indices, const PxU32 triCount, PxMaterial* material, PxPhysics& physics, PxCooking& cooking)
+PxRigidStatic* createRigidTriangleMeshStatic(const PxVec3* verts, const PxU32 numVerts, const PxU32* indices, const PxU32 triCount, PxMaterial* material, PxPhysics& physics, PxCooking& cooking)
 {
-	//std::cout << " Yo2" << std::endl;
-	//std::cout << verts.length << " " << " " << sizeof(PxU32) << " " << std::endl;
-	// Create descriptor for convex mesh
 	PxTriangleMeshDesc meshDesc;
 	meshDesc.points.count = numVerts;
 	meshDesc.points.stride = sizeof(PxVec3);
@@ -179,6 +173,33 @@ PxRigidStatic* createRigidTriangleMesh(const PxVec3* verts, const PxU32 numVerts
 	return rigidStaticMesh;
 }
 
+PxRigidDynamic* createRigidDynamicObject(PxU32 objectType, PxVec3 dimensions, PxVec3 MOI, PxReal mass, PxMaterial* material, PxReal density, PxPhysics& physics, PxCooking& cooking)
+{
+	PxConvexMesh* chassisConvexMesh = createChassisMesh(dimensions, physics, cooking);
+	
+	//Add a plane to the scene.
+	PxConvexMeshGeometry geom(chassisConvexMesh);
+	PxRigidDynamic* objectActor = physics.createRigidDynamic(PxTransform(PxIdentity));
+	if (objectActor == NULL) {
+		return NULL;
+	}
+	
+	PxFilterData obstacleSimFilterData = PxFilterData(COLLISION_FLAG_OBSTACLE, COLLISION_FLAG_OBSTACLE_AGAINST, 0, 0);
+	
+	PxFilterData objectQryFilterData;
+	setupNonDrivableSurface(objectQryFilterData);
+	//Cube 2 x 2 x 2 and Mass of 1 for temporary Moment of intertia
+
+	PxShape* objectShape = PxRigidActorExt::createExclusiveShape(*objectActor, geom, *material);
+	objectShape->setQueryFilterData(objectQryFilterData);
+	objectShape->setSimulationFilterData(obstacleSimFilterData);
+	objectShape->setLocalPose(PxTransform(PxIdentity));
+	objectActor->setMass(mass);
+	objectActor->setMassSpaceInertiaTensor(MOI);
+	objectActor->setCMassLocalPose(PxTransform(PxQuat(PxIdentity)));
+
+	return objectActor;
+}
 
 PxConvexMesh* createChassisMesh(const PxVec3 dims, PxPhysics& physics, PxCooking& cooking)
 {
@@ -246,6 +267,7 @@ PxRigidDynamic* createVehicleActor
 	//Add the chassis shapes to the actor.
 	for(PxU32 i = 0; i < numChassisMeshes; i++)
 	{
+		std::cout << i << std::endl;
 		PxShape* chassisShape=PxRigidActorExt::createExclusiveShape(*vehActor, PxConvexMeshGeometry(chassisConvexMeshes[i]), *chassisMaterials[i]);
 		chassisShape->setQueryFilterData(chassisQryFilterData);
 		chassisShape->setSimulationFilterData(chassisSimFilterData);

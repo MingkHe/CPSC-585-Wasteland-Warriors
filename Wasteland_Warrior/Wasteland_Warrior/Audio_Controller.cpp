@@ -31,6 +31,8 @@ Audio_Controller::Audio_Controller()
 	car_brake = Mix_LoadWAV("SoundEffect/car_brake.wav");
 	car_crash = Mix_LoadWAV("SoundEffect/car_crash.wav");
 	car_expo = Mix_LoadWAV("SoundEffect/car_explosion.mp3");
+	car_crash_static = Mix_LoadWAV("SoundEffect/car_crash_static.wav");
+	car_powerUp = Mix_LoadWAV("SoundEffect/car_powerUp.wav");
 
 	ui_click = Mix_LoadWAV("SoundEffect/click.wav");
 	ui_enter = Mix_LoadWAV("SoundEffect/selected.mp3");
@@ -54,7 +56,7 @@ int Audio_Controller::playSound(Gamestate* gameState)
 	//Implementation
 	std::string input = gameState->button;
 
-	if (gameState->carStart_sound)
+	if (gameState->carStart_sound && gameState->ui_gameplay)
 	{
 		Mix_Volume(0, MIX_MAX_VOLUME);
 		if (!Mix_Playing(0)) {
@@ -63,7 +65,7 @@ int Audio_Controller::playSound(Gamestate* gameState)
 		gameState->carStart_sound = false;
 	}
 
-	if (gameState->carIdle_sound)
+	if (gameState->carIdle_sound && gameState->ui_gameplay)
 	{
 		if (!Mix_Playing(1)) {
 			Mix_Volume(1, MIX_MAX_VOLUME);
@@ -76,9 +78,9 @@ int Audio_Controller::playSound(Gamestate* gameState)
 		}
 	}
 
-	if (gameState->carRunning_sound)
+	if (gameState->carRunning_sound && gameState->ui_gameplay)
 	{
-		printf("speed volumn: %f\n", 20+MIX_MAX_VOLUME*gameState->playerVehicle.speed/10.0f);
+		//printf("speed volumn: %f\n", 20+MIX_MAX_VOLUME*gameState->playerVehicle.speed/10.0f);
 		Mix_Volume(2, MIX_MAX_VOLUME*gameState->playerVehicle.speed/10.0f);
 		if (!Mix_Playing(2)) {	
 			Mix_PlayChannel(2, car_run, -1);
@@ -90,7 +92,7 @@ int Audio_Controller::playSound(Gamestate* gameState)
 		}
 	}
 
-	if (gameState->carBrake_sound)
+	if (gameState->carBrake_sound && gameState->ui_gameplay)
 	{
 		if (!Mix_Playing(3)) {
 			Mix_Volume(3, MIX_MAX_VOLUME/3);
@@ -103,7 +105,7 @@ int Audio_Controller::playSound(Gamestate* gameState)
 		}
 	}
 
-	if (gameState->carCrash_sound)
+	if (gameState->carCrash_sound && gameState->ui_gameplay)
 	{
 		Mix_Volume(4, MIX_MAX_VOLUME);
 		if (!Mix_Playing(4)) {
@@ -112,13 +114,31 @@ int Audio_Controller::playSound(Gamestate* gameState)
 		gameState->carCrash_sound = false;
 	}
 
-	if (gameState->carExpo_sound)
+	if (gameState->carExpo_sound && gameState->ui_gameplay)
 	{
 		Mix_Volume(5, MIX_MAX_VOLUME);
 		if (!Mix_Playing(5)) {
 			Mix_PlayChannel(5, car_expo, 0);
 		}
 		gameState->carExpo_sound = false;
+	}
+
+	if (gameState->carCrashStatic_sound && gameState->ui_gameplay)
+	{
+		Mix_Volume(6, MIX_MAX_VOLUME);
+		if (!Mix_Playing(6)) {
+			Mix_PlayChannel(6, car_crash_static, 0);
+		}
+		gameState->carCrashStatic_sound = false;
+	}
+
+	if (gameState->carPowerUp_sound && gameState->ui_gameplay)
+	{
+		Mix_Volume(7, MIX_MAX_VOLUME);
+		if (!Mix_Playing(7)) {
+			Mix_PlayChannel(7, car_powerUp, 0);
+		}
+		gameState->carPowerUp_sound = false;
 	}
 
 	if (gameState->ui_enter)

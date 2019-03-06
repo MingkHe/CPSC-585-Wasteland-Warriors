@@ -9,6 +9,6 @@ public:
 
 	int type;
 
-	Object(int type, float x, float y);
+	Object(int newPhysicsIndex, int newSceneObjectIndex, float x, float y, float z);
 };
 

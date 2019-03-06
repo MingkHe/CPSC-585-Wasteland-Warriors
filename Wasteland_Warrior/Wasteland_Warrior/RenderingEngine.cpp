@@ -7,8 +7,9 @@
 */
 #define PI_F 3.14159265359f
 #include "RenderingEngine.h"
-
 #include <iostream>
+
+
 
 //included here because it just contains some global functions
 #include "ShaderTools.h"
@@ -19,6 +20,8 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	healthshaderProgram = ShaderTools::InitializeShaders("../shaders/healthvertex.glsl", "../shaders/healthfragment.glsl");
 	radarshaderProgram = ShaderTools::InitializeShaders("../shaders/radarvertex.glsl", "../shaders/radarfragment.glsl");
 	basicshaderProgram = ShaderTools::InitializeShaders("../shaders/basicvertex.glsl", "../shaders/basicfragment.glsl");
+	
+	textShaderProgram = ShaderTools::InitializeShaders("../shaders/texVertex.glsl", "../shaders/texFragment.glsl");
 
 	health.verts.push_back(glm::vec3(.5f, .8f, 0.f));
 	health.verts.push_back(glm::vec3(.5f, .9f, 0.f));
@@ -67,6 +70,15 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	needle.drawMode = GL_TRIANGLES;
 	assignBuffers(needle);
 	setBufferData(needle);
+
+	//the code to load the font, may be do some refactor in the future.
+
+	loadFont("Fonts/lora/Lora-Bold.ttf");
+
+	glm::mat4 projection = glm::ortho(0.0f, static_cast<GLfloat>(gameState->window_width), 0.0f, static_cast<GLfloat>(gameState->window_height));
+	glUseProgram(textShaderProgram);
+	glUniformMatrix4fv(glGetUniformLocation(textShaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+	glUseProgram(0);
 }
 
 RenderingEngine::~RenderingEngine() {
@@ -75,18 +87,16 @@ RenderingEngine::~RenderingEngine() {
 
 void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objects) {
 	//Clears the screen to a dark grey background
-
 	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LESS);
-
 	//sets uniforms
 
-	glm::mat4 perspectiveMatrix = glm::perspective(PI_F*.4f, 512.f / 512.f, .1f, 200.f);
+	glm::mat4 perspectiveMatrix = glm::perspective(PI_F*.4f, 512.f / 512.f, .1f, 750.f); // last argument changed from 200 to 500 to increase view range
 	glm::mat4 modelViewProjection = perspectiveMatrix * game_state->camera.viewMatrix();
 
 	glUseProgram(shaderProgram);
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
 	GLint transformGL = glGetUniformLocation(shaderProgram, "transform");
 	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "modelViewProjection"), 1, false, glm::value_ptr(modelViewProjection));
 
@@ -99,20 +109,21 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	glUniform3fv(glGetUniformLocation(shaderProgram, "materialSpecularColor"), 1, glm::value_ptr(game_state->materialSpecularColor));
 	glUniform1f(glGetUniformLocation(shaderProgram, "materialShininess"), game_state->materialShininess);
 	glUniform1i(glGetUniformLocation(shaderProgram, "materialTex"), 0);
-	
 
-	for (const CompositeWorldObject& g : objects) {
-		glUniformMatrix4fv(transformGL, 1, false, glm::value_ptr(g.geometry[0].transform));
+	int objectNum = objects.size();
+	for (int i = 0; i < objectNum; i++) {
+		glUniformMatrix4fv(transformGL, 1, false, glm::value_ptr(objects[i].geometry[0].transform));
 		//bind the texture
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, g.geometry[0].texture.textureID);
+		glBindTexture(GL_TEXTURE_2D, objects[i].geometry[0].texture.textureID);
 
-		glBindVertexArray(g.geometry[0].vao);
-		glDrawArrays(g.geometry[0].drawMode, 0, g.geometry[0].verts.size());
+		glBindVertexArray(objects[i].geometry[0].vao);
+		glDrawArrays(objects[i].geometry[0].drawMode, 0, objects[i].geometry[0].verts.size());
 
 		// reset state to default (no shader or geometry bound)
-		glBindVertexArray(0);
 	}
+	glBindVertexArray(0);
+	//}
 
 	//render health bar
 	GLint healthGL = glGetUniformLocation(healthshaderProgram, "health");
@@ -161,10 +172,47 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	glDrawArrays(needle.drawMode, 0, needle.verts.size());
 	glBindVertexArray(0);
 
+	//render text
+	//glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	updateText();
+
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	glUseProgram(textShaderProgram);
+
+	//text color:
+	glUniform3f(glGetUniformLocation(textShaderProgram, "textColor"), 0.7f, 0.2f, 0.2f);
+	//glActiveTexture(GL_TEXTURE0);
+
+	for (Geometry& g : texObjects) {
+		
+		//bind the texture
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, g.textureID);
+
+		glBindVertexArray(g.vao);
+		glDrawArrays(g.drawMode, 0, g.verts.size());
+
+		// reset state to default (no shader or geometry bound)
+		glBindVertexArray(0);
+	}
+	
+	texObjects.clear();
+
+	glDisable(GL_CULL_FACE);
+	glDisable(GL_BLEND);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
 	glUseProgram(0);
 
 	// check for an report any OpenGL errors
 	CheckGLErrors();
+
+
 }
 
 void RenderingEngine::RenderMenuScene(const std::vector<Geometry>& objects) {
@@ -211,6 +259,144 @@ void RenderingEngine::RenderMenuSceneClear(const std::vector<Geometry>& objects)
 
 	// check for an report any OpenGL errors
 	CheckGLErrors();
+}
+
+void RenderingEngine::loadFont(const char* ttfFile) {
+
+	//clear
+	Characters.clear();
+
+	// FreeType
+	FT_Library ft;
+	// All functions return a value different than 0 whenever an error occurred
+	if (FT_Init_FreeType(&ft))
+		std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
+
+	// Load font as face
+	FT_Face face;
+	if (FT_New_Face(ft, ttfFile, 0, &face))
+		std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
+
+	// Set size to load glyphs as
+	FT_Set_Pixel_Sizes(face, 0, 48);
+
+	// Disable byte-alignment restriction
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+	// Load first 128 characters of ASCII set
+	for (GLubyte c = 0; c < 128; c++)
+	{
+		// Load character glyph 
+		if (FT_Load_Char(face, c, FT_LOAD_RENDER))
+		{
+			std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
+			continue;
+		}
+		// Generate texture
+		GLuint texture;
+		glGenTextures(1, &texture);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glTexImage2D(
+			GL_TEXTURE_2D,
+			0,
+			GL_RED,
+			face->glyph->bitmap.width,
+			face->glyph->bitmap.rows,
+			0,
+			GL_RED,
+			GL_UNSIGNED_BYTE,
+			face->glyph->bitmap.buffer
+		);
+		// Set texture options
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		// Now store character for later use
+		Character character = {
+			texture,
+			glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
+			glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
+			face->glyph->advance.x
+		};
+		Characters.insert(std::pair<GLchar, Character>(c, character));
+	}
+	glBindTexture(GL_TEXTURE_2D, 0);
+	// Destroy FreeType once we're finished
+	FT_Done_Face(face);
+	FT_Done_FreeType(ft);
+
+}
+
+void RenderingEngine::pushTextObj(std::vector<Geometry>& objects, std::string text, float x, float y, float scale) {
+	// Iterate through all characters
+	std::string::const_iterator c;
+	for (c = text.begin(); c != text.end(); c++)
+	{
+		Character ch = Characters[*c];
+
+		float xpos = x + ch.Bearing.x * scale;
+		float ypos = y - (ch.Size.y - ch.Bearing.y) * scale;
+
+		float w = ch.Size.x * scale;
+		float h = ch.Size.y * scale;
+
+		Geometry character;
+		character.verts.push_back(glm::vec3(xpos, ypos + h, 0.0f));
+		character.verts.push_back(glm::vec3(xpos, ypos, 0.0f));
+		character.verts.push_back(glm::vec3(xpos + w, ypos, 0.0f));
+
+		character.verts.push_back(glm::vec3(xpos, ypos + h, 0.0f));
+		character.verts.push_back(glm::vec3(xpos + w, ypos, 0.0f));
+		character.verts.push_back(glm::vec3(xpos + w, ypos + h, 0.0f));
+
+		character.uvs.push_back(glm::vec2(0.0f, 0.0f));
+		character.uvs.push_back(glm::vec2(0.0f, 1.0f));
+		character.uvs.push_back(glm::vec2(1.0f, 1.0f));
+
+		character.uvs.push_back(glm::vec2(0.0f, 0.0f));
+		character.uvs.push_back(glm::vec2(1.0f, 1.0f));
+		character.uvs.push_back(glm::vec2(1.0f, 0.0f));
+
+		/*
+		// Update VBO for each character
+		GLfloat vertices[6][4] = {
+			{ xpos,     ypos + h,   0.0, 0.0 },
+			{ xpos,     ypos,       0.0, 1.0 },
+			{ xpos + w, ypos,       1.0, 1.0 },
+
+			{ xpos,     ypos + h,   0.0, 0.0 },
+			{ xpos + w, ypos,       1.0, 1.0 },
+			{ xpos + w, ypos + h,   1.0, 0.0 }
+		};
+		*/
+		character.textureID = ch.TextureID;
+		character.drawMode = GL_TRIANGLES;
+
+		assignBuffers(character);
+		setBufferData(character);
+
+		objects.push_back(character);
+
+		// Now advance cursors for next glyph (note that advance is number of 1/64 pixels)
+		x += (ch.Advance >> 6) * scale; // Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
+	}
+}
+
+void RenderingEngine::updateText() {
+
+	pushTextObj(texObjects, "Wave # " + std::to_string(game_state->wave), 0.01f*game_state->window_width, 0.95*game_state->window_height, 1.0f);
+
+	if (game_state->breakSeconds == 0) {
+		pushTextObj(texObjects, "Enemies Left: " + std::to_string(game_state->enemiesLeft), 0.01f*game_state->window_width, 0.9*game_state->window_height, 1.0f);
+	}
+	else {
+		pushTextObj(texObjects, "Break Seconds: " + std::to_string(game_state->breakSeconds), 0.01f*game_state->window_width, 0.85*game_state->window_height, 1.0f);
+	}
+
+	if (game_state->powerText) {
+		pushTextObj(texObjects, "You are heal to full health!", 0.3f*game_state->window_width, 0.8*game_state->window_height, 1.0f);
+	}
 }
 
 void RenderingEngine::LoadShaderProgram(std::string name, const char* vertexFile, const char* fragmentFile) {

@@ -105,6 +105,16 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 		}
 		*/
 
+		if (GameState->textTime>0 ) {
+			GameState->powerText = true;
+			GameState->textTime--;
+			printf("time left %d\n", GameState->textTime);
+		}
+		else {
+			GameState->powerText = false;
+			GameState->textTime = 0;
+		}
+
 		if (GameState->playerVehicle.speed == 0) {
 			GameState->carIdle_sound = true;
 		}
@@ -138,6 +148,7 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 			GameState->UIMode = "Lose";
 			GameState->ui_gameplay = false;
 		}
+
 		//render UI elements over already rendered scene.
 		//Based on info from GameState.
 
@@ -148,8 +159,6 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 
 		//render pause game image. 
 		//Should update based on selected menu item.
-		
-		//todo: pause menu sound effect
 		GameState->ui_pauseMenu = true;
 
 		std::string input = GameState->button;
@@ -240,11 +249,8 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 		else if (pausePointerState == 1 && input == "ENTER") {
 			GameState->UIMode = "Game";
 			GameState->restart = true;
-
-			//todo unknow sound effect bug when the next line call
 			GameState->ui_enter = true;
-
-			//GameState->ui_menu = false;
+			GameState->ui_pauseMenu = false;
 		}
 		else if (pausePointerState == 2 && input == "ENTER"){
 			GameState->UIMode = "Start";
@@ -256,6 +262,7 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 
 	//Start Menu
 	else if (GameState->UIMode == "Start") {
+
 		GameState->ui_menu = true;
 		GameState->restart = true;
 		//render start screen image

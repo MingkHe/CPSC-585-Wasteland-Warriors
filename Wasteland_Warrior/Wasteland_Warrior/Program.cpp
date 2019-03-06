@@ -11,7 +11,11 @@
 //**Must include glad and GLFW in this order or it breaks**
 #include "glad/glad.h"
 #include <GLFW/glfw3.h>
-#include <chrono>
+
+//Time stuff
+#include <sys/timeb.h>
+#include <stdio.h>
+#include <errno.h>
 
 #include "Program.h"
 #include "RenderingEngine.h"
@@ -48,14 +52,13 @@ Program::~Program() {
 void Program::start() {
 	//Initialization
 	Gamestate* gameState = new Gamestate();
+	gameState->window_width = glfwGetVideoMode(glfwGetPrimaryMonitor())->width;
+	gameState->window_height = glfwGetVideoMode(glfwGetPrimaryMonitor())->height;
 
-	auto currentTime = std::chrono::system_clock::now();
-	gameState->time = currentTime;
-	std::chrono::duration<double> elapsed_seconds = currentTime - currentTime;
-
-	gameState->timeStep = 1.0 / 60.0; //60 fps
-	gameState->button = "";
-	gameState->UIMode = "Start";
+	struct timeb currentTime;
+	ftime(&currentTime);
+	gameState->time = currentTime.millitm;
+	int elapsed_seconds = 0;
 
 	SDL_Init(SDL_INIT_AUDIO);
 
@@ -77,31 +80,45 @@ void Program::start() {
 
 	renderingEngine->LoadShaderProgram("menuShader", vertexMenuFile, fragmentMenuFile);
 
-	//scene = new Scene(renderingEngine);
-	gameState->scene = scene; // what is the scene meaning here in the gamestate?
-
 	UI_Controller UICL = UI_Controller(gameState,renderingEngine);
 
 	scene = new Scene(renderingEngine, gameState);
-	//gameState->playSound();
 
-
+	//Spawn Static Entities
 	gameState->SpawnMap();
-	gameState->SpawnStaticObject(2,3,0,5);
-	gameState->SpawnStaticObject(1, -3, 0, -25);
+
+	gameState->SpawnStaticObject(0, 0, 0, 0);
+	gameState->SpawnStaticObject(1, 88, -6.25, 113);
+	gameState->SpawnStaticObject(1, 138, -6.25, 83);
+	gameState->SpawnStaticObject(1, -88, 0, 113);
+	gameState->SpawnStaticObject(1, -108, 0, 93);
+	
+	gameState->SpawnStaticObject(2, 93, -0.75, -45);
+	gameState->SpawnStaticObject(3, 63, 0, -25);
+	gameState->SpawnStaticObject(2, 123, -0.75, -95);
+	gameState->SpawnStaticObject(3, 148, 0, -55);
+	gameState->SpawnStaticObject(2, 133, -0.75, -145);
+	gameState->SpawnStaticObject(3, 73, 0, -125);
+	gameState->SpawnStaticObject(4, -150, 4.25, -120);
+
+	//Spawn Power Ups
+	gameState->SpawnDynamicObject(1, 53, 1, -35);
+	gameState->SpawnDynamicObject(1, -100, 5.25, -100);
+	gameState->SpawnDynamicObject(1, 100, -5.25, 100);
+	gameState->SpawnDynamicObject(1, -100, 1, 100);
+
 	//Spawn Player
-	gameState->SpawnPlayer(0, 3, 0);
+	gameState->SpawnPlayer(0, 0, 0);
 
-	//Spawn Enemies
+	//Initialize Enemies
 	gameState->SpawnEnemy(0, 10000, 10000, 10000);
-	gameState->SpawnEnemy(0, 10000, 10000, 10000);
-	gameState->SpawnEnemy(0, 10000, 10000, 10000);
-	//gameState->SpawnEnemy(0,-25, 2, -15+10000);
-	//gameState->SpawnEnemy(0, 35, 2, 15+10000);
 
+	int waveBreak = 0;
+	int breakTime = 30 * 60;
 
 	//Main render loop
 	while (!glfwWindowShouldClose(window)) {
+		//std::cout << "New execution loop started on: " << currentTime.time << "." << currentTime.millitm << std::endl;
 		//User Input
 		usrInput.Update(gameState);
 
@@ -120,11 +137,13 @@ void Program::start() {
 			physicsCL.Update();
 		}
 
+		//Audio Engine
+		audioCL.playSound(gameState);
+
 		//UI System
 		UICL.Update(gameState, window);
 
-		//Audio Engine
-		audioCL.playSound(gameState);
+		
 
 		//Render Engine
 		if (gameState->UIMode == "Game") {
@@ -140,18 +159,17 @@ void Program::start() {
 		glfwPollEvents();
 
 		//Fixed Timestep
-
-		while (elapsed_seconds.count() < gameState->timeStep){
-			currentTime = std::chrono::system_clock::now();
-			elapsed_seconds = currentTime - gameState->time;
-
-			//std::cout << "Time elapsed: " << elapsed_seconds.count() << std::endl; //Test statement, delete it if you want
-			if (elapsed_seconds.count() >= (gameState->timeStep * 2)) {
-				std::cout << "Frame lost" << std::endl; //Test statement, delete it if you want
-			}
+		while (elapsed_seconds < gameState->timeStep){
+			ftime(&currentTime);
+			//std::cout << "Elapsed time: " << elapsed_seconds << std::endl;
+			//std::cout << "Last time was: " << gameState->time << "   Current time is: " << currentTime.millitm << std::endl;
+			
+			if (currentTime.millitm > gameState->time) { elapsed_seconds = currentTime.millitm - gameState->time; }
+			else { elapsed_seconds = (1000 - currentTime.millitm) + gameState->time; }
 		}
-		elapsed_seconds = currentTime-currentTime;
-		gameState->time = currentTime;
+		//std::cout << "Frame"  << std::endl;
+		elapsed_seconds = 0;
+		gameState->time = currentTime.millitm;
 	}
 
 }
@@ -175,8 +193,8 @@ void Program::setupWindow() {
 	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 	int width = mode->width;//1280;
 	int height = mode->height;//960;
-	window = glfwCreateWindow(width, height, "Wasteland Warrior", NULL, NULL);
-	//window = glfwCreateWindow(width, height, "Wasteland Warrior", glfwGetPrimaryMonitor(), NULL);
+	//window = glfwCreateWindow(width, height, "Wasteland Warrior", NULL, NULL);
+	window = glfwCreateWindow(width, height, "Wasteland Warrior", glfwGetPrimaryMonitor(), NULL);
 	if (!window) {
 		std::cout << "Program failed to create GLFW window, TERMINATING" << std::endl;
 		glfwTerminate();
@@ -186,6 +204,7 @@ void Program::setupWindow() {
 	//Input Callbacks
 	glfwSetKeyCallback(window, UserInput::key);
 	glfwSetCursorPosCallback(window, UserInput::cursor);
+	glfwSetMouseButtonCallback(window, UserInput::mouseButton);
 
 	//Bring the new window to the foreground (not strictly necessary but convenient)
 	glfwMakeContextCurrent(window);

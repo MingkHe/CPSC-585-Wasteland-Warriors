@@ -82,16 +82,28 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 	//In Game UI
 	if (GameState->UIMode == "Game") 
 	{
-		printf("speed: %f\n", GameState->playerVehicle.speed);
+		//printf("speed: %f\n", GameState->playerVehicle.speed);
 		std::string input = GameState->button;
 		GameState->ui_gameplay = true;
 
-		if (GameState->playerVehicle.acceleration > 0) {
-			GameState->carRunning_sound = true;
+
+		GameState->carRunning_sound = true;
+
+		/*
+		// engine sound effect related variable
+		if (gameState->WKey)
+		{
+			gameState->engineAccel = 1.0f;
 		}
-		else {
-			GameState->carRunning_sound = false;
+		else if (gameState->rightTrigger>=-1.0f)
+		{
+			gameState->engineAccel = std::abs(gameState->rightTrigger); // need to use a gamepad to test
 		}
+		else
+		{
+			gameState->engineAccel = 0.0f;
+		}
+		*/
 
 		if (GameState->playerVehicle.speed == 0) {
 			GameState->carIdle_sound = true;

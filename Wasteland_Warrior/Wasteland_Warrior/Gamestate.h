@@ -91,6 +91,9 @@ public:
 	bool ui_win;
 	//lose bgm
 	bool ui_lose;
+
+	//variable to indicate the engine volumn
+	float engineAccel = 0.0f;
 	//----------------------Sound Buffer End-------------------------------
 
 	//Joysticks

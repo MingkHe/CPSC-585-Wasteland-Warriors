@@ -36,7 +36,7 @@ void UserInput::Update(Gamestate* gameState)
 	gameState->rightStickX = 0.0;
 	gameState->rightStickY = 0.0;
 	gameState->leftTrigger = 0.0;
-	gameState->rightTrigger = 0.0;
+	gameState->rightTrigger = 0.0; // is the intial value in the game pad is -1.0 or 1.0?
 	gamepad(glfwJoystickPresent(GLFW_JOYSTICK_1), gameState);
 
 	//Get input from buffer

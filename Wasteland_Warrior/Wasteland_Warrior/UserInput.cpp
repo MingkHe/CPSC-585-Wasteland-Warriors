@@ -242,7 +242,7 @@ void UserInput::gamepad(int controller, Gamestate* gameState) {
 
 		//get Joystick for Mapping
 		const char* name = glfwGetJoystickName(GLFW_JOYSTICK_1);
-		std::cout << name << std::endl;
+		//std::cout << name << std::endl;
 
 		//Gamepad joystick and triggers 
 		int axesCount;

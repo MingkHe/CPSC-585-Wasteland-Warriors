@@ -124,7 +124,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	}
 	glBindVertexArray(0);
 	//}
-
+	
 	//render health bar
 	GLint healthGL = glGetUniformLocation(healthshaderProgram, "health");
 	glUseProgram(healthshaderProgram);
@@ -198,6 +198,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 		glDrawArrays(g.drawMode, 0, g.verts.size());
 
 		// reset state to default (no shader or geometry bound)
+		deleteBufferData(g);
 		glBindVertexArray(0);
 	}
 	

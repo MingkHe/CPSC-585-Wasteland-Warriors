@@ -191,8 +191,8 @@ void Program::setupWindow() {
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-	int width = mode->width;//1280;
-	int height = mode->height;//960;
+	int width = mode->width;//1280; //640
+	int height = mode->height;//960; //480
 	//window = glfwCreateWindow(width, height, "Wasteland Warrior", NULL, NULL);
 	window = glfwCreateWindow(width, height, "Wasteland Warrior", glfwGetPrimaryMonitor(), NULL);
 	if (!window) {

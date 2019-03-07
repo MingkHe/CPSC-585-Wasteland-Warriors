@@ -108,7 +108,7 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 		if (GameState->textTime>0 ) {
 			GameState->powerText = true;
 			GameState->textTime--;
-			printf("time left %d\n", GameState->textTime);
+			//printf("time left %d\n", GameState->textTime);
 		}
 		else {
 			GameState->powerText = false;

@@ -87,24 +87,24 @@ void UserInput::Update(Gamestate* gameState)
 	}
 
 	//Mouse Camera Input
-	if (UserInput::MouseXpos != oldMouseXpos) {
-		if (UserInput::MousePressed) {
+	if (UserInput::MousePressed) {
+		if (UserInput::MouseXpos != oldMouseXpos) {
 			float angle = gameState->cameraAngle + (oldMouseXpos - UserInput::MouseXpos) * 0.01;
 			if (angle < 1.5 && angle > -1.5) {
 				gameState->cameraAngle = angle;
 			}
 			oldMouseXpos = UserInput::MouseXpos;
 		}
-		else {
-			if (gameState->cameraAngle > 0.05){
-				gameState->cameraAngle = gameState->cameraAngle - 0.02;
+	}
+	else {
+		if (gameState->cameraAngle > 0.05){
+			gameState->cameraAngle = gameState->cameraAngle - 0.02;
 		}
 		else if (gameState->cameraAngle < -0.05) {
-				gameState->cameraAngle = gameState->cameraAngle + 0.02;
-			}
+			gameState->cameraAngle = gameState->cameraAngle + 0.02;
+		}
 		else {
 				gameState->cameraAngle = 0;
-			}
 		}
 	}
 }

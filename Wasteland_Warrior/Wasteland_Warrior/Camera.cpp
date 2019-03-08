@@ -1,13 +1,5 @@
 #include "Camera.h"
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtx/rotate_vector.hpp>
 #include "Gamestate.h"
-#include <math.h>
-#include <iostream>
-
-
-using namespace std;
-using namespace glm;
 
 const float MAX_VERT = 0.99f;
 
@@ -24,16 +16,12 @@ Camera::Camera(Gamestate* newGamestate) {
 
 glm::mat4 Camera::viewMatrix() const {
 
-	glm::mat4 viewMatrix;
-
 	glm::vec3 car = gameState->playerVehicle.position;
 	glm::vec3 cam = gameState->playerVehicle.position; 
 
-	float lagSensitivity = 1.0;
-	float distanceBehindCar = 12 + (gameState->playerVehicle.speed * lagSensitivity); //change to acceleration once its being captured more smoothly
-	float distanceAboveCar = 3;
+	float distanceBehindCar = 10 + (gameState->playerVehicle.speed * 0.25);
+	float distanceAboveCar = 2.75;
 
-	//rotation angle based on input
 	float angle;
 	if (gameState->rightStickX == 0) {
 		angle = gameState->cameraAngle;
@@ -55,9 +43,7 @@ glm::mat4 Camera::viewMatrix() const {
 	cam.z = -distanceBehindCar *yVal + car.z;
 	cam.y = cam.y + distanceAboveCar;
 
-	viewMatrix = glm::lookAt(cam, car, up);
-
-	return viewMatrix;
+	return glm::lookAt(cam, car, up);
 }
 
 

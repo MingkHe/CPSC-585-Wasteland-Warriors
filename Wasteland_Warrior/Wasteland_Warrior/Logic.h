@@ -3,12 +3,17 @@
 class Logic
 {
 private:
-	int waveBreak = 0;
-	int breakTime = 30 * 60; // 30 seconds times framerate
+	int enemiesLeft;
+	int waveBreak;
+	int breakTime;
 public:
 	Logic();
 	~Logic();
 
 	void Update(Gamestate* gameState);
+	void modeSelection(Gamestate *gameState, int wave);
+	void mode1(Gamestate *gameState, int wave);
+	void mode2(Gamestate *gameState, int wave);
+	void mode3(Gamestate *gameState, int wave);
 };
 

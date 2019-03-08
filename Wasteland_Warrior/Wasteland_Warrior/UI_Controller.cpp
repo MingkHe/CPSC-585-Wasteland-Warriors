@@ -131,7 +131,7 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 			GameState->carBrake_sound = false;
 		}
 
-		if (input == "M")
+		if (input == "MENU")
 		{
 			GameState->UIMode = "Pause";
 			GameState->ui_gameplay = false;
@@ -240,19 +240,19 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 		//delete mainScene_quit;
 		delete mainScene_pointer;
 
-		if (pausePointerState == 0 && input == "ENTER") {
+		if (pausePointerState == 0 && input == "ENTER" || pausePointerState == 0 && input == "A") {
 			GameState->UIMode = "Game";
 			GameState->ui_enter = true;
 			GameState->carStart_sound = true;
 			GameState->ui_pauseMenu = false;
 		}
-		else if (pausePointerState == 1 && input == "ENTER") {
+		else if (pausePointerState == 1 && input == "ENTER" || pausePointerState == 1 && input == "A") {
 			GameState->UIMode = "Game";
 			GameState->restart = true;
 			GameState->ui_enter = true;
 			GameState->ui_pauseMenu = false;
 		}
-		else if (pausePointerState == 2 && input == "ENTER"){
+		else if (pausePointerState == 2 && input == "ENTER" || pausePointerState == 2 && input == "A"){
 			GameState->UIMode = "Start";
 			GameState->ui_enter = true;
 			GameState->ui_pauseMenu = false;
@@ -327,13 +327,13 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 		//delete mainScene_quit;
 		delete mainScene_pointer;
 
-		if (pointerState == 0 && input == "ENTER") {
+		if (pointerState == 0 && input == "ENTER" || pausePointerState == 0 && input == "A") {
 			GameState->UIMode = "Game";
 			GameState->ui_enter = true;
 			GameState->carStart_sound = true;
 			GameState->ui_menu = false;
 
-		} else if (input == "ENTER") {
+		} else if (input == "ENTER" || input == "A") {
 			GameState->ui_menu = false;
 			glfwSetWindowShouldClose(window, GL_TRUE);
 		}
@@ -365,7 +365,7 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 		win_text->displayTexture(textureArray[10], position);
 		position.clear();
 
-		if (input == "ENTER") {
+		if (input == "ENTER" || input == "A") {
 			GameState->UIMode = "Start";
 			GameState->ui_win = false;
 		}
@@ -395,7 +395,7 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 		lose_text->displayTexture(textureArray[11], position);
 		position.clear();
 
-		if (input == "ENTER") {
+		if (input == "ENTER" || input == "A") {
 			GameState->UIMode = "Start";
 			GameState->ui_lose = false;
 		}

@@ -5,8 +5,10 @@
 #include <string>
 #include <queue>
 
+//Input Buffer
 std::queue<std::string> UserInput::inputBuffer;
 
+//Mouse
 double UserInput::MouseXpos;
 double UserInput::MouseYpos;
 bool UserInput::MousePressed;
@@ -79,18 +81,12 @@ void UserInput::Update(Gamestate* gameState)
 		gameState->SPACEKey = false;
 	}
 
-	//reset orentation
+	//Reset Orientation
 	if (gameState->button == "R" || gameState->button == "Y") {
 		gameState->resetOrientation();
 	}
 
-	if (gameState->leftStickY == 1) {
-		UserInput::inputBuffer.push("UP");
-	}
-	if (gameState->leftStickY == -1) {
-		UserInput::inputBuffer.push("DOWN");
-	}
-
+	//Mouse Camera Input
 	if (UserInput::MouseXpos != oldMouseXpos) {
 		if (UserInput::MousePressed) {
 			float angle = gameState->cameraAngle + (oldMouseXpos - UserInput::MouseXpos) * 0.01;
@@ -144,27 +140,9 @@ void UserInput::key(GLFWwindow* window, int key, int scancode, int action, int m
 			UserInput::inputBuffer.push("ESC");
 			break;
 
-			//Testing Letters
-		case GLFW_KEY_T:
-			UserInput::inputBuffer.push("T");
-			break;
-		case GLFW_KEY_F:
-			UserInput::inputBuffer.push("F");
-			break;
-		case GLFW_KEY_G:
-			UserInput::inputBuffer.push("G");
-			break;
-		case GLFW_KEY_H:
-			UserInput::inputBuffer.push("H");
-			break;
+			//Pause Menu
 		case GLFW_KEY_M:
-			UserInput::inputBuffer.push("M");
-			break;
-		case GLFW_KEY_N:
-			UserInput::inputBuffer.push("N");
-			break;
-		case GLFW_KEY_R:
-			UserInput::inputBuffer.push("R");
+			UserInput::inputBuffer.push("MENU");
 			break;
 
 			//Arrows
@@ -190,6 +168,26 @@ void UserInput::key(GLFWwindow* window, int key, int scancode, int action, int m
 			break;
 		case GLFW_KEY_RIGHT_SHIFT:
 			UserInput::inputBuffer.push("RSHIFT");
+			break;
+
+			//Testing Input
+		case GLFW_KEY_T:
+			UserInput::inputBuffer.push("T");
+			break;
+		case GLFW_KEY_F:
+			UserInput::inputBuffer.push("F");
+			break;
+		case GLFW_KEY_G:
+			UserInput::inputBuffer.push("G");
+			break;
+		case GLFW_KEY_H:
+			UserInput::inputBuffer.push("H");
+			break;
+		case GLFW_KEY_N:
+			UserInput::inputBuffer.push("N");
+			break;
+		case GLFW_KEY_R:
+			UserInput::inputBuffer.push("R");
 			break;
 		}
 		break;
@@ -239,11 +237,6 @@ void UserInput::gamepad(int controller, Gamestate* gameState) {
 	//Controller 1
 	if (controller == 1) {
 
-
-		//get Joystick for Mapping
-		const char* name = glfwGetJoystickName(GLFW_JOYSTICK_1);
-		//std::cout << name << std::endl;
-
 		//Gamepad joystick and triggers 
 		int axesCount;
 		const float *axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &axesCount);
@@ -270,7 +263,6 @@ void UserInput::gamepad(int controller, Gamestate* gameState) {
 		};
 		if (GLFW_PRESS == buttons[2]) {
 			UserInput::inputBuffer.push("X");
-			UserInput::inputBuffer.push("ENTER");
 		};
 		if (GLFW_PRESS == buttons[3]) { 
 			UserInput::inputBuffer.push("Y"); 
@@ -282,11 +274,10 @@ void UserInput::gamepad(int controller, Gamestate* gameState) {
 			UserInput::inputBuffer.push("RB"); 
 		};
 		if (GLFW_PRESS == buttons[6]) { 
-			UserInput::inputBuffer.push("LO"); 
+			UserInput::inputBuffer.push("OPTION"); 
 		};
 		if (GLFW_PRESS == buttons[7]) { 
-			UserInput::inputBuffer.push("RO");
-			UserInput::inputBuffer.push("M");
+			UserInput::inputBuffer.push("MENU");
 		};
 		if (GLFW_PRESS == buttons[8]) { 
 			UserInput::inputBuffer.push("LS");
@@ -294,21 +285,33 @@ void UserInput::gamepad(int controller, Gamestate* gameState) {
 		if (GLFW_PRESS == buttons[9]) { 
 			UserInput::inputBuffer.push("RS");
 		};
-		if (GLFW_PRESS == buttons[10]) { 
-			UserInput::inputBuffer.push("UP");
+		if (GLFW_PRESS == buttons[10]) {
+			if (up == true) {
+				UserInput::inputBuffer.push("UP");
+			}
+			up = false;
 		};
-		if (GLFW_PRESS == buttons[11]) { 
+		if (GLFW_RELEASE == buttons[10]) {
+			up = true;
+		};
+		if (GLFW_PRESS == buttons[11]) {
 			UserInput::inputBuffer.push("RIGHT");
 		};
 		if (GLFW_PRESS == buttons[12]) { 
-			UserInput::inputBuffer.push("DOWN");
+			if (down == true) {
+				UserInput::inputBuffer.push("DOWN");
+			}
+			down = false;
+		};
+		if (GLFW_RELEASE == buttons[12]) {
+			down = true;
 		};
 		if (GLFW_PRESS == buttons[13]) { 
 			UserInput::inputBuffer.push("LEFT");
 		};
 
-		//PS4 Controller mapping
-		/*if (name == "Wireless Controller") {
+		//PS4 Controller Remapping
+		/*if (glfwGetJoystickName(GLFW_JOYSTICK_1) == "Wireless Controller") {
 			float lt = gameState->rightStickY;
 			float rt = gameState->leftTrigger;
 			float ry = gameState->rightTrigger;

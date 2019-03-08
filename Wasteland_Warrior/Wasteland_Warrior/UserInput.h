@@ -8,10 +8,15 @@
 
 class UserInput
 {
+private:
+	bool up;
+	bool down;
+
 public:
 	UserInput();
 	~UserInput();
 
+	//Input Buffer
 	static std::queue<std::string> inputBuffer;
 	
 	//Mouse

@@ -113,9 +113,6 @@ void Program::start() {
 	//Initialize Enemies
 	gameState->SpawnEnemy(0, 10000, 10000, 10000);
 
-	int waveBreak = 0;
-	int breakTime = 30 * 60;
-
 	//Main render loop
 	while (!glfwWindowShouldClose(window)) {
 		//std::cout << "New execution loop started on: " << currentTime.time << "." << currentTime.millitm << std::endl;
@@ -142,8 +139,6 @@ void Program::start() {
 
 		//UI System
 		UICL.Update(gameState, window);
-
-		
 
 		//Render Engine
 		if (gameState->UIMode == "Game") {
@@ -193,8 +188,8 @@ void Program::setupWindow() {
 	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 	int width = mode->width;//1280; //640
 	int height = mode->height;//960; //480
-	//window = glfwCreateWindow(width, height, "Wasteland Warrior", NULL, NULL);
-	window = glfwCreateWindow(width, height, "Wasteland Warrior", glfwGetPrimaryMonitor(), NULL);
+	window = glfwCreateWindow(width, height, "Wasteland Warrior", NULL, NULL);
+	//window = glfwCreateWindow(width, height, "Wasteland Warrior", glfwGetPrimaryMonitor(), NULL);
 	if (!window) {
 		std::cout << "Program failed to create GLFW window, TERMINATING" << std::endl;
 		glfwTerminate();

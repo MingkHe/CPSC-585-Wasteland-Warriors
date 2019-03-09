@@ -301,17 +301,6 @@ void Gamestate::Collision(Vehicle* vehicle, Object* staticObject) {
 	this->carCrashStatic_sound = true;
 }
 
-
-
-
-
-
-
-
-
-
-
-
 void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 newTransformationMatrix, float newSpeed) {
 	Entity* entityToUpdate = &Entity();
 	glm::vec4 newDirection = glm::vec4{ 0.0f, 0.0f, 1.0f, 0.0f } *newTransformationMatrix;

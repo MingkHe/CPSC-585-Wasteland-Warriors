@@ -24,10 +24,10 @@ glm::mat4 Camera::viewMatrix() const {
 
 	float angle;
 	if (gameState->rightStickX == 0) {
-		angle = gameState->cameraAngle;
+		angle = pow(gameState->cameraAngle,5);
 	}
 	else {
-		angle = gameState->rightStickX;
+		angle = pow(gameState->rightStickX,5) * 1.5;
 	}
 
 	glm::vec2 direction = gameState->playerVehicle.direction;

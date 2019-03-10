@@ -11,7 +11,6 @@ Logic::Logic()
 	this->waveBreak = 0;
 	this->breakTime = 0;
 	this->enemiesLeft = 0;
-
 }
 
 Logic::~Logic()
@@ -22,20 +21,22 @@ void Logic::Update(Gamestate *gameState)
 {
 	//Restart
 	if (gameState->restart) {
-		gameState->wave = 0;
 		gameState->restart = false;
 
 		//Reset Car
 		gameState->physics_Controller->setPosition(gameState->playerVehicle.physicsIndex, glm::vec3{ 0, 2, 0 });
 		gameState->playerVehicle.health = 100;
 
-		//Despawn Enemies ***
-		//reset enemies
+		//Reset enemies
 		for (int i = 0; i < gameState->Enemies.size(); i++) {
 			gameState->physics_Controller->setPosition(gameState->Enemies[i].physicsIndex, glm::vec3{ 10000 + (i * 10), 10000 + (i * 10), 10000 + (i * 10) });
 		}
-	}
 
+		gameState->wave = 1;
+		waveBreak = 1;
+		breakTime = 1800;
+		modeSelection(gameState);
+	}
 
 	//Player has lost all health
 	if ((gameState->playerVehicle.health <= 0)) {
@@ -45,17 +46,9 @@ void Logic::Update(Gamestate *gameState)
 	} 
 	else {
 
-		//Setup
-		if (gameState->wave == 0) {
-			gameState->wave = 1;
-			waveBreak = 1;
-			breakTime = 1800;
-			modeSelection(gameState);
-		}
 
-
-		//WAVE 1
-		else if (gameState->wave == 1) {
+		/*--- WAVE 1 ---*/
+		if (gameState->wave == 1) {
 			enemiesLeft = checkEnemyHealth(gameState);
 			if (enemiesLeft == 0) {
 				spawnPowerUps(gameState);
@@ -75,7 +68,7 @@ void Logic::Update(Gamestate *gameState)
 		}
 
 
-		//WAVE 2
+		/*--- WAVE 2 ---*/
 		else if (gameState->wave == 2) {
 			enemiesLeft = checkEnemyHealth(gameState);
 			if (enemiesLeft == 0) {
@@ -96,7 +89,7 @@ void Logic::Update(Gamestate *gameState)
 		}
 		
 
-		//WAVE 3
+		/*--- WAVE 3 ---*/
 		else if (gameState->wave == 3) {
 			enemiesLeft = checkEnemyHealth(gameState);
 			if (enemiesLeft == 0) {
@@ -129,8 +122,7 @@ int Logic::checkEnemyHealth(Gamestate *gameState) {
 			enemiesLeft++;
 		}
 		else {
-			//Despawn Enemies *** this needs the proper despawn function ***
-			gameState->physics_Controller->setPosition(gameState->Enemies[end].physicsIndex, glm::vec3{ 10000 + (i * 10), 10000 + (i * 10), 10000 + (i * 10) });
+			//Despawn Enemies
 		}
 		end--;
 	}
@@ -163,25 +155,30 @@ void Logic::modeSelection(Gamestate *gameState) {
 
 	//Random mode selection
 	srand(time(NULL));
-	int mode = rand() % 3 + 1; //3 modes for now
-	mode = 1; // reset to mode 1 for now
+	int mode = rand() % 5 + 1;
+	mode = 1; // Reset to Survival
 
 	switch (mode) {
 	case 1:
-		mode1(gameState);
+		survival(gameState);
 		break;
 	case 2:
-		mode2(gameState);
+		checkpoint(gameState);
 		break;
 	case 3:
-		mode3(gameState);
+		payload(gameState);
+		break;
+	case 4:
+		headHunter(gameState);
+		break;
+	case 5:
+		bossBattle(gameState);
 		break;
 	}
 }
 
-//Default mode 
-//Spawn as many enemies as the wave number
-void Logic::mode1(Gamestate *gameState) {
+//Survival
+void Logic::survival(Gamestate *gameState) {
 	for (int i = 0; i < gameState->wave; i++) {
 		int mode = i % 4;
 		switch (mode) {
@@ -205,10 +202,22 @@ void Logic::mode1(Gamestate *gameState) {
 	}
 }
 
-void Logic::mode2(Gamestate *gameState) {
+//Checkpoint
+void Logic::checkpoint(Gamestate *gameState) {
 
 }
 
-void Logic::mode3(Gamestate *gameState) {
+//Payload
+void Logic::payload(Gamestate *gameState) {
+
+}
+
+//Head hunter
+void Logic::headHunter(Gamestate *gameState) {
+
+}
+
+//Boss battle
+void Logic::bossBattle(Gamestate *gameState) {
 
 }

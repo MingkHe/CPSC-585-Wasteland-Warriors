@@ -15,9 +15,11 @@ public:
 	int checkEnemyHealth(Gamestate *gameState);
 	void spawnPowerUps(Gamestate *gameState);
 	void modeSelection(Gamestate *gameState);
-	void mode1(Gamestate *gameState);
-	void mode2(Gamestate *gameState);
-	void mode3(Gamestate *gameState);
+	void survival(Gamestate *gameState);
+	void checkpoint(Gamestate *gameState);
+	void payload(Gamestate *gameState);
+	void headHunter(Gamestate *gameState);
+	void bossBattle(Gamestate *gameState);
 
 };
 

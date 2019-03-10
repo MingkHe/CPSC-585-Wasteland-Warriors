@@ -33,7 +33,6 @@ Gamestate::Gamestate()
 
 	cameraAngle = 0.0;
 
-	//Logic
 	wave = 0;
 	restart = false;
 	enemiesLeft = 0;
@@ -192,8 +191,6 @@ void Gamestate::DespawnEnemy(EnemyUnit enemy) { // Needs to blow up or something
 
 	//Mesh/Textures?
 }
-
-
 
 void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse) {
 	//Determin who is the attacker

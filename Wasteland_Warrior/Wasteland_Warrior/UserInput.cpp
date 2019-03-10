@@ -234,8 +234,13 @@ void UserInput::mouseButton(GLFWwindow* window, int button, int action, int mods
 
 void UserInput::gamepad(int controller, Gamestate* gameState) {
 
-	//Controller 1
+	//Controller is connected
 	if (controller == 1) {
+
+		//Generic Controller Support
+		bool Generic = false;
+		std::string name = glfwGetJoystickName(GLFW_JOYSTICK_1);
+		if (name == "Wireless Controller") { Generic = true; }
 
 		//Gamepad joystick and triggers 
 		int axesCount;
@@ -256,36 +261,41 @@ void UserInput::gamepad(int controller, Gamestate* gameState) {
 		const unsigned char *buttons = glfwGetJoystickButtons(GLFW_JOYSTICK_1, &buttonCount);
 
 		if (GLFW_PRESS == buttons[0]) { 
-			UserInput::inputBuffer.push("A"); 
+			UserInput::inputBuffer.push("A");
 		};
-		if (GLFW_PRESS == buttons[1]) { 
-			UserInput::inputBuffer.push("B"); 
+		if (GLFW_PRESS == buttons[1] && Generic == true) {
+			UserInput::inputBuffer.push("A");
+		}
+		else {
+			UserInput::inputBuffer.push("B");
 		};
 		if (GLFW_PRESS == buttons[2]) {
 			UserInput::inputBuffer.push("X");
 		};
 		if (GLFW_PRESS == buttons[3]) { 
-			UserInput::inputBuffer.push("Y"); 
+			UserInput::inputBuffer.push("Y");
 		};
 		if (GLFW_PRESS == buttons[4]) { 
-			UserInput::inputBuffer.push("LB"); 
+			UserInput::inputBuffer.push("LB");
 		};
 		if (GLFW_PRESS == buttons[5]) { 
-			UserInput::inputBuffer.push("RB"); 
+			UserInput::inputBuffer.push("RB");
 		};
 		if (GLFW_PRESS == buttons[6]) { 
-			UserInput::inputBuffer.push("OPTION"); 
+			UserInput::inputBuffer.push("OPTION");
 		};
-		if (GLFW_PRESS == buttons[7]) { 
+		if (GLFW_PRESS == buttons[7] && Generic == false) { 
 			UserInput::inputBuffer.push("MENU");
 		};
 		if (GLFW_PRESS == buttons[8]) { 
 			UserInput::inputBuffer.push("LS");
+			std::cout << "1" << std::endl;
 		};
 		if (GLFW_PRESS == buttons[9]) { 
 			UserInput::inputBuffer.push("RS");
+			std::cout << "2" << std::endl;
 		};
-		if (GLFW_PRESS == buttons[10]) {
+		if (GLFW_PRESS == buttons[10] && Generic == false) {
 			if (up == true) {
 				UserInput::inputBuffer.push("UP");
 			}
@@ -297,28 +307,53 @@ void UserInput::gamepad(int controller, Gamestate* gameState) {
 		if (GLFW_PRESS == buttons[11]) {
 			UserInput::inputBuffer.push("RIGHT");
 		};
-		if (GLFW_PRESS == buttons[12]) { 
+		if (GLFW_PRESS == buttons[12] && Generic == false) {
 			if (down == true) {
 				UserInput::inputBuffer.push("DOWN");
 			}
 			down = false;
 		};
-		if (GLFW_RELEASE == buttons[12]) {
+		if (GLFW_RELEASE == buttons[12] && Generic == false) {
 			down = true;
 		};
-		if (GLFW_PRESS == buttons[13]) { 
+		if (GLFW_PRESS == buttons[13]) {
 			UserInput::inputBuffer.push("LEFT");
 		};
 
-		//PS4 Controller Remapping
-		/*if (glfwGetJoystickName(GLFW_JOYSTICK_1) == "Wireless Controller") {
+		//Generic Dpad
+		if (GLFW_PRESS == buttons[14]) {
+			if (up == true) {
+				UserInput::inputBuffer.push("UP");
+			}
+			up = false;
+		};
+		if (GLFW_RELEASE == buttons[14]) {
+			up = true;
+		};
+		if (GLFW_PRESS == buttons[15]) {
+			UserInput::inputBuffer.push("RIGHT");
+		};
+		if (GLFW_PRESS == buttons[16]) {
+			if (down == true) {
+				UserInput::inputBuffer.push("DOWN");
+			}
+			down = false;
+		};
+		if (GLFW_RELEASE == buttons[16]) {
+			down = true;
+		};
+		if (GLFW_PRESS == buttons[17]) {
+			UserInput::inputBuffer.push("LEFT");
+		};
+
+		//Generic Controller Trigger/Joystick Remapping
+		if (Generic = true) {
 			float lt = gameState->rightStickY;
 			float rt = gameState->leftTrigger;
 			float ry = gameState->rightTrigger;
-
 			gameState->rightStickY = ry;
 			gameState->leftTrigger = lt;
 			gameState->rightTrigger = rt;
-		}*/
+		}
 	}
 }

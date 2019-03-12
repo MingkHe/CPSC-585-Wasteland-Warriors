@@ -57,9 +57,15 @@ UI_Controller::UI_Controller(Gamestate* gameState, RenderingEngine* render)
 	InitializeTexture(&texture, "Image/lose.png", GL_TEXTURE_RECTANGLE);
 	textureArray.push_back(texture);
 
+	//12
+	InitializeTexture(&texture, "Image/title3.png", GL_TEXTURE_RECTANGLE);
+	textureArray.push_back(texture);
+
 	mainScene_bg = new SceneMainMenu(renderingEngine);
 	mainScene_start = new SceneMainMenu(renderingEngine);
 	mainScene_quit = new SceneMainMenu(renderingEngine);
+
+	mainScene_title = new SceneMainMenu(renderingEngine);
 
 	pauseScene_bg = new SceneMainMenu(renderingEngine);
 	pauseScene_restart = new SceneMainMenu(renderingEngine);
@@ -298,6 +304,15 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 		position.push_back(glm::vec3(-.3f, -.2f, 1.0f));
 
 		mainScene_quit->displayTexture(textureArray[2], position);
+		position.clear();
+
+		//Title Image
+		position.push_back(glm::vec3(-.7f, .4f, 1.0f));
+		position.push_back(glm::vec3(.7f, .4f, 1.0f));
+		position.push_back(glm::vec3(.7f, .7f, 1.0f));
+		position.push_back(glm::vec3(-.7f, .7f, 1.0f));
+
+		mainScene_title->displayTexture(textureArray[12], position);
 		position.clear();
 
 		//Pointer Image

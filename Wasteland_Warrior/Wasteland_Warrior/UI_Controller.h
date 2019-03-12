@@ -10,6 +10,8 @@ public:
 
 	RenderingEngine* renderingEngine;
 
+	SceneMainMenu* mainScene_title;
+
 	SceneMainMenu* mainScene_bg;
 	SceneMainMenu* mainScene_start;
 	SceneMainMenu* mainScene_quit;

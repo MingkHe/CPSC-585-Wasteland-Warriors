@@ -47,6 +47,7 @@ Audio_Controller::Audio_Controller()
 
 Audio_Controller::~Audio_Controller()
 {
+	Mix_CloseAudio();
 	Mix_Quit();
 }
 

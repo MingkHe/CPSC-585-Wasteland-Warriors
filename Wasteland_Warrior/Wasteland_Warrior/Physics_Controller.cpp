@@ -567,7 +567,7 @@ void Physics_Controller::resetOrientation(int actorIndex) {
 	
 	glm::vec2 heading = gameState->playerVehicle.direction;
 
-	float angle = atan2(heading.x, heading.y); // Note: I expected atan2(z,x) but OP reported success with atan2(x,z) instead! Switch around if you see 90° off.
+	float angle = atan2(heading.x, heading.y); // Note: I expected atan2(z,x) but OP reported success with atan2(x,z) instead! Switch around if you see 90?off.
 	float qx = 0;
 	float qy = 1 * sin(angle / 2);
 	float qz = 0;

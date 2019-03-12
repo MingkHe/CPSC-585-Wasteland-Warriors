@@ -166,6 +166,8 @@ void Program::start() {
 		elapsed_seconds = 0;
 		gameState->time = currentTime.millitm;
 	}
+	SDL_CloseAudio();
+	SDL_Quit();
 
 }
 

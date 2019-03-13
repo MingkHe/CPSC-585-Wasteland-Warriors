@@ -62,7 +62,7 @@ UI_Controller::UI_Controller(Gamestate* gameState, RenderingEngine* render)
 	textureArray.push_back(texture);
 
 	//13
-	InitializeTexture(&texture, "Image/loading.jpg", GL_TEXTURE_RECTANGLE);
+	InitializeTexture(&texture, "Image/loading.png", GL_TEXTURE_RECTANGLE);
 	textureArray.push_back(texture);
 
 	mainScene_bg = new SceneMainMenu(renderingEngine);

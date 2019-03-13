@@ -32,6 +32,7 @@ Gamestate::Gamestate()
 	textTime = 0;
 
 	cameraAngle = 0.0;
+	view = 0;
 
 	wave = 0;
 	restart = false;

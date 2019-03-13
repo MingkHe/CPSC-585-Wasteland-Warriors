@@ -86,6 +86,16 @@ void UserInput::Update(Gamestate* gameState)
 		gameState->resetOrientation();
 	}
 
+	//Camera view
+	if (gameState->button == "VIEW") {
+		if (gameState->view == 2) {
+			gameState->view = 0;
+		}
+		else {
+			gameState->view++;
+		}
+	}
+
 	//Mouse Camera Input
 	if (UserInput::MousePressed) {
 		if (UserInput::MouseXpos != oldMouseXpos) {
@@ -143,6 +153,11 @@ void UserInput::key(GLFWwindow* window, int key, int scancode, int action, int m
 			//Pause Menu
 		case GLFW_KEY_M:
 			UserInput::inputBuffer.push("MENU");
+			break;
+
+			//Change View
+		case GLFW_KEY_V:
+			UserInput::inputBuffer.push("VIEW");
 			break;
 
 			//Arrows
@@ -279,7 +294,7 @@ void UserInput::gamepad(int controller, Gamestate* gameState) {
 			UserInput::inputBuffer.push("LB");
 		};
 		if (GLFW_PRESS == buttons[5]) { 
-			UserInput::inputBuffer.push("RB");
+			UserInput::inputBuffer.push("VIEW");
 		};
 		if (GLFW_PRESS == buttons[6]) { 
 			UserInput::inputBuffer.push("OPTION");

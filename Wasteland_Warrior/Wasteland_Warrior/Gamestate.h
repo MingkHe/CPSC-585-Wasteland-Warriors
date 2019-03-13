@@ -119,8 +119,10 @@ public:
 	float leftTrigger;
 	float rightTrigger;
 
-	//camera rotation
+	//Camera
+	Camera camera = Camera(this);
 	float cameraAngle;
+	int view;
 
 	//Time
 	int time;
@@ -129,7 +131,6 @@ public:
 	int gstest = 5;
 
 	//Graphics
-	Camera camera = Camera(this);
 	glm::vec3 light = glm::vec3(0.0f, 100.0f, 0.0f);
 	glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
 	double lightAttenuation = 0.000000002f;

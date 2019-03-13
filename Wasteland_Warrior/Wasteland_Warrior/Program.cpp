@@ -54,6 +54,7 @@ void Program::start() {
 	Gamestate* gameState = new Gamestate();
 	gameState->window_width = glfwGetVideoMode(glfwGetPrimaryMonitor())->width;
 	gameState->window_height = glfwGetVideoMode(glfwGetPrimaryMonitor())->height;
+	gameState->UIMode = "Loading";
 
 	struct timeb currentTime;
 	ftime(&currentTime);
@@ -80,13 +81,20 @@ void Program::start() {
 
 	renderingEngine->LoadShaderProgram("menuShader", vertexMenuFile, fragmentMenuFile);
 
+	
+
 	UI_Controller UICL = UI_Controller(gameState,renderingEngine);
 
 	scene = new Scene(renderingEngine, gameState);
 
+	UICL.Update(gameState,window);
+	glfwSwapBuffers(window);
+
+	printf("finished loading\n");
+
 	//Spawn Static Entities
 	gameState->SpawnMap();
-
+	
 	gameState->SpawnStaticObject(0, 0, 0, 0);
 	gameState->SpawnStaticObject(1, 88, -6.25, 113);
 	gameState->SpawnStaticObject(1, 138, -6.25, 83);
@@ -112,6 +120,9 @@ void Program::start() {
 
 	//Initialize Enemies
 	gameState->SpawnEnemy(0, 10000, 10000, 10000);
+
+	gameState->UIMode = "Start";
+	
 
 	//Main render loop
 	while (!glfwWindowShouldClose(window)) {

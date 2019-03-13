@@ -936,7 +936,9 @@ void Physics_Controller::updateEntities() {
 		PxRigidBody *rigidBody = rigidActor->is<PxRigidBody>();
 		PxVec3 velocity = rigidBody->getLinearVelocity();
 		float speed = glm::length(glm::vec2{ velocity.x, velocity.z });
-
+		if (gameState->playerVehicle.physicsIndex == index && std::abs(velocity.x) > .005f && std::abs(velocity.z) > .005f) {
+			gameState->playerVehicle.heading = glm::normalize(glm::vec2{ velocity.x, velocity.z });
+		}
 
 		PxTransform orientation = rigidActor->getGlobalPose();		//   https://docs.nvidia.com/gameworks/content/gameworkslibrary/physx/apireference/files/classPxRigidActor.html
 		PxVec3 location = orientation.p;							//	https://docs.nvidia.com/gameworks/content/gameworkslibrary/physx/apireference/files/classPxTransform.html

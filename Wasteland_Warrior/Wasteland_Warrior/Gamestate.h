@@ -152,6 +152,9 @@ public:
 	bool restart;
 	int enemiesLeft;
 	int breakSeconds;
+	int score;
+	int scoreTime;
+	std::string gameMode;
 
 	int window_width;
 	int window_height;

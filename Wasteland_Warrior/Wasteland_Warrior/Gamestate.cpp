@@ -194,13 +194,10 @@ void Gamestate::DespawnEnemy(EnemyUnit enemy) { // Needs to blow up or something
 }
 
 void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse) {
-	//Determin who is the attacker
-
 	// play sound when collision happen
 	this->carCrash_sound = true;
-	//this->carCrashStatic_sound = true; // testing purpose
-	//this->carPowerUp_sound = true; // testing purpose
 
+	//Calculate "attack levels", how well the direction of the vehicle aligns with the axis of impulse
 	glm::vec2 normalizedImpulse = glm::normalize(impulse);
 	float attackLevelThreshold = 0.9;
 	float entity1AttackLevel = glm::dot(entity1->direction, normalizedImpulse);
@@ -220,43 +217,58 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse)
 	else
 		std::cout << "Enemy collided ";
 
-	float totalForce = abs(impulse.x) + abs(impulse.y);
+	float totalForce = glm::length(impulse);
 	std::cout << "with force: " << totalForce << std::endl;
 
 
 	float damageScaling = 700;		//Smaller number means more damage
-
-
 	float damage = totalForce / damageScaling;
 
-	//If both vehicles align 
-	if ((entity1AttackLevel >= attackLevelThreshold && entity2AttackLevel >= attackLevelThreshold) ||
-		(entity2AttackLevel <= -attackLevelThreshold && entity1AttackLevel <= -attackLevelThreshold) && damage > 5.0f) {
 
+	//Inflict damage
+	//If both vehicles align meaning a rear end
+	if ((entity1AttackLevel >= attackLevelThreshold && entity2AttackLevel >= attackLevelThreshold) ||
+		(entity2AttackLevel <= -attackLevelThreshold && entity1AttackLevel <= -attackLevelThreshold) 
+		&& damage > 5.0f) {
+
+		//Person going slower takes damage
 		if (entity1->speed > entity2->speed) {
-			entity2->health -= totalForce / damageScaling;
+			entity2->health -= damage;
 		}
 		else{
-			entity1->health -= totalForce / damageScaling;
+			entity1->health -= damage;
 		}
 	}
 
+	//If collision is head on
+	else if ((entity1AttackLevel >= attackLevelThreshold && entity2AttackLevel <= -attackLevelThreshold) ||
+		(entity2AttackLevel >= attackLevelThreshold && entity1AttackLevel <= -attackLevelThreshold)
+		&& damage > 5.0f) {
 
-	if (entity1AttackLevel >= attackLevelThreshold || entity1AttackLevel <= -attackLevelThreshold && damage > 5.0f)
-		entity2->health -= totalForce/ damageScaling;
+		entity1->health -= damage;
+		entity2->health -= damage;
+	}
 
-	if (entity2AttackLevel >= attackLevelThreshold || entity1AttackLevel <= -attackLevelThreshold && damage > 5.0f)
-		entity1->health -= totalForce/ damageScaling;
+	else {
+		std::cout << "Single collision" << std::endl;
+		//if (abs(entity1AttackLevel) >= attackLevelThreshold && damage > 5.0f) 
+		if (abs(entity1AttackLevel) >= abs(entity2AttackLevel) && damage > 5.0f)
+			entity2->health -= damage;
+
+		//if (abs(entity2AttackLevel) >= attackLevelThreshold&& damage > 5.0f) 
+		if (abs(entity2AttackLevel) >= abs(entity1AttackLevel) && damage > 5.0f)
+			entity1->health -= totalForce / damageScaling;
+	}
 
 
-
+	//Resolve effects of damage
 	if (entity1->health <= 0)
 		physics_Controller->setPosition(entity1->physicsIndex, glm::vec3{ 10050*entity1->health, 10050*entity1->health, 10050*entity1->health });
 
 	if(entity2->health <= 0)
 		physics_Controller->setPosition(entity2->physicsIndex, glm::vec3{ 10000 * entity1->health, 10000 * entity1->health, 10000 * entity1->health });
 
-	//explosion sound
+	//Explosion sound
 	if (entity1->health <= 0 || entity2->health <= 0)
 		this->carExpo_sound = true;
 

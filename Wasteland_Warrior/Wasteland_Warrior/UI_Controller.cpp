@@ -61,6 +61,10 @@ UI_Controller::UI_Controller(Gamestate* gameState, RenderingEngine* render)
 	InitializeTexture(&texture, "Image/title3.png", GL_TEXTURE_RECTANGLE);
 	textureArray.push_back(texture);
 
+	//13
+	InitializeTexture(&texture, "Image/loading.png", GL_TEXTURE_RECTANGLE);
+	textureArray.push_back(texture);
+
 	mainScene_bg = new SceneMainMenu(renderingEngine);
 	mainScene_start = new SceneMainMenu(renderingEngine);
 	mainScene_quit = new SceneMainMenu(renderingEngine);
@@ -414,5 +418,16 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 			GameState->UIMode = "Start";
 			GameState->ui_lose = false;
 		}
+	}
+	else if (GameState->UIMode == "Loading")
+	{
+		position.push_back(glm::vec3(-1.0f, -1.0f, 1.0f));
+		position.push_back(glm::vec3(1.0f, -1.0f, 1.0f));
+		position.push_back(glm::vec3(1.0f, 1.0f, 1.0f));
+		position.push_back(glm::vec3(-1.0f, 1.0f, 1.0f));
+
+		mainScene_bg->displayTexture(textureArray[13],position);
+		printf("Loading...\n");
+		position.clear();
 	}
 }

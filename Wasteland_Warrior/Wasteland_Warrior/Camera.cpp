@@ -17,10 +17,17 @@ Camera::Camera(Gamestate* newGamestate) {
 glm::mat4 Camera::viewMatrix() const {
 
 	glm::vec3 car = gameState->playerVehicle.position;
-	glm::vec3 cam = gameState->playerVehicle.position; 
+	glm::vec3 cam = gameState->playerVehicle.position;
+	int forward = 1;
+
+	float dir_head_discr = (gameState->playerVehicle.heading.x - gameState->playerVehicle.direction.x)*(gameState->playerVehicle.heading.x - gameState->playerVehicle.direction.x)
+		+ (gameState->playerVehicle.heading.y - gameState->playerVehicle.direction.y)*(gameState->playerVehicle.heading.y - gameState->playerVehicle.direction.y);
+	if (dir_head_discr > .5 && gameState->playerVehicle.speed > 5) {//change the 5 to a 4 maybe?
+		forward = -1;
+	}
 
 	//Third Person
-	float distanceBehindCar = 10 + (gameState->playerVehicle.speed * 0.25);;
+	float distanceBehindCar = forward * (10 + (gameState->playerVehicle.speed * 0.25));
 	float distanceAboveCar = 2.75;
 
 	//Hood Cam

@@ -251,6 +251,7 @@ void UserInput::gamepad(int controller, Gamestate* gameState) {
 
 	//Controller is connected
 	if (controller == 1) {
+		gameState->controller = true;
 
 		//Generic Controller Support
 		bool Generic = false;
@@ -278,14 +279,21 @@ void UserInput::gamepad(int controller, Gamestate* gameState) {
 		if (GLFW_PRESS == buttons[0]) { 
 			UserInput::inputBuffer.push("A");
 		};
-		if (GLFW_PRESS == buttons[1] && Generic == true) {
-			UserInput::inputBuffer.push("A");
-		}
-		else {
-			UserInput::inputBuffer.push("B");
+		if (GLFW_PRESS == buttons[1]) {
+			if(Generic == true){
+				UserInput::inputBuffer.push("A");
+			}
+			else {
+				UserInput::inputBuffer.push("B");
+			}
 		};
 		if (GLFW_PRESS == buttons[2]) {
-			UserInput::inputBuffer.push("X");
+			if (Generic == true) {
+				UserInput::inputBuffer.push("B");
+			}
+			else {
+				UserInput::inputBuffer.push("X");
+			}
 		};
 		if (GLFW_PRESS == buttons[3]) { 
 			UserInput::inputBuffer.push("Y");
@@ -293,8 +301,14 @@ void UserInput::gamepad(int controller, Gamestate* gameState) {
 		if (GLFW_PRESS == buttons[4]) { 
 			UserInput::inputBuffer.push("LB");
 		};
-		if (GLFW_PRESS == buttons[5]) { 
-			UserInput::inputBuffer.push("VIEW");
+		if (GLFW_PRESS == buttons[5]) {
+			if (view == true) {
+				UserInput::inputBuffer.push("VIEW");
+			}
+			view = false;
+		};
+		if (GLFW_RELEASE == buttons[5]) {
+			view = true;
 		};
 		if (GLFW_PRESS == buttons[6]) { 
 			UserInput::inputBuffer.push("OPTION");
@@ -304,11 +318,14 @@ void UserInput::gamepad(int controller, Gamestate* gameState) {
 		};
 		if (GLFW_PRESS == buttons[8]) { 
 			UserInput::inputBuffer.push("LS");
-			std::cout << "1" << std::endl;
 		};
 		if (GLFW_PRESS == buttons[9]) { 
-			UserInput::inputBuffer.push("RS");
-			std::cout << "2" << std::endl;
+			if (Generic == true) {
+				UserInput::inputBuffer.push("MENU");
+			}
+			else {
+				UserInput::inputBuffer.push("RS");
+			}
 		};
 		if (GLFW_PRESS == buttons[10] && Generic == false) {
 			if (up == true) {
@@ -361,8 +378,8 @@ void UserInput::gamepad(int controller, Gamestate* gameState) {
 			UserInput::inputBuffer.push("LEFT");
 		};
 
-		//Generic Controller Trigger/Joystick Remapping
-		if (Generic = true) {
+		//Generic Controller Remapping
+		if (Generic == true) {
 			float lt = gameState->rightStickY;
 			float rt = gameState->leftTrigger;
 			float ry = gameState->rightTrigger;
@@ -370,5 +387,8 @@ void UserInput::gamepad(int controller, Gamestate* gameState) {
 			gameState->leftTrigger = lt;
 			gameState->rightTrigger = rt;
 		}
+	}
+	else {
+		gameState->controller = false;
 	}
 }

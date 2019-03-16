@@ -11,6 +11,7 @@ class UserInput
 private:
 	bool up;
 	bool down;
+	bool view;
 
 public:
 	UserInput();

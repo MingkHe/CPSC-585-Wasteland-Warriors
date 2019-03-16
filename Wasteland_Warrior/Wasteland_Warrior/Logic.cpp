@@ -50,7 +50,6 @@ void Logic::Update(Gamestate *gameState)
 		gameState->scoreTime = score / 60;
 	} 
 	else {
-		std::cout << 2160010000/(score + 1) << std::endl;
 
 		/*--- WAVE 1 ---*/
 		if (gameState->wave == 1) {
@@ -229,7 +228,6 @@ void Logic::modeSelection(Gamestate *gameState) {
 		gameState->gameMode = "Boss Battle";
 		break;
 	}
-	std::cout << gameState->gameMode << std::endl;
 }
 
 //Survival

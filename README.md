@@ -15,42 +15,30 @@ be compiled using only the x86 Debug mode.
 ### Input Controls:
 
     Driving:
-        W or Right Trigger to accelerate forward
+        W or Right Trigger to Accelerate forward
         S or Left Trigger to Brake and Reverse
         A/D or Left Stick for steering left and right respectively
         SPACE or B on gamepad for Handbrake
         
-        R or Y on gamepad to Reset your vehicle after being flipped or stuck
+        R or Y on gamepad to reset your vehicle after being flipped or stuck
 
     Camera:
         Move Mouse while Holding the Left Mouse Button or move the Right Stick to move the camera around the vehicle
+        V or Right Shoulder Button to toggle the view between third person,Hood Cam, and Cockpit view
 
     Screen:
-    In the start Menu:
-        Menu options:
-        - start: start the game
-        - quit: exit the game
-
         UP Arrow or UP on Dpad to move up
         DOWN Arrow or DOWN on Dpad to move down
-        ENTER or X on gamepad to select option
+        ENTER or A on gamepad to select option
+        M or Menu button on gamepad to enter pause menu
+    
+    Start Menu options:
+        - start: start the game
+        - quit: exit the game
         
-
-        
-    In the gameplay:
-        M or Right option on gamepad to enter paused menu
-        G to ener win screen (for testing)
-        H to enter lose screen (for testing)
-        
-    In the pause menu:
-
-        Menu options:
+    Pause Menu options:
         - resume: resume the game
         - restart: restart the game
         - menu: go to start menu
-
-        UP Arrow to move up
-        DOWN Arrow to move down
-        ENTER to select option
         
-
+*Any gamepad is supported. However, Xbox 360 controller buttons are used as a default to explain gamepad input options.

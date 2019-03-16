@@ -109,6 +109,8 @@ public:
 	int textTime;
 	//----------------------UI Buffer End-----------------------------------
 
+	bool controller;
+
 	//Joysticks
 	float leftStickX;
 	float leftStickY;

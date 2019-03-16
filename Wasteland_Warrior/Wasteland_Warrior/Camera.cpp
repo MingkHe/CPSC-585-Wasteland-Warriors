@@ -36,14 +36,14 @@ glm::mat4 Camera::viewMatrix() const {
 
 	//Rotation
 	float angle;
-	if (gameState->rightStickX == 0) {
+	if (gameState->controller == false) {
 		angle = pow(gameState->cameraAngle, 5) * 0.20;
+		if (gameState->view > 0) {
+			angle = -angle;
+		}
 	}
 	else {
-		angle = pow(gameState->cameraAngle, 5) * 1.5;
-	}
-	if (gameState->view > 0) {
-		angle = -angle;
+		angle = pow(gameState->rightStickX, 5) * 1.5;
 	}
 
 	//Direction

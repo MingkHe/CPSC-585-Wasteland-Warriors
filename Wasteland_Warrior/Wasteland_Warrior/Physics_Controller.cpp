@@ -761,29 +761,29 @@ void Physics_Controller::stepPhysics(bool interactive)
 			}
 		}
 		
-
 		if (gameStateIndex != -1) {		//If this is an AI, get its pathfinding computed input
 			glm::vec2 pathfindingInput = gameState->pathfindingInputs[gameStateIndex];
 
-			if (gameState->Enemies[gameStateIndex].CheckForStuck()) {
-				vehiclesVector[i]->mDriveDynData.forceGearChange(PxVehicleGearsData::eREVERSE);
+			std::cout << "Enemy active: " << gameState->Enemies[gameStateIndex].getActive() << std::endl;
 
-				//enemyInputData.setAnalogAccel(pathfindingInput[0]);			//Uncomment these lines to re-enable AI
-				//enemyInputData.setAnalogSteer(-pathfindingInput[1]);
-				enemyInputData.setAnalogAccel(0.0f);
-				enemyInputData.setAnalogSteer(0.0f);
-			}
+			if (gameState->Enemies[gameStateIndex].getActive() == 1) {	//If the vehicle should move  
 
-			else {
-				vehiclesVector[i]->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
-				vehiclesVector[i]->mDriveDynData.setUseAutoGears(true);
-				//enemyInputData.setAnalogAccel(pathfindingInput[0]);			//Uncomment these lines to re-enable AI
-				//enemyInputData.setAnalogSteer(pathfindingInput[1]);
-				enemyInputData.setAnalogAccel(0.0f);
-				enemyInputData.setAnalogSteer(0.0f);
+				if (gameState->Enemies[gameStateIndex].CheckForStuck()) {
+					vehiclesVector[i]->mDriveDynData.forceGearChange(PxVehicleGearsData::eREVERSE);
+
+					enemyInputData.setAnalogAccel(pathfindingInput[0]);			//Uncomment these lines to re-enable AI
+					enemyInputData.setAnalogSteer(-pathfindingInput[1]);
+				}
+
+				else {
+					vehiclesVector[i]->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
+					vehiclesVector[i]->mDriveDynData.setUseAutoGears(true);
+					enemyInputData.setAnalogAccel(pathfindingInput[0]);			//Uncomment these lines to re-enable AI
+					enemyInputData.setAnalogSteer(pathfindingInput[1]);
+				}
+
+				PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, gSteerVsForwardSpeedTable, enemyInputData, timestep, gIsVehicleInAir, *vehiclesVector[i]);
 			}
-	
-			PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, gSteerVsForwardSpeedTable, enemyInputData, timestep, gIsVehicleInAir, *vehiclesVector[i]);
 		}
 		else {							//If this is the player, record as normal
 			PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, gSteerVsForwardSpeedTable, gVehicleInputData, timestep, gIsVehicleInAir, *vehiclesVector[i]);

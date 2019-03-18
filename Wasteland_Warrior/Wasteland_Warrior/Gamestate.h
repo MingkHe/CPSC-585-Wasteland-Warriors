@@ -168,7 +168,7 @@ public:
 	void SpawnDynamicObject(int ObjectType, float x, float y, float z);
 	void SpawnPlayer(float x, float y, float z);
 	void SpawnEnemy(int type, float x, float y, float z);
-	void DespawnEnemy(EnemyUnit enemy);
+	void DespawnEnemy(Vehicle* vehicle);
 
 	void Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse);
 	void Collision(Vehicle* vehicle, PowerUp* powerUp);

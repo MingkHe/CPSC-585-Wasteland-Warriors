@@ -20,5 +20,6 @@ public:
 	int lastMotionTime;
 
 	bool recoveryMode = false;
+	int active = 1;
 };
 

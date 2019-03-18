@@ -167,6 +167,7 @@ void Gamestate::SpawnEnemy(int type, float x, float y, float z) {
 	physics_Controller->setPosition(physicsIndex, glm::vec3{ x, y, z });
 	int sceneObjectIndex = scene->loadOBJObject("Objects/BladedDragster/bourak.obj", "Objects/BladedDragster/bourak.jpg");
 	EnemyUnit enemy = EnemyUnit(physicsIndex, sceneObjectIndex);
+	enemy.gameStateIndex = Enemies.size();
 	Enemies.push_back(enemy);
 	pathfindingInputs.push_back(glm::vec2{ 0.0f,0.0f });
 }
@@ -180,17 +181,10 @@ void Gamestate::resetOrientation(int physicsIndex) {
 }
 
 
-void Gamestate::DespawnEnemy(EnemyUnit enemy) { // Needs to blow up or something cool
-
-
-	//Add to entity system
-	//Enemies.remove(enemy);
-
-	//Add to physics system
-
-	//Add to graphics system
-
-	//Mesh/Textures?
+void Gamestate::DespawnEnemy(Vehicle* vehicle) { 
+	vehicle->setActive(0);
+	int offset = vehicle->physicsIndex;
+	physics_Controller->setPosition(vehicle->physicsIndex, glm::vec3{20 * offset, -20, 0});
 }
 
 void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse) {
@@ -263,10 +257,10 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse)
 
 	//Resolve effects of damage
 	if (entity1->health <= 0)
-		physics_Controller->setPosition(entity1->physicsIndex, glm::vec3{ 10050*entity1->health, 10050*entity1->health, 10050*entity1->health });
+		DespawnEnemy(entity1);
 
 	if(entity2->health <= 0)
-		physics_Controller->setPosition(entity2->physicsIndex, glm::vec3{ 10000 * entity1->health, 10000 * entity1->health, 10000 * entity1->health });
+		DespawnEnemy(entity2);
 
 	//Explosion sound
 	if (entity1->health <= 0 || entity2->health <= 0)

@@ -65,6 +65,17 @@ PxRigidStatic* createDrivablePlane(const PxFilterData& simFilterData, PxMaterial
 	//Add a plane to the scene.
 	PxRigidStatic* groundPlane = PxCreatePlane(*physics, PxPlane(0, 1, 0, 0), *material);
 
+	PxTransform orientation = groundPlane->getGlobalPose();
+	PxVec3 location = orientation.p;
+	PxQuat rotation = orientation.q;
+
+	PxTransform newO = PxTransform(orientation.p - PxVec3{0,24,0}, orientation.q);
+
+	groundPlane->setGlobalPose(newO);
+
+	//PxTransform startTransform(PxVec3(0.0f, 5.0f, -5.0f), PxQuat(PxIdentity));
+	//groundPlane->setGlobalPose(startTransform);
+
 	//Get the plane shape so we can set query and simulation filter data.
 	PxShape* shapes[1];
 	groundPlane->getShapes(shapes, 1);

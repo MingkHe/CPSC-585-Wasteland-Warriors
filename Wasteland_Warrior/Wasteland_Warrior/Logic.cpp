@@ -236,19 +236,21 @@ void Logic::survival(Gamestate *gameState) {
 		switch (i % 4) {
 		case 0: //Spawn Point 1
 			gameState->SpawnEnemy(0, 35 + (i * 10), 5, 35 + (i * 10));
-			gameState->Enemies[i + 1].health = 50;
+			gameState->Enemies[i].health = 50; //50;
 			break;
 		case 1: //Spawn Point 2
 			gameState->SpawnEnemy(0, -35 - (i * 10), 5, 35 + (i * 10));
-			gameState->Enemies[i + 1].health = 50;
+			gameState->Enemies[i].health = 50; //50;
 			break;
 		case 2: //Spawn Point 3
 			gameState->SpawnEnemy(0, 35 + (i * 10), 5, -35 - (i * 10));
-			gameState->Enemies[i + 1].health = 50;
+			gameState->Enemies[i].health = 50; //50;
+
 			break;
 		case 3: //Spawn Point 4
 			gameState->SpawnEnemy(0, -35 - (i * 10), 5, -35 - (i * 10));
-			gameState->Enemies[i + 1].health = 50;
+			gameState->Enemies[i].health = 50; //50;
+
 			break;
 		}
 	}
@@ -261,22 +263,22 @@ void Logic::checkpoint(Gamestate *gameState) {
 		case 0:
 			gameState->SpawnEnemy(0, 35 + (i * 10), 5, 35 + (i * 10));
 			gameState->SpawnDynamicObject(1, 45 + (i * 10), 0, 45 + (i * 10));
-			gameState->Enemies[i + 1].health = 50;
+			gameState->Enemies[i].health = 50;
 			break;
 		case 1:
 			gameState->SpawnEnemy(0, -35 - (i * 10), 5, 35 + (i * 10));
 			gameState->SpawnDynamicObject(1, -45 - (i * 10), 1, 45 + (i * 10));
-			gameState->Enemies[i + 1].health = 50;
+			gameState->Enemies[i].health = 50;
 			break;
 		case 2:
 			gameState->SpawnEnemy(0, 35 + (i * 10), 5, -35 - (i * 10));
 			gameState->SpawnDynamicObject(1, 45 + (i * 10), 1, -45 - (i * 10));
-			gameState->Enemies[i + 1].health = 50;
+			gameState->Enemies[i].health = 50;
 			break;
 		case 3:
 			gameState->SpawnEnemy(0, -35 - (i * 10), 5, -35 - (i * 10));
 			gameState->SpawnDynamicObject(1, -45 - (i * 10), 1, -45 - (i * 10));
-			gameState->Enemies[i + 1].health = 50;
+			gameState->Enemies[i].health = 50;
 			break;
 		}
 	}
@@ -288,19 +290,19 @@ void Logic::payload(Gamestate *gameState) {
 		switch (i % 4) {
 		case 0:
 			gameState->SpawnEnemy(0, 35 + (i * 10), 5, 35 + (i * 10));
-			gameState->Enemies[i + 1].health = 50;
+			gameState->Enemies[i].health = 50;
 			break;
 		case 1:
 			gameState->SpawnEnemy(0, -35 - (i * 10), 5, 35 + (i * 10));
-			gameState->Enemies[i + 1].health = 50;
+			gameState->Enemies[i].health = 50;
 			break;
 		case 2:
 			gameState->SpawnEnemy(0, 35 + (i * 10), 5, -35 - (i * 10));
-			gameState->Enemies[i + 1].health = 50;
+			gameState->Enemies[i].health = 50;
 			break;
 		case 3:
 			gameState->SpawnEnemy(0, -35 - (i * 10), 5, -35 - (i * 10));
-			gameState->Enemies[i + 1].health = 50;
+			gameState->Enemies[i].health = 50;
 			break;
 		}
 	}
@@ -312,19 +314,19 @@ void Logic::headHunter(Gamestate *gameState) {
 		switch (i % 4) {
 		case 0:
 			gameState->SpawnEnemy(0, 35 + (i * 10), 5, 35 + (i * 10));
-			gameState->Enemies[i + 1].health = 50;
+			gameState->Enemies[i].health = 50;
 			break;
 		case 1:
 			gameState->SpawnEnemy(0, -35 - (i * 10), 5, 35 + (i * 10));
-			gameState->Enemies[i + 1].health = 50;
+			gameState->Enemies[i].health = 50;
 			break;
 		case 2:
 			gameState->SpawnEnemy(0, 35 + (i * 10), 5, -35 - (i * 10));
-			gameState->Enemies[i + 1].health = 50;
+			gameState->Enemies[i].health = 50;
 			break;
 		case 3:
 			gameState->SpawnEnemy(0, -35 - (i * 10), 5, -35 - (i * 10));
-			gameState->Enemies[i + 1].health = 50;
+			gameState->Enemies[i].health = 50;
 			break;
 		}
 	}
@@ -335,23 +337,23 @@ void Logic::bossBattle(Gamestate *gameState) {
 		switch (gameState->wave) {
 		case 1:
 			gameState->SpawnEnemy(0, 35, 5, 35);
-			gameState->Enemies[1].health = 10;
+			gameState->Enemies[0].health = 10;
 			break;
 		case 2:
 			gameState->SpawnEnemy(0, 35, 5, 35);
-			gameState->Enemies[1].health = 50;
+			gameState->Enemies[0].health = 50;
 			break;
 		case 3:
 			gameState->SpawnEnemy(0, 35, 5, 35);
-			gameState->Enemies[1].health = 75;
+			gameState->Enemies[0].health = 75;
 			break;
 		case 4:
 			gameState->SpawnEnemy(0, 35, 5, 35);
-			gameState->Enemies[1].health = 100;
+			gameState->Enemies[0].health = 100;
 			break;
 		case 5:
 			gameState->SpawnEnemy(0, 35, 5, 35);
-			gameState->Enemies[1].health = 150;
+			gameState->Enemies[0].health = 150;
 			break;
 		}
 }

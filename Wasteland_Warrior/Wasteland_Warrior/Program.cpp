@@ -117,8 +117,6 @@ void Program::start() {
 	//Spawn Player
 	gameState->SpawnPlayer(0, 0, 0);
 
-	//Initialize Enemies
-	gameState->SpawnEnemy(0, 10000, 10000, 10000);
 
 	gameState->UIMode = "Start";
 	

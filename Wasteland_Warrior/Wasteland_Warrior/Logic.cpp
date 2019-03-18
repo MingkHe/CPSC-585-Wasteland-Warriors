@@ -184,19 +184,19 @@ void Logic::survival(Gamestate *gameState) {
 		switch (mode) {
 		case 0: //quadrant 1
 			gameState->SpawnEnemy(0, 35 + (i * 10), 5, 35 + (i * 10));
-			gameState->Enemies[i + 1].health = 1; //50;
+			gameState->Enemies[i].health = 1; //50;
 			break;
 		case 1: //quadrant 2
 			gameState->SpawnEnemy(0, -35 - (i * 10), 5, 35 + (i * 10));
-			gameState->Enemies[i + 1].health = 1; //50;
+			gameState->Enemies[i].health = 1; //50;
 			break;
 		case 2: //quadrant 3
 			gameState->SpawnEnemy(0, 35 + (i * 10), 5, -35 - (i * 10));
-			gameState->Enemies[i + 1].health = 1; //50;
+			gameState->Enemies[i].health = 1; //50;
 			break;
 		case 3: //quadrant 4
 			gameState->SpawnEnemy(0, -35 - (i * 10), 5, -35 - (i * 10));
-			gameState->Enemies[i + 1].health = 1; //50;
+			gameState->Enemies[i].health = 1; //50;
 			break;
 		}
 	}

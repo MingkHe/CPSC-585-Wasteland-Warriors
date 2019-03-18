@@ -182,15 +182,6 @@ void Gamestate::resetOrientation(int physicsIndex) {
 
 void Gamestate::DespawnEnemy(EnemyUnit enemy) { // Needs to blow up or something cool
 
-
-	//Add to entity system
-	//Enemies.remove(enemy);
-
-	//Add to physics system
-
-	//Add to graphics system
-
-	//Mesh/Textures?
 }
 
 void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse) {

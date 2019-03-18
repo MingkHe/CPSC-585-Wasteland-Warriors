@@ -285,9 +285,9 @@ void Scene::displayScene() {
 	for (int i = 0; i < numOfEnemies; i++) {
 		index = gameState->Enemies[i].sceneObjectIndex;
 		objects[index].geometry[0].transform = gameState->getEntityTransformation(index);
-		
-
 	}
+
+
 	/*int numOfPowerUps = gameState->DynamicObjects.size();
 	index = 0;
 	for (int i = 0; i < numOfPowerUps; i++) {
@@ -299,6 +299,4 @@ void Scene::displayScene() {
 	}*/
 	renderer->RenderScene(objects);
 	
-
-
 }

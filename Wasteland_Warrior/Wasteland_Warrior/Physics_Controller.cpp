@@ -454,10 +454,10 @@ void Physics_Controller::initPhysics(bool interactive)
 	gFrictionPairs = createFrictionPairs(gMaterial);
 
 	//Create a plane to drive on.
-	//PxFilterData groundPlaneSimFilterData(COLLISION_FLAG_GROUND, COLLISION_FLAG_GROUND_AGAINST, 0, 0);
+	PxFilterData groundPlaneSimFilterData(COLLISION_FLAG_GROUND, COLLISION_FLAG_GROUND_AGAINST, 0, 0);
 
-	//gGroundPlane = createDrivablePlane(groundPlaneSimFilterData, gMaterial, gPhysics);
-	//gScene->addActor(*gGroundPlane);
+	gGroundPlane = createDrivablePlane(groundPlaneSimFilterData, gMaterial, gPhysics);
+	gScene->addActor(*gGroundPlane);
 
 	startBrakeMode();
 }
@@ -764,7 +764,7 @@ void Physics_Controller::stepPhysics(bool interactive)
 		if (gameStateIndex != -1) {		//If this is an AI, get its pathfinding computed input
 			glm::vec2 pathfindingInput = gameState->pathfindingInputs[gameStateIndex];
 
-			std::cout << "Enemy active: " << gameState->Enemies[gameStateIndex].getActive() << std::endl;
+			//std::cout << "Enemy active: " << gameState->Enemies[gameStateIndex].getActive() << std::endl;
 
 			if (gameState->Enemies[gameStateIndex].getActive() == 1) {	//If the vehicle should move  
 
@@ -782,6 +782,11 @@ void Physics_Controller::stepPhysics(bool interactive)
 					enemyInputData.setAnalogSteer(pathfindingInput[1]);
 				}
 
+				PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, gSteerVsForwardSpeedTable, enemyInputData, timestep, gIsVehicleInAir, *vehiclesVector[i]);
+			}
+			else {
+				enemyInputData.setAnalogAccel(0.0f);
+				enemyInputData.setAnalogSteer(0.0f);
 				PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, gSteerVsForwardSpeedTable, enemyInputData, timestep, gIsVehicleInAir, *vehiclesVector[i]);
 			}
 		}

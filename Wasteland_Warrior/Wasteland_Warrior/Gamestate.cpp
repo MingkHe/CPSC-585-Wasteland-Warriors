@@ -215,7 +215,7 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse)
 	std::cout << "with force: " << totalForce << std::endl;
 
 
-	float damageScaling = 7;		//Smaller number means more damage
+	float damageScaling = 700;		//Smaller number means more damage
 	float damage = totalForce / damageScaling;
 
 

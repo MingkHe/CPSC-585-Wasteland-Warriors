@@ -6,6 +6,7 @@ private:
 	int waveBreak;
 	int breakTime;
 	int enemiesLeft;
+	int score;
 
 public:
 	Logic();

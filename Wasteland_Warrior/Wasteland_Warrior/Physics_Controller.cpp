@@ -594,7 +594,7 @@ void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DK
 		gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
 	}
 
-	if (leftStickX == 0 && leftTrigger == 0 && rightTrigger == 0) {
+	if (gameState->controller == false) {
 		if ((WKey) && !(SKey) && !(SPACEKey))/*Check if high-order bit is set (1 << 15)*/
 		{
 			if (currentGear < 0) {
@@ -688,6 +688,8 @@ void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DK
 
 		}
 	}
+
+	//Gamepad Driving Input
 	else {
 		if (rightTrigger > -1) {
 			if (currentGear < 0) {
@@ -698,7 +700,7 @@ void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DK
 		}
 		else if (leftTrigger > -1) {
 			if (currentGear > 0) {
-			currentGear = -1;
+				currentGear = -1;
 				changeToReverseGear = true;
 			}
 			gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eREVERSE);
@@ -709,6 +711,9 @@ void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DK
 
 		if (gameState->button == "B") {
 			gVehicleInputData.setAnalogHandbrake(1.0f);
+		}
+		else {
+			gVehicleInputData.setAnalogHandbrake(0.0f);
 		}
 	}
 
@@ -938,7 +943,9 @@ void Physics_Controller::updateEntities() {
 		PxRigidBody *rigidBody = rigidActor->is<PxRigidBody>();
 		PxVec3 velocity = rigidBody->getLinearVelocity();
 		float speed = glm::length(glm::vec2{ velocity.x, velocity.z });
-
+		if (gameState->playerVehicle.physicsIndex == index && std::abs(velocity.x) > .005f && std::abs(velocity.z) > .005f) {
+			gameState->playerVehicle.heading = glm::normalize(glm::vec2{ velocity.x, velocity.z });
+		}
 
 		PxTransform orientation = rigidActor->getGlobalPose();		//   https://docs.nvidia.com/gameworks/content/gameworkslibrary/physx/apireference/files/classPxRigidActor.html
 		PxVec3 location = orientation.p;							//	https://docs.nvidia.com/gameworks/content/gameworkslibrary/physx/apireference/files/classPxTransform.html

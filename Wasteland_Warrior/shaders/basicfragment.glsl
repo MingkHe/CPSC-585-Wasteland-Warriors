@@ -12,9 +12,8 @@ out vec4 finalColor;
 
 void main() {
 	if(istex == 1) {
-		//vec4 surfaceColor = texture(materialTex, fragTexCoord);
-		vec4 surfaceColor = vec4(1, 1, 1, 0);
-		finalColor = surfaceColor;
+		//finalColor = texture(materialTex, fragTexCoord);
+		finalColor = vec4(1, 1, 1, 0);
 	} else {
 		finalColor = vec4(1, 0, 0, 0);
 	}

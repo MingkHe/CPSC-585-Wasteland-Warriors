@@ -30,7 +30,8 @@ void Logic::Update(Gamestate *gameState)
 
 		//Reset Enemies
 		for (int i = 0; i < gameState->Enemies.size(); i++) {
-			gameState->physics_Controller->setPosition(gameState->Enemies[i].physicsIndex, glm::vec3{ 10000 + (i * 10), 10000 + (i * 10), 10000 + (i * 10) });
+			gameState->DespawnEnemy(&gameState->Enemies[i]);
+			gameState->Enemies.erase(gameState->Enemies.begin() + i);
 		}
 
 		//Reset Game
@@ -168,15 +169,14 @@ void Logic::Update(Gamestate *gameState)
 
 int Logic::checkEnemyHealth(Gamestate *gameState) {
 	int enemiesLeft = 0;
-	int end = gameState->Enemies.size()-1;
-	for (int i = 1; i <= gameState->wave; i++) {
-		if (gameState->Enemies[end].health >= 0) {
+	for (int i = 0; i < gameState->Enemies.size(); i++) {
+		if (gameState->Enemies[i].health >= 0) {
 			enemiesLeft++;
 		}
 		else {
-			//Despawn Enemies
+			gameState->DespawnEnemy(&gameState->Enemies[i]);
+			gameState->Enemies.erase(gameState->Enemies.begin()+i);
 		}
-		end--;
 	}
 	gameState->enemiesLeft = enemiesLeft;
 	return enemiesLeft;
@@ -236,21 +236,19 @@ void Logic::survival(Gamestate *gameState) {
 		switch (i % 4) {
 		case 0: //Spawn Point 1
 			gameState->SpawnEnemy(0, 35 + (i * 10), 5, 35 + (i * 10));
-			gameState->Enemies[i].health = 50; //50;
+			gameState->Enemies[i].health = 50;
 			break;
 		case 1: //Spawn Point 2
 			gameState->SpawnEnemy(0, -35 - (i * 10), 5, 35 + (i * 10));
-			gameState->Enemies[i].health = 50; //50;
+			gameState->Enemies[i].health = 50;
 			break;
 		case 2: //Spawn Point 3
 			gameState->SpawnEnemy(0, 35 + (i * 10), 5, -35 - (i * 10));
-			gameState->Enemies[i].health = 50; //50;
-
+			gameState->Enemies[i].health = 50;
 			break;
 		case 3: //Spawn Point 4
 			gameState->SpawnEnemy(0, -35 - (i * 10), 5, -35 - (i * 10));
-			gameState->Enemies[i].health = 50; //50;
-
+			gameState->Enemies[i].health = 50;
 			break;
 		}
 	}

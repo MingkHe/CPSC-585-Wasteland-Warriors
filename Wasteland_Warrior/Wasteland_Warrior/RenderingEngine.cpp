@@ -145,7 +145,8 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 		enemy_locations.push_back(glm::vec2(game_state->Enemies[i].position.x, game_state->Enemies[i].position.z));
 	}
 	//std::cout << enemy_locations[0].x << " " << enemy_locations[0].y << std::endl;
-	glUniform2fv(enemiesGL, enemy_locations.size(), &(enemy_locations[0].x));
+	if(game_state->Enemies.size()!=0)
+		glUniform2fv(enemiesGL, enemy_locations.size(), &(enemy_locations[0].x));
 	glUniform2f(playerposGL, game_state->playerVehicle.position.x, game_state->playerVehicle.position.z);
 	glUniform2f(playerdirGL, game_state->playerVehicle.direction.x, game_state->playerVehicle.direction.y);
 	glUniform1i(numenemiesGL, enemy_locations.size());

@@ -454,10 +454,10 @@ void Physics_Controller::initPhysics(bool interactive)
 	gFrictionPairs = createFrictionPairs(gMaterial);
 
 	//Create a plane to drive on.
-	//PxFilterData groundPlaneSimFilterData(COLLISION_FLAG_GROUND, COLLISION_FLAG_GROUND_AGAINST, 0, 0);
+	PxFilterData groundPlaneSimFilterData(COLLISION_FLAG_GROUND, COLLISION_FLAG_GROUND_AGAINST, 0, 0);
 
-	//gGroundPlane = createDrivablePlane(groundPlaneSimFilterData, gMaterial, gPhysics);
-	//gScene->addActor(*gGroundPlane);
+	gGroundPlane = createDrivablePlane(groundPlaneSimFilterData, gMaterial, gPhysics);
+	gScene->addActor(*gGroundPlane);
 
 	startBrakeMode();
 }
@@ -594,7 +594,7 @@ void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DK
 		gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
 	}
 
-	if (leftStickX == 0 && leftTrigger == 0 && rightTrigger == 0) {
+	if (gameState->controller == false) {
 		if ((WKey) && !(SKey) && !(SPACEKey))/*Check if high-order bit is set (1 << 15)*/
 		{
 			if (currentGear < 0) {
@@ -688,6 +688,8 @@ void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DK
 
 		}
 	}
+
+	//Gamepad Driving Input
 	else {
 		if (rightTrigger > -1) {
 			if (currentGear < 0) {
@@ -698,7 +700,7 @@ void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DK
 		}
 		else if (leftTrigger > -1) {
 			if (currentGear > 0) {
-			currentGear = -1;
+				currentGear = -1;
 				changeToReverseGear = true;
 			}
 			gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eREVERSE);
@@ -709,6 +711,9 @@ void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DK
 
 		if (gameState->button == "B") {
 			gVehicleInputData.setAnalogHandbrake(1.0f);
+		}
+		else {
+			gVehicleInputData.setAnalogHandbrake(0.0f);
 		}
 	}
 
@@ -756,29 +761,34 @@ void Physics_Controller::stepPhysics(bool interactive)
 			}
 		}
 		
-
 		if (gameStateIndex != -1) {		//If this is an AI, get its pathfinding computed input
 			glm::vec2 pathfindingInput = gameState->pathfindingInputs[gameStateIndex];
 
-			if (gameState->Enemies[gameStateIndex].CheckForStuck()) {
-				vehiclesVector[i]->mDriveDynData.forceGearChange(PxVehicleGearsData::eREVERSE);
+			//std::cout << "Enemy active: " << gameState->Enemies[gameStateIndex].getActive() << std::endl;
 
-				//enemyInputData.setAnalogAccel(pathfindingInput[0]);			//Uncomment these lines to re-enable AI
-				//enemyInputData.setAnalogSteer(-pathfindingInput[1]);
-				enemyInputData.setAnalogAccel(0.0f);
-				enemyInputData.setAnalogSteer(0.0f);
+			if (gameState->Enemies[gameStateIndex].getActive() == 1) {	//If the vehicle should move  
+
+				if (gameState->Enemies[gameStateIndex].CheckForStuck()) {
+					vehiclesVector[i]->mDriveDynData.forceGearChange(PxVehicleGearsData::eREVERSE);
+
+					enemyInputData.setAnalogAccel(pathfindingInput[0]);			//Uncomment these lines to re-enable AI
+					enemyInputData.setAnalogSteer(-pathfindingInput[1]);
+				}
+
+				else {
+					vehiclesVector[i]->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
+					vehiclesVector[i]->mDriveDynData.setUseAutoGears(true);
+					enemyInputData.setAnalogAccel(pathfindingInput[0]);			//Uncomment these lines to re-enable AI
+					enemyInputData.setAnalogSteer(pathfindingInput[1]);
+				}
+
+				PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, gSteerVsForwardSpeedTable, enemyInputData, timestep, gIsVehicleInAir, *vehiclesVector[i]);
 			}
-
 			else {
-				vehiclesVector[i]->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
-				vehiclesVector[i]->mDriveDynData.setUseAutoGears(true);
-				//enemyInputData.setAnalogAccel(pathfindingInput[0]);			//Uncomment these lines to re-enable AI
-				//enemyInputData.setAnalogSteer(pathfindingInput[1]);
 				enemyInputData.setAnalogAccel(0.0f);
 				enemyInputData.setAnalogSteer(0.0f);
+				PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, gSteerVsForwardSpeedTable, enemyInputData, timestep, gIsVehicleInAir, *vehiclesVector[i]);
 			}
-	
-			PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, gSteerVsForwardSpeedTable, enemyInputData, timestep, gIsVehicleInAir, *vehiclesVector[i]);
 		}
 		else {							//If this is the player, record as normal
 			PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, gSteerVsForwardSpeedTable, gVehicleInputData, timestep, gIsVehicleInAir, *vehiclesVector[i]);

@@ -20,6 +20,7 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	healthshaderProgram = ShaderTools::InitializeShaders("../shaders/healthvertex.glsl", "../shaders/healthfragment.glsl");
 	radarshaderProgram = ShaderTools::InitializeShaders("../shaders/radarvertex.glsl", "../shaders/radarfragment.glsl");
 	basicshaderProgram = ShaderTools::InitializeShaders("../shaders/basicvertex.glsl", "../shaders/basicfragment.glsl");
+	shadowshaderProgram = ShaderTools::InitializeShaders("../shaders/shadowMapVertex.glsl", "../shaders/shadowMapFragment.glsl");
 	
 	textShaderProgram = ShaderTools::InitializeShaders("../shaders/texVertex.glsl", "../shaders/texFragment.glsl");
 
@@ -61,6 +62,7 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 		speedo.uvs.push_back(glm::vec2(0, 0));
 	}
 	speedo.drawMode = GL_TRIANGLES;
+	InitializeTexture(&speedo.texture, "Image/speedo.png");
 	assignBuffers(speedo);
 	setBufferData(speedo);
 
@@ -70,6 +72,21 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	needle.drawMode = GL_TRIANGLES;
 	assignBuffers(needle);
 	setBufferData(needle);
+
+	mirror.verts.push_back(glm::vec3(-.4f, .65f, 0.f));
+	mirror.verts.push_back(glm::vec3(-.4f, .95f, 0.f));
+	mirror.verts.push_back(glm::vec3(.4f, .65f, 0.f));
+	mirror.verts.push_back(glm::vec3(.4f, .95f, 0.f));
+	mirror.uvs.push_back(glm::vec2(-.4f, .7f));
+	mirror.uvs.push_back(glm::vec2(-.4f, .9f));
+	mirror.uvs.push_back(glm::vec2(.4f, .7f));
+	mirror.uvs.push_back(glm::vec2(.4f, .9f));
+	mirror.drawMode = GL_TRIANGLE_STRIP;
+	assignBuffers(mirror);
+	setBufferData(mirror);
+
+	rear_view = createFramebuffer(game_state->window_width, game_state->window_height);
+	shadow_buffer = createFramebuffer(game_state->window_width, game_state->window_height);
 
 	//the code to load the font, may be do some refactor in the future.
 
@@ -86,19 +103,46 @@ RenderingEngine::~RenderingEngine() {
 }
 
 void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objects) {
-	//Clears the screen to a dark grey background
-	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	//sets uniforms
+	glm::mat4 perspectiveMatrix = glm::perspective(PI_F*.4f, (float)game_state->window_height / (float)game_state->window_width, .1f, 750.f); // last argument changed from 200 to 500 to increase view range
 
-	glm::mat4 perspectiveMatrix = glm::perspective(PI_F*.4f, 512.f / 512.f, .1f, 750.f); // last argument changed from 200 to 500 to increase view range
-	glm::mat4 modelViewProjection = perspectiveMatrix * game_state->camera.viewMatrix();
+	//setting up framebuffer stuff
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
+	glUseProgram(shadowshaderProgram);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	GLint transformGL = glGetUniformLocation(shadowshaderProgram, "transform");
+	glm::mat4 depthProjectionMatrix = glm::ortho<float>(-10, 10, -10, 10, -10, 20);
+	glm::mat4 depthViewMatrix = glm::lookAt(glm::vec3(0, -1, 0), game_state->light, glm::vec3(1, 0, 0));
+	glm::mat4 depthModelMatrix = glm::mat4(1.0);
+	glm::mat4 depthMVP = depthProjectionMatrix * perspectiveMatrix;
+	GLuint depthMatrixID = glGetUniformLocation(shadowshaderProgram, "modelViewProjection");
+	glUniformMatrix4fv(depthMatrixID, 1, GL_FALSE, &depthMVP[0][0]);
+	glBindFramebuffer(GL_FRAMEBUFFER, shadow_buffer.id);
+	for (int i = 0; i < objects.size(); i++) {
+		glUniformMatrix4fv(transformGL, 1, false, glm::value_ptr(objects[i].geometry[0].transform));
+		glBindVertexArray(objects[i].geometry[0].vao);
+		glDrawArrays(objects[i].geometry[0].drawMode, 0, objects[i].geometry[0].verts.size());
+	}
+	
+	//Clears the screen to a dark grey background
+	//glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	//sets uniforms
+	glm::mat4 modelViewProjection = perspectiveMatrix * game_state->camera.backviewMatrix();
+	glBindFramebuffer(GL_FRAMEBUFFER, rear_view.colorTextureID);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glUseProgram(shaderProgram);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
-	GLint transformGL = glGetUniformLocation(shaderProgram, "transform");
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, shadow_buffer.depthTextureID);
+	transformGL = glGetUniformLocation(shaderProgram, "transform");
 	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "modelViewProjection"), 1, false, glm::value_ptr(modelViewProjection));
+
+	depthMatrixID = glGetUniformLocation(shaderProgram, "depthViewProjection");
+	glUniformMatrix4fv(depthMatrixID, 1, GL_FALSE, &depthMVP[0][0]);
 
 	glUniform3fv(glGetUniformLocation(shaderProgram, "cameraPosition"), 1, glm::value_ptr(game_state->camera.pos));
 	glUniform3fv(glGetUniformLocation(shaderProgram, "lightPosition"), 1, glm::value_ptr(game_state->light));
@@ -109,6 +153,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	glUniform3fv(glGetUniformLocation(shaderProgram, "materialSpecularColor"), 1, glm::value_ptr(game_state->materialSpecularColor));
 	glUniform1f(glGetUniformLocation(shaderProgram, "materialShininess"), game_state->materialShininess);
 	glUniform1i(glGetUniformLocation(shaderProgram, "materialTex"), 0);
+	glUniform1i(glGetUniformLocation(shaderProgram, "shadowTex"), 1);
 
 	int objectNum = objects.size();
 	for (int i = 0; i < objectNum; i++) {
@@ -122,14 +167,32 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 
 		// reset state to default (no shader or geometry bound)
 	}
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	modelViewProjection = perspectiveMatrix * game_state->camera.viewMatrix();
+	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "modelViewProjection"), 1, false, glm::value_ptr(modelViewProjection));
+	for (int i = 0; i < objectNum; i++) {
+		glUniformMatrix4fv(transformGL, 1, false, glm::value_ptr(objects[i].geometry[0].transform));
+		//bind the texture
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, objects[i].geometry[0].texture.textureID);
+
+		glBindVertexArray(objects[i].geometry[0].vao);
+		glDrawArrays(objects[i].geometry[0].drawMode, 0, objects[i].geometry[0].verts.size());
+
+		// reset state to default (no shader or geometry bound)
+	}
+
 	glBindVertexArray(0);
-	//}
+
 	
+	glDisable(GL_DEPTH_TEST);
+
 	//render health bar
 	GLint healthGL = glGetUniformLocation(healthshaderProgram, "health");
 	glUseProgram(healthshaderProgram);
 	glUniform1f(healthGL, game_state->playerVehicle.health);
-	glDisable(GL_DEPTH_TEST);
 	glBindVertexArray(health.vao);
 	glDrawArrays(health.drawMode, 0, health.verts.size());
 
@@ -158,6 +221,9 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	glUseProgram(basicshaderProgram);
 	GLint istexGL = glGetUniformLocation(basicshaderProgram, "istex");
 	glUniform1i(istexGL, 1);
+	glUniform1i(glGetUniformLocation(basicshaderProgram, "materialTex"), 0);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, speedo.texture.textureID);
 	glBindVertexArray(speedo.vao);
 	glDrawArrays(speedo.drawMode, 0, speedo.verts.size());
 	glBindVertexArray(0);
@@ -171,6 +237,16 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	glUniform1i(istexGL, 0);
 	glBindVertexArray(needle.vao);
 	glDrawArrays(needle.drawMode, 0, needle.verts.size());
+	glBindVertexArray(0);
+
+	//render mirror
+	istexGL = glGetUniformLocation(basicshaderProgram, "istex");
+	glUniform1i(istexGL, 1);
+	glUniform1i(glGetUniformLocation(basicshaderProgram, "materialTex"), 0);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, rear_view.colorTextureID);
+	glBindVertexArray(mirror.vao);
+	glDrawArrays(mirror.drawMode, 0, mirror.verts.size());
 	glBindVertexArray(0);
 
 	//render text
@@ -397,7 +473,7 @@ void RenderingEngine::updateText() {
 	}
 
 	if (game_state->powerText) {
-		pushTextObj(texObjects, "You are heal to full health!", 0.3f*game_state->window_width, 0.8*game_state->window_height, 1.0f);
+		pushTextObj(texObjects, "You are healed to full health!", 0.3f*game_state->window_width, 0.8*game_state->window_height, 1.0f);
 	}
 }
 

@@ -21,6 +21,8 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
+#include "Framebuffer.h"
+
 //Forward declaration of classes
 //(note this is necessary because these are pointers and it allows the #include to appear in the .cpp file)
 struct GLFWwindow;
@@ -75,10 +77,15 @@ public:
 	GLuint healthshaderProgram;
 	GLuint radarshaderProgram;
 	GLuint basicshaderProgram;
+	GLuint shadowshaderProgram;
 	Geometry health;
 	Geometry radar;
 	Geometry speedo;
 	Geometry needle;
+	Geometry mirror;
+
+	Framebuffer shadow_buffer;
+	Framebuffer rear_view;
 
 	GLuint textShaderProgram;
 

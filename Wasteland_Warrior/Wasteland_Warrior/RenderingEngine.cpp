@@ -430,26 +430,24 @@ void RenderingEngine::updateText() {
 			pushTextObj(texObjects, "Break Seconds: " + std::to_string(game_state->breakSeconds), 0.01f*game_state->window_width, 0.85*game_state->window_height, 1.0f);
 		}
 
-		if (game_state->UIMode == "Win") {
-			pushTextObj(texObjects, "Your score was: " + std::to_string(game_state->score), 0.01f*game_state->window_width, 0.95*game_state->window_height, 1.0f);
-			pushTextObj(texObjects, "You survived in: " + std::to_string(game_state->scoreTime), 0.01f*game_state->window_width, 0.95*game_state->window_height, 1.0f);
-		}
-
-		if (game_state->UIMode == "Lose") {
-			pushTextObj(texObjects, "Your score was: " + std::to_string(game_state->score), 0.01f*game_state->window_width, 0.95*game_state->window_height, 1.0f);
-			pushTextObj(texObjects, "You died after: " + std::to_string(game_state->scoreTime), 0.01f*game_state->window_width, 0.95*game_state->window_height, 1.0f);
-		}
-
 		if (game_state->powerText) {
 			pushTextObj(texObjects, "You are heal to full health!", 0.3f*game_state->window_width, 0.8*game_state->window_height, 1.0f);
 		}
 	}
 
+	if (game_state->UIMode == "Win") {
+		pushTextObj(texObjects, "Your score was: " + std::to_string(game_state->score), 0.4f*game_state->window_width, 0.55*game_state->window_height, 1.0f);
+		pushTextObj(texObjects, "You survived in: " + std::to_string(game_state->scoreTime), 0.4f*game_state->window_width, 0.45*game_state->window_height, 1.0f);
+	}
 
+	if (game_state->UIMode == "Lose") {
+		pushTextObj(texObjects, "Your score was: " + std::to_string(game_state->score), 0.4f*game_state->window_width, 0.45*game_state->window_height, 1.0f);
+		pushTextObj(texObjects, "You died after: " + std::to_string(game_state->scoreTime), 0.4f*game_state->window_width, 0.35*game_state->window_height, 1.0f);
+	}
 
 
 	if (game_state->UIMode == "Loading") {
-		pushTextObj(texObjects, "Loading: %" + std::to_string(game_state->loadingPercentage), 0.8f*game_state->window_width, 0.4*game_state->window_height, 1.0f);
+		pushTextObj(texObjects, "Loading: %" + std::to_string(game_state->loadingPercentage), 0.8f*game_state->window_width, 0.1*game_state->window_height, 1.0f);
 	}
 }
 

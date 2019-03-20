@@ -30,6 +30,7 @@ Gamestate::Gamestate()
 
 	powerText = false;
 	textTime = 0;
+	loadingPercentage = 0;
 
 	cameraAngle = 0.0;
 	view = 0;

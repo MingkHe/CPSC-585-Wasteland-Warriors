@@ -107,6 +107,7 @@ public:
 	//----------------------UI Buffer Start---------------------------------
 	bool powerText;
 	int textTime;
+	int loadingPercentage;
 	//----------------------UI Buffer End-----------------------------------
 
 	bool controller;

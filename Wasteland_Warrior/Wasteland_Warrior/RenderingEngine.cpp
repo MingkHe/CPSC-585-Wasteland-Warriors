@@ -236,6 +236,40 @@ void RenderingEngine::RenderMenuScene(const std::vector<Geometry>& objects) {
 
 	glUseProgram(0);
 
+	updateText();
+
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	glUseProgram(textShaderProgram);
+
+	//text color:
+	glUniform3f(glGetUniformLocation(textShaderProgram, "textColor"), 0.7f, 0.2f, 0.2f);
+	//glActiveTexture(GL_TEXTURE0);
+
+	for (Geometry& g : texObjects) {
+
+		//bind the texture
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, g.textureID);
+
+		glBindVertexArray(g.vao);
+		glDrawArrays(g.drawMode, 0, g.verts.size());
+
+		// reset state to default (no shader or geometry bound)
+		deleteBufferData(g);
+		glBindVertexArray(0);
+	}
+
+	texObjects.clear();
+
+	glDisable(GL_CULL_FACE);
+	glDisable(GL_BLEND);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glUseProgram(0);
+
 	// check for an report any OpenGL errors
 	CheckGLErrors();
 }
@@ -387,17 +421,35 @@ void RenderingEngine::pushTextObj(std::vector<Geometry>& objects, std::string te
 
 void RenderingEngine::updateText() {
 
-	pushTextObj(texObjects, "Wave # " + std::to_string(game_state->wave), 0.01f*game_state->window_width, 0.95*game_state->window_height, 1.0f);
+	if (game_state->UIMode == "Game") {
+		pushTextObj(texObjects, "Wave # " + std::to_string(game_state->wave), 0.01f*game_state->window_width, 0.95*game_state->window_height, 1.0f);
+		if (game_state->breakSeconds == 0) {
+			pushTextObj(texObjects, "Enemies Left: " + std::to_string(game_state->enemiesLeft), 0.01f*game_state->window_width, 0.9*game_state->window_height, 1.0f);
+		}
+		else {
+			pushTextObj(texObjects, "Break Seconds: " + std::to_string(game_state->breakSeconds), 0.01f*game_state->window_width, 0.85*game_state->window_height, 1.0f);
+		}
 
-	if (game_state->breakSeconds == 0) {
-		pushTextObj(texObjects, "Enemies Left: " + std::to_string(game_state->enemiesLeft), 0.01f*game_state->window_width, 0.9*game_state->window_height, 1.0f);
-	}
-	else {
-		pushTextObj(texObjects, "Break Seconds: " + std::to_string(game_state->breakSeconds), 0.01f*game_state->window_width, 0.85*game_state->window_height, 1.0f);
+		if (game_state->UIMode == "Win") {
+			pushTextObj(texObjects, "Your score was: " + std::to_string(game_state->score), 0.01f*game_state->window_width, 0.95*game_state->window_height, 1.0f);
+			pushTextObj(texObjects, "You survived in: " + std::to_string(game_state->scoreTime), 0.01f*game_state->window_width, 0.95*game_state->window_height, 1.0f);
+		}
+
+		if (game_state->UIMode == "Lose") {
+			pushTextObj(texObjects, "Your score was: " + std::to_string(game_state->score), 0.01f*game_state->window_width, 0.95*game_state->window_height, 1.0f);
+			pushTextObj(texObjects, "You died after: " + std::to_string(game_state->scoreTime), 0.01f*game_state->window_width, 0.95*game_state->window_height, 1.0f);
+		}
+
+		if (game_state->powerText) {
+			pushTextObj(texObjects, "You are heal to full health!", 0.3f*game_state->window_width, 0.8*game_state->window_height, 1.0f);
+		}
 	}
 
-	if (game_state->powerText) {
-		pushTextObj(texObjects, "You are heal to full health!", 0.3f*game_state->window_width, 0.8*game_state->window_height, 1.0f);
+
+
+
+	if (game_state->UIMode == "Loading") {
+		pushTextObj(texObjects, "Loading: %" + std::to_string(game_state->loadingPercentage), 0.8f*game_state->window_width, 0.4*game_state->window_height, 1.0f);
 	}
 }
 

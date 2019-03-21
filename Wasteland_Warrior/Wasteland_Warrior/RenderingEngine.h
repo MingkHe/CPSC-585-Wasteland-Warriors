@@ -78,6 +78,7 @@ public:
 	GLuint radarshaderProgram;
 	GLuint basicshaderProgram;
 	GLuint shadowshaderProgram;
+	GLuint needleshaderProgram;
 	Geometry health;
 	Geometry radar;
 	Geometry speedo;

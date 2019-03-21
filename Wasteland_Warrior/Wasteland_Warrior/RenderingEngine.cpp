@@ -20,6 +20,7 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	healthshaderProgram = ShaderTools::InitializeShaders("../shaders/healthvertex.glsl", "../shaders/healthfragment.glsl");
 	radarshaderProgram = ShaderTools::InitializeShaders("../shaders/radarvertex.glsl", "../shaders/radarfragment.glsl");
 	basicshaderProgram = ShaderTools::InitializeShaders("../shaders/basicvertex.glsl", "../shaders/basicfragment.glsl");
+	needleshaderProgram = ShaderTools::InitializeShaders("../shaders/needlevertex.glsl", "../shaders/needlefragment.glsl");
 	shadowshaderProgram = ShaderTools::InitializeShaders("../shaders/shadowMapVertex.glsl", "../shaders/shadowMapFragment.glsl");
 	
 	textShaderProgram = ShaderTools::InitializeShaders("../shaders/texVertex.glsl", "../shaders/texFragment.glsl");
@@ -66,9 +67,12 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	assignBuffers(speedo);
 	setBufferData(speedo);
 
-	needle.verts.push_back(glm::vec3(std::cos(7.f*PI_F / 6.f), std::sin(7.f*PI_F / 6.f), 0.f)*scale + center);
-	needle.verts.push_back(glm::vec3(std::cos(5.f*PI_F / 3.f), std::sin(5.f*PI_F / 3.f), 0.f)*scale + center);
-	needle.verts.push_back(glm::vec3(std::cos(2.f*PI_F / 3.f), std::sin(2.f*PI_F / 3.f), 0.f)*scale + center);
+	needle.verts.push_back(glm::vec3(0, 1, 0.f));
+	needle.verts.push_back(glm::vec3(1, 0, 0.f)*.0625f);
+	needle.verts.push_back(glm::vec3(-1, 0, 0.f)*.0625f);
+	needle.colors.push_back(glm::vec3(1.f, 0.f, 0.f));
+	needle.colors.push_back(glm::vec3(1.f, 0.f, 0.f));
+	needle.colors.push_back(glm::vec3(1.f, 0.f, 0.f));
 	needle.drawMode = GL_TRIANGLES;
 	assignBuffers(needle);
 	setBufferData(needle);
@@ -238,20 +242,12 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	glDrawArrays(speedo.drawMode, 0, speedo.verts.size());
 	glBindVertexArray(0);
 
-	/*glUseProgram(basicshaderProgram);
-	glUniform1i(glGetUniformLocation(basicshaderProgram, "materialTex"), 0);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, speedo.texture.textureID);
-	glm::vec3 center = glm::vec3(.75f, -.75f, 0.f);
-	glm::vec3 scale = glm::vec3(.125f);
-	float speed = game_state->playerVehicle.speed*.075f;
-	needle.verts[0] = (glm::vec3(std::cos(7.f*PI_F / 6.f - speed), std::sin(7.f*PI_F / 6.f - speed), 0.f)*scale + center);
-	needle.verts[1] = (glm::vec3(std::cos(5.f*PI_F / 3.f - speed), std::sin(5.f*PI_F / 3.f - speed), 0.f)*scale*.0625f + center);
-	needle.verts[2] = (glm::vec3(std::cos(2.f*PI_F / 3.f - speed), std::sin(2.f*PI_F / 3.f - speed), 0.f)*scale*.0625f + center);
-	setBufferData(needle);
+	glUseProgram(needleshaderProgram);
+	float speed = game_state->playerVehicle.speed;
+	glUniform1f(glGetUniformLocation(needleshaderProgram, "speed"), speed);
 	glBindVertexArray(needle.vao);
 	glDrawArrays(needle.drawMode, 0, needle.verts.size());
-	glBindVertexArray(0);*/
+	glBindVertexArray(0);
 
 	//render text
 	//glClearColor(0.2f, 0.2f, 0.2f, 1.0f);

@@ -3,7 +3,6 @@
 uniform sampler2D materialTex;
 
 in vec2 fragTexCoord;
-in vec3 fragNormal;
 in vec3 fragVert;
 
 out vec4 finalColor;

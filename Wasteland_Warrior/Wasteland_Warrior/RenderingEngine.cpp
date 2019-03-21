@@ -77,14 +77,22 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	assignBuffers(needle);
 	setBufferData(needle);
 
+	/*mirror.verts.push_back(glm::vec3(-1.f, -1.f, 0.f));
+	mirror.verts.push_back(glm::vec3(-1.f, 1.f, 0.f));
+	mirror.verts.push_back(glm::vec3(1.f, -1.f, 0.f));
+	mirror.verts.push_back(glm::vec3(1.f, 1.f, 0.f));
+	mirror.uvs.push_back((1.f / 3.f)*glm::vec2(0.f, 0.f));
+	mirror.uvs.push_back((1.f / 3.f)*glm::vec2(0.f, 1.f));
+	mirror.uvs.push_back((1.f / 3.f)*glm::vec2(1.f, 0.f));
+	mirror.uvs.push_back((1.f / 3.f)*glm::vec2(1.f, 1.f));*/
 	mirror.verts.push_back(glm::vec3(-.4f, .75f, 0.f));
 	mirror.verts.push_back(glm::vec3(-.4f, .95f, 0.f));
 	mirror.verts.push_back(glm::vec3(.4f, .75f, 0.f));
 	mirror.verts.push_back(glm::vec3(.4f, .95f, 0.f));
-	mirror.uvs.push_back((1.f / 3.f)*glm::vec2(0.f, 0.f));
-	mirror.uvs.push_back((1.f / 3.f)*glm::vec2(0.f, 1.f));
-	mirror.uvs.push_back((1.f / 3.f)*glm::vec2(1.f, 0.f));
-	mirror.uvs.push_back((1.f / 3.f)*glm::vec2(1.f, 1.f));
+	mirror.uvs.push_back((1.f / 3.f)*glm::vec2(0.f, .4f));
+	mirror.uvs.push_back((1.f / 3.f)*glm::vec2(0.f, .85f));
+	mirror.uvs.push_back((1.f / 3.f)*glm::vec2(1.f, .4f));
+	mirror.uvs.push_back((1.f / 3.f)*glm::vec2(1.f, .85f));
 	mirror.drawMode = GL_TRIANGLE_STRIP;
 	assignBuffers(mirror);
 	setBufferData(mirror);

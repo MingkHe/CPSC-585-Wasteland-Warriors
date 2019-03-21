@@ -77,10 +77,10 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	mirror.verts.push_back(glm::vec3(-.4f, .95f, 0.f));
 	mirror.verts.push_back(glm::vec3(.4f, .75f, 0.f));
 	mirror.verts.push_back(glm::vec3(.4f, .95f, 0.f));
-	mirror.uvs.push_back(glm::vec2(-.4f, .7f));
-	mirror.uvs.push_back(glm::vec2(-.4f, .9f));
-	mirror.uvs.push_back(glm::vec2(.4f, .7f));
-	mirror.uvs.push_back(glm::vec2(.4f, .9f));
+	mirror.uvs.push_back((1.f / 3.f)*glm::vec2(0.f, 0.f));
+	mirror.uvs.push_back((1.f / 3.f)*glm::vec2(0.f, 1.f));
+	mirror.uvs.push_back((1.f / 3.f)*glm::vec2(1.f, 0.f));
+	mirror.uvs.push_back((1.f / 3.f)*glm::vec2(1.f, 1.f));
 	mirror.drawMode = GL_TRIANGLE_STRIP;
 	assignBuffers(mirror);
 	setBufferData(mirror);
@@ -195,7 +195,6 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 
 	//render mirror
 	glUseProgram(basicshaderProgram);
-	glUniform1i(glGetUniformLocation(basicshaderProgram, "istex"), 1);
 	glUniform1i(glGetUniformLocation(basicshaderProgram, "materialTex"), 0);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, rear_view.colorTextureID);
@@ -232,8 +231,6 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 
 	//render speedometer
 	glUseProgram(basicshaderProgram);
-	GLint istexGL = glGetUniformLocation(basicshaderProgram, "istex");
-	glUniform1i(istexGL, 1);
 	glUniform1i(glGetUniformLocation(basicshaderProgram, "materialTex"), 0);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, speedo.texture.textureID);
@@ -241,17 +238,20 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	glDrawArrays(speedo.drawMode, 0, speedo.verts.size());
 	glBindVertexArray(0);
 
-	/*glm::vec3 center = glm::vec3(.75f, -.75f, 0.f);
+	/*glUseProgram(basicshaderProgram);
+	glUniform1i(glGetUniformLocation(basicshaderProgram, "materialTex"), 0);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, speedo.texture.textureID);
+	glm::vec3 center = glm::vec3(.75f, -.75f, 0.f);
 	glm::vec3 scale = glm::vec3(.125f);
 	float speed = game_state->playerVehicle.speed*.075f;
 	needle.verts[0] = (glm::vec3(std::cos(7.f*PI_F / 6.f - speed), std::sin(7.f*PI_F / 6.f - speed), 0.f)*scale + center);
 	needle.verts[1] = (glm::vec3(std::cos(5.f*PI_F / 3.f - speed), std::sin(5.f*PI_F / 3.f - speed), 0.f)*scale*.0625f + center);
 	needle.verts[2] = (glm::vec3(std::cos(2.f*PI_F / 3.f - speed), std::sin(2.f*PI_F / 3.f - speed), 0.f)*scale*.0625f + center);
 	setBufferData(needle);
-	glUniform1i(istexGL, 0);
 	glBindVertexArray(needle.vao);
-	glDrawArrays(needle.drawMode, 0, needle.verts.size());*/
-	glBindVertexArray(0);
+	glDrawArrays(needle.drawMode, 0, needle.verts.size());
+	glBindVertexArray(0);*/
 
 	//render text
 	//glClearColor(0.2f, 0.2f, 0.2f, 1.0f);

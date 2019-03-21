@@ -80,7 +80,7 @@ UI_Controller::UI_Controller(Gamestate* gameState, RenderingEngine* render)
 	lose_bg = new SceneMainMenu(renderingEngine);
 
 	win_text = new SceneMainMenu(renderingEngine);
-	lose_text = lose_bg = new SceneMainMenu(renderingEngine);
+	lose_text  = new SceneMainMenu(renderingEngine);
 }
 
 UI_Controller::~UI_Controller()

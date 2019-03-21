@@ -94,12 +94,20 @@ void Program::start() {
 	//Spawn Static Entities
 	gameState->SpawnMap();
 	
-	//gameState->SpawnStaticObject(0, 0, 0, 0);
+	gameState->loadingPercentage = 25;
+	UICL.Update(gameState, window);
+	glfwSwapBuffers(window);
+	
+	gameState->SpawnStaticObject(0, 0, 0, 0);
 	gameState->SpawnStaticObject(1, 88, -6.25, 113);
 	gameState->SpawnStaticObject(1, 138, -6.25, 83);
 	gameState->SpawnStaticObject(1, -88, 0, 113);
 	gameState->SpawnStaticObject(1, -108, 0, 93);
 	
+	gameState->loadingPercentage = 50;
+	UICL.Update(gameState, window);
+	glfwSwapBuffers(window);
+
 	gameState->SpawnStaticObject(2, 93, -0.75, -45);
 	gameState->SpawnStaticObject(3, 63, 0, -25);
 	gameState->SpawnStaticObject(2, 123, -0.75, -95);
@@ -108,6 +116,10 @@ void Program::start() {
 	gameState->SpawnStaticObject(3, 73, 0, -125);
 	gameState->SpawnStaticObject(4, -150, 4.25, -120);
 
+	gameState->loadingPercentage = 75;
+	UICL.Update(gameState, window);
+	glfwSwapBuffers(window);
+	
 	//Spawn Power Ups
 	gameState->SpawnDynamicObject(1, 53, 1, -35);
 	gameState->SpawnDynamicObject(1, -100, 5.25, -100);
@@ -117,8 +129,20 @@ void Program::start() {
 	//Spawn Player
 	gameState->SpawnPlayer(0, 0, 0);
 
-
+	gameState->loadingPercentage = 100;
+	UICL.Update(gameState, window);
+	glfwSwapBuffers(window);
 	gameState->UIMode = "Start";
+
+	/*
+	while (true) {
+		usrInput.Update(gameState);
+		if (gameState->button == "Enter") {
+			break;
+		}
+	}
+	*/
+
 	
 
 	//Main render loop

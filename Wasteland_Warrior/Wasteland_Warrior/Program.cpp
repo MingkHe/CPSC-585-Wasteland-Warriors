@@ -94,7 +94,7 @@ void Program::start() {
 	//Spawn Static Entities
 	gameState->SpawnMap();
 	
-	gameState->SpawnStaticObject(0, 0, 0, 0);
+	//gameState->SpawnStaticObject(0, 0, 0, 0);
 	gameState->SpawnStaticObject(1, 88, -6.25, 113);
 	gameState->SpawnStaticObject(1, 138, -6.25, 83);
 	gameState->SpawnStaticObject(1, -88, 0, 113);

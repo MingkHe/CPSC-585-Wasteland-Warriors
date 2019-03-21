@@ -154,6 +154,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="EnemyUnit.cpp" />
     <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="Framebuffer.cpp" />
     <ClCompile Include="Gamestate.cpp" />
     <ClCompile Include="Geometry.cpp" />
     <ClCompile Include="Logic.cpp" />
@@ -183,6 +184,7 @@
     <ClInclude Include="CompositeWorldObject.h" />
     <ClInclude Include="EnemyUnit.h" />
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="Framebuffer.h" />
     <ClInclude Include="Gamestate.h" />
     <ClInclude Include="Geometry.h" />
     <ClInclude Include="AI_Interaction.h" />
@@ -210,6 +212,8 @@
     <Text Include="Wasteland_Warrior.vcxproj.filters.txt" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\shaders\basicfragment.glsl" />
+    <None Include="..\shaders\basicvertex.glsl" />
     <None Include="..\shaders\fragment.glsl" />
     <None Include="..\shaders\fragmentMainMenu.glsl" />
     <None Include="..\shaders\geometry.glsl" />

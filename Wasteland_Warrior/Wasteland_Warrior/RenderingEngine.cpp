@@ -57,9 +57,9 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 		speedo.verts.push_back(glm::vec3(std::cos(i + increment), std::sin(i + increment), 0.f)*scale + center);
 		speedo.verts.push_back(center);
 
-		speedo.uvs.push_back(glm::vec2(std::cos(i), std::sin(i)));
-		speedo.uvs.push_back(glm::vec2(std::cos(i + increment), std::sin(i + increment)));
-		speedo.uvs.push_back(glm::vec2(0, 0));
+		speedo.uvs.push_back(.5f*glm::vec2(std::cos(i), std::sin(i)) + glm::vec2(.5f, .5f));
+		speedo.uvs.push_back(.5f*glm::vec2(std::cos(i + increment), std::sin(i + increment)) + glm::vec2(.5f, .5f));
+		speedo.uvs.push_back(glm::vec2(.5f, .5f));
 	}
 	speedo.drawMode = GL_TRIANGLES;
 	InitializeTexture(&speedo.texture, "Image/speedo.png");
@@ -73,9 +73,9 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	assignBuffers(needle);
 	setBufferData(needle);
 
-	mirror.verts.push_back(glm::vec3(-.4f, .65f, 0.f));
+	mirror.verts.push_back(glm::vec3(-.4f, .75f, 0.f));
 	mirror.verts.push_back(glm::vec3(-.4f, .95f, 0.f));
-	mirror.verts.push_back(glm::vec3(.4f, .65f, 0.f));
+	mirror.verts.push_back(glm::vec3(.4f, .75f, 0.f));
 	mirror.verts.push_back(glm::vec3(.4f, .95f, 0.f));
 	mirror.uvs.push_back(glm::vec2(-.4f, .7f));
 	mirror.uvs.push_back(glm::vec2(-.4f, .9f));
@@ -108,8 +108,9 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	//setting up framebuffer stuff
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
-	glUseProgram(shadowshaderProgram);
+	glBindFramebuffer(GL_FRAMEBUFFER, shadow_buffer.id);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glUseProgram(shadowshaderProgram);
 	GLint transformGL = glGetUniformLocation(shadowshaderProgram, "transform");
 	glm::mat4 depthProjectionMatrix = glm::ortho<float>(-10, 10, -10, 10, -10, 20);
 	glm::mat4 depthViewMatrix = glm::lookAt(glm::vec3(0, -1, 0), game_state->light, glm::vec3(1, 0, 0));
@@ -117,7 +118,6 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	glm::mat4 depthMVP = depthProjectionMatrix * perspectiveMatrix;
 	GLuint depthMatrixID = glGetUniformLocation(shadowshaderProgram, "modelViewProjection");
 	glUniformMatrix4fv(depthMatrixID, 1, GL_FALSE, &depthMVP[0][0]);
-	glBindFramebuffer(GL_FRAMEBUFFER, shadow_buffer.id);
 	for (int i = 0; i < objects.size(); i++) {
 		glUniformMatrix4fv(transformGL, 1, false, glm::value_ptr(objects[i].geometry[0].transform));
 		glBindVertexArray(objects[i].geometry[0].vao);
@@ -129,15 +129,13 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	//sets uniforms
-	glm::mat4 modelViewProjection = perspectiveMatrix * game_state->camera.backviewMatrix();
-	glBindFramebuffer(GL_FRAMEBUFFER, rear_view.colorTextureID);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glm::mat4 modelViewProjection = perspectiveMatrix * game_state->camera.viewMatrix();
 
 	glUseProgram(shaderProgram);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, shadow_buffer.depthTextureID);
 	transformGL = glGetUniformLocation(shaderProgram, "transform");
 	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "modelViewProjection"), 1, false, glm::value_ptr(modelViewProjection));
 
@@ -155,6 +153,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	glUniform1i(glGetUniformLocation(shaderProgram, "materialTex"), 0);
 	glUniform1i(glGetUniformLocation(shaderProgram, "shadowTex"), 1);
 
+	//draw rear view
 	int objectNum = objects.size();
 	for (int i = 0; i < objectNum; i++) {
 		glUniformMatrix4fv(transformGL, 1, false, glm::value_ptr(objects[i].geometry[0].transform));
@@ -162,21 +161,26 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, objects[i].geometry[0].texture.textureID);
 
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, shadow_buffer.depthTextureID);
+
 		glBindVertexArray(objects[i].geometry[0].vao);
 		glDrawArrays(objects[i].geometry[0].drawMode, 0, objects[i].geometry[0].verts.size());
-
-		// reset state to default (no shader or geometry bound)
 	}
 
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	//draw actual frame
+	glBindFramebuffer(GL_FRAMEBUFFER, rear_view.id);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	modelViewProjection = perspectiveMatrix * game_state->camera.viewMatrix();
+	modelViewProjection = perspectiveMatrix * game_state->camera.backviewMatrix();
 	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "modelViewProjection"), 1, false, glm::value_ptr(modelViewProjection));
 	for (int i = 0; i < objectNum; i++) {
 		glUniformMatrix4fv(transformGL, 1, false, glm::value_ptr(objects[i].geometry[0].transform));
 		//bind the texture
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, objects[i].geometry[0].texture.textureID);
+
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, shadow_buffer.depthTextureID);
 
 		glBindVertexArray(objects[i].geometry[0].vao);
 		glDrawArrays(objects[i].geometry[0].drawMode, 0, objects[i].geometry[0].verts.size());
@@ -186,8 +190,18 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 
 	glBindVertexArray(0);
 
-	
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glDisable(GL_DEPTH_TEST);
+
+	//render mirror
+	glUseProgram(basicshaderProgram);
+	glUniform1i(glGetUniformLocation(basicshaderProgram, "istex"), 1);
+	glUniform1i(glGetUniformLocation(basicshaderProgram, "materialTex"), 0);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, rear_view.colorTextureID);
+	glBindVertexArray(mirror.vao);
+	glDrawArrays(mirror.drawMode, 0, mirror.verts.size());
+	glBindVertexArray(0);
 
 	//render health bar
 	GLint healthGL = glGetUniformLocation(healthshaderProgram, "health");
@@ -207,7 +221,6 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	for (int i = 0; i < game_state->Enemies.size(); i++) {
 		enemy_locations.push_back(glm::vec2(game_state->Enemies[i].position.x, game_state->Enemies[i].position.z));
 	}
-	//std::cout << enemy_locations[0].x << " " << enemy_locations[0].y << std::endl;
 	if(game_state->Enemies.size()!=0)
 		glUniform2fv(enemiesGL, enemy_locations.size(), &(enemy_locations[0].x));
 	glUniform2f(playerposGL, game_state->playerVehicle.position.x, game_state->playerVehicle.position.z);
@@ -227,7 +240,8 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	glBindVertexArray(speedo.vao);
 	glDrawArrays(speedo.drawMode, 0, speedo.verts.size());
 	glBindVertexArray(0);
-	glm::vec3 center = glm::vec3(.75f, -.75f, 0.f);
+
+	/*glm::vec3 center = glm::vec3(.75f, -.75f, 0.f);
 	glm::vec3 scale = glm::vec3(.125f);
 	float speed = game_state->playerVehicle.speed*.075f;
 	needle.verts[0] = (glm::vec3(std::cos(7.f*PI_F / 6.f - speed), std::sin(7.f*PI_F / 6.f - speed), 0.f)*scale + center);
@@ -236,17 +250,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	setBufferData(needle);
 	glUniform1i(istexGL, 0);
 	glBindVertexArray(needle.vao);
-	glDrawArrays(needle.drawMode, 0, needle.verts.size());
-	glBindVertexArray(0);
-
-	//render mirror
-	istexGL = glGetUniformLocation(basicshaderProgram, "istex");
-	glUniform1i(istexGL, 1);
-	glUniform1i(glGetUniformLocation(basicshaderProgram, "materialTex"), 0);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, rear_view.colorTextureID);
-	glBindVertexArray(mirror.vao);
-	glDrawArrays(mirror.drawMode, 0, mirror.verts.size());
+	glDrawArrays(needle.drawMode, 0, needle.verts.size());*/
 	glBindVertexArray(0);
 
 	//render text

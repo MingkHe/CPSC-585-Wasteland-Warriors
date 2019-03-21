@@ -90,20 +90,9 @@ glm::mat4 Camera::backviewMatrix() const {
 	float dir_head_discr = (gameState->playerVehicle.heading.x - gameState->playerVehicle.direction.x)*(gameState->playerVehicle.heading.x - gameState->playerVehicle.direction.x)
 		+ (gameState->playerVehicle.heading.y - gameState->playerVehicle.direction.y)*(gameState->playerVehicle.heading.y - gameState->playerVehicle.direction.y);
 
-	//Third Person
-	float distanceBehindCar = -1.f * (10 + (gameState->playerVehicle.speed * 0.25));
-	float distanceAboveCar = 2.75;
 
-	//Hood Cam
-	if (gameState->view == 1) {
-		distanceBehindCar = -0.5;
-		distanceAboveCar = 0.75;
-	}
-	//Cockpit
-	else if (gameState->view == 2) {
-		distanceBehindCar = 0.5;
-		distanceAboveCar = 0.4;
-	}
+	float distanceBehindCar = 1.f;
+	float distanceAboveCar = 0.75f;
 
 	//Rotation
 	float angle;
@@ -132,16 +121,9 @@ glm::mat4 Camera::backviewMatrix() const {
 	cam.z = -distanceBehindCar * yVal + car.z;
 	cam.y = cam.y + distanceAboveCar;
 
-	//Hood Cam
-	if (gameState->view == 1) {
-		car.x = -distanceBehindCar * xVal + cam.x;
-		car.z = -distanceBehindCar * yVal + cam.z;
-		car.y = car.y + distanceAboveCar;
-	}
-	//Cockpit
-	else if (gameState->view == 2) {
-		car.y = car.y + distanceAboveCar;
-	}
+	car.x = -distanceBehindCar * xVal + cam.x;
+	car.z = -distanceBehindCar * yVal + cam.z;
+	car.y = car.y + distanceAboveCar;
 
 	return glm::lookAt(cam, car, up);
 }

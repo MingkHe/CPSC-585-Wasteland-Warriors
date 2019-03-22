@@ -452,6 +452,14 @@ void RenderingEngine::updateText() {
 	if (game_state->UIMode == "Loading") {
 		pushTextObj(texObjects, "%" + std::to_string(game_state->loadingPercentage), 0.7f*game_state->window_width, 0.32*game_state->window_height, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 	}
+
+	if (game_state->UIMode == "Story") {
+		pushTextObj(texObjects, "Press Enter to continue...", 0.65f*game_state->window_width, 0.1*game_state->window_height, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+	}
+
+	if (game_state->UIMode == "Control") {
+		pushTextObj(texObjects, "Press Enter to continue...", 0.65f*game_state->window_width, 0.1*game_state->window_height, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+	}
 }
 
 void RenderingEngine::LoadShaderProgram(std::string name, const char* vertexFile, const char* fragmentFile) {

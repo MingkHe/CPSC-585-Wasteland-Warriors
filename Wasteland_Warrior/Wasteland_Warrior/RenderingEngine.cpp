@@ -270,7 +270,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	glUseProgram(textShaderProgram);
 
 	//text color:
-	glUniform3f(glGetUniformLocation(textShaderProgram, "textColor"), 0.7f, 0.2f, 0.2f);
+	//glUniform3f(glGetUniformLocation(textShaderProgram, "textColor"), 0.7f, 0.2f, 0.2f);
 	//glActiveTexture(GL_TEXTURE0);
 
 	for (Geometry& g : texObjects) {
@@ -280,6 +280,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 		glBindTexture(GL_TEXTURE_2D, g.textureID);
 
 		glBindVertexArray(g.vao);
+		glUniform3f(glGetUniformLocation(textShaderProgram, "textColor"), g.colors[0].x, g.colors[0].y, g.colors[0].z);
 		glDrawArrays(g.drawMode, 0, g.verts.size());
 
 		// reset state to default (no shader or geometry bound)
@@ -329,7 +330,7 @@ void RenderingEngine::RenderMenuScene(const std::vector<Geometry>& objects) {
 	glUseProgram(textShaderProgram);
 
 	//text color:
-	glUniform3f(glGetUniformLocation(textShaderProgram, "textColor"), 0.7f, 0.2f, 0.2f);
+	//glUniform3f(glGetUniformLocation(textShaderProgram, "textColor"), 0.7f, 0.2f, 0.2f);
 	//glActiveTexture(GL_TEXTURE0);
 
 	for (Geometry& g : texObjects) {
@@ -339,6 +340,8 @@ void RenderingEngine::RenderMenuScene(const std::vector<Geometry>& objects) {
 		glBindTexture(GL_TEXTURE_2D, g.textureID);
 
 		glBindVertexArray(g.vao);
+		glUniform3f(glGetUniformLocation(textShaderProgram, "textColor"), g.colors[0].x, g.colors[0].y, g.colors[0].z);
+
 		glDrawArrays(g.drawMode, 0, g.verts.size());
 
 		// reset state to default (no shader or geometry bound)
@@ -448,7 +451,7 @@ void RenderingEngine::loadFont(const char* ttfFile) {
 
 }
 
-void RenderingEngine::pushTextObj(std::vector<Geometry>& objects, std::string text, float x, float y, float scale) {
+void RenderingEngine::pushTextObj(std::vector<Geometry>& objects, std::string text, float x, float y, float scale, glm::vec3 color) {
 	// Iterate through all characters
 	std::string::const_iterator c;
 	for (c = text.begin(); c != text.end(); c++)
@@ -492,6 +495,7 @@ void RenderingEngine::pushTextObj(std::vector<Geometry>& objects, std::string te
 		*/
 		character.textureID = ch.TextureID;
 		character.drawMode = GL_TRIANGLES;
+		character.colors.push_back(color);
 
 		assignBuffers(character);
 		setBufferData(character);
@@ -506,32 +510,40 @@ void RenderingEngine::pushTextObj(std::vector<Geometry>& objects, std::string te
 void RenderingEngine::updateText() {
 
 	if (game_state->UIMode == "Game") {
-		pushTextObj(texObjects, "Wave # " + std::to_string(game_state->wave), 0.01f*game_state->window_width, 0.95*game_state->window_height, 1.0f);
+		pushTextObj(texObjects, "Wave # " + std::to_string(game_state->wave), 0.01f*game_state->window_width, 0.95*game_state->window_height, 1.0f,glm::vec3(0.7f, 0.2f, 0.2f));
 		if (game_state->breakSeconds == 0) {
-			pushTextObj(texObjects, "Enemies Left: " + std::to_string(game_state->enemiesLeft), 0.01f*game_state->window_width, 0.9*game_state->window_height, 1.0f);
+			pushTextObj(texObjects, "Enemies Left: " + std::to_string(game_state->enemiesLeft), 0.01f*game_state->window_width, 0.9*game_state->window_height, 1.0f, glm::vec3(0.7f, 0.2f, 0.2f));
 		}
 		else {
-			pushTextObj(texObjects, "Break Seconds: " + std::to_string(game_state->breakSeconds), 0.01f*game_state->window_width, 0.85*game_state->window_height, 1.0f);
+			pushTextObj(texObjects, "Break Seconds: " + std::to_string(game_state->breakSeconds), 0.01f*game_state->window_width, 0.85*game_state->window_height, 1.0f, glm::vec3(0.7f, 0.2f, 0.2f));
 		}
     
 		if (game_state->powerText) {
-			pushTextObj(texObjects, "You are heal to full health!", 0.3f*game_state->window_width, 0.8*game_state->window_height, 1.0f);
+			pushTextObj(texObjects, "You are heal to full health!", 0.3f*game_state->window_width, 0.8*game_state->window_height, 1.0f, glm::vec3(0.7f, 0.2f, 0.2f));
 		}
 	}
-  
-  if (game_state->UIMode == "Win") {
-		pushTextObj(texObjects, "Your score was: " + std::to_string(game_state->score), 0.4f*game_state->window_width, 0.55*game_state->window_height, 1.0f);
-		pushTextObj(texObjects, "You survived in: " + std::to_string(game_state->scoreTime), 0.4f*game_state->window_width, 0.45*game_state->window_height, 1.0f);
+
+	if (game_state->UIMode == "Win") {
+		pushTextObj(texObjects, "Your score was: " + std::to_string(game_state->score), 0.4f*game_state->window_width, 0.45*game_state->window_height, 1.0f, glm::vec3(.9f, 1.0f, .4f));
+		pushTextObj(texObjects, "You survived in: " + std::to_string(game_state->scoreTime), 0.4f*game_state->window_width, 0.38*game_state->window_height, 1.0f,glm::vec3(.9f, 1.0f, .4f));
 	}
 
 	if (game_state->UIMode == "Lose") {
-		pushTextObj(texObjects, "Your score was: " + std::to_string(game_state->score), 0.4f*game_state->window_width, 0.45*game_state->window_height, 1.0f);
-		pushTextObj(texObjects, "You died after: " + std::to_string(game_state->scoreTime), 0.4f*game_state->window_width, 0.35*game_state->window_height, 1.0f);
+		pushTextObj(texObjects, "Your score was: " + std::to_string(game_state->score), 0.4f*game_state->window_width, 0.4*game_state->window_height, 1.0f, glm::vec3(.7f, .2f, .2f));
+		pushTextObj(texObjects, "You died after: " + std::to_string(game_state->scoreTime), 0.4f*game_state->window_width, 0.33*game_state->window_height, 1.0f, glm::vec3(.7f, .2f, .2f));
 	}
 
 	if (game_state->UIMode == "Loading") {
-		pushTextObj(texObjects, "Loading: %" + std::to_string(game_state->loadingPercentage), 0.8f*game_state->window_width, 0.1*game_state->window_height, 1.0f);
-  }
+		pushTextObj(texObjects, "%" + std::to_string(game_state->loadingPercentage), 0.7f*game_state->window_width, 0.315*game_state->window_height, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+	}
+
+	if (game_state->UIMode == "Story") {
+		pushTextObj(texObjects, "Press Enter to continue...", 0.65f*game_state->window_width, 0.1*game_state->window_height, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+	}
+
+	if (game_state->UIMode == "Control") {
+		pushTextObj(texObjects, "Press Enter to continue...", 0.65f*game_state->window_width, 0.1*game_state->window_height, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+	}
 }
 
 void RenderingEngine::LoadShaderProgram(std::string name, const char* vertexFile, const char* fragmentFile) {

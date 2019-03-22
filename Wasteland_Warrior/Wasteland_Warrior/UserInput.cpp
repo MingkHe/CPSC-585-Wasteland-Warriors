@@ -11,7 +11,8 @@ std::queue<std::string> UserInput::inputBuffer;
 //Mouse
 double UserInput::MouseXpos;
 double UserInput::MouseYpos;
-bool UserInput::MousePressed;
+bool UserInput::MouseLeft;
+bool UserInput::MouseRight;
 
 //WASD
 bool UserInput::WKey;
@@ -96,8 +97,8 @@ void UserInput::Update(Gamestate* gameState)
 		}
 	}
 
-	//Mouse Camera Input
-	if (UserInput::MousePressed) {
+	//Mouse Input
+	if (UserInput::MouseLeft) {
 		if (UserInput::MouseXpos != oldMouseXpos) {
 			float angle = gameState->cameraAngle + (oldMouseXpos - UserInput::MouseXpos) * 0.01;
 			if (angle < 1.5 && angle > -1.5) {
@@ -116,6 +117,12 @@ void UserInput::Update(Gamestate* gameState)
 		else {
 				gameState->cameraAngle = 0;
 		}
+	}
+	if (UserInput::MouseRight) {
+		gameState->mouseRight = true;
+	}
+	else {
+		gameState->mouseRight = false;
 	}
 }
 
@@ -241,9 +248,15 @@ void UserInput::cursor(GLFWwindow* window, double xpos, double ypos)
 void UserInput::mouseButton(GLFWwindow* window, int button, int action, int mods)
 {
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-		UserInput::MousePressed = true;
+		UserInput::MouseLeft = true;
 	} else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
-		UserInput::MousePressed = false;
+		UserInput::MouseLeft = false;
+	}
+	if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
+		UserInput::MouseRight = true;
+	}
+	else if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE) {
+		UserInput::MouseRight = false;
 	}
 }
 

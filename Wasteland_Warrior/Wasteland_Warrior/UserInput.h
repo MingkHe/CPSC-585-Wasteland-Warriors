@@ -25,7 +25,8 @@ public:
 	static double MouseYpos;
 	float oldMouseXpos;
 	float oldMouseYpos;
-	static bool MousePressed;
+	static bool MouseLeft;
+	static bool MouseRight;
 
 	//WASD
 	static bool WKey;

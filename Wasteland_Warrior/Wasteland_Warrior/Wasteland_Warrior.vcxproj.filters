@@ -33,6 +33,7 @@
     <ClCompile Include="UserInput.cpp" />
     <ClCompile Include="Vehicle.cpp" />
     <ClCompile Include="SFXPool.cpp" />
+    <ClCompile Include="Framebuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\snippetFiles\snippetvehiclecommon\SnippetVehicleCreate.h" />
@@ -65,6 +66,7 @@
     <ClInclude Include="snippetFiles\snippetvehiclecommon\SnippetVehicleCreate.h" />
     <ClInclude Include="SFXPool.h" />
     <ClInclude Include="CompositeWorldObject.h" />
+    <ClInclude Include="Framebuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="bgm.mp3" />
@@ -91,6 +93,10 @@
     <None Include="SDL2_mixer.dll" />
     <None Include="..\shaders\texFragment.glsl" />
     <None Include="..\shaders\texVertex.glsl" />
+    <None Include="..\shaders\basicfragment.glsl" />
+    <None Include="..\shaders\basicvertex.glsl" />
+    <None Include="..\shaders\needlefragment.glsl" />
+    <None Include="..\shaders\needlevertex.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Wasteland_Warrior.vcxproj.filters.txt" />

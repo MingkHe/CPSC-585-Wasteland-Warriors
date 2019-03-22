@@ -440,17 +440,17 @@ void RenderingEngine::updateText() {
 	}
 
 	if (game_state->UIMode == "Win") {
-		pushTextObj(texObjects, "Your score was: " + std::to_string(game_state->score), 0.4f*game_state->window_width, 0.55*game_state->window_height, 1.0f, glm::vec3(.6f, .7f, .8f));
-		pushTextObj(texObjects, "You survived in: " + std::to_string(game_state->scoreTime), 0.4f*game_state->window_width, 0.48*game_state->window_height, 1.0f,glm::vec3(.6f, .7f, .8f));
+		pushTextObj(texObjects, "Your score was: " + std::to_string(game_state->score), 0.4f*game_state->window_width, 0.45*game_state->window_height, 1.0f, glm::vec3(.9f, 1.0f, .4f));
+		pushTextObj(texObjects, "You survived in: " + std::to_string(game_state->scoreTime), 0.4f*game_state->window_width, 0.38*game_state->window_height, 1.0f,glm::vec3(.9f, 1.0f, .4f));
 	}
 
 	if (game_state->UIMode == "Lose") {
-		pushTextObj(texObjects, "Your score was: " + std::to_string(game_state->score), 0.4f*game_state->window_width, 0.45*game_state->window_height, 1.0f, glm::vec3(.6f, .7f, .8f));
-		pushTextObj(texObjects, "You died after: " + std::to_string(game_state->scoreTime), 0.4f*game_state->window_width, 0.38*game_state->window_height, 1.0f, glm::vec3(.6f, .7f, .8f));
+		pushTextObj(texObjects, "Your score was: " + std::to_string(game_state->score), 0.4f*game_state->window_width, 0.4*game_state->window_height, 1.0f, glm::vec3(.7f, .2f, .2f));
+		pushTextObj(texObjects, "You died after: " + std::to_string(game_state->scoreTime), 0.4f*game_state->window_width, 0.33*game_state->window_height, 1.0f, glm::vec3(.7f, .2f, .2f));
 	}
 
 	if (game_state->UIMode == "Loading") {
-		pushTextObj(texObjects, "%" + std::to_string(game_state->loadingPercentage), 0.7f*game_state->window_width, 0.32*game_state->window_height, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+		pushTextObj(texObjects, "%" + std::to_string(game_state->loadingPercentage), 0.7f*game_state->window_width, 0.315*game_state->window_height, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 	}
 
 	if (game_state->UIMode == "Story") {

@@ -44,6 +44,8 @@ public:
 	bool DKey;
 	bool SPACEKey;
 
+	bool mouseRight;
+
 	//----------------------Sound Buffer Begin-------------------------------
 
 	/*

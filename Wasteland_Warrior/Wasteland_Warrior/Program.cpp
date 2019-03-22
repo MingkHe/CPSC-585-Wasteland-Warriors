@@ -133,6 +133,7 @@ void Program::start() {
 	UICL.Update(gameState, window);
 	glfwSwapBuffers(window);
 	gameState->UIMode = "Start";
+	Sleep(1000);
 
 	/*
 	while (true) {

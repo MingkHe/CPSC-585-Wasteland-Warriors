@@ -166,7 +166,26 @@ void Gamestate::SpawnPlayer(float x, float y, float z) {
 void Gamestate::SpawnEnemy(int type, float x, float y, float z) {
 	int physicsIndex = physics_Controller->createEnemyVehicle();
 	physics_Controller->setPosition(physicsIndex, glm::vec3{ x, y, z });
-	int sceneObjectIndex = scene->loadOBJObject("Objects/BladedDragster/bourak.obj", "Objects/BladedDragster/bourak.jpg");
+
+	//Different Enemy Types
+	switch (type) {
+	case 0: 
+		int sceneObjectIndex = scene->loadOBJObject("Objects/BladedDragster/bourak.obj", "Objects/BladedDragster/bourak.jpg");
+		break;
+	case 1: 
+		int sceneObjectIndex = scene->loadOBJObject("Objects/BladedDragster/bourak.obj", "Objects/BladedDragster/bourak.jpg");
+		break;
+	case 2: 
+		int sceneObjectIndex = scene->loadOBJObject("Objects/BladedDragster/bourak.obj", "Objects/BladedDragster/bourak.jpg");
+		break;
+	case 3: 
+		int sceneObjectIndex = scene->loadOBJObject("Objects/BladedDragster/bourak.obj", "Objects/BladedDragster/bourak.jpg");
+		break;
+	case 4: 
+		int sceneObjectIndex = scene->loadOBJObject("Objects/BladedDragster/bourak.obj", "Objects/BladedDragster/bourak.jpg");
+		break;
+	}
+	
 	EnemyUnit enemy = EnemyUnit(physicsIndex, sceneObjectIndex);
 	enemy.gameStateIndex = Enemies.size();
 	Enemies.push_back(enemy);

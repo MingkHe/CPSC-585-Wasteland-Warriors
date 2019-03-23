@@ -49,7 +49,7 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	assignBuffers(radar);
 	setBufferData(radar);
 
-	float increment = (2.f*3.1415926536) / 50;
+	float increment = (2.f*3.1415926536f) / 50.f;
 	glm::vec3 center = glm::vec3(.75f, -.75f, 0.f);
 	glm::vec3 scale = glm::vec3(.125f);
 
@@ -130,7 +130,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	glm::mat4 depthMVP = depthProjectionMatrix * perspectiveMatrix;
 	GLuint depthMatrixID = glGetUniformLocation(shadowshaderProgram, "modelViewProjection");
 	glUniformMatrix4fv(depthMatrixID, 1, GL_FALSE, &depthMVP[0][0]);
-	for (int i = 0; i < objects.size(); i++) {
+	for (int i = 0; i < (int)objects.size(); i++) {
 		glUniformMatrix4fv(transformGL, 1, false, glm::value_ptr(objects[i].geometry[0].transform));
 		glBindVertexArray(objects[i].geometry[0].vao);
 		glDrawArrays(objects[i].geometry[0].drawMode, 0, objects[i].geometry[0].verts.size());
@@ -229,7 +229,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	GLint playerdirGL = glGetUniformLocation(radarshaderProgram, "playerdir");
 	GLint radar_distGL = glGetUniformLocation(radarshaderProgram, "radar_dist");
 	std::vector<glm::vec2> enemy_locations;
-	for (int i = 0; i < game_state->Enemies.size(); i++) {
+	for (int i = 0; i < (int)game_state->Enemies.size(); i++) {
 		enemy_locations.push_back(glm::vec2(game_state->Enemies[i].position.x, game_state->Enemies[i].position.z));
 	}
 	if(game_state->Enemies.size()!=0)
@@ -440,7 +440,7 @@ void RenderingEngine::loadFont(const char* ttfFile) {
 			texture,
 			glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
 			glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
-			face->glyph->advance.x
+			(GLuint)(face->glyph->advance.x)
 		};
 		Characters.insert(std::pair<GLchar, Character>(c, character));
 	}
@@ -510,39 +510,39 @@ void RenderingEngine::pushTextObj(std::vector<Geometry>& objects, std::string te
 void RenderingEngine::updateText() {
 
 	if (game_state->UIMode == "Game") {
-		pushTextObj(texObjects, "Wave # " + std::to_string(game_state->wave), 0.01f*game_state->window_width, 0.95*game_state->window_height, 1.0f,glm::vec3(0.7f, 0.2f, 0.2f));
+		pushTextObj(texObjects, "Wave # " + std::to_string(game_state->wave), 0.01f*game_state->window_width, 0.95f*game_state->window_height, 1.0f,glm::vec3(0.7f, 0.2f, 0.2f));
 		if (game_state->breakSeconds == 0) {
-			pushTextObj(texObjects, "Enemies Left: " + std::to_string(game_state->enemiesLeft), 0.01f*game_state->window_width, 0.9*game_state->window_height, 1.0f, glm::vec3(0.7f, 0.2f, 0.2f));
+			pushTextObj(texObjects, "Enemies Left: " + std::to_string(game_state->enemiesLeft), 0.01f*game_state->window_width, 0.9f*game_state->window_height, 1.0f, glm::vec3(0.7f, 0.2f, 0.2f));
 		}
 		else {
-			pushTextObj(texObjects, "Break Seconds: " + std::to_string(game_state->breakSeconds), 0.01f*game_state->window_width, 0.85*game_state->window_height, 1.0f, glm::vec3(0.7f, 0.2f, 0.2f));
+			pushTextObj(texObjects, "Break Seconds: " + std::to_string(game_state->breakSeconds), 0.01f*game_state->window_width, 0.85f*game_state->window_height, 1.0f, glm::vec3(0.7f, 0.2f, 0.2f));
 		}
     
 		if (game_state->powerText) {
-			pushTextObj(texObjects, "You are heal to full health!", 0.3f*game_state->window_width, 0.8*game_state->window_height, 1.0f, glm::vec3(0.7f, 0.2f, 0.2f));
+			pushTextObj(texObjects, "You are heal to full health!", 0.3f*game_state->window_width, 0.8f*game_state->window_height, 1.0f, glm::vec3(0.7f, 0.2f, 0.2f));
 		}
 	}
 
 	if (game_state->UIMode == "Win") {
-		pushTextObj(texObjects, "Your score was: " + std::to_string(game_state->score), 0.4f*game_state->window_width, 0.45*game_state->window_height, 1.0f, glm::vec3(.9f, 1.0f, .4f));
-		pushTextObj(texObjects, "You survived in: " + std::to_string(game_state->scoreTime), 0.4f*game_state->window_width, 0.38*game_state->window_height, 1.0f,glm::vec3(.9f, 1.0f, .4f));
+		pushTextObj(texObjects, "Your score was: " + std::to_string(game_state->score), 0.4f*game_state->window_width, 0.45f*game_state->window_height, 1.0f, glm::vec3(.9f, 1.0f, .4f));
+		pushTextObj(texObjects, "You survived in: " + std::to_string(game_state->scoreTime), 0.4f*game_state->window_width, 0.38f*game_state->window_height, 1.0f,glm::vec3(.9f, 1.0f, .4f));
 	}
 
 	if (game_state->UIMode == "Lose") {
-		pushTextObj(texObjects, "Your score was: " + std::to_string(game_state->score), 0.4f*game_state->window_width, 0.4*game_state->window_height, 1.0f, glm::vec3(.7f, .2f, .2f));
-		pushTextObj(texObjects, "You died after: " + std::to_string(game_state->scoreTime), 0.4f*game_state->window_width, 0.33*game_state->window_height, 1.0f, glm::vec3(.7f, .2f, .2f));
+		pushTextObj(texObjects, "Your score was: " + std::to_string(game_state->score), 0.4f*game_state->window_width, 0.4f*game_state->window_height, 1.0f, glm::vec3(.7f, .2f, .2f));
+		pushTextObj(texObjects, "You died after: " + std::to_string(game_state->scoreTime), 0.4f*game_state->window_width, 0.33f*game_state->window_height, 1.0f, glm::vec3(.7f, .2f, .2f));
 	}
 
 	if (game_state->UIMode == "Loading") {
-		pushTextObj(texObjects, "%" + std::to_string(game_state->loadingPercentage), 0.7f*game_state->window_width, 0.315*game_state->window_height, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+		pushTextObj(texObjects, "%" + std::to_string(game_state->loadingPercentage), 0.7f*game_state->window_width, 0.315f*game_state->window_height, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 	}
 
 	if (game_state->UIMode == "Story") {
-		pushTextObj(texObjects, "Press Enter to continue...", 0.65f*game_state->window_width, 0.1*game_state->window_height, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+		pushTextObj(texObjects, "Press Enter to continue...", 0.65f*game_state->window_width, 0.1f*game_state->window_height, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 	}
 
 	if (game_state->UIMode == "Control") {
-		pushTextObj(texObjects, "Press Enter to continue...", 0.65f*game_state->window_width, 0.1*game_state->window_height, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+		pushTextObj(texObjects, "Press Enter to continue...", 0.65f*game_state->window_width, 0.1f*game_state->window_height, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 	}
 }
 

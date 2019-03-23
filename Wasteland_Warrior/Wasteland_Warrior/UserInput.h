@@ -21,8 +21,8 @@ public:
 	static std::queue<std::string> inputBuffer;
 	
 	//Mouse
-	static double MouseXpos;
-	static double MouseYpos;
+	static float MouseXpos;
+	static float MouseYpos;
 	float oldMouseXpos;
 	float oldMouseYpos;
 	static bool MouseLeft;

@@ -138,7 +138,7 @@ public:
 	//Graphics
 	glm::vec3 light = glm::vec3(0.0f, 100.0f, 0.0f);
 	glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
-	double lightAttenuation = 0.000000002f;
+	float lightAttenuation = 0.000000002f;
 	float lightAmbientCoefficient = 0.00f;
 
 	glm::vec3 materialSpecularColor = glm::vec3(1.0f, 1.0f, 1.0f);

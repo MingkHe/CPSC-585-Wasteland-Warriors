@@ -4,7 +4,7 @@
 
 Gamestate::Gamestate()
 {
-	timeStep = (1.0 / 60.0) * 1000; //60 fps
+	timeStep = (int)((1.0 / 60.0) * 1000); //60 fps
 	button = "";
 	UIMode = "Start";
 
@@ -166,23 +166,23 @@ void Gamestate::SpawnPlayer(float x, float y, float z) {
 void Gamestate::SpawnEnemy(int type, float x, float y, float z) {
 	int physicsIndex = physics_Controller->createEnemyVehicle();
 	physics_Controller->setPosition(physicsIndex, glm::vec3{ x, y, z });
-
+	int sceneObjectIndex;
 	//Different Enemy Types
 	switch (type) {
 	case 0: 
-		int sceneObjectIndex = scene->loadOBJObject("Objects/BladedDragster/bourak.obj", "Objects/BladedDragster/bourak.jpg");
+		sceneObjectIndex = scene->loadOBJObject("Objects/BladedDragster/bourak.obj", "Objects/BladedDragster/bourak.jpg");
 		break;
 	case 1: 
-		int sceneObjectIndex = scene->loadOBJObject("Objects/BladedDragster/bourak.obj", "Objects/BladedDragster/bourak.jpg");
+		sceneObjectIndex = scene->loadOBJObject("Objects/BladedDragster/bourak.obj", "Objects/BladedDragster/bourak.jpg");
 		break;
 	case 2: 
-		int sceneObjectIndex = scene->loadOBJObject("Objects/BladedDragster/bourak.obj", "Objects/BladedDragster/bourak.jpg");
+		sceneObjectIndex = scene->loadOBJObject("Objects/BladedDragster/bourak.obj", "Objects/BladedDragster/bourak.jpg");
 		break;
 	case 3: 
-		int sceneObjectIndex = scene->loadOBJObject("Objects/BladedDragster/bourak.obj", "Objects/BladedDragster/bourak.jpg");
+		sceneObjectIndex = scene->loadOBJObject("Objects/BladedDragster/bourak.obj", "Objects/BladedDragster/bourak.jpg");
 		break;
 	case 4: 
-		int sceneObjectIndex = scene->loadOBJObject("Objects/BladedDragster/bourak.obj", "Objects/BladedDragster/bourak.jpg");
+		sceneObjectIndex = scene->loadOBJObject("Objects/BladedDragster/bourak.obj", "Objects/BladedDragster/bourak.jpg");
 		break;
 	}
 	
@@ -213,7 +213,7 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse)
 
 	//Calculate "attack levels", how well the direction of the vehicle aligns with the axis of impulse
 	glm::vec2 normalizedImpulse = glm::normalize(impulse);
-	float attackLevelThreshold = 0.9;
+	float attackLevelThreshold = 0.9f;
 	float entity1AttackLevel = glm::dot(entity1->direction, normalizedImpulse);
 	std::cout << "Entity 1 attack level: " << entity1AttackLevel << std::endl;
 	float entity2AttackLevel = glm::dot(entity2->direction, normalizedImpulse);

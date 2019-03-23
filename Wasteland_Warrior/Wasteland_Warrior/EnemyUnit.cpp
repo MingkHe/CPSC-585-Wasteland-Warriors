@@ -14,7 +14,7 @@ EnemyUnit::EnemyUnit(int newPhysicsIndex, int newSceneObjectIndex) {
 
 	struct timeb currentTime;
 	ftime(&currentTime);
-	lastMotionTime = currentTime.time;
+	lastMotionTime = (int)(currentTime.time);
 }
 
 EnemyUnit::~EnemyUnit()
@@ -24,7 +24,7 @@ EnemyUnit::~EnemyUnit()
 bool EnemyUnit::CheckForStuck(){
 	struct timeb currentTime;
 	ftime(&currentTime);
-	double elapsed_seconds = currentTime.time - lastMotionTime;
+	double elapsed_seconds = (double)(currentTime.time) - (double)(lastMotionTime);
 
 	//std::cout << "Current time: " << currentTime.time << "     and last movement was at: " << lastMotionTime << std::endl;
 	//std::cout << "Elapsed stuck seconds = " << elapsed_seconds << std::endl;
@@ -34,7 +34,7 @@ bool EnemyUnit::CheckForStuck(){
 	if (recoveryMode == false) {			//Car is not currently marked as stuck
 		//std::cout << "Recovery mode OFF" << std::endl;
 		if (speed > 1) {				//Check if car is moving
-			lastMotionTime = currentTime.time;
+			lastMotionTime = (int)(currentTime.time);
 			//std::cout << "lastMotionTime updated to: " << lastMotionTime << std::endl;
 			return false;
 		}
@@ -53,7 +53,7 @@ bool EnemyUnit::CheckForStuck(){
 		if (elapsed_seconds >= 4) {	//For 2 more seconds remain in recovery mode
 			recoveryMode = false;
 			//std::cout << "Recovery mode turned OFF" << std::endl;
-			lastMotionTime = currentTime.time;
+			lastMotionTime = (int)(currentTime.time);
 			//std::cout << "lastMotionTime updated to: " << lastMotionTime << std::endl;
 			return false;
 		}

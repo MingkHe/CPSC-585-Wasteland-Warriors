@@ -747,7 +747,7 @@ void Physics_Controller::stepPhysics(bool interactive)
 	
 
 	//Update each vehicles drive direction based on input values
-	for (int i = 0; i < vehiclesVector.size(); i++) {
+	for (int i = 0; i < (int)vehiclesVector.size(); i++) {
 		
 		PxActor *actor = vehiclesVector[i]->getRigidDynamicActor()->is<PxActor>();
 		
@@ -821,7 +821,7 @@ void Physics_Controller::stepPhysics(bool interactive)
 
 
 	//Check collisions for Vehicle/Vehicle collisions
-	for (int i = 0; i < gContactReportCallback.gContactActor1s.size(); i++) {
+	for (int i = 0; i < (int)gContactReportCallback.gContactActor1s.size(); i++) {
 		Vehicle* vehicle1 = NULL;
 		Vehicle* vehicle2 = NULL;
 		//std::cout << "gContactReportCallback contact: " << i << "/" << gContactReportCallback.gContactActor1s.size() << std::endl;
@@ -847,7 +847,7 @@ void Physics_Controller::stepPhysics(bool interactive)
 	if (powerupGrabbed == false) {
 		//std::cout << "Starting Powerup check" << std::endl;
 		//Check collisions for Player/PowerUp collisions
-		for (int i = 0; i < gContactReportCallback.gContactActor1s.size(); i++) {
+		for (int i = 0; i < (int)gContactReportCallback.gContactActor1s.size(); i++) {
 			//std::cout << "..." << std::endl;
 			Vehicle* vehicle1 = NULL;
 			PowerUp* powerUp = NULL;
@@ -884,7 +884,7 @@ void Physics_Controller::stepPhysics(bool interactive)
 	
 	
 	//Check collisions for Player/Static Object collisions
-	for (int i = 0; i < gContactReportCallback.gContactActor1s.size(); i++) {
+	for (int i = 0; i < (int)gContactReportCallback.gContactActor1s.size(); i++) {
 		Vehicle* vehicle1 = NULL;
 		Object* object = NULL;
 

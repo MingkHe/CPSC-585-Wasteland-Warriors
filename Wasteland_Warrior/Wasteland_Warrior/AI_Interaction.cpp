@@ -23,7 +23,7 @@ int AI_Interaction::Update()
 	glm::vec2 targetPosition = { EntityPosition.x, EntityPosition.z};
 
 
-	for (int i = 0; i < gameState->Enemies.size(); i++) {
+	for (int i = 0; i < (int)(gameState->Enemies.size()); i++) {
 
 		EnemyUnit enemy = gameState->Enemies[i];
 		glm::vec2 enemyHeading = glm::normalize(enemy.direction);
@@ -32,10 +32,10 @@ int AI_Interaction::Update()
 
 		float enemyRotation = glm::atan(enemyHeading.y / enemyHeading.x);
 		if (enemyHeading.x < 0 && enemyRotation > 0)
-			enemyRotation = enemyRotation -M_PI;
+			enemyRotation = enemyRotation -(float)M_PI;
 
 		else if (enemyHeading.x < 0 && enemyRotation < 0)
-			enemyRotation = enemyRotation +M_PI;
+			enemyRotation = enemyRotation +(float)M_PI;
 
 
 
@@ -44,11 +44,11 @@ int AI_Interaction::Update()
 
 
 		if (targetVector.x < 0 && targetRotation > 0) {
-			targetRotation = targetRotation-M_PI;
+			targetRotation = targetRotation-(float)M_PI;
 		}
 
 		else if (targetVector.x < 0 && targetRotation < 0)
-			targetRotation = targetRotation+M_PI;
+			targetRotation = targetRotation+(float)M_PI;
 
 
 		float relativeRotation;
@@ -60,10 +60,10 @@ int AI_Interaction::Update()
 			relativeRotation = targetRotation - enemyRotation;
 
 			if (relativeRotation > (M_PI))
-				relativeRotation -= (2 * M_PI);
+				relativeRotation -= (2.f * (float)M_PI);
 
 			if (relativeRotation <= (-M_PI))
-				relativeRotation += (2 * M_PI);
+				relativeRotation += (2.f * (float)M_PI);
 
 
 			if (relativeRotation > 0.0f) {

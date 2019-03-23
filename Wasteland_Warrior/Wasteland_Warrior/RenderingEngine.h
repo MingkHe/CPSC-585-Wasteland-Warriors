@@ -91,6 +91,8 @@ public:
 	GLuint textShaderProgram;
 
 	std::vector<Geometry> texObjects;
+
+	
 };
 
 #endif /* RENDERINGENGINE_H_ */

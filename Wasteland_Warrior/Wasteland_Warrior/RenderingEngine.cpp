@@ -168,6 +168,12 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	//draw rear view
 	int objectNum = objects.size();
 	for (int i = 0; i < objectNum; i++) {
+		if (i == game_state->skyboxIndex) {
+			glUniform1i(glGetUniformLocation(shaderProgram, "isSkybox"), 1);
+		}
+		else {
+			glUniform1i(glGetUniformLocation(shaderProgram, "isSkybox"), 0);
+		}
 		glUniformMatrix4fv(transformGL, 1, false, glm::value_ptr(objects[i].geometry[0].transform));
 		//bind the texture
 		glActiveTexture(GL_TEXTURE0);
@@ -186,6 +192,12 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	modelViewProjection = perspectiveMatrix * game_state->camera.backviewMatrix();
 	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "modelViewProjection"), 1, false, glm::value_ptr(modelViewProjection));
 	for (int i = 0; i < objectNum; i++) {
+		if (i == game_state->skyboxIndex) {
+			glUniform1i(glGetUniformLocation(shaderProgram, "isSkybox"), 1);
+		}
+		else {
+			glUniform1i(glGetUniformLocation(shaderProgram, "isSkybox"), 0);
+		}
 		glUniformMatrix4fv(transformGL, 1, false, glm::value_ptr(objects[i].geometry[0].transform));
 		//bind the texture
 		glActiveTexture(GL_TEXTURE0);

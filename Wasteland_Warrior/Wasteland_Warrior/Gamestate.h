@@ -128,6 +128,7 @@ public:
 	Camera camera = Camera(this);
 	float cameraAngle;
 	int view;
+	int skyboxIndex;
 
 	//Time
 	int time;

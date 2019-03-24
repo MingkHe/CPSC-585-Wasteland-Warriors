@@ -36,10 +36,10 @@ int AI_Interaction::Update()
 		std::cout << "distFromDest = " << distFromDest << std::endl;
 
 		//Destination information
-		if (enemy->AIType != 2)
+		if (enemy->AIType == 0)
 			enemy->destination = glm::vec2(PlayerPosition.x, PlayerPosition.z);
 
-		else if (enemy->AIType == 2) {
+		else if (enemy->AIType == 1) {
 			if ((enemy->destination.x == 0 && enemy->destination.y == 0) ||
 				distFromDest < 10)
 			{
@@ -48,6 +48,13 @@ int AI_Interaction::Update()
 				//Enemy has arived at destination, new destination created
 				enemy->destination = glm::vec2((rand()% levelLength)-(levelLength/2), (rand()% levelWidth)-(levelWidth/2));
 				std::cout << "Destination reached, new destination: (" << enemy->destination.x << "," << enemy->destination.y << ")" << std::endl;
+			}
+		}
+
+		else if (enemy->AIType == 2) {
+			if (distFromDest < 10)
+			{
+				enemy->AIType = 0;
 			}
 		}
 

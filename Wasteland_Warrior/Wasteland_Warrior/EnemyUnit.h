@@ -16,7 +16,7 @@ public:
 
 	bool CheckForStuck();
 
-	int AIType = 1;
+	int AIType;
 	int ObjectType;
 
 	int lastMotionTime;

@@ -980,6 +980,9 @@ void Physics_Controller::updateEntities() {
 
 void Physics_Controller::cleanupPhysics(bool interactive)
 {
+	/*
+	//This cleanup call is triggering errors as the objects appear to have already been removed
+
 	PX_UNUSED(interactive);
 
 	gVehicle4W->getRigidDynamicActor()->release();
@@ -1004,5 +1007,5 @@ void Physics_Controller::cleanupPhysics(bool interactive)
 	transport->release();
 	gFoundation->release();
 
-	//printf("SnippetVehicle4W done.\n");
+	//printf("SnippetVehicle4W done.\n");*/
 }

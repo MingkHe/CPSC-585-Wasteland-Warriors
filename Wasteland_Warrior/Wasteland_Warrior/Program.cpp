@@ -205,7 +205,6 @@ void Program::start() {
 	}
 	SDL_CloseAudio();
 	SDL_Quit();
-
 }
 
 void Program::setupWindow() {

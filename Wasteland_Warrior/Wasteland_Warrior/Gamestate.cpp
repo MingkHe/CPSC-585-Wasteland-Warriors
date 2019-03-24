@@ -169,12 +169,13 @@ void Gamestate::SpawnPlayer(float x, float y, float z) {
 }
 
 
-void Gamestate::SpawnEnemy(int type, float x, float y, float z) {
+void Gamestate::SpawnEnemy(int ObjectType, int AIType, float x, float y, float z) {
 	int physicsIndex = physics_Controller->createEnemyVehicle();
 	physics_Controller->setPosition(physicsIndex, glm::vec3{ x, y, z });
 	int sceneObjectIndex;
-	//Different Enemy Types
-	switch (type) {
+
+	//Different Enemy Mesh/Texture Types *** Add new mesh/textures to this list ***
+	switch (ObjectType) {
 	case 0: 
 		sceneObjectIndex = scene->loadOBJObject("Objects/BladedDragster/bourak.obj", "Objects/BladedDragster/bourak.jpg");
 		break;
@@ -194,6 +195,7 @@ void Gamestate::SpawnEnemy(int type, float x, float y, float z) {
 	
 	EnemyUnit enemy = EnemyUnit(physicsIndex, sceneObjectIndex);
 	enemy.gameStateIndex = Enemies.size();
+	enemy.AIType = AIType;
 	Enemies.push_back(enemy);
 	pathfindingInputs.push_back(glm::vec2{ 0.0f,0.0f });
 }
@@ -213,12 +215,12 @@ void Gamestate::DespawnEnemy(Vehicle* vehicle) {
 	physics_Controller->setPosition(vehicle->physicsIndex, glm::vec3{20 * offset, -20, 0});
 }
 
-void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse) {
+void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse) {
 	// play sound when collision happen
 	this->carCrash_sound = true;
 
 	//Calculate "attack levels", how well the direction of the vehicle aligns with the axis of impulse
-	glm::vec2 normalizedImpulse = glm::normalize(impulse);
+	glm::vec2 normalizedImpulse = glm::normalize(glm::vec2(impulse.x, impulse.z));
 	float attackLevelThreshold = 0.9f;
 	float entity1AttackLevel = glm::dot(entity1->direction, glm::vec3(normalizedImpulse.x,0, normalizedImpulse.y));
 	std::cout << "Entity 1 attack level: " << entity1AttackLevel << std::endl;
@@ -243,6 +245,7 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse)
 
 	float damageScaling = 700;		//Smaller number means more damage
 	float damage = totalForce / damageScaling;
+	std::cout << "causeing: " << damage << " base damage (if less than 5, no damage dealt)" << std::endl;
 
 
 	//Inflict damage
@@ -253,10 +256,10 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse)
 
 		//Person going slower takes damage
 		if (entity1->speed > entity2->speed) {
-			entity2->health -= damage;
+			entity2->health -= damage * entity1->damageMultiplier;
 		}
 		else{
-			entity1->health -= damage;
+			entity1->health -= damage * entity2->damageMultiplier;
 		}
 	}
 
@@ -265,19 +268,19 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse)
 		(entity2AttackLevel >= attackLevelThreshold && entity1AttackLevel <= -attackLevelThreshold)
 		&& damage > 5.0f) {
 
-		entity1->health -= damage;
-		entity2->health -= damage;
+		entity1->health -= damage * entity2->damageMultiplier;
+		entity2->health -= damage * entity1->damageMultiplier;
 	}
 
 	else {
-		std::cout << "Single collision" << std::endl;
+		//std::cout << "Single collision" << std::endl;
 		//if (abs(entity1AttackLevel) >= attackLevelThreshold && damage > 5.0f) 
 		if (abs(entity1AttackLevel) >= abs(entity2AttackLevel) && damage > 5.0f)
-			entity2->health -= damage;
+			entity2->health -= damage * entity1->damageMultiplier;
 
 		//if (abs(entity2AttackLevel) >= attackLevelThreshold&& damage > 5.0f) 
 		if (abs(entity2AttackLevel) >= abs(entity1AttackLevel) && damage > 5.0f)
-			entity1->health -= totalForce / damageScaling;
+			entity1->health -= damage * entity2->damageMultiplier;
 	}
 
 
@@ -293,13 +296,13 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse)
 		this->carExpo_sound = true;
 
 
-	std::cout << "New health values: " << entity1->health << " | " << entity2->health << std::endl;
+	std::cout << "New health values: " << entity1->health << " | " << entity2->health << std::endl << std::endl;
 }
 
 
 
 void Gamestate::Collision(Vehicle* vehicle, PowerUp* powerUp) {
-	std::cout << "You feel more powerfull!" << std::endl;		//Placeholder
+	std::cout << "Powerup picked up" << std::endl;		//Placeholder
 	
 	glm::mat4 transformMatrix = glm::mat4(
 		2.f, 0.f, 0.f, 0.f,
@@ -363,17 +366,15 @@ void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 
 	}
 
 
-	if (!found){
-		std::cout << "Gamestate failed to locate the physicsIndex, entity not updated" << std::endl;
-	}
-
 	if (found) {
 		entityToUpdate->acceleration = ((newSpeed - entityToUpdate->speed)/60);
 		entityToUpdate->speed = newSpeed;
 		entityToUpdate->position = newPosition;
 		entityToUpdate->transformationMatrix = newTransformationMatrix;
 	}
-
+	else{
+		//std::cout << "Gamestate failed to locate the physicsIndex, entity not updated" << std::endl;
+	}
 
 }
 

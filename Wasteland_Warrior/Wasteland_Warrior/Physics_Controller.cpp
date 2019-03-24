@@ -841,7 +841,7 @@ void Physics_Controller::stepPhysics(bool interactive)
 		
 		if (vehicle1 != NULL && vehicle2 != NULL && (gContactReportCallback.gContactImpulses[i] != PxVec3{ 0.0f,0.0f,0.0f })) {
 			//std::cout << "Found 2 vehicles, Contact Impule Vector length is : " << gContactReportCallback.gContactImpulses.size() << std::endl;
-			glm::vec2 impulse = (glm::vec2{ gContactReportCallback.gContactImpulses[i].x, gContactReportCallback.gContactImpulses[i].z });
+			glm::vec3 impulse = (glm::vec3{ gContactReportCallback.gContactImpulses[i].x, gContactReportCallback.gContactImpulses[i].y, gContactReportCallback.gContactImpulses[i].z });
 			gameState->Collision(vehicle1, vehicle2, impulse);
 		}
 	}

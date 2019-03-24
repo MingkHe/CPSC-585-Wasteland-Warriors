@@ -16,7 +16,9 @@ public:
 
 	bool CheckForStuck();
 
-	int type = 1;
+	int AIType = 1;
+	int ObjectType;
+
 	int lastMotionTime;
 
 	bool recoveryMode = false;

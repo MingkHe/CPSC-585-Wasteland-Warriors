@@ -36,10 +36,10 @@ int AI_Interaction::Update()
 		std::cout << "distFromDest = " << distFromDest << std::endl;
 
 		//Destination information
-		if (enemy->type != 5)
+		if (enemy->AIType != 2)
 			enemy->destination = glm::vec2(PlayerPosition.x, PlayerPosition.z);
 
-		else if (enemy->type == 5) {
+		else if (enemy->AIType == 2) {
 			if ((enemy->destination.x == 0 && enemy->destination.y == 0) ||
 				distFromDest < 10)
 			{

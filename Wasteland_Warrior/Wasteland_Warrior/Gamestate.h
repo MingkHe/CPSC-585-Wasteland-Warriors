@@ -176,7 +176,7 @@ public:
 	void SpawnEnemy(int ObjectType, int AIType, float x, float y, float z);
 	void DespawnEnemy(Vehicle* vehicle);
 
-	void Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse);
+	void Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse);
 	void Collision(Vehicle* vehicle, PowerUp* powerUp);
 	void Collision(Vehicle* vehicle, Object* staticObject);
 

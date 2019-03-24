@@ -183,7 +183,7 @@ int Logic::checkEnemyHealth(Gamestate *gameState) {
 }
 
 void Logic::spawnPowerUps(Gamestate *gameState) {
-
+	
 	for (int i = 0; i < gameState->wave; i++) {
 		int mode = i % 4;
 		switch (mode) {

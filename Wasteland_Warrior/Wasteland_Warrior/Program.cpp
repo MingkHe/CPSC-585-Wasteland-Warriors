@@ -120,12 +120,16 @@ void Program::start() {
 	UICL.Update(gameState, window);
 	glfwSwapBuffers(window);
 	
+	/*
 	//Spawn Power Ups
 	gameState->SpawnDynamicObject(1, 53, 1, -35);
 	gameState->SpawnDynamicObject(1, -100, 5.25, -100);
 	gameState->SpawnDynamicObject(1, 100, -5.25, 100);
 	gameState->SpawnDynamicObject(1, -100, 1, 100);
-	
+	*/
+
+	gameState->SpawnDynamicObject(1, 0, 15, 0);
+
 	//Spawn Player
 	gameState->SpawnPlayer(0, 0, 0);
 

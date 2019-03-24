@@ -9,8 +9,9 @@
 
 class CompositeWorldObject {
 public:
-	std::vector<Geometry> geometry;
+	std::vector<Geometry> subObjects;
 	glm::mat4 transform;
+	std::vector<int> subobjectIndices;
 };
 
 #endif /* NODE_H_ */

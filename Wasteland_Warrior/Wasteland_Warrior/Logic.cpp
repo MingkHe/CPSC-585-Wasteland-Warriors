@@ -188,7 +188,7 @@ void Logic::spawnPowerUps(Gamestate *gameState) {
 		int mode = i % 4;
 		switch (mode) {
 		case 0: //Spawn Point 1
-			gameState->SpawnDynamicObject(1, 25.f + (i * 10.f), 0.f, 25.f + (i * 10.f));
+			gameState->SpawnDynamicObject(1, 25.f + (i * 10.f), 1.f, 25.f + (i * 10.f));
 			break;
 		case 1: //Spawn Point 2
 			gameState->SpawnDynamicObject(1, -25.f - (i * 10.f), 1.f, 25.f + (i * 10.f));

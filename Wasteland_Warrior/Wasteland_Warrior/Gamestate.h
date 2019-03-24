@@ -129,6 +129,7 @@ public:
 	float cameraAngle;
 	int view;
 	int skyboxIndex;
+	int mapGroundPhysicsIndex;
 
 	//Time
 	int time;
@@ -167,6 +168,7 @@ public:
 
 	//Spawning/Despawning Entities
 
+	void InstantiateAllMeshes_Textures();
 	void SpawnMap();
 	void SpawnStaticObject(int ObjectType, float x, float y, float z);
 	void SpawnDynamicObject(int ObjectType, float x, float y, float z);

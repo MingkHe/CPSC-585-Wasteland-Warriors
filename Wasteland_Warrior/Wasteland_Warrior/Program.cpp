@@ -107,7 +107,7 @@ void Program::start() {
 	gameState->loadingPercentage = 50;
 	UICL.Update(gameState, window);
 	glfwSwapBuffers(window);
-
+	
 	gameState->SpawnStaticObject(2, 93, -0.75, -45);
 	gameState->SpawnStaticObject(3, 63, 0, -25);
 	gameState->SpawnStaticObject(2, 123, -0.75, -95);
@@ -115,7 +115,7 @@ void Program::start() {
 	gameState->SpawnStaticObject(2, 133, -0.75, -145);
 	gameState->SpawnStaticObject(3, 73, 0, -125);
 	gameState->SpawnStaticObject(4, -150, 4.25, -120);
-
+	
 	gameState->loadingPercentage = 75;
 	UICL.Update(gameState, window);
 	glfwSwapBuffers(window);
@@ -125,7 +125,7 @@ void Program::start() {
 	gameState->SpawnDynamicObject(1, -100, 5.25, -100);
 	gameState->SpawnDynamicObject(1, 100, -5.25, 100);
 	gameState->SpawnDynamicObject(1, -100, 1, 100);
-
+	
 	//Spawn Player
 	gameState->SpawnPlayer(0, 0, 0);
 

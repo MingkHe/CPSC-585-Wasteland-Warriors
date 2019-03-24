@@ -26,11 +26,11 @@ int AI_Interaction::Update()
 	for (int i = 0; i < (int)(gameState->Enemies.size()); i++) {
 
 		EnemyUnit enemy = gameState->Enemies[i];
-		glm::vec2 enemyHeading = glm::normalize(enemy.direction);
+		glm::vec3 enemyHeading = glm::normalize(enemy.direction);
 		glm::vec2 enemyPosition = {enemy.position.x, enemy.position.z};
 
 
-		float enemyRotation = glm::atan(enemyHeading.y / enemyHeading.x);
+		float enemyRotation = glm::atan(enemyHeading.z / enemyHeading.x);
 		if (enemyHeading.x < 0 && enemyRotation > 0)
 			enemyRotation = enemyRotation -(float)M_PI;
 

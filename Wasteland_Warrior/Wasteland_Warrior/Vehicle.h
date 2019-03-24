@@ -11,7 +11,7 @@ public:
 	int playerDrivemode;
 
 	//2D xy vector of the direction of the car
-	glm::vec2 direction = glm::vec2(1.f, 0.f);
+	glm::vec3 direction = glm::vec3(1.f, 0.f, 0.0f);
 
 	float health;
 

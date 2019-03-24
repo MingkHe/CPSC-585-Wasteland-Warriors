@@ -37,12 +37,18 @@ public:
 	RenderingEngine * renderer;
 
 	//list of objects in the scene
-	std::vector<CompositeWorldObject> objects;
+	std::vector<CompositeWorldObject> allWorldCompObjects;
+	std::vector<CompositeWorldObject> compObjectInstances;
 	int generateRectPrism(float length, float width, float height);
 
-	int sceneObjectIndex = 0;
+	int sceneObjectIndex = -1;
+	int sceneCompObjectIndex = -1;
+	char previousHeader = 'v';
 
 private:
+	void createObject(const char* textureFilepath, CompositeWorldObject OBJobjectComp, Geometry OBJobject,
+		std::vector< unsigned int > vertexIndices, std::vector< unsigned int > uvIndices, std::vector< unsigned int > normalIndices,
+		std::vector< glm::vec3 > temp_vertices, std::vector< glm::vec2 > temp_uvs, std::vector< glm::vec3 > temp_normals);
 };
 
 

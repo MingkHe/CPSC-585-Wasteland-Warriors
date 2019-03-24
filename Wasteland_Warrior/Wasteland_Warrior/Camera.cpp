@@ -21,7 +21,7 @@ glm::mat4 Camera::viewMatrix() const {
 	int forward = 1;
 
 	float dir_head_discr = (gameState->playerVehicle.heading.x - gameState->playerVehicle.direction.x)*(gameState->playerVehicle.heading.x - gameState->playerVehicle.direction.x)
-		+ (gameState->playerVehicle.heading.y - gameState->playerVehicle.direction.y)*(gameState->playerVehicle.heading.y - gameState->playerVehicle.direction.y);
+		+ (gameState->playerVehicle.heading.z - gameState->playerVehicle.direction.z)*(gameState->playerVehicle.heading.z - gameState->playerVehicle.direction.z);
 	if (dir_head_discr > .5 && gameState->playerVehicle.speed > 5) {//change the 5 to a 4 maybe?
 		forward = -1;
 	}
@@ -54,11 +54,11 @@ glm::mat4 Camera::viewMatrix() const {
 	}
 
 	//Direction
-	glm::vec2 direction = gameState->playerVehicle.direction;
+	glm::vec3 direction = gameState->playerVehicle.direction;
 	glm::vec2 newDirection;
 
-	newDirection.x = (direction.x * cos(angle)) - (direction.y * sin(angle));
-	newDirection.y = (direction.y * cos(angle)) + (direction.x * sin(angle));
+	newDirection.x = (direction.x * cos(angle)) - (direction.z * sin(angle));
+	newDirection.y = (direction.z * cos(angle)) + (direction.x * sin(angle));
 
 	float xVal = newDirection.x / newDirection.length();
 	float yVal = newDirection.y / newDirection.length();
@@ -88,7 +88,7 @@ glm::mat4 Camera::backviewMatrix() const {
 	glm::vec3 cam = gameState->playerVehicle.position;
 
 	float dir_head_discr = (gameState->playerVehicle.heading.x - gameState->playerVehicle.direction.x)*(gameState->playerVehicle.heading.x - gameState->playerVehicle.direction.x)
-		+ (gameState->playerVehicle.heading.y - gameState->playerVehicle.direction.y)*(gameState->playerVehicle.heading.y - gameState->playerVehicle.direction.y);
+		+ (gameState->playerVehicle.heading.z - gameState->playerVehicle.direction.z)*(gameState->playerVehicle.heading.z - gameState->playerVehicle.direction.z);
 
 
 	float distanceBehindCar = 1.f;
@@ -107,11 +107,11 @@ glm::mat4 Camera::backviewMatrix() const {
 	}
 
 	//Direction
-	glm::vec2 direction = gameState->playerVehicle.direction;
+	glm::vec3 direction = gameState->playerVehicle.direction;
 	glm::vec2 newDirection;
 
-	newDirection.x = (direction.x * cos(angle)) - (direction.y * sin(angle));
-	newDirection.y = (direction.y * cos(angle)) + (direction.x * sin(angle));
+	newDirection.x = (direction.x * cos(angle)) - (direction.z * sin(angle));
+	newDirection.y = (direction.z * cos(angle)) + (direction.x * sin(angle));
 
 	float xVal = newDirection.x / newDirection.length();
 	float yVal = newDirection.y / newDirection.length();

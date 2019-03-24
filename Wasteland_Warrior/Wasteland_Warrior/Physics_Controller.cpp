@@ -35,7 +35,7 @@ PxCooking*				gCooking = NULL;
 PxCooking*				gCookingNoCleaning = NULL;
 
 PxMaterial*				gMaterial = NULL;
-PxMaterial*				tireMaterial;
+PxMaterial*				tireMaterial = NULL;
 
 PxPvd*                  gPvd = NULL;
 
@@ -201,7 +201,7 @@ VehicleDesc initPlayerVehiclePhysicsDesc()
 	//Moment of inertia is just the moment of inertia of a cylinder.
 	const PxF32 wheelMass = 40.0f;
 	const PxF32 wheelRadius = 0.6f;
-	const PxF32 wheelWidth = 0.01f;		//This became needed after uneven driving terrain was added. On
+	const PxF32 wheelWidth = 0.2f;		//This became needed after uneven driving terrain was added. On
 	const PxF32 wheelMOI = 0.5f*wheelMass*wheelRadius*wheelRadius*2;
 	const PxU32 nbWheels = 4;
 
@@ -436,8 +436,8 @@ void Physics_Controller::initPhysics(bool interactive)
 		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
 		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
 	}
-	gMaterial = gPhysics->createMaterial(0.6f, 0.6f, 0.6f);
-	tireMaterial = gPhysics->createMaterial(0.8f, 0.8f, 0.6f);
+	gMaterial = gPhysics->createMaterial(0.6f, 0.3f, 0.8f);
+	tireMaterial = gPhysics->createMaterial(0.6f, 0.3f, 0.6f);
 
 	gCooking = PxCreateCooking(PX_PHYSICS_VERSION, *gFoundation, PxCookingParams(PxTolerancesScale()));
 
@@ -486,7 +486,9 @@ int Physics_Controller::createStaticObject(const PxVec3* verts, const PxU32 numV
 int Physics_Controller::createDynamicObject(PxU32 objectType, PxVec3 dimensions, PxVec3 MOI, PxReal mass, PxReal density, float x, float y, float z) {
 	gDynamicObject = createRigidDynamicObject(objectType, dimensions, MOI, mass, gMaterial, density, *gPhysics, *gCooking);
 	gDynamicObject->setGlobalPose({ x, y, z });
+	
 	gScene->addActor(*gDynamicObject);
+	gDynamicObject->wakeUp();
 
 	rigidDynamicActorIndex++;
 	return rigidDynamicActorIndex;
@@ -565,9 +567,9 @@ void Physics_Controller::resetOrientation(int actorIndex) {
 
 	//int gsi = gameState->lookupGSIUsingPI(actorIndex);
 	
-	glm::vec2 heading = gameState->playerVehicle.direction;
+	glm::vec3 heading = gameState->playerVehicle.direction;
 
-	float angle = atan2(heading.x, heading.y); // Note: I expected atan2(z,x) but OP reported success with atan2(x,z) instead! Switch around if you see 90?off.
+	float angle = atan2(heading.x, heading.z); // Note: I expected atan2(z,x) but OP reported success with atan2(x,z) instead! Switch around if you see 90?off.
 	float qx = 0;
 	float qy = 1 * sin(angle / 2);
 	float qz = 0;
@@ -901,8 +903,8 @@ void Physics_Controller::stepPhysics(bool interactive)
 		//Try to find static object
 		for (int index = 0; index <= rigidStaticActorIndex; index++) {
 			PxActor *actor = userBufferRS[index];
-
-			if (index != gameState->map.physicsIndex) {
+			//printf("%d\n", index);
+			if (index != gameState->mapGroundPhysicsIndex+1) {
 				if (gContactReportCallback.gContactActor1s[i] == actor || gContactReportCallback.gContactActor2s[i] == actor) {
 					object = new Object();	//Since it does not matter at this point, object refrence is not accurate
 					//std::cout << "Collision with object with index: " << index << std::endl;
@@ -947,10 +949,11 @@ void Physics_Controller::updateEntities() {
 		PxRigidActor *rigidActor = actor->is<PxRigidActor>();
 		PxRigidBody *rigidBody = rigidActor->is<PxRigidBody>();
 		PxVec3 velocity = rigidBody->getLinearVelocity();
-		float speed = glm::length(glm::vec2{ velocity.x, velocity.z });
+		float speed = glm::length(glm::vec3{ velocity.x, velocity.y, velocity.z });
 		if (gameState->playerVehicle.physicsIndex == index && std::abs(velocity.x) > .005f && std::abs(velocity.z) > .005f) {
-			gameState->playerVehicle.heading = glm::normalize(glm::vec2{ velocity.x, velocity.z });
+			gameState->playerVehicle.heading = glm::normalize(glm::vec3{ velocity.x, velocity.y, velocity.z });
 		}
+
 
 		PxTransform orientation = rigidActor->getGlobalPose();		//   https://docs.nvidia.com/gameworks/content/gameworkslibrary/physx/apireference/files/classPxRigidActor.html
 		PxVec3 location = orientation.p;							//	https://docs.nvidia.com/gameworks/content/gameworkslibrary/physx/apireference/files/classPxTransform.html

@@ -29,8 +29,6 @@ bool EnemyUnit::CheckForStuck(){
 	//std::cout << "Current time: " << currentTime.time << "     and last movement was at: " << lastMotionTime << std::endl;
 	//std::cout << "Elapsed stuck seconds = " << elapsed_seconds << std::endl;
 
-	
-	
 	if (recoveryMode == false) {			//Car is not currently marked as stuck
 		//std::cout << "Recovery mode OFF" << std::endl;
 		if (speed > 1) {				//Check if car is moving
@@ -52,6 +50,10 @@ bool EnemyUnit::CheckForStuck(){
 		//std::cout << "Recovery mode ON" << std::endl;
 		if (elapsed_seconds >= 4) {	//For 2 more seconds remain in recovery mode
 			recoveryMode = false;
+
+			
+			destination = glm::vec2(position.x + (rand() % 60) - 30, position.z + (rand() % 60) - 30);
+			AIType = 2;
 			//std::cout << "Recovery mode turned OFF" << std::endl;
 			lastMotionTime = (int)(currentTime.time);
 			//std::cout << "lastMotionTime updated to: " << lastMotionTime << std::endl;

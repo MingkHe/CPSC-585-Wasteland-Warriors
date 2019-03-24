@@ -21,5 +21,6 @@ public:
 	void setActive(int activeState);
 
 	int active = 1;
+	float damageMultiplier = 1;
 };
 

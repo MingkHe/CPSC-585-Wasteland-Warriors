@@ -256,10 +256,10 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse)
 
 		//Person going slower takes damage
 		if (entity1->speed > entity2->speed) {
-			entity2->health -= damage;
+			entity2->health -= damage * entity1->damageMultiplier;
 		}
 		else{
-			entity1->health -= damage;
+			entity1->health -= damage * entity2->damageMultiplier;
 		}
 	}
 
@@ -268,19 +268,19 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse)
 		(entity2AttackLevel >= attackLevelThreshold && entity1AttackLevel <= -attackLevelThreshold)
 		&& damage > 5.0f) {
 
-		entity1->health -= damage;
-		entity2->health -= damage;
+		entity1->health -= damage * entity2->damageMultiplier;
+		entity2->health -= damage * entity1->damageMultiplier;
 	}
 
 	else {
 		//std::cout << "Single collision" << std::endl;
 		//if (abs(entity1AttackLevel) >= attackLevelThreshold && damage > 5.0f) 
 		if (abs(entity1AttackLevel) >= abs(entity2AttackLevel) && damage > 5.0f)
-			entity2->health -= damage;
+			entity2->health -= damage * entity1->damageMultiplier;
 
 		//if (abs(entity2AttackLevel) >= attackLevelThreshold&& damage > 5.0f) 
 		if (abs(entity2AttackLevel) >= abs(entity1AttackLevel) && damage > 5.0f)
-			entity1->health -= totalForce / damageScaling;
+			entity1->health -= damage * entity2->damageMultiplier;
 	}
 
 

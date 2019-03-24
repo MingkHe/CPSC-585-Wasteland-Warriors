@@ -215,12 +215,12 @@ void Gamestate::DespawnEnemy(Vehicle* vehicle) {
 	physics_Controller->setPosition(vehicle->physicsIndex, glm::vec3{20 * offset, -20, 0});
 }
 
-void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse) {
+void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse) {
 	// play sound when collision happen
 	this->carCrash_sound = true;
 
 	//Calculate "attack levels", how well the direction of the vehicle aligns with the axis of impulse
-	glm::vec2 normalizedImpulse = glm::normalize(impulse);
+	glm::vec2 normalizedImpulse = glm::normalize(glm::vec2(impulse.x, impulse.z));
 	float attackLevelThreshold = 0.9f;
 	float entity1AttackLevel = glm::dot(entity1->direction, glm::vec3(normalizedImpulse.x,0, normalizedImpulse.y));
 	std::cout << "Entity 1 attack level: " << entity1AttackLevel << std::endl;
@@ -245,7 +245,7 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse)
 
 	float damageScaling = 700;		//Smaller number means more damage
 	float damage = totalForce / damageScaling;
-	std::cout << "causeing: " << damage << " damage (if less than 5, no damage dealt)" << totalForce << std::endl;
+	std::cout << "causeing: " << damage << " base damage (if less than 5, no damage dealt)" << totalForce << std::endl;
 
 
 	//Inflict damage

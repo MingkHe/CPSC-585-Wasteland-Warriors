@@ -169,12 +169,13 @@ void Gamestate::SpawnPlayer(float x, float y, float z) {
 }
 
 
-void Gamestate::SpawnEnemy(int type, float x, float y, float z) {
+void Gamestate::SpawnEnemy(int ObjectType, int AIType, float x, float y, float z) {
 	int physicsIndex = physics_Controller->createEnemyVehicle();
 	physics_Controller->setPosition(physicsIndex, glm::vec3{ x, y, z });
 	int sceneObjectIndex;
-	//Different Enemy Types
-	switch (type) {
+
+	//Different Enemy Mesh/Texture Types *** Add new mesh/textures to this list ***
+	switch (ObjectType) {
 	case 0: 
 		sceneObjectIndex = scene->loadOBJObject("Objects/BladedDragster/bourak.obj", "Objects/BladedDragster/bourak.jpg");
 		break;
@@ -194,6 +195,7 @@ void Gamestate::SpawnEnemy(int type, float x, float y, float z) {
 	
 	EnemyUnit enemy = EnemyUnit(physicsIndex, sceneObjectIndex);
 	enemy.gameStateIndex = Enemies.size();
+	enemy.AIType = AIType;
 	Enemies.push_back(enemy);
 	pathfindingInputs.push_back(glm::vec2{ 0.0f,0.0f });
 }

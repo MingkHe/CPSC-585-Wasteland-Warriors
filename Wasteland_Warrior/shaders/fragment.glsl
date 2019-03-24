@@ -84,15 +84,16 @@ void main() {
 			linearColor = ambient + attenuation*(diffuse + specular);
 
 		//shadow
-		/*float visibility = 0.f;
+		float visibility = 0.f;
 		float bias = 0.005;
-		for (int i=0;i<4;i++){
-			visibility += texture(shadowTex, vec2(shadowCoord.xy + poissonDisk[i]/700.0)).a;
+		/*for (int i=0;i<4;i++){
+			visibility += texture(shadowTex, vec2(shadowCoord.xy + poissonDisk[i]/700.0)).r;
 		}
-		visibility /= 4;
-		if(visibility - bias < distanceToLight) {
+		visibility /= 4;*/
+		visibility = texture(shadowTex, vec2(shadowCoord.xy)).r;
+		if(visibility  > distanceToLight) {
 			linearColor *= .5f;
-		}*/
+		}
 	}
     
 

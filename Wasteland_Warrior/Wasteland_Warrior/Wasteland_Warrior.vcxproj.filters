@@ -97,6 +97,8 @@
     <None Include="..\shaders\basicvertex.glsl" />
     <None Include="..\shaders\needlefragment.glsl" />
     <None Include="..\shaders\needlevertex.glsl" />
+    <None Include="..\shaders\shadowMapFragment.glsl" />
+    <None Include="..\shaders\shadowMapVertex.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Wasteland_Warrior.vcxproj.filters.txt" />

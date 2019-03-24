@@ -169,6 +169,15 @@ void Logic::Update(Gamestate *gameState)
 
 int Logic::checkEnemyHealth(Gamestate *gameState) {
 	int enemiesLeft = 0;
+
+	//Head Hunter
+	if (gameState->Enemies[gameState->wave].health <= 0) {
+		for (int i = 0; i < (int)gameState->Enemies.size(); i++) {
+			gameState->Enemies[i].health = 0;
+		}
+	}
+
+	//Despawn defeated enemies
 	for (int i = 0; i < (int)gameState->Enemies.size(); i++) {
 		if (gameState->Enemies[i].health >= 0) {
 			enemiesLeft++;
@@ -178,6 +187,7 @@ int Logic::checkEnemyHealth(Gamestate *gameState) {
 			gameState->Enemies.erase(gameState->Enemies.begin()+i);
 		}
 	}
+
 	gameState->enemiesLeft = enemiesLeft;
 	return enemiesLeft;
 }
@@ -185,8 +195,7 @@ int Logic::checkEnemyHealth(Gamestate *gameState) {
 void Logic::spawnPowerUps(Gamestate *gameState) {
 
 	for (int i = 0; i < gameState->wave; i++) {
-		int mode = i % 4;
-		switch (mode) {
+		switch (i % 4) {
 		case 0: //Spawn Point 1
 			gameState->SpawnDynamicObject(1, 25.f + (i * 10.f), 1.f, 25.f + (i * 10.f));
 			break;
@@ -206,7 +215,7 @@ void Logic::spawnPowerUps(Gamestate *gameState) {
 void Logic::modeSelection(Gamestate *gameState) {
 
 	srand((unsigned int)time(NULL));
-	switch (rand() % 5 + 1) {
+	switch (4) {//(rand() % 5 + 1) {
 	case 1:
 		survival(gameState);
 		gameState->gameMode = "Survival";
@@ -328,6 +337,10 @@ void Logic::headHunter(Gamestate *gameState) {
 			break;
 		}
 	}
+
+	//Target Enemy
+	gameState->SpawnEnemy(0, 1, 25.f, 5.f, 25.f);
+	gameState->Enemies[gameState->wave].health = 50.f;
 }
 
 //Boss battle

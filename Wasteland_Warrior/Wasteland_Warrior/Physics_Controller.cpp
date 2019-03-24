@@ -219,7 +219,7 @@ VehicleDesc initPlayerVehiclePhysicsDesc()
 	vehicleDesc.wheelWidth = wheelWidth;
 	vehicleDesc.wheelMOI = wheelMOI;
 	vehicleDesc.numWheels = nbWheels;
-	vehicleDesc.wheelMaterial = tireMaterial;
+	vehicleDesc.wheelMaterial = gMaterial;
 	vehicleDesc.chassisSimFilterData = PxFilterData(COLLISION_FLAG_WHEEL, COLLISION_FLAG_WHEEL_AGAINST, 0, 0);
 
 	return vehicleDesc;
@@ -260,7 +260,7 @@ VehicleDesc initEnemyVehiclePhysicsDesc()
 	vehicleDesc.wheelWidth = wheelWidth;
 	vehicleDesc.wheelMOI = wheelMOI;
 	vehicleDesc.numWheels = nbWheels;
-	vehicleDesc.wheelMaterial = tireMaterial;
+	vehicleDesc.wheelMaterial = gMaterial;
 	vehicleDesc.chassisSimFilterData = PxFilterData(COLLISION_FLAG_WHEEL, COLLISION_FLAG_WHEEL_AGAINST, 0, 0);
 
 	return vehicleDesc;
@@ -436,8 +436,8 @@ void Physics_Controller::initPhysics(bool interactive)
 		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
 		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
 	}
-	gMaterial = gPhysics->createMaterial(0.6f, 0.3f, 0.8f);
-	tireMaterial = gPhysics->createMaterial(0.6f, 0.3f, 0.6f);
+	gMaterial = gPhysics->createMaterial(0.5f, 0.3f, 0.8f);
+	//tireMaterial = gPhysics->createMaterial(0.5f, 0.2f, 0.6f);
 
 	gCooking = PxCreateCooking(PX_PHYSICS_VERSION, *gFoundation, PxCookingParams(PxTolerancesScale()));
 

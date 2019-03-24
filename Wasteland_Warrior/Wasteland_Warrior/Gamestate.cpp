@@ -243,6 +243,7 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse)
 
 	float damageScaling = 700;		//Smaller number means more damage
 	float damage = totalForce / damageScaling;
+	std::cout << "causeing: " << damage << " damage (if less than 5, no damage dealt)" << totalForce << std::endl;
 
 
 	//Inflict damage
@@ -270,7 +271,7 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse)
 	}
 
 	else {
-		std::cout << "Single collision" << std::endl;
+		//std::cout << "Single collision" << std::endl;
 		//if (abs(entity1AttackLevel) >= attackLevelThreshold && damage > 5.0f) 
 		if (abs(entity1AttackLevel) >= abs(entity2AttackLevel) && damage > 5.0f)
 			entity2->health -= damage;
@@ -299,7 +300,7 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse)
 
 
 void Gamestate::Collision(Vehicle* vehicle, PowerUp* powerUp) {
-	std::cout << "You feel more powerfull!" << std::endl;		//Placeholder
+	std::cout << "Powerup picked up" << std::endl;		//Placeholder
 	
 	glm::mat4 transformMatrix = glm::mat4(
 		2.f, 0.f, 0.f, 0.f,
@@ -363,17 +364,15 @@ void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 
 	}
 
 
-	if (!found){
-		std::cout << "Gamestate failed to locate the physicsIndex, entity not updated" << std::endl;
-	}
-
 	if (found) {
 		entityToUpdate->acceleration = ((newSpeed - entityToUpdate->speed)/60);
 		entityToUpdate->speed = newSpeed;
 		entityToUpdate->position = newPosition;
 		entityToUpdate->transformationMatrix = newTransformationMatrix;
 	}
-
+	else{
+		//std::cout << "Gamestate failed to locate the physicsIndex, entity not updated" << std::endl;
+	}
 
 }
 

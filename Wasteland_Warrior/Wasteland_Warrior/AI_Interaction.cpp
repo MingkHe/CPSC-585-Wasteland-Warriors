@@ -31,9 +31,9 @@ int AI_Interaction::Update()
 		//std::cout << "Enemy type: " << enemy.type << std::endl;
 
 		float distFromDest = glm::length(enemy->destination - enemyPosition);
-		std::cout << "Destination: (" << enemy->destination.x << "," << enemy->destination.y << ")" << std::endl;
-		std::cout << "Location: (" << enemyPosition.x << "," << enemyPosition.y << ")" << std::endl;
-		std::cout << "distFromDest = " << distFromDest << std::endl;
+		//std::cout << "Destination: (" << enemy->destination.x << "," << enemy->destination.y << ")" << std::endl;
+		//std::cout << "Location: (" << enemyPosition.x << "," << enemyPosition.y << ")" << std::endl;
+		//std::cout << "distFromDest = " << distFromDest << std::endl;
 
 		//Destination information
 		if (enemy->AIType == 0)
@@ -47,7 +47,7 @@ int AI_Interaction::Update()
 				int levelWidth = 300;
 				//Enemy has arived at destination, new destination created
 				enemy->destination = glm::vec2((rand()% levelLength)-(levelLength/2), (rand()% levelWidth)-(levelWidth/2));
-				std::cout << "Destination reached, new destination: (" << enemy->destination.x << "," << enemy->destination.y << ")" << std::endl;
+				//std::cout << "Destination reached, new destination: (" << enemy->destination.x << "," << enemy->destination.y << ")" << std::endl;
 			}
 		}
 

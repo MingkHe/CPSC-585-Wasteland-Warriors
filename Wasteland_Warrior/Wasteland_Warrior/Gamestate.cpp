@@ -245,7 +245,7 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse)
 
 	float damageScaling = 700;		//Smaller number means more damage
 	float damage = totalForce / damageScaling;
-	std::cout << "causeing: " << damage << " base damage (if less than 5, no damage dealt)" << totalForce << std::endl;
+	std::cout << "causeing: " << damage << " base damage (if less than 5, no damage dealt)" << std::endl;
 
 
 	//Inflict damage
@@ -296,7 +296,7 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse)
 		this->carExpo_sound = true;
 
 
-	std::cout << "New health values: " << entity1->health << " | " << entity2->health << std::endl;
+	std::cout << "New health values: " << entity1->health << " | " << entity2->health << std::endl << std::endl;
 }
 
 

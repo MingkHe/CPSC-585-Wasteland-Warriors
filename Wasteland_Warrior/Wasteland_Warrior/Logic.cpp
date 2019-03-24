@@ -47,7 +47,7 @@ void Logic::Update(Gamestate *gameState)
 		gameState->UIMode = "Lose";
 		gameState->ui_gameplay = false;
 		gameState->restart = true;
-		gameState->score = 2160010000 / (score + 1);
+		gameState->score = (score / 25) * 10;
 		gameState->scoreTime = score / 60;
 	} 
 	else {

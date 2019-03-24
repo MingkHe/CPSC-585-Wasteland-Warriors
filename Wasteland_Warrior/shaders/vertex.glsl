@@ -37,5 +37,5 @@ void main()
 	fragNormal = normalize((transform*vec4(VertexNormal, 0)).xyz);
 	fragVert = (transform*vec4(VertexPosition, 1)).xyz;
 	
-	shadowCoord = depthViewProjection * transform*vec4(VertexPosition, 1.0)*.5f + .5f;
+	shadowCoord = depthViewProjection * transform*vec4(VertexPosition, 1.0);
 }

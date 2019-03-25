@@ -350,7 +350,13 @@ void Gamestate::Collision(Vehicle* vehicle, Object* staticObject) {
 void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 newTransformationMatrix, float newSpeed) {
 	Entity* entityToUpdate = &Entity();
 	glm::vec4 newDirection = glm::vec4{ 0.0f, 0.0f, 1.0f, 0.0f } *newTransformationMatrix;
+	float playerOffSet = 1.5f;
+	float enemyOffSet = 1.0f;
 
+
+	glm::mat4 pureRotation = newTransformationMatrix;
+	pureRotation[3] = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+	glm::vec4 vehicleNormal = glm::vec4{ 0.0f, 1.0f, 0.0f, 0.0f} *pureRotation;
 
 	bool found = false;
 	if (physicsIndex == playerVehicle.physicsIndex) {
@@ -358,6 +364,9 @@ void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 
 
 		entityToUpdate = &playerVehicle;
 		playerVehicle.direction = glm::vec3{ -newDirection.x , newDirection.y, newDirection.z };
+
+		newTransformationMatrix[3] = newTransformationMatrix[3] - (playerOffSet* vehicleNormal);
+
 		//std::cout << "Player direction: [" << playerVehicle.direction.x << "," << playerVehicle.direction.y << "]" << std::endl; //Test statement, delete it if you want
 		//std::cout << "Player position:  X:" << newPosition.x << "  Y:" << newPosition.y << "  Z:" << newPosition.z << std::endl; //Test statement, delete it if you want
 	}
@@ -367,6 +376,8 @@ void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 
 		if (physicsIndex == Enemies[i].physicsIndex) {
 			Enemies[i].direction = glm::vec3{ -newDirection.x , newDirection.y, newDirection.z };
 			entityToUpdate = &Enemies[i];
+
+			newTransformationMatrix[3] = newTransformationMatrix[3] - (enemyOffSet* vehicleNormal);
 			found = true;
 		}
 	}

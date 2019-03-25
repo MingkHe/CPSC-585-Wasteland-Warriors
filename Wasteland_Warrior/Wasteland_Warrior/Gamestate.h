@@ -158,6 +158,7 @@ public:
 	int wave;
 	bool restart;
 	int enemiesLeft;
+	int checkpoints;
 	int breakSeconds;
 	int score;
 	int scoreTime;
@@ -165,6 +166,8 @@ public:
 
 	int window_width;
 	int window_height;
+
+	int powerUpType;
 
 	//Spawning/Despawning Entities
 

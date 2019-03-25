@@ -785,17 +785,22 @@ void Physics_Controller::stepPhysics(bool interactive)
 
 			if (gameState->Enemies[gameStateIndex].getActive() == 1) {	//If the vehicle should move  
 
-				if (gameState->Enemies[gameStateIndex].CheckForStuck()) {
+				if (gameState->Enemies[gameStateIndex].CheckForStuck()) {		//If vehicle is stuck, go in reverse
 					vehiclesVector[i]->mDriveDynData.forceGearChange(PxVehicleGearsData::eREVERSE);
 
-					enemyInputData.setAnalogAccel(pathfindingInput[0]);			//Uncomment these lines to re-enable AI
+					enemyInputData.setAnalogAccel(pathfindingInput[0]);			
 					enemyInputData.setAnalogSteer(-pathfindingInput[1]);
+
+					if (gameState->Enemies[gameStateIndex].forceRelocate) {		//If vehicle has finished trying to get unstuck and is still not moving, relocate
+						EnemyUnit enemy = gameState->Enemies[gameStateIndex];
+						setPosition(enemy.physicsIndex, glm::vec3(enemy.position.x, enemy.position.y, enemy.position.z) + glm::vec3(0.2f, 0.0f, 0.0f));
+					}
 				}
 
-				else {
+				else {															//Else drive as normal
 					vehiclesVector[i]->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
 					vehiclesVector[i]->mDriveDynData.setUseAutoGears(true);
-					enemyInputData.setAnalogAccel(pathfindingInput[0]);			//Uncomment these lines to re-enable AI
+					enemyInputData.setAnalogAccel(pathfindingInput[0]);			
 					enemyInputData.setAnalogSteer(pathfindingInput[1]);
 				}
 

@@ -179,6 +179,14 @@ int Logic::checkEnemyHealth(Gamestate *gameState) {
 		}
 	}
 	gameState->enemiesLeft = enemiesLeft;
+
+
+	if (gameState->gameMode == "Checkpoint") {
+		if (gameState->checkpoints <= 0) {
+			enemiesLeft = 0;
+		}
+	}
+
 	return enemiesLeft;
 }
 
@@ -280,6 +288,7 @@ void Logic::checkpoint(Gamestate *gameState) {
 			break;
 		}
 	}
+	gameState->checkpoints = gameState->wave;
 }
 
 //Payload

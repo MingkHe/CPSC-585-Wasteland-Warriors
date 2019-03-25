@@ -158,6 +158,7 @@ public:
 	int wave;
 	bool restart;
 	int enemiesLeft;
+	int checkpoints;
 	int breakSeconds;
 	int score;
 	int scoreTime;

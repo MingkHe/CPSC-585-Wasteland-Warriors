@@ -236,32 +236,25 @@ void Gamestate::SpawnEnemy(int ObjectType, int AIType, float x, float y, float z
 	physics_Controller->setPosition(physicsIndex, glm::vec3{ x, y, z });
 	int sceneObjectIndex;
 
-	//Different Enemy Mesh/Texture Types *** Add new mesh/textures to this list ***
+	//Different Enemy Mesh/Texture Types
 	switch (ObjectType) {
 	case 0:
-		//sceneObjectIndex = scene->loadOBJObject("Objects/BladedDragster/bourak.obj", "Objects/BladedDragster/bourak.jpg");
 		sceneObjectIndex = scene->loadCompObjectInstance(vehicleMeshTextureIndices[1]);
-		//sceneObjectIndex = scene->loadOBJObject("Objects/Battle_Car_Package/OBJs/enemy1_oilBarrelCar.obj", "Objects/Battle_Car_Package/tex/AX materiel 1.jpg");
 		break;
 	case 1:
 		sceneObjectIndex = scene->loadCompObjectInstance(vehicleMeshTextureIndices[2]);
-		//sceneObjectIndex = scene->loadOBJObject("Objects/Battle_Car_Package/OBJs/enemy2_truck.obj", "Objects/Battle_Car_Package/tex/Battle Jip.jpg");
 		break;
 	case 2:
 		sceneObjectIndex = scene->loadCompObjectInstance(vehicleMeshTextureIndices[3]);
-		//sceneObjectIndex = scene->loadOBJObject("Objects/Battle_Car_Package/OBJs/enemy3_bigBug.obj", "Objects/Battle_Car_Package/tex/Battle Toscar.jpg");
 		break;
 	case 3:
 		sceneObjectIndex = scene->loadCompObjectInstance(vehicleMeshTextureIndices[4]);
-		//sceneObjectIndex = scene->loadOBJObject("Objects/Battle_Car_Package/OBJs/enemy4_dragster.obj", "Objects/Battle_Car_Package/tex/4X Car.jpg");
 		break;
 	case 4:
 		sceneObjectIndex = scene->loadCompObjectInstance(vehicleMeshTextureIndices[5]);
-		//sceneObjectIndex = scene->loadOBJObject("Objects/Battle_Car_Package/OBJs/enemy5_bigTruck.obj", "Objects/Battle_Car_Package/tex/Small Truck.jpg");
 		break;
 	case 5:
 		sceneObjectIndex = scene->loadCompObjectInstance(vehicleMeshTextureIndices[6]);
-		//sceneObjectIndex = scene->loadOBJObject("Objects/Battle_Car_Package/OBJs/bigBadBoss.obj", "Objects/Battle_Car_Package/tex/Truck Tex.jpg");
 		break;
 	}
 
@@ -295,6 +288,20 @@ void Gamestate::DespawnEnemy(Vehicle* vehicle) {
 	vehicle->setActive(0);
 	int offset = vehicle->physicsIndex;
 	physics_Controller->setPosition(vehicle->physicsIndex, glm::vec3{20 * offset, -20, 0});
+}
+
+void Gamestate::DespawnObject(Object* Object) {
+
+	glm::mat4 transformMatrix = glm::mat4(
+		2.f, 0.f, 0.f, 0.f,
+		0.f, 2.f, 0.f, 0.f,
+		0.f, 0.f, 2.f, 0.f,
+		0.f, -20.0f, 0.f, 1.f
+	);
+
+	scene->allWorldCompObjects[Object->sceneObjectIndex].subObjects[0].transform = transformMatrix;  //Change location of graphic to out of sight
+	int offset = Object->physicsIndex;
+	physics_Controller->setPosition(Object->physicsIndex, glm::vec3{ 20 * offset, -20, 0 });
 }
 
 void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse) {

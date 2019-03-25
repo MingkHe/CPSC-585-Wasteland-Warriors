@@ -24,7 +24,7 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	shadowshaderProgram = ShaderTools::InitializeShaders("../shaders/shadowMapVertex.glsl", "../shaders/shadowMapFragment.glsl");
 	
 	textShaderProgram = ShaderTools::InitializeShaders("../shaders/texVertex.glsl", "../shaders/texFragment.glsl");
-
+	float aspect_ratio = game_state->window_height / game_state->window_width;
 	health.verts.push_back(glm::vec3(.5f, .8f, 0.f));
 	health.verts.push_back(glm::vec3(.5f, .9f, 0.f));
 	health.verts.push_back(glm::vec3(.9f, .8f, 0.f));
@@ -115,8 +115,8 @@ RenderingEngine::~RenderingEngine() {
 }
 
 void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objects) {
-	glm::mat4 perspectiveMatrix = glm::perspective(PI_F*.4f, (float)game_state->window_height / (float)game_state->window_width, .1f, 750.f); // last argument changed from 200 to 500 to increase view range
-	glm::mat4 depthperspectiveMatrix = glm::perspective(PI_F*.1f, (float)game_state->window_height / (float)game_state->window_width, 50.f, 250.f);
+	glm::mat4 perspectiveMatrix = glm::perspective(PI_F*.4f, (float)game_state->window_width / (float)game_state->window_height, .1f, 750.f); // last argument changed from 200 to 500 to increase view range
+	glm::mat4 depthperspectiveMatrix = glm::perspective(PI_F*.2f, (float)game_state->window_width / (float)game_state->window_height, 50.f, 250.f);
 	//setting up framebuffer stuff
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
@@ -230,9 +230,9 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	glBindVertexArray(0);
 
 	//render health bar
-	GLint healthGL = glGetUniformLocation(healthshaderProgram, "health");
 	glUseProgram(healthshaderProgram);
-	glUniform1f(healthGL, game_state->playerVehicle.health);
+	glUniform1f(glGetUniformLocation(healthshaderProgram, "health"), game_state->playerVehicle.health);
+	glUniform1f(glGetUniformLocation(healthshaderProgram, "maxhealth"), 100);
 	glBindVertexArray(health.vao);
 	glDrawArrays(health.drawMode, 0, health.verts.size());
 

@@ -65,6 +65,34 @@ void Gamestate::InstantiateAllMeshes_Textures() {
 	}
 }
 
+void Gamestate::InstantiateAllMeshes_Textures_Map() {
+	//Initialize Map Meshes & Textures
+	for (int i = 0; i < 1; i++) {
+		mapMeshTextureIndices[i] = scene->loadOBJObjectInstance(mapMeshList[i], mapTextureList[i]);
+	}
+}
+
+void Gamestate::InstantiateAllMeshes_Textures_Static() {
+	//Initialize Static Object Meshes & Textures
+	for (int i = 0; i < 8; i++) {
+		staticObjMeshTextureIndices[i] = scene->loadOBJObjectInstance(staticObjMeshList[i], staticObjTextureList[i]);
+	}
+}
+
+void Gamestate::InstantiateAllMeshes_Textures_Dynamic() {
+	//Initialize Dynamic Object Meshes & Textures
+	for (int i = 0; i < 2; i++) {
+		dynamicObjMeshTextureIndices[i] = scene->loadOBJObjectInstance(dynamicObjMeshList[i], dynamicObjTextureList[i]);
+	}
+}
+
+void Gamestate::InstantiateAllMeshes_Textures_Vehicle() {
+	//Initialize Vehicle Meshes & Textures
+	for (int i = 0; i < 7; i++) {
+		vehicleMeshTextureIndices[i] = scene->loadOBJObjectInstance(vehicleMeshList[i], vehicleTextureList[i]);
+	}
+}
+
 void Gamestate::SpawnMap() {
 	int sceneObjectIndex = scene->loadCompObjectInstance(mapMeshTextureIndices[0]);
 	//int sceneObjectIndex = scene->loadOBJObject(mapMeshList[0], mapTextureList[0]);

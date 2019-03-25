@@ -91,8 +91,8 @@ glm::mat4 Camera::backviewMatrix() const {
 		+ (gameState->playerVehicle.heading.z - gameState->playerVehicle.direction.z)*(gameState->playerVehicle.heading.z - gameState->playerVehicle.direction.z);
 
 
-	float distanceBehindCar = 1.f;
-	float distanceAboveCar = 0.75f;
+	float distanceBehindCar = 4.f;
+	float distanceAboveCar = 1.f;
 
 	//Rotation
 	float angle;

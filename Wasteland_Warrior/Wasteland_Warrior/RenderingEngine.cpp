@@ -134,9 +134,9 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 		if (i == game_state->skyboxIndex) {
 			continue;
 		}
-		glUniformMatrix4fv(transformGL, 1, false, glm::value_ptr(objects[i].geometry[0].transform));
-		glBindVertexArray(objects[i].geometry[0].vao);
-		glDrawArrays(objects[i].geometry[0].drawMode, 0, objects[i].geometry[0].verts.size());
+		glUniformMatrix4fv(transformGL, 1, false, glm::value_ptr(objects[i].subObjects[0].transform));
+		glBindVertexArray(objects[i].subObjects[0].vao);
+		glDrawArrays(objects[i].subObjects[0].drawMode, 0, objects[i].subObjects[0].verts.size());
 	}
 	
 	//Clears the screen to a dark grey background
@@ -177,16 +177,16 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 		else {
 			glUniform1i(glGetUniformLocation(shaderProgram, "isSkybox"), 0);
 		}
-		glUniformMatrix4fv(transformGL, 1, false, glm::value_ptr(objects[i].geometry[0].transform));
+		glUniformMatrix4fv(transformGL, 1, false, glm::value_ptr(objects[i].subObjects[0].transform));
 		//bind the texture
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, objects[i].geometry[0].texture.textureID);
+		glBindTexture(GL_TEXTURE_2D, objects[i].subObjects[0].texture.textureID);
 
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, shadow_buffer.depthTextureID);
 
-		glBindVertexArray(objects[i].geometry[0].vao);
-		glDrawArrays(objects[i].geometry[0].drawMode, 0, objects[i].geometry[0].verts.size());
+		glBindVertexArray(objects[i].subObjects[0].vao);
+		glDrawArrays(objects[i].subObjects[0].drawMode, 0, objects[i].subObjects[0].verts.size());
 	}
 
 	//draw actual frame
@@ -201,16 +201,16 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 		else {
 			glUniform1i(glGetUniformLocation(shaderProgram, "isSkybox"), 0);
 		}
-		glUniformMatrix4fv(transformGL, 1, false, glm::value_ptr(objects[i].geometry[0].transform));
+		glUniformMatrix4fv(transformGL, 1, false, glm::value_ptr(objects[i].subObjects[0].transform));
 		//bind the texture
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, objects[i].geometry[0].texture.textureID);
+		glBindTexture(GL_TEXTURE_2D, objects[i].subObjects[0].texture.textureID);
 
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, shadow_buffer.depthTextureID);
 
-		glBindVertexArray(objects[i].geometry[0].vao);
-		glDrawArrays(objects[i].geometry[0].drawMode, 0, objects[i].geometry[0].verts.size());
+		glBindVertexArray(objects[i].subObjects[0].vao);
+		glDrawArrays(objects[i].subObjects[0].drawMode, 0, objects[i].subObjects[0].verts.size());
 
 		// reset state to default (no shader or geometry bound)
 	}
@@ -250,7 +250,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	if(game_state->Enemies.size()!=0)
 		glUniform2fv(enemiesGL, enemy_locations.size(), &(enemy_locations[0].x));
 	glUniform2f(playerposGL, game_state->playerVehicle.position.x, game_state->playerVehicle.position.z);
-	glUniform2f(playerdirGL, game_state->playerVehicle.direction.x, game_state->playerVehicle.direction.y);
+	glUniform2f(playerdirGL, game_state->playerVehicle.direction.x, game_state->playerVehicle.direction.z);
 	glUniform1i(numenemiesGL, enemy_locations.size());
 	glUniform1f(radar_distGL, game_state->radar_view);
 	glBindVertexArray(radar.vao);
@@ -534,7 +534,7 @@ void RenderingEngine::updateText() {
 		}
     
 		if (game_state->powerText) {
-			pushTextObj(texObjects, "You are heal to full health!", 0.3f*game_state->window_width, 0.8f*game_state->window_height, 1.0f, glm::vec3(0.7f, 0.2f, 0.2f));
+			pushTextObj(texObjects, "You have been healed to full health!", 0.3f*game_state->window_width, 0.8f*game_state->window_height, 1.0f, glm::vec3(0.7f, 0.2f, 0.2f));
 		}
 	}
 
@@ -549,7 +549,7 @@ void RenderingEngine::updateText() {
 	}
 
 	if (game_state->UIMode == "Loading") {
-		pushTextObj(texObjects, "%" + std::to_string(game_state->loadingPercentage), 0.7f*game_state->window_width, 0.315f*game_state->window_height, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+		pushTextObj(texObjects, std::to_string(game_state->loadingPercentage)+"%", 0.7f*game_state->window_width, 0.315f*game_state->window_height, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 	}
 
 	if (game_state->UIMode == "Story") {

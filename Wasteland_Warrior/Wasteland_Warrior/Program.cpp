@@ -99,32 +99,35 @@ void Program::start() {
 	glfwSwapBuffers(window);
 	
 	gameState->SpawnStaticObject(0, 0, 0, 0);
-	gameState->SpawnStaticObject(1, 88, -6.25, 113);
+	gameState->SpawnStaticObject(5, -150, 2, -120);
+	/*gameState->SpawnStaticObject(1, 88, -6.25, 113);
 	gameState->SpawnStaticObject(1, 138, -6.25, 83);
 	gameState->SpawnStaticObject(1, -88, 0, 113);
 	gameState->SpawnStaticObject(1, -108, 0, 93);
-	
+	*/
 	gameState->loadingPercentage = 50;
 	UICL.Update(gameState, window);
 	glfwSwapBuffers(window);
-
-	gameState->SpawnStaticObject(2, 93, -0.75, -45);
+	
+	/*gameState->SpawnStaticObject(2, 93, -0.75, -45);
 	gameState->SpawnStaticObject(3, 63, 0, -25);
 	gameState->SpawnStaticObject(2, 123, -0.75, -95);
 	gameState->SpawnStaticObject(3, 148, 0, -55);
 	gameState->SpawnStaticObject(2, 133, -0.75, -145);
 	gameState->SpawnStaticObject(3, 73, 0, -125);
 	gameState->SpawnStaticObject(4, -150, 4.25, -120);
-
+	*/
 	gameState->loadingPercentage = 75;
 	UICL.Update(gameState, window);
 	glfwSwapBuffers(window);
 	
+	/*
 	//Spawn Power Ups
-	gameState->SpawnDynamicObject(1, 53, 1, -35);
+	/*gameState->SpawnDynamicObject(1, 53, 1, -35);
 	gameState->SpawnDynamicObject(1, -100, 5.25, -100);
 	gameState->SpawnDynamicObject(1, 100, -5.25, 100);
 	gameState->SpawnDynamicObject(1, -100, 1, 100);
+	*/
 
 	//Spawn Player
 	gameState->SpawnPlayer(0, 0, 0);
@@ -201,7 +204,6 @@ void Program::start() {
 	}
 	SDL_CloseAudio();
 	SDL_Quit();
-
 }
 
 void Program::setupWindow() {

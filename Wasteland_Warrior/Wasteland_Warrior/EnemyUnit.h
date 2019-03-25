@@ -16,10 +16,14 @@ public:
 
 	bool CheckForStuck();
 
-	int type;
+	int AIType;
+	int ObjectType;
+
 	int lastMotionTime;
 
 	bool recoveryMode = false;
 	int active = 1;
+
+	glm::vec2 destination = glm::vec2(0.0f, 0.0f);
 };
 

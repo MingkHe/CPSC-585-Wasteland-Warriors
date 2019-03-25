@@ -10,7 +10,7 @@ PlayerUnit::PlayerUnit(int newPhysicsIndex, int newSceneObjectIndex)
 	sceneObjectIndex = newSceneObjectIndex;
 	health = 200;
 
-	heading = glm::vec2(-1, 0);
+	heading = glm::vec3(-1, 0, 0);
 }
 
 

@@ -19,18 +19,50 @@ AI_Interaction::~AI_Interaction()
 int AI_Interaction::Update()
 {
 	//This will later be replaced by an arbitrary point passed in
-	glm::vec3 EntityPosition = gameState->playerVehicle.position;
-	glm::vec2 targetPosition = { EntityPosition.x, EntityPosition.z};
-
+	glm::vec3 PlayerPosition = gameState->playerVehicle.position;
+	glm::vec2 targetPosition = { 0.0f, 0.0f };
 
 	for (int i = 0; i < (int)(gameState->Enemies.size()); i++) {
+		//Enemy information
+		EnemyUnit* enemy = &gameState->Enemies[i];
+		glm::vec3 enemyHeading = glm::normalize(enemy->direction);
+		glm::vec2 enemyPosition = {enemy->position.x, enemy->position.z};
 
-		EnemyUnit enemy = gameState->Enemies[i];
-		glm::vec2 enemyHeading = glm::normalize(enemy.direction);
-		glm::vec2 enemyPosition = {enemy.position.x, enemy.position.z};
+		//std::cout << "Enemy type: " << enemy.type << std::endl;
 
+		float distFromDest = glm::length(enemy->destination - enemyPosition);
+		//std::cout << "Destination: (" << enemy->destination.x << "," << enemy->destination.y << ")" << std::endl;
+		//std::cout << "Location: (" << enemyPosition.x << "," << enemyPosition.y << ")" << std::endl;
+		//std::cout << "distFromDest = " << distFromDest << std::endl;
 
-		float enemyRotation = glm::atan(enemyHeading.y / enemyHeading.x);
+		//Destination information
+		if (enemy->AIType == 0)
+			enemy->destination = glm::vec2(PlayerPosition.x, PlayerPosition.z);
+
+		else if (enemy->AIType == 1) {
+			if ((enemy->destination.x == 0 && enemy->destination.y == 0) ||
+				distFromDest < 10)
+			{
+				int levelLength = 300;
+				int levelWidth = 300;
+				//Enemy has arived at destination, new destination created
+				enemy->destination = glm::vec2((rand()% levelLength)-(levelLength/2), (rand()% levelWidth)-(levelWidth/2));
+				//std::cout << "Destination reached, new destination: (" << enemy->destination.x << "," << enemy->destination.y << ")" << std::endl;
+			}
+		}
+
+		else if (enemy->AIType == 2) {
+			if (distFromDest < 10)
+			{
+				enemy->AIType = 0;
+			}
+		}
+
+		//Set target
+		targetPosition = enemy->destination;
+
+		//Determin turn direction
+		float enemyRotation = glm::atan(enemyHeading.z / enemyHeading.x);
 		if (enemyHeading.x < 0 && enemyRotation > 0)
 			enemyRotation = enemyRotation -(float)M_PI;
 

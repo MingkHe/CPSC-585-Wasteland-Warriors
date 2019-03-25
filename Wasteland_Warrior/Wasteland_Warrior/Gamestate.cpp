@@ -44,27 +44,32 @@ Gamestate::~Gamestate()
 {
 }
 
+void Gamestate::InstantiateAllMeshes_Textures() {
+
+}
+
 void Gamestate::SpawnMap() {
-	int sceneObjectIndex = scene->loadOBJObject("Objects/WorldMapV2.obj", "Textures/sandTexture.jpg");
-	int vertsSize = scene->objects[sceneObjectIndex].geometry[0].vertsPhys.size();
+	int sceneObjectIndex = scene->loadOBJObject("Objects/WorldMapV3Test.obj", "Textures/sandTexture.jpg");
+	std::cout << sceneObjectIndex  << "Hello"<< std::endl;
+	int vertsSize = scene->allWorldCompObjects[0].subObjects[0].vertsPhys.size();
 	PxVec3* vertsPhysArray = new PxVec3[vertsSize];
 	glm::vec3 vertHolder = { -1,1,1 };
 	for (int i = 0; i < vertsSize; i++) {
-		vertHolder = scene->objects[sceneObjectIndex].geometry[0].vertsPhys[i];
+		vertHolder = scene->allWorldCompObjects[sceneObjectIndex].subObjects[0].vertsPhys[i];
 		vertsPhysArray[i] = PxVec3(vertHolder.x, vertHolder.y, vertHolder.z);
 	}
 
-	int faceVertsSize = scene->objects[sceneObjectIndex].geometry[0].faceVertexIndices.size();
+	int faceVertsSize = scene->allWorldCompObjects[sceneObjectIndex].subObjects[0].faceVertexIndices.size();
 	PxU32* faceVertsPhys = new PxU32[faceVertsSize]; 
 	PxU32 faceVertHolder = 0;
 	int index = 0;
 	for (int i = 0; i < faceVertsSize; i++) {
-		faceVertHolder = scene->objects[sceneObjectIndex].geometry[0].faceVertexIndices[i];
+		faceVertHolder = scene->allWorldCompObjects[sceneObjectIndex].subObjects[0].faceVertexIndices[i];
 		faceVertHolder--;
 		faceVertsPhys[i] = PxU32(faceVertHolder);
 
 	}
-	map.physicsIndex = physics_Controller->createMap(vertsPhysArray, vertsSize, faceVertsPhys, faceVertsSize/3);
+	mapGroundPhysicsIndex = physics_Controller->createMap(vertsPhysArray, vertsSize, faceVertsPhys, faceVertsSize/3);
 }
 
 void Gamestate::SpawnStaticObject(int ObjectType, float x, float y, float z) {
@@ -86,24 +91,31 @@ void Gamestate::SpawnStaticObject(int ObjectType, float x, float y, float z) {
 	else if (ObjectType == 4) {
 		sceneObjectIndex = scene->loadOBJObject("Objects/Building1/building_lowpoly.obj", "Objects/Building1/building_lowpoly_texture.jpg");
 	}
+	else if (ObjectType == 4) {
+		sceneObjectIndex = scene->loadOBJObject("Objects/Building1/building_lowpoly.obj", "Objects/Building1/building_lowpoly_texture.jpg");
+	}
+	else if (ObjectType == 5) {
+		sceneObjectIndex = scene->loadOBJObject("Objects/checkpointMarker.obj", "Textures/blueSmoke.jpg");
+	}
+	
 	else {
 		objectExists = false;
 	}
 	if (objectExists) {
-		int vertsSize = scene->objects[sceneObjectIndex].geometry[0].vertsPhys.size();
+		int vertsSize = scene->allWorldCompObjects[sceneObjectIndex].subObjects[0].vertsPhys.size();
 		PxVec3* vertsPhysArray = new PxVec3[vertsSize];
 		glm::vec3 vertHolder = { -1,1,1 };
 		for (int i = 0; i < vertsSize; i++) {
-			vertHolder = scene->objects[sceneObjectIndex].geometry[0].vertsPhys[i];
+			vertHolder = scene->allWorldCompObjects[sceneObjectIndex].subObjects[0].vertsPhys[i];
 			vertsPhysArray[i] = PxVec3(vertHolder.x, vertHolder.y, vertHolder.z);
 		}
 
-		int faceVertsSize = scene->objects[sceneObjectIndex].geometry[0].faceVertexIndices.size();
+		int faceVertsSize = scene->allWorldCompObjects[sceneObjectIndex].subObjects[0].faceVertexIndices.size();
 		PxU32* faceVertsPhys = new PxU32[faceVertsSize];
 		PxU32 faceVertHolder = 0;
 		int index = 0;
 		for (int i = 0; i < faceVertsSize; i++) {
-			faceVertHolder = scene->objects[sceneObjectIndex].geometry[0].faceVertexIndices[i];
+			faceVertHolder = scene->allWorldCompObjects[sceneObjectIndex].subObjects[0].faceVertexIndices[i];
 			faceVertHolder--;
 			faceVertsPhys[i] = PxU32(faceVertHolder);
 
@@ -115,7 +127,7 @@ void Gamestate::SpawnStaticObject(int ObjectType, float x, float y, float z) {
 			0.f, 0.f, 1.f, 0.f,
 			x, y, z, 1.f
 		);
-		scene->objects[sceneObjectIndex].geometry[0].transform = transformMatrix;
+		scene->allWorldCompObjects[sceneObjectIndex].subObjects[0].transform = transformMatrix;
 
 		StaticObjects.push_back(Object(physicsIndex, sceneObjectIndex, x, y, z));
 	}
@@ -140,16 +152,18 @@ void Gamestate::SpawnDynamicObject(int ObjectType, float x, float y, float z) {
 			(dimensions.x*dimensions.x + dimensions.y*dimensions.y)*mass / 12.0f);
 		int physicsIndex = physics_Controller->createDynamicObject(ObjectType, dimensions, objectMOI, mass, density, x, y, z);
 		glm::mat4 transformMatrix = glm::mat4(
-			2.f, 0.f, 0.f, 0.f,
-			0.f, 2.f, 0.f, 0.f,
-			0.f, 0.f, 2.f, 0.f,
-			x, y+1.0f, z, 1.f
+			1.f, 0.f, 0.f, 0.f,
+			0.f, 1.f, 0.f, 0.f,
+			0.f, 0.f, 1.f, 0.f,
+			x, y, z, 1.f
 		);
-		scene->objects[sceneObjectIndex].geometry[0].transform = transformMatrix;
-		PowerUps.push_back(PowerUp(1, physicsIndex, sceneObjectIndex,  x, y, z));
+		scene->allWorldCompObjects[sceneObjectIndex].subObjects[0].transform = transformMatrix;
+		PowerUp newPowerUp = PowerUp(1, physicsIndex, sceneObjectIndex, x, y, z);
+		newPowerUp.gameStateIndex = PowerUps.size();
+		PowerUps.push_back(newPowerUp);
 		//DynamicObjects.push_back(Object(physicsIndex, sceneObjectIndex , x, y, z));
 		
-	}
+ 	}
 	else {
 		objectExists = false;
 	}
@@ -164,12 +178,13 @@ void Gamestate::SpawnPlayer(float x, float y, float z) {
 }
 
 
-void Gamestate::SpawnEnemy(int type, float x, float y, float z) {
+void Gamestate::SpawnEnemy(int ObjectType, int AIType, float x, float y, float z) {
 	int physicsIndex = physics_Controller->createEnemyVehicle();
 	physics_Controller->setPosition(physicsIndex, glm::vec3{ x, y, z });
 	int sceneObjectIndex;
-	//Different Enemy Types
-	switch (type) {
+
+	//Different Enemy Mesh/Texture Types *** Add new mesh/textures to this list ***
+	switch (ObjectType) {
 	case 0: 
 		sceneObjectIndex = scene->loadOBJObject("Objects/BladedDragster/bourak.obj", "Objects/BladedDragster/bourak.jpg");
 		break;
@@ -189,6 +204,7 @@ void Gamestate::SpawnEnemy(int type, float x, float y, float z) {
 	
 	EnemyUnit enemy = EnemyUnit(physicsIndex, sceneObjectIndex);
 	enemy.gameStateIndex = Enemies.size();
+	enemy.AIType = AIType;
 	Enemies.push_back(enemy);
 	pathfindingInputs.push_back(glm::vec2{ 0.0f,0.0f });
 }
@@ -208,16 +224,16 @@ void Gamestate::DespawnEnemy(Vehicle* vehicle) {
 	physics_Controller->setPosition(vehicle->physicsIndex, glm::vec3{20 * offset, -20, 0});
 }
 
-void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse) {
+void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse) {
 	// play sound when collision happen
 	this->carCrash_sound = true;
 
 	//Calculate "attack levels", how well the direction of the vehicle aligns with the axis of impulse
-	glm::vec2 normalizedImpulse = glm::normalize(impulse);
+	glm::vec2 normalizedImpulse = glm::normalize(glm::vec2(impulse.x, impulse.z));
 	float attackLevelThreshold = 0.9f;
-	float entity1AttackLevel = glm::dot(entity1->direction, normalizedImpulse);
+	float entity1AttackLevel = glm::dot(entity1->direction, glm::vec3(normalizedImpulse.x,0, normalizedImpulse.y));
 	std::cout << "Entity 1 attack level: " << entity1AttackLevel << std::endl;
-	float entity2AttackLevel = glm::dot(entity2->direction, normalizedImpulse);
+	float entity2AttackLevel = glm::dot(entity2->direction, glm::vec3(normalizedImpulse.x, 0, normalizedImpulse.y));
 	std::cout << "Entity 2 attack level: " << entity2AttackLevel << std::endl;
 
 	if (entity1 == &playerVehicle)
@@ -238,6 +254,7 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse)
 
 	float damageScaling = 700;		//Smaller number means more damage
 	float damage = totalForce / damageScaling;
+	std::cout << "causeing: " << damage << " base damage (if less than 5, no damage dealt)" << std::endl;
 
 
 	//Inflict damage
@@ -248,10 +265,10 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse)
 
 		//Person going slower takes damage
 		if (entity1->speed > entity2->speed) {
-			entity2->health -= damage;
+			entity2->health -= damage * entity1->damageMultiplier;
 		}
 		else{
-			entity1->health -= damage;
+			entity1->health -= damage * entity2->damageMultiplier;
 		}
 	}
 
@@ -260,19 +277,19 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse)
 		(entity2AttackLevel >= attackLevelThreshold && entity1AttackLevel <= -attackLevelThreshold)
 		&& damage > 5.0f) {
 
-		entity1->health -= damage;
-		entity2->health -= damage;
+		entity1->health -= damage * entity2->damageMultiplier;
+		entity2->health -= damage * entity1->damageMultiplier;
 	}
 
 	else {
-		std::cout << "Single collision" << std::endl;
+		//std::cout << "Single collision" << std::endl;
 		//if (abs(entity1AttackLevel) >= attackLevelThreshold && damage > 5.0f) 
 		if (abs(entity1AttackLevel) >= abs(entity2AttackLevel) && damage > 5.0f)
-			entity2->health -= damage;
+			entity2->health -= damage * entity1->damageMultiplier;
 
 		//if (abs(entity2AttackLevel) >= attackLevelThreshold&& damage > 5.0f) 
 		if (abs(entity2AttackLevel) >= abs(entity1AttackLevel) && damage > 5.0f)
-			entity1->health -= totalForce / damageScaling;
+			entity1->health -= damage * entity2->damageMultiplier;
 	}
 
 
@@ -288,13 +305,13 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse)
 		this->carExpo_sound = true;
 
 
-	std::cout << "New health values: " << entity1->health << " | " << entity2->health << std::endl;
+	std::cout << "New health values: " << entity1->health << " | " << entity2->health << std::endl << std::endl;
 }
 
 
 
 void Gamestate::Collision(Vehicle* vehicle, PowerUp* powerUp) {
-	std::cout << "You feel more powerfull!" << std::endl;		//Placeholder
+	std::cout << "Powerup picked up" << std::endl;		//Placeholder
 	
 	glm::mat4 transformMatrix = glm::mat4(
 		2.f, 0.f, 0.f, 0.f,
@@ -303,7 +320,7 @@ void Gamestate::Collision(Vehicle* vehicle, PowerUp* powerUp) {
 		0.f, -3.0f, 0.f, 1.f
 	);
 
-	scene->objects[powerUp->sceneObjectIndex].geometry[0].transform = transformMatrix;  //Change location of graphic to out of sight
+	scene->allWorldCompObjects[powerUp->sceneObjectIndex].subObjects[0].transform = transformMatrix;  //Change location of graphic to out of sight
 	physics_Controller->setPosition(powerUp->physicsIndex, glm::vec3{ 0, -10, 0 });     //Change location of physics to out of way
 
 	//heal the player to full hp
@@ -330,12 +347,13 @@ void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 
 	Entity* entityToUpdate = &Entity();
 	glm::vec4 newDirection = glm::vec4{ 0.0f, 0.0f, 1.0f, 0.0f } *newTransformationMatrix;
 
+
 	bool found = false;
 	if (physicsIndex == playerVehicle.physicsIndex) {
 		found = true;
 
 		entityToUpdate = &playerVehicle;
-		playerVehicle.direction = glm::vec2{ -newDirection.x , newDirection.z };
+		playerVehicle.direction = glm::vec3{ -newDirection.x , newDirection.y, newDirection.z };
 		//std::cout << "Player direction: [" << playerVehicle.direction.x << "," << playerVehicle.direction.y << "]" << std::endl; //Test statement, delete it if you want
 		//std::cout << "Player position:  X:" << newPosition.x << "  Y:" << newPosition.y << "  Z:" << newPosition.z << std::endl; //Test statement, delete it if you want
 	}
@@ -343,7 +361,7 @@ void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 
 
 	for (int i = 0; i < (int)Enemies.size(); i++) {
 		if (physicsIndex == Enemies[i].physicsIndex) {
-			Enemies[i].direction = glm::vec2{ -newDirection.x , newDirection.z };
+			Enemies[i].direction = glm::vec3{ -newDirection.x , newDirection.y, newDirection.z };
 			entityToUpdate = &Enemies[i];
 			found = true;
 		}
@@ -351,16 +369,12 @@ void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 
 
 	for (int i = 0; i < (int)PowerUps.size(); i++) {
 		if (physicsIndex == PowerUps[i].physicsIndex) {
-			//PowerUps[i].direction = glm::vec2{ -newDirection.x , newDirection.z };
+			//PowerUps[i].direction = glm::vec3{ -newDirection.x , newDirection.y, newDirection.z };
 			entityToUpdate = &PowerUps[i];
 			found = true;
 		}
 	}
 
-
-	if (!found){
-		std::cout << "Gamestate failed to locate the physicsIndex, entity not updated" << std::endl;
-	}
 
 	if (found) {
 		entityToUpdate->acceleration = ((newSpeed - entityToUpdate->speed)/60);
@@ -368,7 +382,9 @@ void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 
 		entityToUpdate->position = newPosition;
 		entityToUpdate->transformationMatrix = newTransformationMatrix;
 	}
-
+	else{
+		//std::cout << "Gamestate failed to locate the physicsIndex, entity not updated" << std::endl;
+	}
 
 }
 

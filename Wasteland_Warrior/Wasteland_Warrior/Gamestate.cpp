@@ -284,9 +284,6 @@ void Gamestate::SpawnEnemy(int ObjectType, int AIType, float x, float y, float z
 	case 5:
 		sceneObjectIndex = scene->loadCompObjectInstance(vehicleMeshTextureIndices[6]);
 		break;
-	case 6:
-		sceneObjectIndex = scene->loadCompObjectInstance(vehicleMeshTextureIndices[7]);
-		break;
 	}
 
 	EnemyUnit enemy = EnemyUnit(physicsIndex, sceneObjectIndex);

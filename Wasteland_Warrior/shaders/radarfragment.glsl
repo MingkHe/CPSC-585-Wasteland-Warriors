@@ -7,7 +7,9 @@
 in vec2 position;
 
 uniform vec2 enemies[50];
+uniform vec2 highlights[50];
 uniform int numenemies;
+uniform int numhighlights;
 uniform vec2 playerpos;
 uniform vec2 playerdir;
 uniform float radar_dist;
@@ -31,6 +33,14 @@ void main(void) {
 		point.y *= -1;
 		if(radius_squared(radar_dist*point, position) < 0.005) {
 			FragmentColour = vec4(.9, 0, 0, 0);
+		}
+	}
+	for(int i = 0; i < numhighlights; i++) {
+		vec2 point = highlights[i]-playerpos;
+		point = (point*rot).yx;
+		point.y *= -1;
+		if(radius_squared(radar_dist*point, position) < 0.005) {
+			FragmentColour = vec4(.5, 0, .5, 0);
 		}
 	}
 	if(radius_squared(vec2(0), position) < 0.005) {

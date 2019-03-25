@@ -99,7 +99,8 @@ void Program::start() {
 	glfwSwapBuffers(window);
 	
 	gameState->SpawnStaticObject(0, 0, 0, 0);
-	gameState->SpawnStaticObject(5, -150, 2, -120);
+	gameState->SpawnStaticObject(6, 0, 0, 0);
+	//gameState->SpawnStaticObject(5, -150, 2, -120);
 	/*gameState->SpawnStaticObject(1, 88, -6.25, 113);
 	gameState->SpawnStaticObject(1, 138, -6.25, 83);
 	gameState->SpawnStaticObject(1, -88, 0, 113);

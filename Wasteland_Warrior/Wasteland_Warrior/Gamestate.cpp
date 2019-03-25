@@ -97,6 +97,9 @@ void Gamestate::SpawnStaticObject(int ObjectType, float x, float y, float z) {
 	else if (ObjectType == 5) {
 		sceneObjectIndex = scene->loadOBJObject("Objects/checkpointMarker.obj", "Textures/blueSmoke.jpg");
 	}
+	else if (ObjectType == 6) {
+		sceneObjectIndex = scene->loadOBJObject("Objects/canyonWalls.obj", "Textures/canyonWallTexture.png");
+	}
 	
 	else {
 		objectExists = false;

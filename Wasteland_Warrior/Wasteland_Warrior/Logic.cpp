@@ -74,6 +74,13 @@ void Logic::Update(Gamestate *gameState)
 					for (int i = 0; i < (int)gameState->Enemies.size(); i++) {
 						gameState->DespawnEnemy(&gameState->Enemies[i]);
 					}
+					//Reset Checkpoints
+					for (int i = 0; i < (int)gameState->DynamicObjects.size(); i++) {
+						if (gameState->DynamicObjects[i].type == 0) {
+							gameState->DespawnObject(&gameState->DynamicObjects[i]);
+							gameState->DynamicObjects.erase(gameState->DynamicObjects.begin() + i);
+						}
+					}
 					gameState->Enemies.clear();
 					spawnPowerUps(gameState);
 					gameState->wave = 2;
@@ -121,6 +128,13 @@ void Logic::Update(Gamestate *gameState)
 					for (int i = 0; i < (int)gameState->Enemies.size(); i++) {
 						gameState->DespawnEnemy(&gameState->Enemies[i]);
 					}
+					//Reset Checkpoints
+					for (int i = 0; i < (int)gameState->DynamicObjects.size(); i++) {
+						if (gameState->DynamicObjects[i].type == 0) {
+							gameState->DespawnObject(&gameState->DynamicObjects[i]);
+							gameState->DynamicObjects.erase(gameState->DynamicObjects.begin() + i);
+						}
+					}
 					gameState->Enemies.clear();
 					spawnPowerUps(gameState);
 					gameState->wave = 3;
@@ -160,6 +174,13 @@ void Logic::Update(Gamestate *gameState)
 					for (int i = 0; i < (int)gameState->Enemies.size(); i++) {
 						gameState->DespawnEnemy(&gameState->Enemies[i]);
 					}
+					//Reset Checkpoints
+					for (int i = 0; i < (int)gameState->DynamicObjects.size(); i++) {
+						if (gameState->DynamicObjects[i].type == 0) {
+							gameState->DespawnObject(&gameState->DynamicObjects[i]);
+							gameState->DynamicObjects.erase(gameState->DynamicObjects.begin() + i);
+						}
+					}
 					gameState->Enemies.clear();
 					spawnPowerUps(gameState);
 					gameState->wave = 4;
@@ -198,6 +219,13 @@ void Logic::Update(Gamestate *gameState)
 					for (int i = 0; i < (int)gameState->Enemies.size(); i++) {
 						gameState->DespawnEnemy(&gameState->Enemies[i]);
 					}
+					//Reset Checkpoints
+					for (int i = 0; i < (int)gameState->DynamicObjects.size(); i++) {
+						if (gameState->DynamicObjects[i].type == 0) {
+							gameState->DespawnObject(&gameState->DynamicObjects[i]);
+							gameState->DynamicObjects.erase(gameState->DynamicObjects.begin() + i);
+						}
+					}
 					gameState->Enemies.clear();
 					spawnPowerUps(gameState);
 					gameState->wave = 5;
@@ -235,6 +263,13 @@ void Logic::Update(Gamestate *gameState)
 				if (gameState->checkpoints <= 0) {
 					for (int i = 0; i < (int)gameState->Enemies.size(); i++) {
 						gameState->DespawnEnemy(&gameState->Enemies[i]);
+					}
+					//Reset Checkpoints
+					for (int i = 0; i < (int)gameState->DynamicObjects.size(); i++) {
+						if (gameState->DynamicObjects[i].type == 0) {
+							gameState->DespawnObject(&gameState->DynamicObjects[i]);
+							gameState->DynamicObjects.erase(gameState->DynamicObjects.begin() + i);
+						}
 					}
 					gameState->Enemies.clear();
 					spawnPowerUps(gameState);

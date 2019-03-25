@@ -268,6 +268,7 @@ public:
 	void SpawnEnemy(int ObjectType, int AIType, float x, float y, float z, float xRot, float yRot, float zRot);
 	void DespawnEnemy(Vehicle* vehicle);
 	void DespawnObject(Object* object);
+	void DespawnCheckpoint(PowerUp* checkpoint);
 
 	void Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse);
 	void Collision(Vehicle* vehicle, PowerUp* powerUp);

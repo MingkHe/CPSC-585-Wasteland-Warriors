@@ -337,6 +337,19 @@ void Gamestate::DespawnObject(Object* Object) {
 	physics_Controller->setPosition(Object->physicsIndex, glm::vec3{ 20 * offset, -20, 0 });
 }
 
+void Gamestate::DespawnCheckpoint(PowerUp* powerUp) {
+
+	glm::mat4 transformMatrix = glm::mat4(
+		2.f, 0.f, 0.f, 0.f,
+		0.f, 2.f, 0.f, 0.f,
+		0.f, 0.f, 2.f, 0.f,
+		-1000.f, -100.0f, -100.f, 1.f
+	);
+
+	scene->allWorldCompObjects[powerUp->sceneObjectIndex].subObjects[0].transform = transformMatrix;  //Change location of graphic to out of sight
+	physics_Controller->setPosition(powerUp->physicsIndex, glm::vec3{ -1000, -1000, -1000 });     //Change location of physics to out of way
+}
+
 void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse) {
 	// play sound when collision happen
 	this->carCrash_sound = true;
@@ -446,7 +459,6 @@ void Gamestate::Collision(Vehicle* vehicle, PowerUp* powerUp) {
 		break;
 	case 2://Max health
 		vehicle->maxhealth = vehicle->maxhealth + 10;
-		break;
 	case 3://Health boost
 		vehicle->health = vehicle->health + 10;
 		break;

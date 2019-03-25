@@ -146,6 +146,7 @@ void Program::start() {
 	gameState->SpawnStaticObject(7, 0, 0, 173, 0, 90, 0);
 	gameState->SpawnStaticObject(8, 0, 0, 190, 0, 180, 0);
 	gameState->SpawnStaticObject(8, 100, 0, -180, 0, 0, 0);
+	gameState->SpawnStaticObject(9, -30, 0, 40, 0, 0, 0);
 	
 
 	

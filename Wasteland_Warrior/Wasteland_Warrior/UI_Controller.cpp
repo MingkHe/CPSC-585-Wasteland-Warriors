@@ -354,7 +354,7 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 		//delete mainScene_quit;
 		delete mainScene_pointer;
 
-		if (pointerState == 0 && input == "ENTER" || pausePointerState == 0 && input == "A") {
+		if (pointerState == 0 && input == "ENTER" || pointerState == 0 && input == "A") {
 			GameState->UIMode = "Story";
 			GameState->ui_enter = true;
 			GameState->carStart_sound = true;

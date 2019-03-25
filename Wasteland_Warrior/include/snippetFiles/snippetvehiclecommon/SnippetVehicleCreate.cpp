@@ -185,6 +185,7 @@ PxRigidStatic* createRigidTriangleMeshStatic(const PxVec3* verts, const PxU32 nu
 	//Set the query filter data of the ground plane so that the vehicle raycasts can hit the ground.
 	PxFilterData qryFilterData;
 	setupNonDrivableSurface(qryFilterData);
+	//setupDrivableSurface(qryFilterData);
 	shapes->setQueryFilterData(qryFilterData);
 	PxFilterData obstacleSimFilterData = PxFilterData(COLLISION_FLAG_OBSTACLE, COLLISION_FLAG_OBSTACLE_AGAINST, 0, 0);
 	//Set the simulation filter data of the ground plane so that it collides with the chassis of a vehicle but not the wheels.

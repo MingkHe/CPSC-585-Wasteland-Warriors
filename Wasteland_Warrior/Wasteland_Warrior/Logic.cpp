@@ -47,7 +47,7 @@ void Logic::Update(Gamestate *gameState)
 		gameState->UIMode = "Lose";
 		gameState->ui_gameplay = false;
 		gameState->restart = true;
-		gameState->score = 2160010000 / (score + 1);
+		gameState->score = (score / 25) * 10;
 		gameState->scoreTime = score / 60;
 	} 
 	else {
@@ -55,9 +55,27 @@ void Logic::Update(Gamestate *gameState)
 		/*--- WAVE 1 ---*/
 		if (gameState->wave == 1) {
 			enemiesLeft = checkEnemyHealth(gameState);
-			if (enemiesLeft == 0) {
-				spawnPowerUps(gameState);
-				gameState->wave = 2;
+			if (gameState->gameMode == "Checkpoint") {
+				if (gameState->checkpoints <= 0) {
+					for (int i = 0; i < (int)gameState->Enemies.size(); i++) {
+						gameState->DespawnEnemy(&gameState->Enemies[i]);
+						gameState->Enemies.erase(gameState->Enemies.begin() + i);
+					}
+					spawnPowerUps(gameState);
+					gameState->wave = 2;
+				}
+			}
+			else if (gameState->gameMode == "Head Hunter") {
+				if (enemiesLeft == 0) {
+					spawnPowerUps(gameState);
+					gameState->wave = 2;
+				}
+			}
+			else {
+				if (enemiesLeft == 0) {
+					spawnPowerUps(gameState);
+					gameState->wave = 2;
+				}
 			}
 		}
 
@@ -76,9 +94,27 @@ void Logic::Update(Gamestate *gameState)
 		/*--- WAVE 2 ---*/
 		else if (gameState->wave == 2) {
 			enemiesLeft = checkEnemyHealth(gameState);
-			if (enemiesLeft == 0) {
-				spawnPowerUps(gameState);
-				gameState->wave = 3;
+			if (gameState->gameMode == "Checkpoint") {
+				if (gameState->checkpoints <= 0) {
+					for (int i = 0; i < (int)gameState->Enemies.size(); i++) {
+						gameState->DespawnEnemy(&gameState->Enemies[i]);
+						gameState->Enemies.erase(gameState->Enemies.begin() + i);
+					}
+					spawnPowerUps(gameState);
+					gameState->wave = 3;
+				}
+			}
+			else if (gameState->gameMode == "Head Hunter") {
+				if (enemiesLeft == 0) {
+					spawnPowerUps(gameState);
+					gameState->wave = 3;
+				}
+			}
+			else {
+				if (enemiesLeft == 0) {
+					spawnPowerUps(gameState);
+					gameState->wave = 3;
+				}
 			}
 		}
 
@@ -97,9 +133,27 @@ void Logic::Update(Gamestate *gameState)
 		/*--- WAVE 3 ---*/
 		else if (gameState->wave == 3) {
 			enemiesLeft = checkEnemyHealth(gameState);
-			if (enemiesLeft == 0) {
-				spawnPowerUps(gameState);
-				gameState->wave = 4;
+			if (gameState->gameMode == "Checkpoint") {
+				if (gameState->checkpoints <= 0) {
+					for (int i = 0; i < (int)gameState->Enemies.size(); i++) {
+						gameState->DespawnEnemy(&gameState->Enemies[i]);
+						gameState->Enemies.erase(gameState->Enemies.begin() + i);
+					}
+					spawnPowerUps(gameState);
+					gameState->wave = 4;
+				}
+			}
+			else if (gameState->gameMode == "Head Hunter") {
+				if (enemiesLeft == 0) {
+					spawnPowerUps(gameState);
+					gameState->wave = 4;
+				}
+			}
+			else {
+				if (enemiesLeft == 0) {
+					spawnPowerUps(gameState);
+					gameState->wave = 4;
+				}
 			}
 		}
 
@@ -117,9 +171,27 @@ void Logic::Update(Gamestate *gameState)
 		/*--- WAVE 4 ---*/
 		else if (gameState->wave == 4) {
 			enemiesLeft = checkEnemyHealth(gameState);
-			if (enemiesLeft == 0) {
-				spawnPowerUps(gameState);
-				gameState->wave = 5;
+			if (gameState->gameMode == "Checkpoint") {
+				if (gameState->checkpoints <= 0) {
+					for (int i = 0; i < (int)gameState->Enemies.size(); i++) {
+						gameState->DespawnEnemy(&gameState->Enemies[i]);
+						gameState->Enemies.erase(gameState->Enemies.begin() + i);
+					}
+					spawnPowerUps(gameState);
+					gameState->wave = 5;
+				}
+			}
+			else if (gameState->gameMode == "Head Hunter") {
+				if (enemiesLeft == 0) {
+					spawnPowerUps(gameState);
+					gameState->wave = 5;
+				}
+			}
+			else {
+				if (enemiesLeft == 0) {
+					spawnPowerUps(gameState);
+					gameState->wave = 5;
+				}
 			}
 		}
 
@@ -137,9 +209,27 @@ void Logic::Update(Gamestate *gameState)
 		/*--- WAVE 5 ---*/
 		else if (gameState->wave == 5) {
 			enemiesLeft = checkEnemyHealth(gameState);
-			if (enemiesLeft == 0) {
-				spawnPowerUps(gameState);
-				gameState->wave = -1;
+			if (gameState->gameMode == "Checkpoint") {
+				if (gameState->checkpoints <= 0) {
+					for (int i = 0; i < (int)gameState->Enemies.size(); i++) {
+						gameState->DespawnEnemy(&gameState->Enemies[i]);
+						gameState->Enemies.erase(gameState->Enemies.begin() + i);
+					}
+					spawnPowerUps(gameState);
+					gameState->wave = -1;
+				}
+			}
+			else if (gameState->gameMode == "Head Hunter") {
+				if (enemiesLeft == 0) {
+					spawnPowerUps(gameState);
+					gameState->wave = -1;
+				}
+			}
+			else {
+				if (enemiesLeft == 0) {
+					spawnPowerUps(gameState);
+					gameState->wave = -1;
+				}
 			}
 		}
 
@@ -206,7 +296,7 @@ void Logic::spawnPowerUps(Gamestate *gameState) {
 void Logic::modeSelection(Gamestate *gameState) {
 
 	srand((unsigned int)time(NULL));
-	switch (rand() % 5 + 1) {
+	switch (2) {//rand() % 5 + 1) {
 	case 1:
 		survival(gameState);
 		gameState->gameMode = "Survival";
@@ -260,26 +350,27 @@ void Logic::checkpoint(Gamestate *gameState) {
 		switch (i % 4) {
 		case 0:
 			gameState->SpawnEnemy(0, 0, 35.f + (i * 10.f), 5.f, 35.f + (i * 10.f));
-			gameState->SpawnDynamicObject(1, 45.f + (i * 10.f), 0.f, 45.f + (i * 10.f));
+			gameState->SpawnDynamicObject(2, 45.f + (i * 10.f), 0.f, 45.f + (i * 10.f));
 			gameState->Enemies[i].health = 50.f;
 			break;
 		case 1:
 			gameState->SpawnEnemy(0, 0, -35.f - (i * 10.f), 5.f, 35.f + (i * 10.f));
-			gameState->SpawnDynamicObject(1, -45.f - (i * 10.f), 1.f, 45.f + (i * 10.f));
+			gameState->SpawnDynamicObject(2, -45.f - (i * 10.f), 1.f, 45.f + (i * 10.f));
 			gameState->Enemies[i].health = 50.f;
 			break;
 		case 2:
 			gameState->SpawnEnemy(0, 0, 35.f + (i * 10.f), 5.f, -35.f - (i * 10.f));
-			gameState->SpawnDynamicObject(1, 45.f + (i * 10.f), 1.f, -45.f - (i * 10.f));
+			gameState->SpawnDynamicObject(2, 45.f + (i * 10.f), 1.f, -45.f - (i * 10.f));
 			gameState->Enemies[i].health = 50.f;
 			break;
 		case 3:
 			gameState->SpawnEnemy(0, 0, -35.f - (i * 10.f), 5.f, -35.f - (i * 10.f));
-			gameState->SpawnDynamicObject(1, -45.f - (i * 10.f), 1.f, -45.f - (i * 10.f));
+			gameState->SpawnDynamicObject(2, -45.f - (i * 10.f), 1.f, -45.f - (i * 10.f));
 			gameState->Enemies[i].health = 50.f;
 			break;
 		}
 	}
+	gameState->checkpoints = gameState->wave;
 }
 
 //Payload

@@ -38,6 +38,7 @@ Gamestate::Gamestate()
 	wave = 0;
 	restart = false;
 	enemiesLeft = 0;
+	checkpoints = 0;
 }
 
 Gamestate::~Gamestate()
@@ -91,9 +92,6 @@ void Gamestate::SpawnStaticObject(int ObjectType, float x, float y, float z) {
 	else if (ObjectType == 4) {
 		sceneObjectIndex = scene->loadOBJObject("Objects/Building1/building_lowpoly.obj", "Objects/Building1/building_lowpoly_texture.jpg");
 	}
-	else if (ObjectType == 4) {
-		sceneObjectIndex = scene->loadOBJObject("Objects/Building1/building_lowpoly.obj", "Objects/Building1/building_lowpoly_texture.jpg");
-	}
 	else if (ObjectType == 5) {
 		sceneObjectIndex = scene->loadOBJObject("Objects/checkpointMarker.obj", "Textures/blueSmoke.jpg");
 	}
@@ -135,7 +133,9 @@ void Gamestate::SpawnStaticObject(int ObjectType, float x, float y, float z) {
 		);
 		scene->allWorldCompObjects[sceneObjectIndex].subObjects[0].transform = transformMatrix;
 
-		StaticObjects.push_back(Object(physicsIndex, sceneObjectIndex, x, y, z));
+		Object staticObject = Object(physicsIndex, sceneObjectIndex, x, y, z);
+		staticObject.type = ObjectType;
+		StaticObjects.push_back(staticObject);
 	}
 	
 }
@@ -144,10 +144,20 @@ void Gamestate::SpawnDynamicObject(int ObjectType, float x, float y, float z) {
 	bool objectExists = true;
 	int sceneObjectIndex = 0;
 	PxReal density = 1;
-	if (ObjectType == 1) {
 
 		//CreateBoxObject
-		sceneObjectIndex = scene->loadOBJObject("Objects/Realistic_Box_Model/box_realistic.obj", "Objects/Realistic_Box_Model/box_texture_color_red.png");
+		switch (ObjectType)
+		{
+		case 1:
+			sceneObjectIndex = scene->loadOBJObject("Objects/Realistic_Box_Model/box_realistic.obj", "Objects/Realistic_Box_Model/box_texture_color_red.png");
+			break;
+		case 2:
+			sceneObjectIndex = scene->loadOBJObject("Objects/checkpointMarker.obj", "Textures/blueSmoke.jpg");
+			break;
+		default:
+			objectExists = false;
+			break;
+		}
 
 		density = 1;
 		PxVec3 dimensions = { 2,2,2 };
@@ -166,13 +176,10 @@ void Gamestate::SpawnDynamicObject(int ObjectType, float x, float y, float z) {
 		scene->allWorldCompObjects[sceneObjectIndex].subObjects[0].transform = transformMatrix;
 		PowerUp newPowerUp = PowerUp(1, physicsIndex, sceneObjectIndex, x, y, z);
 		newPowerUp.gameStateIndex = PowerUps.size();
+		newPowerUp.type = ObjectType;
 		PowerUps.push_back(newPowerUp);
 		//DynamicObjects.push_back(Object(physicsIndex, sceneObjectIndex , x, y, z));
 		
- 	}
-	else {
-		objectExists = false;
-	}
 }
 
 void Gamestate::SpawnPlayer(float x, float y, float z) {
@@ -332,11 +339,22 @@ void Gamestate::Collision(Vehicle* vehicle, PowerUp* powerUp) {
 	);
 
 	scene->allWorldCompObjects[powerUp->sceneObjectIndex].subObjects[0].transform = transformMatrix;  //Change location of graphic to out of sight
-	physics_Controller->setPosition(powerUp->physicsIndex, glm::vec3{ 0, -10, 0 });     //Change location of physics to out of way
+	physics_Controller->setPosition(powerUp->physicsIndex, glm::vec3{ 0, -1000, 0 });     //Change location of physics to out of way
 
-	//heal the player to full hp
-	printf("healing full hp!\n");
-	vehicle->health = 100;
+	switch (powerUp->type)
+		{
+	case 1:
+		//player fully healed
+		vehicle->health = 100;
+		break;
+	case 2:
+		//Checkpoint
+		checkpoints--;
+	default:
+		break;
+		}
+
+	powerUpType = powerUp->type;
 
 	// play sound when car collect power up
 	this->carPowerUp_sound = true;
@@ -348,6 +366,20 @@ void Gamestate::Collision(Vehicle* vehicle, PowerUp* powerUp) {
 
 
 void Gamestate::Collision(Vehicle* vehicle, Object* staticObject) {
+	if (staticObject->type == 5) {
+		checkpoints--;
+
+		glm::mat4 transformMatrix = glm::mat4(
+			2.f, 0.f, 0.f, 0.f,
+			0.f, 2.f, 0.f, 0.f,
+			0.f, 0.f, 2.f, 0.f,
+			0.f, -3.0f, 0.f, 1.f
+		);
+
+		scene->allWorldCompObjects[staticObject->sceneObjectIndex].subObjects[0].transform = transformMatrix;  //Change location of graphic to out of sight
+		physics_Controller->setPosition(staticObject->physicsIndex, glm::vec3{ 0, -10, 0 });     //Change location of physics to out of way
+
+	}
 	std::cout << "You ran into a wall, nice driving :P" << std::endl;	//Placeholder
 
 	// play sound when car crash to static object

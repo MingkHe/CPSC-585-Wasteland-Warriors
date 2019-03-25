@@ -22,7 +22,7 @@ glm::mat4 Camera::viewMatrix() const {
 
 	float dir_head_discr = (gameState->playerVehicle.heading.x - gameState->playerVehicle.direction.x)*(gameState->playerVehicle.heading.x - gameState->playerVehicle.direction.x)
 		+ (gameState->playerVehicle.heading.z - gameState->playerVehicle.direction.z)*(gameState->playerVehicle.heading.z - gameState->playerVehicle.direction.z);
-	if (dir_head_discr > .5 && gameState->playerVehicle.speed > 5) {//change the 5 to a 4 maybe?
+	if (gameState->button == "REVERSE") {
 		forward = -1;
 	}
 

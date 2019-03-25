@@ -459,8 +459,8 @@ void Gamestate::Collision(Vehicle* vehicle, Object* staticObject) {
 void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 newTransformationMatrix, float newSpeed) {
 	Entity* entityToUpdate = &Entity();
 	glm::vec4 newDirection = glm::vec4{ 0.0f, 0.0f, 1.0f, 0.0f } *newTransformationMatrix;
-	float playerOffSet = 1.5f;
-	float enemyOffSet = 1.0f;
+	float playerOffSet = 1.73f;
+	float enemyOffSet = 1.73f;
 
 
 	glm::mat4 pureRotation = newTransformationMatrix;

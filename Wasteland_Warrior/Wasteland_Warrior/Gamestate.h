@@ -177,12 +177,14 @@ public:
 		 "Objects/Battle_Car_Package/tex/Oil Tank.jpg"
 	 };
 
-	int dynamicObjMeshTextureIndices[1];
-	const char* dynamicObjMeshList[1] = {
-	"Objects/Realistic_Box_Model/box_realistic.obj" };
+	int dynamicObjMeshTextureIndices[2];
+	const char* dynamicObjMeshList[2] = {
+	"Objects/Realistic_Box_Model/box_realistic.obj",
+	"Objects/checkpointMarker.obj"};
 
-	const char* dynamicObjTextureList[1] = {
-	"Objects/Realistic_Box_Model/box_texture_color_red.png" };
+	const char* dynamicObjTextureList[2] = {
+	"Objects/Realistic_Box_Model/box_texture_color_red.png", 
+	"Textures/blueSmoke.jpg" };
 
 
 	int vehicleMeshTextureIndices[7];
@@ -220,6 +222,7 @@ public:
 	int wave;
 	bool restart;
 	int enemiesLeft;
+	int checkpoints;
 	int breakSeconds;
 	int score;
 	int scoreTime;
@@ -227,6 +230,8 @@ public:
 
 	int window_width;
 	int window_height;
+
+	int powerUpType;
 
 	//Spawning/Despawning Entities
 

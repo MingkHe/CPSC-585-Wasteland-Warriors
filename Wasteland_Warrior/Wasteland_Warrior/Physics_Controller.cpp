@@ -914,7 +914,7 @@ void Physics_Controller::stepPhysics(bool interactive)
 		for (int index = 0; index <= rigidDynamicActorIndex; index++) {
 			PxActor *actor = userBufferRD[index];
 			if (index == gameState->playerVehicle.physicsIndex) {				
-				if (gContactReportCallback.gContactActor1s[i] == actor || gContactReportCallback.gContactActor2s[i] == actor) {
+				if ((gContactReportCallback.gContactActor1s[i] == actor || gContactReportCallback.gContactActor2s[i] == actor) && vehicle1 == NULL) {
 					vehicle1 = gameState->lookupVUsingPI(index);
 				}
 			}
@@ -925,14 +925,14 @@ void Physics_Controller::stepPhysics(bool interactive)
 			PxActor *actor = userBufferRS[index];
 			//printf("%d\n", index);
 			if (index != gameState->mapGroundPhysicsIndex+1) {
-				if (gContactReportCallback.gContactActor1s[i] == actor || gContactReportCallback.gContactActor2s[i] == actor) {
-					object = new Object();	//Since it does not matter at this point, object refrence is not accurate
+				if ((gContactReportCallback.gContactActor1s[i] == actor || gContactReportCallback.gContactActor2s[i] == actor)){
+					object = gameState->lookupSOUsingPI(index);	//Since it does not matter at this point, object refrence is not accurate
 					//std::cout << "Collision with object with index: " << index << std::endl;
 				}
 			}
 		}
 
-		if (vehicle1 != NULL && object != NULL) {
+		if (vehicle1 != NULL && object != NULL && object->type != 0) {
 			gameState->Collision(vehicle1, object);
 		}
 	}

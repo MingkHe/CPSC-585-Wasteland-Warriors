@@ -98,6 +98,9 @@ void Gamestate::SpawnStaticObject(int ObjectType, float x, float y, float z) {
 	else if (ObjectType == 6) {
 		sceneObjectIndex = scene->loadOBJObject("Objects/canyonWalls.obj", "Textures/canyonWallTexture2.png");
 	}
+	else if (ObjectType == 7) {
+		sceneObjectIndex = scene->loadOBJObject("Objects/Battle_Car_Package/OBJs/staticOilTanker.obj", "Objects/Battle_Car_Package/tex/Oil Tank.jpg");
+	}
 	
 	else {
 		objectExists = false;
@@ -197,19 +200,23 @@ void Gamestate::SpawnEnemy(int ObjectType, int AIType, float x, float y, float z
 	//Different Enemy Mesh/Texture Types *** Add new mesh/textures to this list ***
 	switch (ObjectType) {
 	case 0: 
-		sceneObjectIndex = scene->loadOBJObject("Objects/BladedDragster/bourak.obj", "Objects/BladedDragster/bourak.jpg");
+		//sceneObjectIndex = scene->loadOBJObject("Objects/BladedDragster/bourak.obj", "Objects/BladedDragster/bourak.jpg");
+		sceneObjectIndex = scene->loadOBJObject("Objects/Battle_Car_Package/OBJs/enemy1_oilBarrelCar.obj", "Objects/Battle_Car_Package/tex/AX materiel 1.jpg");
 		break;
 	case 1: 
-		sceneObjectIndex = scene->loadOBJObject("Objects/BladedDragster/bourak.obj", "Objects/BladedDragster/bourak.jpg");
+		sceneObjectIndex = scene->loadOBJObject("Objects/Battle_Car_Package/OBJs/enemy2_truck.obj", "Objects/Battle_Car_Package/tex/Battle Jip.jpg");
 		break;
 	case 2: 
-		sceneObjectIndex = scene->loadOBJObject("Objects/BladedDragster/bourak.obj", "Objects/BladedDragster/bourak.jpg");
+		sceneObjectIndex = scene->loadOBJObject("Objects/Battle_Car_Package/OBJs/enemy3_bigBug.obj", "Objects/Battle_Car_Package/tex/Battle Toscar.jpg");
 		break;
 	case 3: 
-		sceneObjectIndex = scene->loadOBJObject("Objects/BladedDragster/bourak.obj", "Objects/BladedDragster/bourak.jpg");
+		sceneObjectIndex = scene->loadOBJObject("Objects/Battle_Car_Package/OBJs/enemy4_dragster.obj", "Objects/Battle_Car_Package/tex/4X Car.jpg");
 		break;
 	case 4: 
-		sceneObjectIndex = scene->loadOBJObject("Objects/BladedDragster/bourak.obj", "Objects/BladedDragster/bourak.jpg");
+		sceneObjectIndex = scene->loadOBJObject("Objects/Battle_Car_Package/OBJs/enemy5_bigTruck.obj", "Objects/Battle_Car_Package/tex/Small Truck.jpg");
+		break;
+	case 5: 
+		sceneObjectIndex = scene->loadOBJObject("Objects/Battle_Car_Package/OBJs/bigBadBoss.obj", "Objects/Battle_Car_Package/tex/Truck Tex.jpg");
 		break;
 	}
 	
@@ -381,7 +388,13 @@ void Gamestate::Collision(Vehicle* vehicle, Object* staticObject) {
 void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 newTransformationMatrix, float newSpeed) {
 	Entity* entityToUpdate = &Entity();
 	glm::vec4 newDirection = glm::vec4{ 0.0f, 0.0f, 1.0f, 0.0f } *newTransformationMatrix;
+	float playerOffSet = 1.5f;
+	float enemyOffSet = 1.0f;
 
+
+	glm::mat4 pureRotation = newTransformationMatrix;
+	pureRotation[3] = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+	glm::vec4 vehicleNormal = glm::vec4{ 0.0f, 1.0f, 0.0f, 0.0f} *pureRotation;
 
 	bool found = false;
 	if (physicsIndex == playerVehicle.physicsIndex) {
@@ -389,6 +402,9 @@ void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 
 
 		entityToUpdate = &playerVehicle;
 		playerVehicle.direction = glm::vec3{ -newDirection.x , newDirection.y, newDirection.z };
+
+		newTransformationMatrix[3] = newTransformationMatrix[3] - (playerOffSet* vehicleNormal);
+
 		//std::cout << "Player direction: [" << playerVehicle.direction.x << "," << playerVehicle.direction.y << "]" << std::endl; //Test statement, delete it if you want
 		//std::cout << "Player position:  X:" << newPosition.x << "  Y:" << newPosition.y << "  Z:" << newPosition.z << std::endl; //Test statement, delete it if you want
 	}
@@ -398,6 +414,8 @@ void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 
 		if (physicsIndex == Enemies[i].physicsIndex) {
 			Enemies[i].direction = glm::vec3{ -newDirection.x , newDirection.y, newDirection.z };
 			entityToUpdate = &Enemies[i];
+
+			newTransformationMatrix[3] = newTransformationMatrix[3] - (enemyOffSet* vehicleNormal);
 			found = true;
 		}
 	}

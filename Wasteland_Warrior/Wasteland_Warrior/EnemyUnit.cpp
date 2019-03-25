@@ -49,10 +49,13 @@ bool EnemyUnit::CheckForStuck(){
 	else {
 		//std::cout << "Recovery mode ON" << std::endl;
 		if (elapsed_seconds >= 4) {	//For 2 more seconds remain in recovery mode
+
+			if (speed < 1)			//If still stuck
+				forceRelocate = true;
+
 			recoveryMode = false;
 
-			
-			destination = glm::vec2(position.x + (rand() % 60) - 30, position.z + (rand() % 60) - 30);
+			destination = glm::vec2(position.x + (rand() % 60) - 30, position.z + (rand() % 60) - 30);		//Move to a new location before chasing player
 			AIType = 2;
 			//std::cout << "Recovery mode turned OFF" << std::endl;
 			lastMotionTime = (int)(currentTime.time);

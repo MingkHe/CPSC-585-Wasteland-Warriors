@@ -126,10 +126,10 @@ PxF32 playerSteerVsForwardSpeedData[2 * 5] =
 
 PxF32 enemySteerVsForwardSpeedData[2 * 5] =
 {
-	0.0f,		0.3f,
-	5.0f,		0.1f,
-	30.0f,		0.1f,
-	120.0f,		0.05f,
+	0.0f,		0.5f,
+	5.0f,		0.35f,
+	30.0f,		0.2f,
+	120.0f,		0.15f,
 	PX_MAX_F32, PX_MAX_F32
 };
 //Prior speed table

@@ -81,18 +81,18 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	mirror.verts.push_back(glm::vec3(-1.f, 1.f, 0.f));
 	mirror.verts.push_back(glm::vec3(1.f, -1.f, 0.f));
 	mirror.verts.push_back(glm::vec3(1.f, 1.f, 0.f));
-	mirror.uvs.push_back((1.f / 3.f)*glm::vec2(0.f, 0.f));
-	mirror.uvs.push_back((1.f / 3.f)*glm::vec2(0.f, 1.f));
-	mirror.uvs.push_back((1.f / 3.f)*glm::vec2(1.f, 0.f));
-	mirror.uvs.push_back((1.f / 3.f)*glm::vec2(1.f, 1.f));*/
+	mirror.uvs.push_back(glm::vec2(0.f, 0.f));
+	mirror.uvs.push_back(glm::vec2(0.f, 1.f));
+	mirror.uvs.push_back(glm::vec2(1.f, 0.f));
+	mirror.uvs.push_back(glm::vec2(1.f, 1.f));*/
 	mirror.verts.push_back(glm::vec3(-.4f, .75f, 0.f));
 	mirror.verts.push_back(glm::vec3(-.4f, .95f, 0.f));
 	mirror.verts.push_back(glm::vec3(.4f, .75f, 0.f));
 	mirror.verts.push_back(glm::vec3(.4f, .95f, 0.f));
-	mirror.uvs.push_back((1.f / 3.f)*glm::vec2(1.f, .4f));
-	mirror.uvs.push_back((1.f / 3.f)*glm::vec2(1.f, .85f));
-	mirror.uvs.push_back((1.f / 3.f)*glm::vec2(0.f, .4f));
-	mirror.uvs.push_back((1.f / 3.f)*glm::vec2(0.f, .85f));
+	mirror.uvs.push_back(glm::vec2(1.f, .4f));
+	mirror.uvs.push_back(glm::vec2(1.f, .85f));
+	mirror.uvs.push_back(glm::vec2(0.f, .4f));
+	mirror.uvs.push_back(glm::vec2(0.f, .85f));
 	mirror.drawMode = GL_TRIANGLE_STRIP;
 	assignBuffers(mirror);
 	setBufferData(mirror);
@@ -116,7 +116,7 @@ RenderingEngine::~RenderingEngine() {
 
 void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objects) {
 	glm::mat4 perspectiveMatrix = glm::perspective(PI_F*.4f, (float)game_state->window_height / (float)game_state->window_width, .1f, 750.f); // last argument changed from 200 to 500 to increase view range
-
+	glm::mat4 depthperspectiveMatrix = glm::perspective(PI_F*.1f, (float)game_state->window_height / (float)game_state->window_width, 50.f, 250.f);
 	//setting up framebuffer stuff
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
@@ -124,13 +124,16 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glUseProgram(shadowshaderProgram);
 	GLint transformGL = glGetUniformLocation(shadowshaderProgram, "transform");
-	glm::mat4 depthProjectionMatrix = glm::ortho<float>(-10, 10, -10, 10, -10, 20);
-	glm::mat4 depthViewMatrix = glm::lookAt(glm::vec3(0, -1, 0), game_state->light, glm::vec3(1, 0, 0));
+	//glm::mat4 depthProjectionMatrix = glm::ortho<float>(-10, 10, -10, 10, -10, 20);
+	glm::mat4 depthViewMatrix = glm::lookAt(game_state->light, game_state->playerVehicle.position, glm::cross(game_state->light - game_state->playerVehicle.position, glm::vec3(1, 0, 0)));
 	glm::mat4 depthModelMatrix = glm::mat4(1.0);
-	glm::mat4 depthMVP = depthProjectionMatrix * perspectiveMatrix;
+	glm::mat4 depthMVP = depthperspectiveMatrix * depthViewMatrix;
 	GLuint depthMatrixID = glGetUniformLocation(shadowshaderProgram, "modelViewProjection");
 	glUniformMatrix4fv(depthMatrixID, 1, GL_FALSE, &depthMVP[0][0]);
 	for (int i = 0; i < (int)objects.size(); i++) {
+		if (i == game_state->skyboxIndex) {
+			continue;
+		}
 		glUniformMatrix4fv(transformGL, 1, false, glm::value_ptr(objects[i].subObjects[0].transform));
 		glBindVertexArray(objects[i].subObjects[0].vao);
 		glDrawArrays(objects[i].subObjects[0].drawMode, 0, objects[i].subObjects[0].verts.size());

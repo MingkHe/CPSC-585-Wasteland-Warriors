@@ -51,8 +51,8 @@ Program::~Program() {
 void Program::start() {
 	//Initialization
 	Gamestate* gameState = new Gamestate();
-	gameState->window_width = glfwGetVideoMode(glfwGetPrimaryMonitor())->width;
-	gameState->window_height = glfwGetVideoMode(glfwGetPrimaryMonitor())->height;
+	gameState->window_width = 640;//glfwGetVideoMode(glfwGetPrimaryMonitor())->width;
+	gameState->window_height = 480;//glfwGetVideoMode(glfwGetPrimaryMonitor())->height;
 	gameState->UIMode = "Loading";
 
 	struct timeb currentTime;

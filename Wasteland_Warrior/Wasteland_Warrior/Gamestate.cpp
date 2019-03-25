@@ -400,7 +400,8 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse)
 		if (abs(entity2AttackLevel) >= abs(entity1AttackLevel) && damage > 5.0f)
 			entity1->health -= damage * entity2->damageMultiplier;
 	}
-
+	entity1->health += entity1->armour;
+	entity2->health += entity2->armour;
 
 	//Resolve effects of damage
 	if (entity1->health <= 0)
@@ -436,18 +437,20 @@ void Gamestate::Collision(Vehicle* vehicle, PowerUp* powerUp) {
 		{
 	case 0://Checkpoint
 		checkpoints--;
-	case 1://Max Health
-		vehicle->health = 100;
+	case 1://Heal to full health
+		vehicle->health = vehicle->maxhealth;
 		break;
-	case 2://Large health boost
-		vehicle->health = vehicle->health + 25;
+	case 2://Max health
+		vehicle->maxhealth = vehicle->maxhealth + 10;
 		break;
-	case 3://Small health boost
+	case 3://Health boost
 		vehicle->health = vehicle->health + 10;
 		break;
 	case 4://Increase armour
+		vehicle->armour + 0.1;
 		break;
 	case 5://Increase damage
+		vehicle->damageMultiplier + 0.1;
 		break;
 	default:
 		break;

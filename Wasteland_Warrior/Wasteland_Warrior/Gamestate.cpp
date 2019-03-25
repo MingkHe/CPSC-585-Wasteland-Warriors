@@ -52,15 +52,15 @@ void Gamestate::InstantiateAllMeshes_Textures() {
 		mapMeshTextureIndices[i] = scene->loadOBJObjectInstance(mapMeshList[i], mapTextureList[i]);
 	}
 	//Initialize Static Object Meshes & Textures
-	for (int i = 0; i < 8; i++) {
+	for (int i = 0; i < numOfStaticObjectInstances; i++) {
 		staticObjMeshTextureIndices[i] = scene->loadOBJObjectInstance(staticObjMeshList[i], staticObjTextureList[i]);
 	}
 	//Initialize Dynamic Object Meshes & Textures
-	for (int i = 0; i < 2; i++) {
+	for (int i = 0; i < numOfDynamicObjectInstances; i++) {
 		dynamicObjMeshTextureIndices[i] = scene->loadOBJObjectInstance(dynamicObjMeshList[i], dynamicObjTextureList[i]);
 	}
 	//Initialize Vehicle Meshes & Textures
-	for (int i = 0; i < 7; i++) {
+	for (int i = 0; i < numOfVehicleObjectInstances; i++) {
 		vehicleMeshTextureIndices[i] = scene->loadOBJObjectInstance(vehicleMeshList[i], vehicleTextureList[i]);
 	}
 }
@@ -90,7 +90,7 @@ void Gamestate::SpawnMap() {
 	mapGroundPhysicsIndex = physics_Controller->createMap(vertsPhysArray, vertsSize, faceVertsPhys, faceVertsSize/3);
 }
 
-void Gamestate::SpawnStaticObject(int ObjectType, float x, float y, float z) {
+void Gamestate::SpawnStaticObject(int ObjectType, float x, float y, float z, float xRot, float yRot, float zRot) {
 	bool objectExists = true;
 	int sceneObjectIndex=0;
 	if (ObjectType == 0) {
@@ -126,6 +126,10 @@ void Gamestate::SpawnStaticObject(int ObjectType, float x, float y, float z) {
 		sceneObjectIndex = scene->loadCompObjectInstance(staticObjMeshTextureIndices[7]);
 		//sceneObjectIndex = scene->loadOBJObject(staticObjMeshList[7], staticObjTextureList[7]);
 	}
+	else if (ObjectType == 8) {
+		sceneObjectIndex = scene->loadCompObjectInstance(staticObjMeshTextureIndices[8]);
+		//sceneObjectIndex = scene->loadOBJObject(staticObjMeshList[7], staticObjTextureList[7]);
+	}
 	
 	else {
 		objectExists = false;
@@ -156,6 +160,7 @@ void Gamestate::SpawnStaticObject(int ObjectType, float x, float y, float z) {
 			0.f, 0.f, 1.f, 0.f,
 			x, y, z, 1.f
 		);
+		transformMatrix = transformMatrix * getRotationMatrix(xRot, yRot, zRot);
 		scene->allWorldCompObjects[sceneObjectIndex].subObjects[0].transform = transformMatrix;
 
 		Object staticObject = Object(physicsIndex, sceneObjectIndex, x, y, z);
@@ -165,7 +170,7 @@ void Gamestate::SpawnStaticObject(int ObjectType, float x, float y, float z) {
 	
 }
 
-void Gamestate::SpawnDynamicObject(int ObjectType, float x, float y, float z) {
+void Gamestate::SpawnDynamicObject(int ObjectType, float x, float y, float z, float xRot, float yRot, float zRot) {
 	bool objectExists = true;
 	int sceneObjectIndex = 0;
 	PxReal density = 1;
@@ -209,7 +214,7 @@ void Gamestate::SpawnDynamicObject(int ObjectType, float x, float y, float z) {
 		
 }
 
-void Gamestate::SpawnPlayer(float x, float y, float z) {
+void Gamestate::SpawnPlayer(float x, float y, float z, float xRot, float yRot, float zRot) {
 	int physicsIndex = physics_Controller->createPlayerVehicle();
 	physics_Controller->setPosition(physicsIndex, glm::vec3{x, y, z});
 	//int sceneObjectIndex = scene->loadOBJObject("Objects/BladedDragster/bourak.obj", "Objects/BladedDragster/bourak.jpg");
@@ -221,7 +226,7 @@ void Gamestate::SpawnPlayer(float x, float y, float z) {
 }
 
 
-void Gamestate::SpawnEnemy(int ObjectType, int AIType, float x, float y, float z) {
+void Gamestate::SpawnEnemy(int ObjectType, int AIType, float x, float y, float z, float xRot, float yRot, float zRot) {
 	int physicsIndex = physics_Controller->createEnemyVehicle();
 	physics_Controller->setPosition(physicsIndex, glm::vec3{ x, y, z });
 	int sceneObjectIndex;
@@ -559,5 +564,26 @@ glm::mat4 Gamestate::getEntityTransformation(int sceneObjectIndex) {
 						{0.0f,1.0f,0.0f,0.0f},
 						{0.0f,0.0f,1.0f,0.0f},
 						{0.0f,0.0f,0.0f,1.0f} });
+}
+
+glm::mat4 Gamestate::getRotationMatrix(float xRot, float yRot, float zRot) {
+	xRot = xRot * M_PI / 180;
+	yRot = yRot * M_PI / 180;
+	zRot = zRot * M_PI / 180;
+
+	glm::mat4 Rx = glm::mat4{{1.0f,0.0f,0.0f,0.0f},
+							{0.0f,cos(xRot),sin(xRot),0.0f},
+							{0.0f,-sin(xRot),cos(xRot),0.0f},
+							{0.0f,0.0f,0.0f,1.0f} };
+	glm::mat4 Ry = glm::mat4{ {cos(yRot),0.0f,-sin(yRot),0.0f},
+							{0.0f,1.0f,0.0f,0.0f},
+							{sin(yRot),0.0f,cos(yRot),0.0f},
+							{0.0f,0.0f,0.0f,1.0f} };
+	glm::mat4 Rz = glm::mat4{ {cos(zRot),sin(zRot),0.0f,0.0f},
+							{-sin(zRot),cos(zRot),0.0f,0.0f},
+							{0.0f,0.0f,1.0f,0.0f},
+							{0.0f,0.0f,0.0f,1.0f} };
+	return(Rz*Ry*Rx);
+
 }
 

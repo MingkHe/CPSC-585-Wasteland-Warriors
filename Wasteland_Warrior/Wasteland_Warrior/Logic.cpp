@@ -501,27 +501,27 @@ void Logic::headHunter(Gamestate *gameState) {
 void Logic::bossBattle(Gamestate *gameState) {
 		switch (gameState->wave) {
 		case 1:
-			gameState->SpawnEnemy(rand() % 5, rand() % 2, 35.f, 5.f, 35.f);
-			gameState->Enemies[0].health = 10.f;
+			gameState->SpawnEnemy(6, rand() % 2, 35.f, 5.f, 35.f);
+			gameState->Enemies[0].health = 25.f;
 			gameState->Enemies[0].maxhealth = 10.f;
 			break;
 		case 2:
-			gameState->SpawnEnemy(rand() % 5, rand() % 2, 35.f, 5.f, 35.f);
+			gameState->SpawnEnemy(6, rand() % 2, 35.f, 5.f, 35.f);
 			gameState->Enemies[0].health = 50.f;
 			gameState->Enemies[0].maxhealth = 50.f;
 			break;
 		case 3:
-			gameState->SpawnEnemy(rand() % 5, rand() % 2, 35.f, 5.f, 35.f);
+			gameState->SpawnEnemy(6, rand() % 2, 35.f, 5.f, 35.f);
 			gameState->Enemies[0].health = 75.f;
 			gameState->Enemies[0].maxhealth = 75.f;
 			break;
 		case 4:
-			gameState->SpawnEnemy(rand() % 5, rand() % 2, 35.f, 5.f, 35.f);
+			gameState->SpawnEnemy(6, rand() % 2, 35.f, 5.f, 35.f);
 			gameState->Enemies[0].health = 100.f;
 			gameState->Enemies[0].maxhealth = 100.f;
 			break;
 		case 5:
-			gameState->SpawnEnemy(rand() % 5 + 1, rand() % 2 + 1, 35.f, 5.f, 35.f);
+			gameState->SpawnEnemy(6, rand() % 2 + 1, 35.f, 5.f, 35.f);
 			gameState->Enemies[0].health = 150.f;
 			gameState->Enemies[0].maxhealth = 150.f;
 			break;

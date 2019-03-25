@@ -128,21 +128,20 @@ void Program::start() {
 	gameState->SpawnMap();
 	gameState->SpawnStaticObject(0, 0, 0, 0, 0, 0, 0);
 	gameState->SpawnStaticObject(6, 0, 0, 0, 0, 0, 0);
-	gameState->SpawnStaticObject(5, -150, 2, -120, 0, 0, 0);
-	gameState->SpawnStaticObject(1, 88, -6.25, 113, 0, 0, 0);
+	gameState->SpawnStaticObject(1, 88, 0, 93, 0, 0, 0);
 	gameState->SpawnStaticObject(1, 138, -6.25, 83, 0, 0, 0);
 	gameState->SpawnStaticObject(1, -88, 0, 113, 0, 0, 0);
 	gameState->SpawnStaticObject(1, -108, 0, 93, 0, 0, 0);
 	
 
 
-	gameState->SpawnStaticObject(2, 93, -0.75, -45, 0, 0, 0);
+	gameState->SpawnStaticObject(2, 93, -0.5, -45, 0, 0, 0);
 	gameState->SpawnStaticObject(3, 63, 0, -25, 0, 0, 0);
-	gameState->SpawnStaticObject(2, 123, -0.75, -95, 0, 0, 0);
-	gameState->SpawnStaticObject(3, 148, 0, -55, 0, 0, 0);
-	gameState->SpawnStaticObject(2, 133, -0.75, -145, 0, 0, 0);
+	gameState->SpawnStaticObject(2, 123, -6.7, -95, 0, 0, 0);
+	gameState->SpawnStaticObject(3, 148, -6.2, -55, 0, 0, 0);
+	gameState->SpawnStaticObject(2, 143, -6.7, -125, 0, 0, 0);
 	gameState->SpawnStaticObject(3, 73, 0, -125, 0, 0, 0);
-	gameState->SpawnStaticObject(4, -150, 4.25, -120, 0, 0, 0);
+	gameState->SpawnStaticObject(4, -130, -6.3, -120, 0, 0, 0);
 	gameState->SpawnStaticObject(7, 0, 0, 173, 0, 90, 0);
 	gameState->SpawnStaticObject(8, 0, 0, 190, 0, 180, 0);
 	gameState->SpawnStaticObject(8, 100, 0, -180, 0, 0, 0);

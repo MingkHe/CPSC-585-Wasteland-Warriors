@@ -51,8 +51,8 @@ Program::~Program() {
 void Program::start() {
 	//Initialization
 	Gamestate* gameState = new Gamestate();
-	gameState->window_width = 640;//glfwGetVideoMode(glfwGetPrimaryMonitor())->width;
-	gameState->window_height = 480;//glfwGetVideoMode(glfwGetPrimaryMonitor())->height;
+	gameState->window_width = this->win_width;//glfwGetVideoMode(glfwGetPrimaryMonitor())->width;
+	gameState->window_height = this->win_height;//glfwGetVideoMode(glfwGetPrimaryMonitor())->height;
 	gameState->UIMode = "Loading";
 
 	struct timeb currentTime;
@@ -224,10 +224,12 @@ void Program::setupWindow() {
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-	//int width = mode->width;//1280; //640
-	//int height = mode->height;//960; //480
-	int width = 640;
-	int height = 480;
+	int width = mode->width;//1280; //640
+	int height = mode->height;//960; //480
+	//int width = 640;
+	//int height = 480;
+	this->win_height = height;
+	this->win_width = width;
 
 	window = glfwCreateWindow(width, height, "Wasteland Warrior", NULL, NULL);
 	//window = glfwCreateWindow(width, height, "Wasteland Warrior", glfwGetPrimaryMonitor(), NULL);

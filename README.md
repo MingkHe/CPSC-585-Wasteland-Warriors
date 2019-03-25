@@ -25,6 +25,7 @@ be compiled using only the x86 Debug mode.
     Camera:
         Move Mouse while Holding the Left Mouse Button or move the Right Stick to move the camera around the vehicle
         V or Right Shoulder Button to toggle the view between third person,Hood Cam, and Cockpit view
+        Hold down E or Left Shoulder Button to look behind you
 
     Screen:
         UP Arrow or UP on Dpad to move up

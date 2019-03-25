@@ -124,30 +124,41 @@ void Program::start() {
 
 	gameState->InstantiateAllMeshes_Textures_Vehicle();
 
-	//Spawn Static Entities
+	//Spawn Map, Skybox and Canyon Walls
 	gameState->SpawnMap();
 	gameState->SpawnStaticObject(0, 0, 0, 0, 0, 0, 0);
 	gameState->SpawnStaticObject(6, 0, 0, 0, 0, 0, 0);
-	gameState->SpawnStaticObject(5, -150, 2, -120, 0, 0, 0);
-	gameState->SpawnStaticObject(1, 88, -6.25, 113, 0, 0, 0);
-	gameState->SpawnStaticObject(1, 138, -6.25, 83, 0, 0, 0);
-	gameState->SpawnStaticObject(1, -88, 0, 113, 0, 0, 0);
-	gameState->SpawnStaticObject(1, -108, 0, 93, 0, 0, 0);
 	
-
-
+	//Spawn Various Static Objects
 	gameState->SpawnStaticObject(2, 93, -0.75, -45, 0, 0, 0);
 	gameState->SpawnStaticObject(3, 63, 0, -25, 0, 0, 0);
 	gameState->SpawnStaticObject(2, 123, -0.75, -95, 0, 0, 0);
 	gameState->SpawnStaticObject(3, 148, 0, -55, 0, 0, 0);
 	gameState->SpawnStaticObject(2, 133, -0.75, -145, 0, 0, 0);
 	gameState->SpawnStaticObject(3, 73, 0, -125, 0, 0, 0);
-	gameState->SpawnStaticObject(4, -150, 4.25, -120, 0, 0, 0);
-	gameState->SpawnStaticObject(7, 0, 0, 173, 0, 90, 0);
+	
+	gameState->SpawnStaticObject(7, 0, 0, 173, 90, 0, 0);
+	//Tunnels
 	gameState->SpawnStaticObject(8, 0, 0, 190, 0, 180, 0);
 	gameState->SpawnStaticObject(8, 100, 0, -180, 0, 0, 0);
-	gameState->SpawnStaticObject(9, -50, 0, 40, 0, 0, 0);
-	gameState->SpawnStaticObject(10, -50, 0, 10, 0, 0, 0);
+
+	//Buildings & Ruined Buildings
+	gameState->SpawnStaticObject(1, 20, 0, 20, 0, 0, 0);
+	gameState->SpawnStaticObject(1, -40, 0, -30, 0, 0, 0);
+	gameState->SpawnStaticObject(1, 60, 0, -13, 0, 0, 0);
+	gameState->SpawnStaticObject(1, -80, 0, 53, 0, 0, 0);
+	gameState->SpawnStaticObject(1, 100, 0, 93, 0, 0, 0);
+	gameState->SpawnStaticObject(1, -120, 0, -43, 0, 0, 0);
+	gameState->SpawnStaticObject(1, 140, 0, 73, 0, 0, 0);
+	gameState->SpawnStaticObject(1, -100, 0, -53, 0, 0, 0);
+
+	gameState->SpawnStaticObject(1, 20, 0, -123, 0, 0, 0);
+	gameState->SpawnStaticObject(1, -30, 0, -145, 0, 0, 0);
+
+	gameState->SpawnStaticObject(9, -20, 0, -100, 0, 0, 0);
+	gameState->SpawnStaticObject(4, 0, 0, -100, 0, 0, 0);
+	gameState->SpawnStaticObject(9, 40, 0, -100, 0, 0, 0);
+	gameState->SpawnStaticObject(10, 20, 0, -100, 0, 0, 0);
 
 	
 	

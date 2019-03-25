@@ -56,6 +56,7 @@ bool EnemyUnit::CheckForStuck(){
 			recoveryMode = false;
 
 			destination = glm::vec2(position.x + (rand() % 60) - 30, position.z + (rand() % 60) - 30);		//Move to a new location before chasing player
+			AITypeRevert = AIType;
 			AIType = 2;
 			//std::cout << "Recovery mode turned OFF" << std::endl;
 			lastMotionTime = (int)(currentTime.time);

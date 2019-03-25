@@ -156,6 +156,23 @@ void Program::start() {
 	gameState->SpawnDynamicObject(1, -100, 5.25, -100, 0, 0, 0);
 	gameState->SpawnDynamicObject(1, 100, -5.25, 100, 0, 0, 0);
 	gameState->SpawnDynamicObject(1, -100, 1, 100, 0, 0, 0);
+
+
+	/*
+	//testing power box textures
+	//Max Health
+	gameState->SpawnDynamicObject(1, -4, 1, 10,0,0,0);
+	//Large health boost
+	gameState->SpawnDynamicObject(2, -2, 1, 10, 0, 0, 0);
+	//Small health boost
+	gameState->SpawnDynamicObject(3, 0, 1, 10, 0, 0, 0);
+	//Increase armour
+	gameState->SpawnDynamicObject(4, 2, 1, 10, 0, 0, 0);
+	//Increase damage
+	gameState->SpawnDynamicObject(5, 4, 1, 10, 0, 0, 0);
+	*/
+
+
 	
 	
 	//Spawn Player

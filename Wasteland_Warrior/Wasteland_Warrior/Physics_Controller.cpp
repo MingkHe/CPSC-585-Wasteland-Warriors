@@ -200,13 +200,13 @@ VehicleDesc initPlayerVehiclePhysicsDesc()
 	//Set up the chassis mass, dimensions, moment of inertia, and center of mass offset.
 	//The moment of inertia is just the moment of inertia of a cuboid but modified for easier steering.
 	//Center of mass offset is 0.65m above the base of the chassis and 0.25m towards the front.
-	const PxF32 chassisMass = 1400.0f;
+	const PxF32 chassisMass = 2400.0f;
 	const PxVec3 chassisDims(2.0f, 1.0f, 5.2f);
 	const PxVec3 chassisMOI
 	((chassisDims.y*chassisDims.y + chassisDims.z*chassisDims.z)*chassisMass / 12.0f,
 		(chassisDims.x*chassisDims.x + chassisDims.z*chassisDims.z)*chassisMass / 12.0f,
 		(chassisDims.x*chassisDims.x + chassisDims.y*chassisDims.y)*chassisMass / 12.0f);
-	const PxVec3 chassisCMOffset(0.0f, -chassisDims.y*0.5f - 0.8f, -0.3f);
+	const PxVec3 chassisCMOffset(0.0f, -chassisDims.y*0.5f - 0.8f, -0.15f);
 
 	//Set up the wheel mass, radius, width, moment of inertia, and number of wheels.
 	//Moment of inertia is just the moment of inertia of a cylinder.
@@ -241,13 +241,13 @@ VehicleDesc initEnemyVehiclePhysicsDesc()
 	//Set up the chassis mass, dimensions, moment of inertia, and center of mass offset.
 	//The moment of inertia is just the moment of inertia of a cuboid but modified for easier steering.
 	//Center of mass offset is 0.65m above the base of the chassis and 0.25m towards the front.
-	const PxF32 chassisMass = 1400.0f;
+	const PxF32 chassisMass = 2400.0f;
 	const PxVec3 chassisDims(2.0f, 1.0f, 5.2f);
 	const PxVec3 chassisMOI
 	((chassisDims.y*chassisDims.y + chassisDims.z*chassisDims.z)*chassisMass / 12.0f,
 		(chassisDims.x*chassisDims.x + chassisDims.z*chassisDims.z)*chassisMass / 12.0f,
 		(chassisDims.x*chassisDims.x + chassisDims.y*chassisDims.y)*chassisMass / 12.0f);
-	const PxVec3 chassisCMOffset(0.0f, -chassisDims.y*0.5f - 0.8f, -0.3f);
+	const PxVec3 chassisCMOffset(0.0f, -chassisDims.y*0.5f - 0.8f, -0.15f);
 
 	//Set up the wheel mass, radius, width, moment of inertia, and number of wheels.
 	//Moment of inertia is just the moment of inertia of a cylinder.

@@ -18,9 +18,8 @@ AI_Interaction::~AI_Interaction()
 
 int AI_Interaction::Update()
 {
-	//This will later be replaced by an arbitrary point passed in
-	glm::vec3 PlayerPosition = gameState->playerVehicle.position;
 	glm::vec2 targetPosition = { 0.0f, 0.0f };
+	glm::vec3 PlayerPosition = gameState->playerVehicle.position;
 
 	for (int i = 0; i < (int)(gameState->Enemies.size()); i++) {
 		//Enemy information
@@ -35,13 +34,15 @@ int AI_Interaction::Update()
 		//std::cout << "Location: (" << enemyPosition.x << "," << enemyPosition.y << ")" << std::endl;
 		//std::cout << "distFromDest = " << distFromDest << std::endl;
 
+		float triggerRadious = 12.0f;
+
 		//Destination information
 		if (enemy->AIType == 0)
 			enemy->destination = glm::vec2(PlayerPosition.x, PlayerPosition.z);
 
 		else if (enemy->AIType == 1) {
 			if ((enemy->destination.x == 0 && enemy->destination.y == 0) ||
-				distFromDest < 10)
+				distFromDest < triggerRadious)
 			{
 				int levelLength = 300;
 				int levelWidth = 300;
@@ -52,9 +53,9 @@ int AI_Interaction::Update()
 		}
 
 		else if (enemy->AIType == 2) {
-			if (distFromDest < 10)
+			if (distFromDest < triggerRadious)
 			{
-				enemy->AIType = 0;
+				enemy->AIType = enemy->AITypeRevert;
 			}
 		}
 

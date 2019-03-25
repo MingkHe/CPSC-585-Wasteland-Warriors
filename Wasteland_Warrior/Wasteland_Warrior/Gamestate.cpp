@@ -179,22 +179,22 @@ void Gamestate::SpawnDynamicObject(int ObjectType, float x, float y, float z, fl
 		switch (ObjectType)
 		{
 		case 0://Checkpoint
-			sceneObjectIndex = scene->loadCompObjectInstance(dynamicObjMeshTextureIndices[1]);
+			sceneObjectIndex = scene->loadCompObjectInstance(dynamicObjMeshTextureIndices[5]);
 			break;
 		case 1://Max Health
 			sceneObjectIndex = scene->loadCompObjectInstance(dynamicObjMeshTextureIndices[0]);
 			break;
 		case 2://Large health boost
-			sceneObjectIndex = scene->loadCompObjectInstance(dynamicObjMeshTextureIndices[0]);
+			sceneObjectIndex = scene->loadCompObjectInstance(dynamicObjMeshTextureIndices[1]);
 			break;
 		case 3://Small health boost
-			sceneObjectIndex = scene->loadCompObjectInstance(dynamicObjMeshTextureIndices[0]);
+			sceneObjectIndex = scene->loadCompObjectInstance(dynamicObjMeshTextureIndices[2]);
 			break;
 		case 4://Increase armour
-			sceneObjectIndex = scene->loadCompObjectInstance(dynamicObjMeshTextureIndices[0]);
+			sceneObjectIndex = scene->loadCompObjectInstance(dynamicObjMeshTextureIndices[3]);
 			break;
 		case 5://Increase damage
-			sceneObjectIndex = scene->loadCompObjectInstance(dynamicObjMeshTextureIndices[0]);
+			sceneObjectIndex = scene->loadCompObjectInstance(dynamicObjMeshTextureIndices[4]);
 			break;
 		default:
 			objectExists = false;

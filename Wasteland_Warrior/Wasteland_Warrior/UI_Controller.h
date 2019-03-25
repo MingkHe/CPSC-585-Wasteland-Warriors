@@ -2,6 +2,7 @@
 #include "RenderingEngine.h"
 #include "SceneMainMenu.h"
 
+#pragma once
 class UI_Controller
 {
 public:

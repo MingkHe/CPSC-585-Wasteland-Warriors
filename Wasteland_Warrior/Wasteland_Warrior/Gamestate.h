@@ -109,6 +109,7 @@ public:
 	//----------------------UI Buffer Start---------------------------------
 	bool powerText;
 	int textTime;
+	GLFWwindow *window;
 	int loadingPercentage;
 	//----------------------UI Buffer End-----------------------------------
 
@@ -235,7 +236,16 @@ public:
 
 	//Spawning/Despawning Entities
 
+	//In order to make showing loading percentage in easier way, break InstantiateAllMeshes_Textures() into serveal part:
 	void InstantiateAllMeshes_Textures();
+	void InstantiateAllMeshes_Textures_Map();
+	void InstantiateAllMeshes_Textures_Static();
+	void InstantiateAllMeshes_Textures_Dynamic();
+	void InstantiateAllMeshes_Textures_Vehicle();
+
+	
+	//--------------------------------------
+
 	void SpawnMap();
 	void SpawnStaticObject(int ObjectType, float x, float y, float z);
 	void SpawnDynamicObject(int ObjectType, float x, float y, float z);

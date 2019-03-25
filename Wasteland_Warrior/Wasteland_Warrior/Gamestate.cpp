@@ -46,10 +46,27 @@ Gamestate::~Gamestate()
 
 void Gamestate::InstantiateAllMeshes_Textures() {
 
+	//Initialize Map Meshes & Textures
+	for (int i = 0; i < 1; i++) {
+		mapMeshTextureIndices[i] = scene->loadOBJObjectInstance(mapMeshList[i], mapTextureList[i]);
+	}
+	//Initialize Static Object Meshes & Textures
+	for (int i = 0; i < 8; i++) {
+		staticObjMeshTextureIndices[i] = scene->loadOBJObjectInstance(staticObjMeshList[i], staticObjTextureList[i]);
+	}
+	//Initialize Dynamic Object Meshes & Textures
+	for (int i = 0; i < 1; i++) {
+		dynamicObjMeshTextureIndices[i] = scene->loadOBJObjectInstance(dynamicObjMeshList[i], dynamicObjTextureList[i]);
+	}
+	//Initialize Vehicle Meshes & Textures
+	for (int i = 0; i < 7; i++) {
+		vehicleMeshTextureIndices[i] = scene->loadOBJObjectInstance(vehicleMeshList[i], vehicleTextureList[i]);
+	}
 }
 
 void Gamestate::SpawnMap() {
-	int sceneObjectIndex = scene->loadOBJObject("Objects/WorldMapV3Test.obj", "Textures/sandTexture.jpg");
+	int sceneObjectIndex = scene->loadCompObjectInstance(mapMeshTextureIndices[0]);
+	//int sceneObjectIndex = scene->loadOBJObject(mapMeshList[0], mapTextureList[0]);
 	std::cout << sceneObjectIndex  << "Hello"<< std::endl;
 	int vertsSize = scene->allWorldCompObjects[0].subObjects[0].vertsPhys.size();
 	PxVec3* vertsPhysArray = new PxVec3[vertsSize];
@@ -76,32 +93,37 @@ void Gamestate::SpawnStaticObject(int ObjectType, float x, float y, float z) {
 	bool objectExists = true;
 	int sceneObjectIndex=0;
 	if (ObjectType == 0) {
-		sceneObjectIndex = scene->loadOBJObject("Objects/SkyBox/skySphere.obj", "Objects/SkyBox/skySphere_texture.jpg");
+		sceneObjectIndex = scene->loadCompObjectInstance(staticObjMeshTextureIndices[0]);
+		//sceneObjectIndex = scene->loadOBJObject(staticObjMeshList[0], staticObjTextureList[0]);
 		skyboxIndex = sceneObjectIndex;
 	}
 	else if (ObjectType == 1) {
-		sceneObjectIndex = scene->loadOBJObject("Objects/Ruined_Brick_Building/ruined building_brick.obj", "Objects/Ruined_Brick_Building/ruined_building_brick.jpg");
+		sceneObjectIndex = scene->loadCompObjectInstance(staticObjMeshTextureIndices[1]);
+		//sceneObjectIndex = scene->loadOBJObject(staticObjMeshList[1], staticObjTextureList[1]);
 	}
 	else if (ObjectType == 2) {
-		sceneObjectIndex = scene->loadOBJObject("Objects/Wooden_train_cars/wagon.obj", "Objects/Wooden_train_cars/wagon_tex3.png");
+		sceneObjectIndex = scene->loadCompObjectInstance(staticObjMeshTextureIndices[2]);
+		//sceneObjectIndex = scene->loadOBJObject(staticObjMeshList[2], staticObjTextureList[2]);
 	}
 	else if (ObjectType == 3) {
-		sceneObjectIndex = scene->loadOBJObject("Objects/Truck/truck.obj", "Objects/Truck/truck_tex1.png");
+		sceneObjectIndex = scene->loadCompObjectInstance(staticObjMeshTextureIndices[3]);
+		//sceneObjectIndex = scene->loadOBJObject(staticObjMeshList[3], staticObjTextureList[3]);
 	}
 	else if (ObjectType == 4) {
-		sceneObjectIndex = scene->loadOBJObject("Objects/Building1/building_lowpoly.obj", "Objects/Building1/building_lowpoly_texture.jpg");
-	}
-	else if (ObjectType == 4) {
-		sceneObjectIndex = scene->loadOBJObject("Objects/Building1/building_lowpoly.obj", "Objects/Building1/building_lowpoly_texture.jpg");
+		sceneObjectIndex = scene->loadCompObjectInstance(staticObjMeshTextureIndices[4]);
+		//sceneObjectIndex = scene->loadOBJObject(staticObjMeshList[4], staticObjTextureList[4]);
 	}
 	else if (ObjectType == 5) {
-		sceneObjectIndex = scene->loadOBJObject("Objects/checkpointMarker.obj", "Textures/blueSmoke.jpg");
+		sceneObjectIndex = scene->loadCompObjectInstance(staticObjMeshTextureIndices[5]);
+		//sceneObjectIndex = scene->loadOBJObject(staticObjMeshList[5], staticObjTextureList[5]);
 	}
 	else if (ObjectType == 6) {
-		sceneObjectIndex = scene->loadOBJObject("Objects/canyonWalls.obj", "Textures/canyonWallTexture2.png");
+		sceneObjectIndex = scene->loadCompObjectInstance(staticObjMeshTextureIndices[6]);
+		//sceneObjectIndex = scene->loadOBJObject(staticObjMeshList[6], staticObjTextureList[6]);
 	}
 	else if (ObjectType == 7) {
-		sceneObjectIndex = scene->loadOBJObject("Objects/Battle_Car_Package/OBJs/staticOilTanker.obj", "Objects/Battle_Car_Package/tex/Oil Tank.jpg");
+		sceneObjectIndex = scene->loadCompObjectInstance(staticObjMeshTextureIndices[7]);
+		//sceneObjectIndex = scene->loadOBJObject(staticObjMeshList[7], staticObjTextureList[7]);
 	}
 	
 	else {
@@ -147,7 +169,7 @@ void Gamestate::SpawnDynamicObject(int ObjectType, float x, float y, float z) {
 	if (ObjectType == 1) {
 
 		//CreateBoxObject
-		sceneObjectIndex = scene->loadOBJObject("Objects/Realistic_Box_Model/box_realistic.obj", "Objects/Realistic_Box_Model/box_texture_color_red.png");
+		sceneObjectIndex = scene->loadCompObjectInstance(dynamicObjMeshTextureIndices[0]);
 
 		density = 1;
 		PxVec3 dimensions = { 2,2,2 };
@@ -179,7 +201,9 @@ void Gamestate::SpawnPlayer(float x, float y, float z) {
 	int physicsIndex = physics_Controller->createPlayerVehicle();
 	physics_Controller->setPosition(physicsIndex, glm::vec3{x, y, z});
 	//int sceneObjectIndex = scene->loadOBJObject("Objects/BladedDragster/bourak.obj", "Objects/BladedDragster/bourak.jpg");
-	int sceneObjectIndex = scene->loadOBJObject("Objects/Battle_Car_Package/OBJs/playerVehicle.obj", "Objects/Battle_Car_Package/tex/Bex Car 4.jpg");
+	//int sceneObjectIndex = vehicleMeshTextureIndices[0];
+	int sceneObjectIndex = scene->loadCompObjectInstance(vehicleMeshTextureIndices[0]);
+	//int sceneObjectIndex = scene->loadOBJObject("Objects/Battle_Car_Package/OBJs/playerVehicle.obj", "Objects/Battle_Car_Package/tex/Bex Car 4.jpg");
 	playerVehicle = PlayerUnit(physicsIndex, sceneObjectIndex);
 	resetOrientation(physicsIndex);
 }
@@ -194,22 +218,28 @@ void Gamestate::SpawnEnemy(int ObjectType, int AIType, float x, float y, float z
 	switch (ObjectType) {
 	case 0: 
 		//sceneObjectIndex = scene->loadOBJObject("Objects/BladedDragster/bourak.obj", "Objects/BladedDragster/bourak.jpg");
-		sceneObjectIndex = scene->loadOBJObject("Objects/Battle_Car_Package/OBJs/enemy1_oilBarrelCar.obj", "Objects/Battle_Car_Package/tex/AX materiel 1.jpg");
+		sceneObjectIndex = scene->loadCompObjectInstance(vehicleMeshTextureIndices[1]);
+		//sceneObjectIndex = scene->loadOBJObject("Objects/Battle_Car_Package/OBJs/enemy1_oilBarrelCar.obj", "Objects/Battle_Car_Package/tex/AX materiel 1.jpg");
 		break;
 	case 1: 
-		sceneObjectIndex = scene->loadOBJObject("Objects/Battle_Car_Package/OBJs/enemy2_truck.obj", "Objects/Battle_Car_Package/tex/Battle Jip.jpg");
+		sceneObjectIndex = scene->loadCompObjectInstance(vehicleMeshTextureIndices[2]);
+		//sceneObjectIndex = scene->loadOBJObject("Objects/Battle_Car_Package/OBJs/enemy2_truck.obj", "Objects/Battle_Car_Package/tex/Battle Jip.jpg");
 		break;
 	case 2: 
-		sceneObjectIndex = scene->loadOBJObject("Objects/Battle_Car_Package/OBJs/enemy3_bigBug.obj", "Objects/Battle_Car_Package/tex/Battle Toscar.jpg");
+		sceneObjectIndex = scene->loadCompObjectInstance(vehicleMeshTextureIndices[3]);
+		//sceneObjectIndex = scene->loadOBJObject("Objects/Battle_Car_Package/OBJs/enemy3_bigBug.obj", "Objects/Battle_Car_Package/tex/Battle Toscar.jpg");
 		break;
 	case 3: 
-		sceneObjectIndex = scene->loadOBJObject("Objects/Battle_Car_Package/OBJs/enemy4_dragster.obj", "Objects/Battle_Car_Package/tex/4X Car.jpg");
+		sceneObjectIndex = scene->loadCompObjectInstance(vehicleMeshTextureIndices[4]);
+		//sceneObjectIndex = scene->loadOBJObject("Objects/Battle_Car_Package/OBJs/enemy4_dragster.obj", "Objects/Battle_Car_Package/tex/4X Car.jpg");
 		break;
-	case 4: 
-		sceneObjectIndex = scene->loadOBJObject("Objects/Battle_Car_Package/OBJs/enemy5_bigTruck.obj", "Objects/Battle_Car_Package/tex/Small Truck.jpg");
+	case 4:
+		sceneObjectIndex = scene->loadCompObjectInstance(vehicleMeshTextureIndices[5]);
+		//sceneObjectIndex = scene->loadOBJObject("Objects/Battle_Car_Package/OBJs/enemy5_bigTruck.obj", "Objects/Battle_Car_Package/tex/Small Truck.jpg");
 		break;
 	case 5: 
-		sceneObjectIndex = scene->loadOBJObject("Objects/Battle_Car_Package/OBJs/bigBadBoss.obj", "Objects/Battle_Car_Package/tex/Truck Tex.jpg");
+		sceneObjectIndex = scene->loadCompObjectInstance(vehicleMeshTextureIndices[6]);
+		//sceneObjectIndex = scene->loadOBJObject("Objects/Battle_Car_Package/OBJs/bigBadBoss.obj", "Objects/Battle_Car_Package/tex/Truck Tex.jpg");
 		break;
 	}
 	

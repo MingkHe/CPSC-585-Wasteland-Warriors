@@ -183,6 +183,7 @@ public:
 		 "Objects/Tunnel/tunnelWall.jpg"
 	 };
 
+	const int numOfDynamicObjectInstances = 6;
 	int dynamicObjMeshTextureIndices[6];
 	const char* dynamicObjMeshList[6] = {
 	"Objects/Realistic_Box_Model/box_realistic.obj",

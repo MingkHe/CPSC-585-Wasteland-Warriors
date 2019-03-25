@@ -49,7 +49,7 @@ void Gamestate::InstantiateAllMeshes_Textures() {
 }
 
 void Gamestate::SpawnMap() {
-	int sceneObjectIndex = scene->loadOBJObject("Objects/WorldMapV2.obj", "Textures/sandTexture.jpg");
+	int sceneObjectIndex = scene->loadOBJObject("Objects/WorldMapV3Test.obj", "Textures/sandTexture.jpg");
 	std::cout << sceneObjectIndex  << "Hello"<< std::endl;
 	int vertsSize = scene->allWorldCompObjects[0].subObjects[0].vertsPhys.size();
 	PxVec3* vertsPhysArray = new PxVec3[vertsSize];

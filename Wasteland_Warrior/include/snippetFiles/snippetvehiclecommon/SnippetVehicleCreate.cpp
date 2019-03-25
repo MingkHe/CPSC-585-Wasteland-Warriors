@@ -254,7 +254,7 @@ PxConvexMesh* createWheelMesh(const PxF32 width, const PxF32 radius, PxPhysics& 
 		points[2*i+1] = PxVec3(+width/2.0f, y, z);
 	}
 
-	return createConvexMesh(points,32,physics,cooking);
+	return createConvexMesh(points,8,physics,cooking);
 }
 
 PxRigidDynamic* createVehicleActor

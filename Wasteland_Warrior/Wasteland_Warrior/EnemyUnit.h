@@ -17,6 +17,7 @@ public:
 	bool CheckForStuck();
 
 	int AIType;
+	int AITypeRevert;	//Used to store the original AI type so after becoming unstuck it continues the original behavior
 	int ObjectType;
 
 	int lastMotionTime;

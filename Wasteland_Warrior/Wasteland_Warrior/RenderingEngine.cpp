@@ -531,7 +531,7 @@ void RenderingEngine::updateText() {
 		}
     
 		if (game_state->powerText) {
-			pushTextObj(texObjects, "You are heal to full health!", 0.3f*game_state->window_width, 0.8f*game_state->window_height, 1.0f, glm::vec3(0.7f, 0.2f, 0.2f));
+			pushTextObj(texObjects, "You have been healed to full health!", 0.3f*game_state->window_width, 0.8f*game_state->window_height, 1.0f, glm::vec3(0.7f, 0.2f, 0.2f));
 		}
 	}
 
@@ -546,7 +546,7 @@ void RenderingEngine::updateText() {
 	}
 
 	if (game_state->UIMode == "Loading") {
-		pushTextObj(texObjects, "%" + std::to_string(game_state->loadingPercentage), 0.7f*game_state->window_width, 0.315f*game_state->window_height, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+		pushTextObj(texObjects, std::to_string(game_state->loadingPercentage)+"%", 0.7f*game_state->window_width, 0.315f*game_state->window_height, 1.0f, glm::vec3(1.0f, 1.0f, 1.0f));
 	}
 
 	if (game_state->UIMode == "Story") {

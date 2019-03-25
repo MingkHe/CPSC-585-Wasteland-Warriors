@@ -14,7 +14,7 @@ public:
 	glm::vec3 direction = glm::vec3(1.f, 0.f, 0.0f);
 
 	float health;
-
+	float maxhealth;
 
 	//Used for disableing AI vehicles
 	int getActive();

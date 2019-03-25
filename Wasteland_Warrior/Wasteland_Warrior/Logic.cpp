@@ -30,6 +30,7 @@ void Logic::Update(Gamestate *gameState)
 		//Reset Car
 		gameState->physics_Controller->setPosition(gameState->playerVehicle.physicsIndex, glm::vec3{ 0, 3, 0 });
 		gameState->playerVehicle.health = 100;
+		gameState->playerVehicle.maxhealth = 100;
 
 		//Reset Enemies
 		for (int i = 0; i < (int)gameState->Enemies.size(); i++) {
@@ -344,18 +345,22 @@ void Logic::survival(Gamestate *gameState) {
 		case 0: //Spawn Point 1
 			gameState->SpawnEnemy(rand() % 5, rand() % 2, 35.f + (i * 10.f), 5.f, 35.f + (i * 10.f));
 			gameState->Enemies[i].health = 50.f;
+			gameState->Enemies[i].maxhealth = 50.f;
 			break;
 		case 1: //Spawn Point 2
 			gameState->SpawnEnemy(rand() % 5, rand() % 2, -35.f - (i * 10.f), 5.f, 35.f + (i * 10.f));
 			gameState->Enemies[i].health = 50.f;
+			gameState->Enemies[i].maxhealth = 50.f;
 			break;
 		case 2: //Spawn Point 3
 			gameState->SpawnEnemy(rand() % 5, rand() % 2, 35.f + (i * 10.f), 5.f, -35.f - (i * 10.f));
 			gameState->Enemies[i].health = 50.f;
+			gameState->Enemies[i].maxhealth = 50.f;
 			break;
 		case 3: //Spawn Point 4
 			gameState->SpawnEnemy(rand() % 5, rand() % 2, -35.f - (i * 10.f), 5.f, -35.f - (i * 10.f));
 			gameState->Enemies[i].health = 50.f;
+			gameState->Enemies[i].maxhealth = 50.f;
 			break;
 		}
 	}
@@ -369,21 +374,25 @@ void Logic::checkpoint(Gamestate *gameState) {
 			gameState->SpawnEnemy(rand() % 5, rand() % 2, 35.f + (i * 10.f), 5.f, 35.f + (i * 10.f));
 			gameState->SpawnDynamicObject(0, 45.f + (i * 10.f), 0.f, 45.f + (i * 10.f));
 			gameState->Enemies[i].health = 50.f;
+			gameState->Enemies[i].maxhealth = 50.f;
 			break;
 		case 1:
 			gameState->SpawnEnemy(rand() % 5, rand() % 2, -35.f - (i * 10.f), 5.f, 35.f + (i * 10.f));
 			gameState->SpawnDynamicObject(0, -45.f - (i * 10.f), 1.f, 45.f + (i * 10.f));
 			gameState->Enemies[i].health = 50.f;
+			gameState->Enemies[i].maxhealth = 50.f;
 			break;
 		case 2:
 			gameState->SpawnEnemy(rand() % 5, rand() % 2, 35.f + (i * 10.f), 5.f, -35.f - (i * 10.f));
 			gameState->SpawnDynamicObject(0, 45.f + (i * 10.f), 1.f, -45.f - (i * 10.f));
 			gameState->Enemies[i].health = 50.f;
+			gameState->Enemies[i].maxhealth = 50.f;
 			break;
 		case 3:
 			gameState->SpawnEnemy(rand() % 5, rand() % 2, -35.f - (i * 10.f), 5.f, -35.f - (i * 10.f));
 			gameState->SpawnDynamicObject(0, -45.f - (i * 10.f), 1.f, -45.f - (i * 10.f));
 			gameState->Enemies[i].health = 50.f;
+			gameState->Enemies[i].maxhealth = 50.f;
 			break;
 		}
 	}
@@ -398,21 +407,25 @@ void Logic::payload(Gamestate *gameState) {
 			gameState->SpawnEnemy(rand() % 5, rand() % 2, 35.f + (i * 10.f), 5.f, 35.f + (i * 10.f));
 			gameState->SpawnDynamicObject(0, 45.f + (i * 10.f), 0.f, 45.f + (i * 10.f));
 			gameState->Enemies[i].health = 50.f;
+			gameState->Enemies[i].maxhealth = 50.f;
 			break;
 		case 1:
 			gameState->SpawnEnemy(rand() % 5, rand() % 2, -35.f - (i * 10.f), 5.f, 35.f + (i * 10.f));
 			gameState->SpawnDynamicObject(0, -45.f - (i * 10.f), 1.f, 45.f + (i * 10.f));
 			gameState->Enemies[i].health = 50.f;
+			gameState->Enemies[i].maxhealth = 50.f;
 			break;
 		case 2:
 			gameState->SpawnEnemy(rand() % 5, rand() % 2, 35.f + (i * 10.f), 5.f, -35.f - (i * 10.f));
 			gameState->SpawnDynamicObject(0, 45.f + (i * 10.f), 1.f, -45.f - (i * 10.f));
 			gameState->Enemies[i].health = 50.f;
+			gameState->Enemies[i].maxhealth = 50.f;
 			break;
 		case 3:
 			gameState->SpawnEnemy(rand() % 5, rand() % 2, -35.f - (i * 10.f), 5.f, -35.f - (i * 10.f));
 			gameState->SpawnDynamicObject(0, -45.f - (i * 10.f), 1.f, -45.f - (i * 10.f));
 			gameState->Enemies[i].health = 50.f;
+			gameState->Enemies[i].maxhealth = 50.f;
 			break;
 		}
 	}
@@ -426,18 +439,22 @@ void Logic::headHunter(Gamestate *gameState) {
 		case 0:
 			gameState->SpawnEnemy(rand() % 5, 1, 35.f + (i * 10.f), 5.f, 35.f + (i * 10.f));
 			gameState->Enemies[i].health = 50.f;
+			gameState->Enemies[i].maxhealth = 50.f;
 			break;
 		case 1:
 			gameState->SpawnEnemy(rand() % 5, 2, -35.f - (i * 10.f), 5.f, 35.f + (i * 10.f));
 			gameState->Enemies[i].health = 50.f;
+			gameState->Enemies[i].maxhealth = 50.f;
 			break;
 		case 2:
 			gameState->SpawnEnemy(rand() % 5, 2, 35.f + (i * 10.f), 5.f, -35.f - (i * 10.f));
 			gameState->Enemies[i].health = 50.f;
+			gameState->Enemies[i].maxhealth = 50.f;
 			break;
 		case 3:
 			gameState->SpawnEnemy(rand() % 5, 0, -35.f - (i * 10.f), 5.f, -35.f - (i * 10.f));
 			gameState->Enemies[i].health = 50.f;
+			gameState->Enemies[i].maxhealth = 50.f;
 			break;
 		}
 	}
@@ -449,22 +466,27 @@ void Logic::bossBattle(Gamestate *gameState) {
 		case 1:
 			gameState->SpawnEnemy(rand() % 5, rand() % 2, 35.f, 5.f, 35.f);
 			gameState->Enemies[0].health = 10.f;
+			gameState->Enemies[0].maxhealth = 10.f;
 			break;
 		case 2:
 			gameState->SpawnEnemy(rand() % 5, rand() % 2, 35.f, 5.f, 35.f);
 			gameState->Enemies[0].health = 50.f;
+			gameState->Enemies[0].maxhealth = 50.f;
 			break;
 		case 3:
 			gameState->SpawnEnemy(rand() % 5, rand() % 2, 35.f, 5.f, 35.f);
 			gameState->Enemies[0].health = 75.f;
+			gameState->Enemies[0].maxhealth = 75.f;
 			break;
 		case 4:
 			gameState->SpawnEnemy(rand() % 5, rand() % 2, 35.f, 5.f, 35.f);
 			gameState->Enemies[0].health = 100.f;
+			gameState->Enemies[0].maxhealth = 100.f;
 			break;
 		case 5:
 			gameState->SpawnEnemy(rand() % 5 + 1, rand() % 2 + 1, 35.f, 5.f, 35.f);
 			gameState->Enemies[0].health = 150.f;
+			gameState->Enemies[0].maxhealth = 150.f;
 			break;
 		}
 }

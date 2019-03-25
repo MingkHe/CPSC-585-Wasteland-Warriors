@@ -553,10 +553,10 @@ void RenderingEngine::updateText() {
 				pushTextObj(texObjects, "You have been healed to full health!", 0.3f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f));
 				break;
 			case 2:
-				pushTextObj(texObjects, "You have recieved a large health boost!", 0.3f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f));
+				pushTextObj(texObjects, "You Maximum health has been increaced!", 0.3f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f));
 				break;
 			case 3:
-				pushTextObj(texObjects, "You have recieved a small health boost!", 0.3f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f));
+				pushTextObj(texObjects, "You have recieved a health boost!", 0.3f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f));
 				break;
 			case 4:
 				pushTextObj(texObjects, "You have recieved an armour boost!", 0.3f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f));

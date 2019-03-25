@@ -407,13 +407,13 @@ void Gamestate::Collision(Vehicle* vehicle, PowerUp* powerUp) {
 		{
 	case 0://Checkpoint
 		checkpoints--;
-	case 1://Max Health
-		vehicle->health = 100;
+	case 1://Heal to full health
+		vehicle->health = vehicle->maxhealth;
 		break;
-	case 2://Large health boost
-		vehicle->health = vehicle->health + 25;
+	case 2://Max health
+		vehicle->maxhealth = vehicle->maxhealth + 10;
 		break;
-	case 3://Small health boost
+	case 3://Health boost
 		vehicle->health = vehicle->health + 10;
 		break;
 	case 4://Increase armour

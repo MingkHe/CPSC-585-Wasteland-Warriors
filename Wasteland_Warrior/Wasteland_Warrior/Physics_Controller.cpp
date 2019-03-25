@@ -953,6 +953,7 @@ void Physics_Controller::updateEntities() {
 	//std::cout << "Number of Ridged objects: " << numOfRidg << std::endl; //Test statement, delete it if you want
 
 	PxU32 numOfRidgActors = gScene->getActors(PxActorTypeFlag::eRIGID_DYNAMIC, userBuffer, numOfRidg, 0);
+	//std::cout << "Number of Ridged objects: " << numOfRidgActors << std::endl; //Test statement, delete it if you want
 
 	for (int index = 0; index <= rigidDynamicActorIndex; index++) {
 		PxActor *actor = userBuffer[index];
@@ -990,6 +991,9 @@ void Physics_Controller::updateEntities() {
 
 void Physics_Controller::cleanupPhysics(bool interactive)
 {
+	/*
+	//This cleanup call is triggering errors as the objects appear to have already been removed
+
 	PX_UNUSED(interactive);
 
 	gVehicle4W->getRigidDynamicActor()->release();
@@ -1014,5 +1018,5 @@ void Physics_Controller::cleanupPhysics(bool interactive)
 	transport->release();
 	gFoundation->release();
 
-	//printf("SnippetVehicle4W done.\n");
+	//printf("SnippetVehicle4W done.\n");*/
 }

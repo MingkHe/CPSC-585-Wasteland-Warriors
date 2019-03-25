@@ -151,10 +151,12 @@ void Gamestate::SpawnDynamicObject(int ObjectType, float x, float y, float z) {
 			x, y, z, 1.f
 		);
 		scene->allWorldCompObjects[sceneObjectIndex].subObjects[0].transform = transformMatrix;
-		PowerUps.push_back(PowerUp(1, physicsIndex, sceneObjectIndex,  x, y, z));
+		PowerUp newPowerUp = PowerUp(1, physicsIndex, sceneObjectIndex, x, y, z);
+		newPowerUp.gameStateIndex = PowerUps.size();
+		PowerUps.push_back(newPowerUp);
 		//DynamicObjects.push_back(Object(physicsIndex, sceneObjectIndex , x, y, z));
 		
-	}
+ 	}
 	else {
 		objectExists = false;
 	}
@@ -337,6 +339,7 @@ void Gamestate::Collision(Vehicle* vehicle, Object* staticObject) {
 void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 newTransformationMatrix, float newSpeed) {
 	Entity* entityToUpdate = &Entity();
 	glm::vec4 newDirection = glm::vec4{ 0.0f, 0.0f, 1.0f, 0.0f } *newTransformationMatrix;
+
 
 	bool found = false;
 	if (physicsIndex == playerVehicle.physicsIndex) {

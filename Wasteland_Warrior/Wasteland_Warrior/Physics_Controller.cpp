@@ -115,31 +115,42 @@ void Physics_Controller::Update()
 	stepPhysics(false);
 }
 
-PxF32 gSteerVsForwardSpeedData[2 * 18] =
+PxF32 playerSteerVsForwardSpeedData[2 * 5] =
 {
-	0.0f,		0.75f,
-	3.0f,		0.70f,
-	5.0f,		0.65f,	
-	7.0f,		0.53f,
-	10.0f,		0.45f,
+	0.0f,		1.0f,
+	5.0f,		0.9f,	
+	30.0f,		0.50f,
+	120.0f,		0.9f,
+	PX_MAX_F32, PX_MAX_F32
+};
+
+PxF32 enemySteerVsForwardSpeedData[2 * 5] =
+{
+	0.0f,		0.3f,
+	5.0f,		0.1f,
+	30.0f,		0.1f,
+	120.0f,		0.05f,
+	PX_MAX_F32, PX_MAX_F32
+};
+//Prior speed table
+/*PxF32 enemySteerVsForwardSpeedData[2 * 10] =
+{
+	0.0f,		0.5f,
+	3.0f,		0.45f,
+	5.0f,		0.4f,
+	7.0f,		0.35f,
+	10.0f,		0.3f,
 	15.0f,		0.20f,
 	20.0f,		0.12f,
 	30.0f,		0.10f,
 	120.0f,		0.10f,
-	PX_MAX_F32, PX_MAX_F32,
-	PX_MAX_F32, PX_MAX_F32,
-	PX_MAX_F32, PX_MAX_F32,
-	PX_MAX_F32, PX_MAX_F32,
-	PX_MAX_F32, PX_MAX_F32,
-	PX_MAX_F32, PX_MAX_F32,
-	PX_MAX_F32, PX_MAX_F32,
-	PX_MAX_F32, PX_MAX_F32,
 	PX_MAX_F32, PX_MAX_F32
-};
+};*/
 
 
 
-PxFixedSizeLookupTable<8> gSteerVsForwardSpeedTable(gSteerVsForwardSpeedData, 4);
+PxFixedSizeLookupTable<8> playerSteerVsForwardSpeedTable(playerSteerVsForwardSpeedData, 5);
+PxFixedSizeLookupTable<8> enemySteerVsForwardSpeedTable(enemySteerVsForwardSpeedData, 5);
 
 PxVehicleKeySmoothingData gKeySmoothingData =
 {
@@ -363,11 +374,13 @@ void startHandbrakeTurnLeftMode()
 {
 	if (gMimicKeyInputs)
 	{
-		gVehicleInputData.setDigitalSteerLeft(true);
-		gVehicleInputData.setDigitalHandbrake(true);
+		gVehicleInputData.setAnalogAccel(1.0f);
+		gVehicleInputData.setAnalogSteer(-1.0f);
+		gVehicleInputData.setAnalogHandbrake(1.0f);
 	}
 	else
 	{
+		gVehicleInputData.setAnalogAccel(1.0f);
 		gVehicleInputData.setAnalogSteer(-1.0f);
 		gVehicleInputData.setAnalogHandbrake(1.0f);
 	}
@@ -377,11 +390,13 @@ void startHandbrakeTurnRightMode()
 {
 	if (gMimicKeyInputs)
 	{
-		gVehicleInputData.setDigitalSteerRight(true);
-		gVehicleInputData.setDigitalHandbrake(true);
+		gVehicleInputData.setAnalogAccel(1.0f);
+		gVehicleInputData.setAnalogSteer(1.0f);
+		gVehicleInputData.setAnalogHandbrake(1.0f);
 	}
 	else
 	{
+		gVehicleInputData.setAnalogAccel(1.0f);
 		gVehicleInputData.setAnalogSteer(1.0f);
 		gVehicleInputData.setAnalogHandbrake(1.0f);
 	}
@@ -597,7 +612,7 @@ void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DK
 	}
 
 	if (gameState->controller == false) {
-		if ((WKey) && !(SKey) && !(SPACEKey))/*Check if high-order bit is set (1 << 15)*/
+		if ((WKey) && !(SKey))/*Check if high-order bit is set (1 << 15)*/
 		{
 			if (currentGear < 0) {
 				currentGear = 1;
@@ -621,7 +636,7 @@ void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DK
 				steerDirection = "right";
 				if (SPACEKey) {
 
-					startHandbrakeTurnLeftMode();
+   					startHandbrakeTurnLeftMode();
 				}
 				else {
 					startTurnHardLeftMode();
@@ -634,7 +649,7 @@ void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DK
 			}
 		}
 
-		else if ((SKey) && !(WKey) && !(SPACEKey))/*Check if high-order bit is set (1 << 15)*/
+		else if ((SKey) && !(WKey))/*Check if high-order bit is set (1 << 15)*/
 		{
 			if (currentGear > 0) {
 				currentGear = -1;
@@ -670,7 +685,7 @@ void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DK
 			}
 		}
 
-		if (!(WKey) && !(SKey) && !(SPACEKey))/*Check if high-order bit is set (1 << 15)*/
+		if (!(WKey) && !(SKey))/*Check if high-order bit is set (1 << 15)*/
 		{
 
 			if ((AKey) && !(DKey))
@@ -685,7 +700,7 @@ void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DK
 			}
 		}
 
-		if ((SPACEKey) || ((WKey) && (SKey))) {
+		if ((WKey) && (SKey)) {
 			startBrakeMode();
 
 		}
@@ -715,7 +730,7 @@ void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DK
 			gVehicleInputData.setAnalogHandbrake(1.0f);
 		}
 		else {
-			gVehicleInputData.setAnalogHandbrake(0.0f);
+			     gVehicleInputData.setAnalogHandbrake(0.0f);
 		}
 	}
 
@@ -788,16 +803,17 @@ void Physics_Controller::stepPhysics(bool interactive)
 					enemyInputData.setAnalogAccel(pathfindingInput[0]);			
 					enemyInputData.setAnalogSteer(pathfindingInput[1]);
 				}
-				PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, gSteerVsForwardSpeedTable, enemyInputData, timestep, gIsVehicleInAir, *vehiclesVector[i]);
+
+				PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, enemySteerVsForwardSpeedTable, enemyInputData, timestep, gIsVehicleInAir, *vehiclesVector[i]);
 			}
 			else {
 				enemyInputData.setAnalogAccel(0.0f);
 				enemyInputData.setAnalogSteer(0.0f);
-				PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, gSteerVsForwardSpeedTable, enemyInputData, timestep, gIsVehicleInAir, *vehiclesVector[i]);
+				PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, enemySteerVsForwardSpeedTable, enemyInputData, timestep, gIsVehicleInAir, *vehiclesVector[i]);
 			}
 		}
 		else {							//If this is the player, record as normal
-			PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, gSteerVsForwardSpeedTable, gVehicleInputData, timestep, gIsVehicleInAir, *vehiclesVector[i]);
+			PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, playerSteerVsForwardSpeedTable, gVehicleInputData, timestep, gIsVehicleInAir, *vehiclesVector[i]);
 		}
 		
 

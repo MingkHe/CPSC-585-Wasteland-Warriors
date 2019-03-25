@@ -223,6 +223,8 @@
     <None Include="..\shaders\needlevertex.glsl" />
     <None Include="..\shaders\radarfragment.glsl" />
     <None Include="..\shaders\radarvertex.glsl" />
+    <None Include="..\shaders\shadowMapFragment.glsl" />
+    <None Include="..\shaders\shadowMapVertex.glsl" />
     <None Include="..\shaders\texFragment.glsl" />
     <None Include="..\shaders\texVertex.glsl" />
     <None Include="..\shaders\vertex.glsl" />

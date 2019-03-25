@@ -21,6 +21,8 @@ bool UserInput::SKey;
 bool UserInput::DKey;
 bool UserInput::SPACEKey;
 
+bool UserInput::Reverse;
+
 UserInput::UserInput()
 {
 }
@@ -124,6 +126,10 @@ void UserInput::Update(Gamestate* gameState)
 	else {
 		gameState->mouseRight = false;
 	}
+
+	if (UserInput::Reverse) {
+		UserInput::inputBuffer.push("REVERSE");
+	}
 }
 
 // Callback for key presses
@@ -165,6 +171,11 @@ void UserInput::key(GLFWwindow* window, int key, int scancode, int action, int m
 			//Change View
 		case GLFW_KEY_V:
 			UserInput::inputBuffer.push("VIEW");
+			break;
+
+			//Reverse Cam
+		case GLFW_KEY_E:
+			UserInput::Reverse = true;
 			break;
 
 			//Arrows
@@ -232,6 +243,10 @@ void UserInput::key(GLFWwindow* window, int key, int scancode, int action, int m
 			break;
 		case GLFW_KEY_SPACE:
 			UserInput::SPACEKey = false;
+			break;
+
+		case GLFW_KEY_E:
+			UserInput::Reverse = false;
 			break;
 		}
 	}
@@ -312,7 +327,7 @@ void UserInput::gamepad(int controller, Gamestate* gameState) {
 			UserInput::inputBuffer.push("Y");
 		};
 		if (GLFW_PRESS == buttons[4]) { 
-			UserInput::inputBuffer.push("LB");
+			UserInput::inputBuffer.push("REVERSE");
 		};
 		if (GLFW_PRESS == buttons[5]) {
 			if (view == true) {

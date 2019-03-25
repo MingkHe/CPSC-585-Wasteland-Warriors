@@ -25,7 +25,7 @@ void Logic::Update(Gamestate *gameState)
 		gameState->restart = false;
 
 		//Reset Car
-		gameState->physics_Controller->setPosition(gameState->playerVehicle.physicsIndex, glm::vec3{ 0, 3, 0 });
+		gameState->physics_Controller->setPosition(gameState->playerVehicle.physicsIndex, glm::vec3{ 0, 0, 0 });
 		gameState->playerVehicle.health = 100;
 
 		//Reset Enemies

@@ -108,6 +108,8 @@ int Scene::loadOBJObject(const char* filepath, const char* textureFilepath) {
 			//printf("7\n");
 			glm::vec2 uv;
 			fscanf(file, "%f %f\n", &uv.x, &uv.y);
+			uv.x = uv.x - floor(uv.x);
+			uv.y = uv.y - floor(uv.y);
 			temp_uvs.push_back(uv);
 
 		}

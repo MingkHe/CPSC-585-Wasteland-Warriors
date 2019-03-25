@@ -64,7 +64,8 @@ void Scene::setGamestate(Gamestate* newGamestate) {
 	gameState = newGamestate;
 }
 
-int Scene::loadOBJObject(const char* filepath, const char* textureFilepath) {
+
+int Scene::loadOBJObjectInstance(const char* filepath, const char* textureFilepath) {
 	CompositeWorldObject OBJobjectComp;
 	Geometry OBJobject;
 	std::vector< unsigned int > vertexIndices, uvIndices, normalIndices;
@@ -142,12 +143,12 @@ int Scene::loadOBJObject(const char* filepath, const char* textureFilepath) {
 		}
 	}
 
-	createObject(textureFilepath, OBJobjectComp, OBJobject, vertexIndices, uvIndices, normalIndices, temp_vertices, temp_uvs, temp_normals);
+	createObjectInstance(textureFilepath, OBJobjectComp, OBJobject, vertexIndices, uvIndices, normalIndices, temp_vertices, temp_uvs, temp_normals);
 	printf("%da\n", allWorldCompObjects.size());
-	
+
 	printf("%db\n", allWorldCompObjects.size());
-	
-	
+
+
 	OBJobjectComp.transform = glm::mat4(
 		1.f, 0.f, 0.f, 0.f,
 		0.f, 1.f, 0.f, 0.f,
@@ -155,15 +156,14 @@ int Scene::loadOBJObject(const char* filepath, const char* textureFilepath) {
 		0.f, 0.f, 0.f, 1.f
 	);
 
-	
-	sceneCompObjectIndex++;
-	printf("%dc\n", sceneCompObjectIndex);
-	return(sceneCompObjectIndex);
+	objectInstanceIndex++;
+	printf("%dc\n", objectInstanceIndex);
+	return(objectInstanceIndex);
 }
 
-void Scene::createObject(const char* textureFilepath, CompositeWorldObject OBJobjectComp, Geometry OBJobject,
-std::vector< unsigned int > vertexIndices,  std::vector< unsigned int > uvIndices, std::vector< unsigned int > normalIndices,
-std::vector< glm::vec3 > temp_vertices, std::vector< glm::vec2 > temp_uvs, std::vector< glm::vec3 > temp_normals) {
+void Scene::createObjectInstance(const char* textureFilepath, CompositeWorldObject OBJobjectComp, Geometry OBJobject,
+	std::vector< unsigned int > vertexIndices, std::vector< unsigned int > uvIndices, std::vector< unsigned int > normalIndices,
+	std::vector< glm::vec3 > temp_vertices, std::vector< glm::vec2 > temp_uvs, std::vector< glm::vec3 > temp_normals) {
 
 	OBJobject.transform = glm::mat4(
 		1.f, 0.f, 0.f, 0.f,
@@ -202,10 +202,24 @@ std::vector< glm::vec3 > temp_vertices, std::vector< glm::vec2 > temp_uvs, std::
 	temp_vertices.clear();
 	temp_uvs.clear();
 	temp_normals.clear();
-	
+
 	sceneObjectIndex++;
 	OBJobjectComp.subobjectIndices.push_back(sceneObjectIndex);
-	allWorldCompObjects.push_back(OBJobjectComp);
+	compObjectInstances.push_back(OBJobjectComp);
+}
+
+
+int Scene::loadCompObjectInstance(int compObjIndex) {
+	std::cout << compObjectInstances.size() << std::endl;
+	if (compObjIndex < compObjectInstances.size()) {
+		allWorldCompObjects.push_back(compObjectInstances[compObjIndex]);
+		sceneCompObjectIndex++;
+		//printf("%dc\n", sceneCompObjectIndex);
+		return(sceneCompObjectIndex);
+	}
+	else {
+		throw "Error loading comp object instance!";
+	}
 }
 
 

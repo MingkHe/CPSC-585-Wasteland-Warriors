@@ -535,7 +535,7 @@ void RenderingEngine::pushTextObj(std::vector<Geometry>& objects, std::string te
 void RenderingEngine::updateText() {
 	float scale = (float)game_state->window_height / 960.f;
 	if (game_state->UIMode == "Game") {
-		pushTextObj(texObjects, "Wave # " + std::to_string(game_state->wave), 0.01f*game_state->window_width, 0.95f*game_state->window_height, scale,glm::vec3(0.7f, 0.2f, 0.2f));
+		pushTextObj(texObjects, "Wave # " + std::to_string(game_state->wave)+" - "+game_state->gameMode, 0.01f*game_state->window_width, 0.95f*game_state->window_height, scale,glm::vec3(0.7f, 0.2f, 0.2f));
 		if (game_state->breakSeconds == 0) {
 			pushTextObj(texObjects, "Enemies Left: " + std::to_string(game_state->enemiesLeft), 0.01f*game_state->window_width, 0.9f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f));
 		}

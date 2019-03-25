@@ -374,11 +374,13 @@ void startHandbrakeTurnLeftMode()
 {
 	if (gMimicKeyInputs)
 	{
-		gVehicleInputData.setDigitalSteerLeft(true);
-		gVehicleInputData.setDigitalHandbrake(true);
+		gVehicleInputData.setAnalogAccel(1.0f);
+		gVehicleInputData.setAnalogSteer(-1.0f);
+		gVehicleInputData.setAnalogHandbrake(1.0f);
 	}
 	else
 	{
+		gVehicleInputData.setAnalogAccel(1.0f);
 		gVehicleInputData.setAnalogSteer(-1.0f);
 		gVehicleInputData.setAnalogHandbrake(1.0f);
 	}
@@ -388,11 +390,13 @@ void startHandbrakeTurnRightMode()
 {
 	if (gMimicKeyInputs)
 	{
-		gVehicleInputData.setDigitalSteerRight(true);
-		gVehicleInputData.setDigitalHandbrake(true);
+		gVehicleInputData.setAnalogAccel(1.0f);
+		gVehicleInputData.setAnalogSteer(1.0f);
+		gVehicleInputData.setAnalogHandbrake(1.0f);
 	}
 	else
 	{
+		gVehicleInputData.setAnalogAccel(1.0f);
 		gVehicleInputData.setAnalogSteer(1.0f);
 		gVehicleInputData.setAnalogHandbrake(1.0f);
 	}
@@ -608,7 +612,7 @@ void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DK
 	}
 
 	if (gameState->controller == false) {
-		if ((WKey) && !(SKey) && !(SPACEKey))/*Check if high-order bit is set (1 << 15)*/
+		if ((WKey) && !(SKey))/*Check if high-order bit is set (1 << 15)*/
 		{
 			if (currentGear < 0) {
 				currentGear = 1;
@@ -632,7 +636,7 @@ void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DK
 				steerDirection = "right";
 				if (SPACEKey) {
 
-					startHandbrakeTurnLeftMode();
+   					startHandbrakeTurnLeftMode();
 				}
 				else {
 					startTurnHardLeftMode();
@@ -645,7 +649,7 @@ void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DK
 			}
 		}
 
-		else if ((SKey) && !(WKey) && !(SPACEKey))/*Check if high-order bit is set (1 << 15)*/
+		else if ((SKey) && !(WKey))/*Check if high-order bit is set (1 << 15)*/
 		{
 			if (currentGear > 0) {
 				currentGear = -1;
@@ -681,7 +685,7 @@ void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DK
 			}
 		}
 
-		if (!(WKey) && !(SKey) && !(SPACEKey))/*Check if high-order bit is set (1 << 15)*/
+		if (!(WKey) && !(SKey))/*Check if high-order bit is set (1 << 15)*/
 		{
 
 			if ((AKey) && !(DKey))
@@ -696,7 +700,7 @@ void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DK
 			}
 		}
 
-		if ((SPACEKey) || ((WKey) && (SKey))) {
+		if ((WKey) && (SKey)) {
 			startBrakeMode();
 
 		}
@@ -726,7 +730,7 @@ void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DK
 			gVehicleInputData.setAnalogHandbrake(1.0f);
 		}
 		else {
-			gVehicleInputData.setAnalogHandbrake(0.0f);
+			     gVehicleInputData.setAnalogHandbrake(0.0f);
 		}
 	}
 

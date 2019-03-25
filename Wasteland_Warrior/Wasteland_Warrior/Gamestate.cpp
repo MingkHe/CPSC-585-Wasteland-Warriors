@@ -91,6 +91,13 @@ void Gamestate::SpawnStaticObject(int ObjectType, float x, float y, float z) {
 	else if (ObjectType == 4) {
 		sceneObjectIndex = scene->loadOBJObject("Objects/Building1/building_lowpoly.obj", "Objects/Building1/building_lowpoly_texture.jpg");
 	}
+	else if (ObjectType == 4) {
+		sceneObjectIndex = scene->loadOBJObject("Objects/Building1/building_lowpoly.obj", "Objects/Building1/building_lowpoly_texture.jpg");
+	}
+	else if (ObjectType == 5) {
+		sceneObjectIndex = scene->loadOBJObject("Objects/checkpointMarker.obj", "Textures/blueSmoke.jpg");
+	}
+	
 	else {
 		objectExists = false;
 	}

@@ -90,16 +90,43 @@ void Program::start() {
 	glfwSwapBuffers(window);
 
 	printf("finished loading\n");
-	gameState->InstantiateAllMeshes_Textures();
+	//gameState->InstantiateAllMeshes_Textures();
+
+	//Mesh loading
+	gameState->InstantiateAllMeshes_Textures_Map();
+	for (int i = 1; i <= 25; i++) {
+		Sleep(100);
+		gameState->loadingPercentage = i;
+		UICL.Update(gameState, window);
+		glfwSwapBuffers(window);
+	}
+	gameState->loadingPercentage = 25;
+
+	gameState->InstantiateAllMeshes_Textures_Static();
+
+	for (int i = 26; i <= 50; i++) {
+		Sleep(100);
+		gameState->loadingPercentage = i;
+		UICL.Update(gameState, window);
+		glfwSwapBuffers(window);
+	}
+
+	//Sleep(1000);
+
+	gameState->InstantiateAllMeshes_Textures_Dynamic();
+
+	for (int i = 51; i <= 78; i++) {
+		Sleep(100);
+		gameState->loadingPercentage = i;
+		UICL.Update(gameState, window);
+		glfwSwapBuffers(window);
+	}
+
+	gameState->InstantiateAllMeshes_Textures_Vehicle();
+
 	//Spawn Static Entities
 	gameState->SpawnMap();
-	
-
-	gameState->loadingPercentage = 25;
-	UICL.Update(gameState, window);
-	glfwSwapBuffers(window);
-	
-	gameState->SpawnStaticObject(0, 0, 0, 0,0,0,0);
+	gameState->SpawnStaticObject(0, 0, 0, 0, 0, 0, 0);
 	gameState->SpawnStaticObject(6, 0, 0, 0, 0, 0, 0);
 	gameState->SpawnStaticObject(5, -150, 2, -120, 0, 0, 0);
 	gameState->SpawnStaticObject(1, 88, -6.25, 113, 0, 0, 0);
@@ -107,10 +134,8 @@ void Program::start() {
 	gameState->SpawnStaticObject(1, -88, 0, 113, 0, 0, 0);
 	gameState->SpawnStaticObject(1, -108, 0, 93, 0, 0, 0);
 	
-	gameState->loadingPercentage = 50;
-	UICL.Update(gameState, window);
-	glfwSwapBuffers(window);
-	
+
+
 	gameState->SpawnStaticObject(2, 93, -0.75, -45, 0, 0, 0);
 	gameState->SpawnStaticObject(3, 63, 0, -25, 0, 0, 0);
 	gameState->SpawnStaticObject(2, 123, -0.75, -95, 0, 0, 0);
@@ -122,9 +147,7 @@ void Program::start() {
 	gameState->SpawnStaticObject(8, 0, 0, 190, 0, 180, 0);
 	gameState->SpawnStaticObject(8, 100, 0, -180, 0, 0, 0);
 	
-	gameState->loadingPercentage = 75;
-	UICL.Update(gameState, window);
-	glfwSwapBuffers(window);
+
 	
 	
 	//Spawn Power Ups
@@ -138,9 +161,13 @@ void Program::start() {
 	
 	gameState->SpawnPlayer(0, 0, 0, 0, 0, 0);
 
-	gameState->loadingPercentage = 100;
-	UICL.Update(gameState, window);
-	glfwSwapBuffers(window);
+	for (int i = 79; i <= 100; i++) {
+		Sleep(100);
+		gameState->loadingPercentage = i;
+		UICL.Update(gameState, window);
+		glfwSwapBuffers(window);
+	}
+
 	gameState->UIMode = "Start";
 	Sleep(1000);
 
@@ -276,9 +303,4 @@ void Program::QueryGLVersion() {
 void ErrorCallback(int error, const char* description) {
 	std::cout << "GLFW ERROR " << error << ":" << std::endl;
 	std::cout << description << std::endl;
-}
-void updateLoadingPercentage(int loadingPercent) {
-	/*gameState->loadingPercentage = loadingPercent;
-	UICL.Update(gameState, window);
-	glfwSwapBuffers(window);*/
 }

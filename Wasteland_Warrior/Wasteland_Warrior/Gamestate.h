@@ -16,6 +16,8 @@
 
 #pragma once
 
+# define M_PI           3.14159265358979323846  /* pi */
+
 class Gamestate
 {
 public:
@@ -155,8 +157,9 @@ public:
 
 	std::string UIMode;
 
-	int staticObjMeshTextureIndices[8];
-	const char* staticObjMeshList[8] = {
+	const int numOfStaticObjectInstances = 9;
+	int staticObjMeshTextureIndices[9];
+	const char* staticObjMeshList[9] = {
 		"Objects/SkyBox/skySphere.obj",
 		"Objects/Ruined_Brick_Building/ruined building_brick.obj", 
 		"Objects/Wooden_train_cars/wagon.obj", 
@@ -164,10 +167,11 @@ public:
 		"Objects/Building1/building_lowpoly.obj",  
 		"Objects/checkpointMarker.obj", 
 		"Objects/canyonWalls.obj", 
-		"Objects/Battle_Car_Package/OBJs/staticOilTanker.obj" 
+		"Objects/Battle_Car_Package/OBJs/staticOilTanker.obj",
+		"Objects/Tunnel/tunnel.obj"
 	};
 
-	const char* staticObjTextureList[8] = {
+	const char* staticObjTextureList[9] = {
 		 "Objects/SkyBox/skySphere_texture.jpg",
 		 "Objects/Ruined_Brick_Building/ruined_building_brick.jpg",
 		 "Objects/Wooden_train_cars/wagon_tex3.png",
@@ -175,7 +179,8 @@ public:
 		 "Objects/Building1/building_lowpoly_texture.jpg",
 		 "Textures/blueSmoke.jpg",
 		 "Textures/canyonWallTexture2.png",
-		 "Objects/Battle_Car_Package/tex/Oil Tank.jpg"
+		 "Objects/Battle_Car_Package/tex/Oil Tank.jpg",
+		 "Objects/Tunnel/tunnelWall.jpg"
 	 };
 
 	int dynamicObjMeshTextureIndices[6];
@@ -196,7 +201,7 @@ public:
 	"Objects/Realistic_Box_Model/damage.png",
 	"Textures/blueSmoke.jpg" };
 
-
+	const int numOfVehicleObjectInstances = 7;
 	int vehicleMeshTextureIndices[7];
 	const char* vehicleMeshList[7] = { 
 	"Objects/Battle_Car_Package/OBJs/playerVehicle.obj",
@@ -256,10 +261,10 @@ public:
 	//--------------------------------------
 
 	void SpawnMap();
-	void SpawnStaticObject(int ObjectType, float x, float y, float z);
-	void SpawnDynamicObject(int ObjectType, float x, float y, float z);
-	void SpawnPlayer(float x, float y, float z);
-	void SpawnEnemy(int ObjectType, int AIType, float x, float y, float z);
+	void SpawnStaticObject(int ObjectType, float x, float y, float z, float xRot, float yRot, float zRot);
+	void SpawnDynamicObject(int ObjectType, float x, float y, float z, float xRot, float yRot, float zRot);
+	void SpawnPlayer(float x, float y, float z, float xRot, float yRot, float zRot);
+	void SpawnEnemy(int ObjectType, int AIType, float x, float y, float z, float xRot, float yRot, float zRot);
 	void DespawnEnemy(Vehicle* vehicle);
 	void DespawnObject(Object* object);
 
@@ -267,6 +272,7 @@ public:
 	void Collision(Vehicle* vehicle, PowerUp* powerUp);
 	void Collision(Vehicle* vehicle, Object* staticObject);
 
+	glm::mat4 getRotationMatrix(float xRot, float yRot, float zRot);
 	void resetOrientation();
 	void resetOrientation(int physicsIndex);
 

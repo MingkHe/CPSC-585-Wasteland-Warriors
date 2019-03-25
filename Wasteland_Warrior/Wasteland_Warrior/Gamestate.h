@@ -167,6 +167,8 @@ public:
 	int window_width;
 	int window_height;
 
+	int powerUpType;
+
 	//Spawning/Despawning Entities
 
 	void InstantiateAllMeshes_Textures();

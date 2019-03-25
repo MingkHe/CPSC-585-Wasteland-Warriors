@@ -344,16 +344,17 @@ void Gamestate::Collision(Vehicle* vehicle, PowerUp* powerUp) {
 	switch (powerUp->type)
 		{
 	case 1:
-		//heal the player to full hp
-		printf("healing full hp!\n");
+		//player fully healed
 		vehicle->health = 100;
 		break;
 	case 2:
+		//Checkpoint
 		checkpoints--;
 	default:
 		break;
 		}
 
+	powerUpType = powerUp->type;
 
 	// play sound when car collect power up
 	this->carPowerUp_sound = true;

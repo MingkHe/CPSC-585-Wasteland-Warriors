@@ -923,11 +923,11 @@ void Physics_Controller::stepPhysics(bool interactive)
 		//Try to find static object
 		for (int index = 0; index <= rigidStaticActorIndex; index++) {
 			PxActor *actor = userBufferRS[index];
-			printf("%d\n", index);
+			//printf("%d\n", index);
 			if (index != gameState->mapGroundPhysicsIndex+1) {
 				if ((gContactReportCallback.gContactActor1s[i] == actor || gContactReportCallback.gContactActor2s[i] == actor)){
 					object = gameState->lookupSOUsingPI(index);	//Since it does not matter at this point, object refrence is not accurate
-					std::cout << "Collision with object with index: " << index << std::endl;
+					//std::cout << "Collision with object with index: " << index << std::endl;
 				}
 			}
 		}

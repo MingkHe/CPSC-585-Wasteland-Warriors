@@ -178,13 +178,22 @@ public:
 		 "Objects/Battle_Car_Package/tex/Oil Tank.jpg"
 	 };
 
-	int dynamicObjMeshTextureIndices[2];
-	const char* dynamicObjMeshList[2] = {
+	int dynamicObjMeshTextureIndices[6];
+	const char* dynamicObjMeshList[6] = {
+	"Objects/Realistic_Box_Model/box_realistic.obj",
+	"Objects/Realistic_Box_Model/box_realistic.obj",
+	"Objects/Realistic_Box_Model/box_realistic.obj",
+	"Objects/Realistic_Box_Model/box_realistic.obj",
 	"Objects/Realistic_Box_Model/box_realistic.obj",
 	"Objects/checkpointMarker.obj"};
 
-	const char* dynamicObjTextureList[2] = {
-	"Objects/Realistic_Box_Model/box_texture_color_red.png", 
+	const char* dynamicObjTextureList[6] = {
+	//"Objects/Realistic_Box_Model/box_texture_color_red.png", 
+	"Objects/Realistic_Box_Model/full_health.jpg",
+	"Objects/Realistic_Box_Model/large_health_boost.jpg",
+	"Objects/Realistic_Box_Model/small_health_boost.png",
+	"Objects/Realistic_Box_Model/armour.png",
+	"Objects/Realistic_Box_Model/damage.png",
 	"Textures/blueSmoke.jpg" };
 
 

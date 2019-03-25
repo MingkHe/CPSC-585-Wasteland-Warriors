@@ -148,6 +148,20 @@ void Program::start() {
 	
 	
 	//Spawn Power Ups
+
+	/*testing power box textures
+	//Max Health
+	gameState->SpawnDynamicObject(1, -4, 1, 10);
+	//Large health boost
+	gameState->SpawnDynamicObject(2, -2, 1, 10);
+	//Small health boost
+	gameState->SpawnDynamicObject(3, 0, 1, 10);
+	//Increase armour
+	gameState->SpawnDynamicObject(4, 2, 1, 10);
+	//Increase damage
+	gameState->SpawnDynamicObject(5, 4, 1, 10);
+	*/
+
 	gameState->SpawnDynamicObject(1, 53, 1, -35);
 	gameState->SpawnDynamicObject(1, -100, 5.25, -100);
 	gameState->SpawnDynamicObject(1, 100, -5.25, 100);

@@ -51,15 +51,15 @@ float ShadowCalculation(vec4 fragPosLightSpace)
 
 	float shadow = 0.0;
 	vec2 texelSize = 1.0 / textureSize(shadowTex, 0);
-	for(float x = -1; x <= 1; x+=.5)
+	for(float x = -1; x <= 1; x+=.25)
 	{
-		for(float y = -1; y <= 1; y+=.5)
+		for(float y = -1; y <= 1; y+=.25)
 		{
 			float pcfDepth = texture(shadowTex, projCoords.xy + vec2(x, y) * texelSize).r;
 			shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
 		}
 	}
-	shadow /= 25.0;
+	shadow /= 81.0;
 
     return shadow;
 }

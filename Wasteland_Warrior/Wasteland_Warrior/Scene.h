@@ -32,7 +32,6 @@ public:
 
 	//Send geometry to the renderer
 	void displayScene();
-	int loadOBJObject(const char* filepath, const char* textureFilepath);
 	int loadOBJObjectInstance(const char* filepath, const char* textureFilepath);
 
 	RenderingEngine * renderer;
@@ -49,9 +48,6 @@ public:
 
 	int loadCompObjectInstance(int compObjIndex);
 private:
-	void createObject(const char* textureFilepath, CompositeWorldObject OBJobjectComp, Geometry OBJobject,
-		std::vector< unsigned int > vertexIndices, std::vector< unsigned int > uvIndices, std::vector< unsigned int > normalIndices,
-		std::vector< glm::vec3 > temp_vertices, std::vector< glm::vec2 > temp_uvs, std::vector< glm::vec3 > temp_normals);
 
 	void createObjectInstance(const char* textureFilepath, CompositeWorldObject OBJobjectComp, Geometry OBJobject,
 		std::vector< unsigned int > vertexIndices, std::vector< unsigned int > uvIndices, std::vector< unsigned int > normalIndices,

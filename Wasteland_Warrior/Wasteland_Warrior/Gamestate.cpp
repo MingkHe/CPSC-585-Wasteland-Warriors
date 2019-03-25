@@ -175,7 +175,8 @@ void Gamestate::SpawnDynamicObject(int ObjectType, float x, float y, float z) {
 void Gamestate::SpawnPlayer(float x, float y, float z) {
 	int physicsIndex = physics_Controller->createPlayerVehicle();
 	physics_Controller->setPosition(physicsIndex, glm::vec3{x, y, z});
-	int sceneObjectIndex = scene->loadOBJObject("Objects/BladedDragster/bourak.obj", "Objects/BladedDragster/bourak.jpg");
+	//int sceneObjectIndex = scene->loadOBJObject("Objects/BladedDragster/bourak.obj", "Objects/BladedDragster/bourak.jpg");
+	int sceneObjectIndex = scene->loadOBJObject("Objects/Battle_Car_Package/OBJs/playerVehicle.obj", "Objects/Battle_Car_Package/tex/Bex Car 4.jpg");
 	playerVehicle = PlayerUnit(physicsIndex, sceneObjectIndex);
 	resetOrientation(physicsIndex);
 }

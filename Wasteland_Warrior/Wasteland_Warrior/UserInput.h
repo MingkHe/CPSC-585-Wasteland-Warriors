@@ -35,6 +35,8 @@ public:
 	static bool DKey;
 	static bool SPACEKey;
 
+	static bool Reverse;
+
 	void Update(Gamestate* gameState);
 	static void key(GLFWwindow * window, int key, int scancode, int action, int mods);
 	static void cursor(GLFWwindow* window, double xpos, double ypos);

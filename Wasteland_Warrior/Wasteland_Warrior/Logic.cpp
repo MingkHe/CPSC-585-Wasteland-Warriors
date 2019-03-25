@@ -28,7 +28,7 @@ void Logic::Update(Gamestate *gameState)
 		gameState->restart = false;
 
 		//Reset Car
-		gameState->physics_Controller->setPosition(gameState->playerVehicle.physicsIndex, glm::vec3{ 0, 0, 0 });
+		gameState->physics_Controller->setPosition(gameState->playerVehicle.physicsIndex, glm::vec3{ 0, 3, 0 });
 		gameState->playerVehicle.health = 100;
 
 		//Reset Enemies
@@ -285,28 +285,26 @@ int Logic::checkEnemyHealth(Gamestate *gameState) {
 
 void Logic::spawnPowerUps(Gamestate *gameState) {
 	
-	for (int i = 0; i < gameState->wave; i++) {
+	for (int i = 0; i < gameState->wave*2; i++) {
 		int mode = i % 4;
 		switch (mode) {
 		case 0: //Spawn Point 1
-			gameState->SpawnDynamicObject(1, 25.f + (i * 10.f), 1.f, 25.f + (i * 10.f));
+			gameState->SpawnDynamicObject(rand() % 5, 25.f + (i * 10.f), 1.f, 25.f + (i * 10.f));
 			break;
 		case 1: //Spawn Point 2
-			gameState->SpawnDynamicObject(1, -25.f - (i * 10.f), 1.f, 25.f + (i * 10.f));
+			gameState->SpawnDynamicObject(rand() % 5, -25.f - (i * 10.f), 1.f, 25.f + (i * 10.f));
 			break;
 		case 2: //Spawn Point 3
-			gameState->SpawnDynamicObject(1, 25.f + (i * 10.f), 1.f, -25.f - (i * 10.f));
+			gameState->SpawnDynamicObject(rand() % 5, 25.f + (i * 10.f), 1.f, -25.f - (i * 10.f));
 			break;
 		case 3: //Spawn Point 4
-			gameState->SpawnDynamicObject(1, -25.f - (i * 10.f), 1.f, -25.f - (i * 10.f));
+			gameState->SpawnDynamicObject(rand() % 5, -25.f - (i * 10.f), 1.f, -25.f - (i * 10.f));
 			break;
 		}
 	}
 }
 
 void Logic::modeSelection(Gamestate *gameState) {
-
-	srand((unsigned int)time(NULL));
 	switch (rand() % 5 + 1) {
 	case 1:
 		survival(gameState);
@@ -361,22 +359,22 @@ void Logic::checkpoint(Gamestate *gameState) {
 		switch (i % 4) {
 		case 0:
 			gameState->SpawnEnemy(rand() % 5, rand() % 2, 35.f + (i * 10.f), 5.f, 35.f + (i * 10.f));
-			gameState->SpawnDynamicObject(2, 45.f + (i * 10.f), 0.f, 45.f + (i * 10.f));
+			gameState->SpawnDynamicObject(0, 45.f + (i * 10.f), 0.f, 45.f + (i * 10.f));
 			gameState->Enemies[i].health = 50.f;
 			break;
 		case 1:
 			gameState->SpawnEnemy(rand() % 5, rand() % 2, -35.f - (i * 10.f), 5.f, 35.f + (i * 10.f));
-			gameState->SpawnDynamicObject(2, -45.f - (i * 10.f), 1.f, 45.f + (i * 10.f));
+			gameState->SpawnDynamicObject(0, -45.f - (i * 10.f), 1.f, 45.f + (i * 10.f));
 			gameState->Enemies[i].health = 50.f;
 			break;
 		case 2:
 			gameState->SpawnEnemy(rand() % 5, rand() % 2, 35.f + (i * 10.f), 5.f, -35.f - (i * 10.f));
-			gameState->SpawnDynamicObject(2, 45.f + (i * 10.f), 1.f, -45.f - (i * 10.f));
+			gameState->SpawnDynamicObject(0, 45.f + (i * 10.f), 1.f, -45.f - (i * 10.f));
 			gameState->Enemies[i].health = 50.f;
 			break;
 		case 3:
 			gameState->SpawnEnemy(rand() % 5, rand() % 2, -35.f - (i * 10.f), 5.f, -35.f - (i * 10.f));
-			gameState->SpawnDynamicObject(2, -45.f - (i * 10.f), 1.f, -45.f - (i * 10.f));
+			gameState->SpawnDynamicObject(0, -45.f - (i * 10.f), 1.f, -45.f - (i * 10.f));
 			gameState->Enemies[i].health = 50.f;
 			break;
 		}

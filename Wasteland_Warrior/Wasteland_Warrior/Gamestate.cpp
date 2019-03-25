@@ -148,11 +148,23 @@ void Gamestate::SpawnDynamicObject(int ObjectType, float x, float y, float z) {
 		//CreateBoxObject
 		switch (ObjectType)
 		{
-		case 1:
+		case 0://Checkpoint
+			sceneObjectIndex = scene->loadOBJObject("Objects/checkpointMarker.obj", "Textures/blueSmoke.jpg");
+			break;
+		case 1://Max Health
 			sceneObjectIndex = scene->loadOBJObject("Objects/Realistic_Box_Model/box_realistic.obj", "Objects/Realistic_Box_Model/box_texture_color_red.png");
 			break;
-		case 2:
-			sceneObjectIndex = scene->loadOBJObject("Objects/checkpointMarker.obj", "Textures/blueSmoke.jpg");
+		case 2://Large health boost
+			sceneObjectIndex = scene->loadOBJObject("Objects/Realistic_Box_Model/box_realistic.obj", "Objects/Realistic_Box_Model/box_texture_color_red.png");
+			break;
+		case 3://Small health boost
+			sceneObjectIndex = scene->loadOBJObject("Objects/Realistic_Box_Model/box_realistic.obj", "Objects/Realistic_Box_Model/box_texture_color_red.png");
+			break;
+		case 4://Increase armour
+			sceneObjectIndex = scene->loadOBJObject("Objects/Realistic_Box_Model/box_realistic.obj", "Objects/Realistic_Box_Model/box_texture_color_red.png");
+			break;
+		case 5://Increase damage
+			sceneObjectIndex = scene->loadOBJObject("Objects/Realistic_Box_Model/box_realistic.obj", "Objects/Realistic_Box_Model/box_texture_color_red.png");
 			break;
 		default:
 			objectExists = false;
@@ -237,6 +249,16 @@ void Gamestate::resetOrientation(int physicsIndex) {
 
 
 void Gamestate::DespawnEnemy(Vehicle* vehicle) { 
+
+	glm::mat4 transformMatrix = glm::mat4(
+		2.f, 0.f, 0.f, 0.f,
+		0.f, 2.f, 0.f, 0.f,
+		0.f, 0.f, 2.f, 0.f,
+		0.f, -20.0f, 0.f, 1.f
+	);
+
+	scene->allWorldCompObjects[vehicle->sceneObjectIndex].subObjects[0].transform = transformMatrix;  //Change location of graphic to out of sight
+
 	vehicle->setActive(0);
 	int offset = vehicle->physicsIndex;
 	physics_Controller->setPosition(vehicle->physicsIndex, glm::vec3{20 * offset, -20, 0});
@@ -343,13 +365,21 @@ void Gamestate::Collision(Vehicle* vehicle, PowerUp* powerUp) {
 
 	switch (powerUp->type)
 		{
-	case 1:
-		//player fully healed
+	case 0://Checkpoint
+		checkpoints--;
+	case 1://Max Health
 		vehicle->health = 100;
 		break;
-	case 2:
-		//Checkpoint
-		checkpoints--;
+	case 2://Large health boost
+		vehicle->health = vehicle->health + 25;
+		break;
+	case 3://Small health boost
+		vehicle->health = vehicle->health + 10;
+		break;
+	case 4://Increase armour
+		break;
+	case 5://Increase damage
+		break;
 	default:
 		break;
 		}

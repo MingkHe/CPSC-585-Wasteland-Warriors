@@ -95,6 +95,7 @@ void Gamestate::InstantiateAllMeshes_Textures_Vehicle() {
 
 void Gamestate::SpawnMap() {
 	int sceneObjectIndex = scene->loadCompObjectInstance(mapMeshTextureIndices[0]);
+	groundIndex = sceneObjectIndex;
 	//int sceneObjectIndex = scene->loadOBJObject(mapMeshList[0], mapTextureList[0]);
 	std::cout << sceneObjectIndex  << "Hello"<< std::endl;
 	int vertsSize = scene->allWorldCompObjects[0].subObjects[0].vertsPhys.size();

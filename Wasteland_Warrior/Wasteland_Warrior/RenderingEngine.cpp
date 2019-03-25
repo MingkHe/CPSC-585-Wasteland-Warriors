@@ -24,7 +24,7 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	shadowshaderProgram = ShaderTools::InitializeShaders("../shaders/shadowMapVertex.glsl", "../shaders/shadowMapFragment.glsl");
 	
 	textShaderProgram = ShaderTools::InitializeShaders("../shaders/texVertex.glsl", "../shaders/texFragment.glsl");
-
+	float aspect_ratio = game_state->window_height / game_state->window_width;
 	health.verts.push_back(glm::vec3(.5f, .8f, 0.f));
 	health.verts.push_back(glm::vec3(.5f, .9f, 0.f));
 	health.verts.push_back(glm::vec3(.9f, .8f, 0.f));
@@ -115,8 +115,8 @@ RenderingEngine::~RenderingEngine() {
 }
 
 void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objects) {
-	glm::mat4 perspectiveMatrix = glm::perspective(PI_F*.4f, (float)game_state->window_height / (float)game_state->window_width, .1f, 750.f); // last argument changed from 200 to 500 to increase view range
-	glm::mat4 depthperspectiveMatrix = glm::perspective(PI_F*.1f, (float)game_state->window_height / (float)game_state->window_width, 50.f, 250.f);
+	glm::mat4 perspectiveMatrix = glm::perspective(PI_F*.4f, (float)game_state->window_width / (float)game_state->window_height, .1f, 750.f); // last argument changed from 200 to 500 to increase view range
+	glm::mat4 depthperspectiveMatrix = glm::perspective(PI_F*.2f, (float)game_state->window_width / (float)game_state->window_height, 50.f, 250.f);
 	//setting up framebuffer stuff
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
@@ -230,9 +230,9 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	glBindVertexArray(0);
 
 	//render health bar
-	GLint healthGL = glGetUniformLocation(healthshaderProgram, "health");
 	glUseProgram(healthshaderProgram);
-	glUniform1f(healthGL, game_state->playerVehicle.health);
+	glUniform1f(glGetUniformLocation(healthshaderProgram, "health"), game_state->playerVehicle.health);
+	glUniform1f(glGetUniformLocation(healthshaderProgram, "maxhealth"), 100);
 	glBindVertexArray(health.vao);
 	glDrawArrays(health.drawMode, 0, health.verts.size());
 
@@ -240,18 +240,28 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	glUseProgram(radarshaderProgram);
 	GLint enemiesGL = glGetUniformLocation(radarshaderProgram, "enemies");
 	GLint numenemiesGL = glGetUniformLocation(radarshaderProgram, "numenemies");
+	GLint highlightsGL = glGetUniformLocation(radarshaderProgram, "highlights");
+	GLint numhighlightGL = glGetUniformLocation(radarshaderProgram, "numhighlight");
 	GLint playerposGL = glGetUniformLocation(radarshaderProgram, "playerpos");
 	GLint playerdirGL = glGetUniformLocation(radarshaderProgram, "playerdir");
 	GLint radar_distGL = glGetUniformLocation(radarshaderProgram, "radar_dist");
 	std::vector<glm::vec2> enemy_locations;
+	std::vector<glm::vec2> highlighted_locations;
 	for (int i = 0; i < (int)game_state->Enemies.size(); i++) {
-		enemy_locations.push_back(glm::vec2(game_state->Enemies[i].position.x, game_state->Enemies[i].position.z));
+		if (game_state->Enemies[i].AIType == 1) {
+			highlighted_locations.push_back(glm::vec2(game_state->Enemies[i].position.x, game_state->Enemies[i].position.z));
+		} else {
+			enemy_locations.push_back(glm::vec2(game_state->Enemies[i].position.x, game_state->Enemies[i].position.z));
+		}
 	}
-	if(game_state->Enemies.size()!=0)
+	if(enemy_locations.size()!=0)
 		glUniform2fv(enemiesGL, enemy_locations.size(), &(enemy_locations[0].x));
+	if (highlighted_locations.size() != 0)
+		glUniform2fv(highlightsGL, highlighted_locations.size(), &(highlighted_locations[0].x));
 	glUniform2f(playerposGL, game_state->playerVehicle.position.x, game_state->playerVehicle.position.z);
 	glUniform2f(playerdirGL, game_state->playerVehicle.direction.x, game_state->playerVehicle.direction.z);
 	glUniform1i(numenemiesGL, enemy_locations.size());
+	glUniform1i(numhighlightGL, highlighted_locations.size());
 	glUniform1f(radar_distGL, game_state->radar_view);
 	glBindVertexArray(radar.vao);
 	glDrawArrays(radar.drawMode, 0, radar.verts.size());

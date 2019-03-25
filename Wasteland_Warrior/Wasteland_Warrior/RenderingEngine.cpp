@@ -177,6 +177,12 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 		else {
 			glUniform1i(glGetUniformLocation(shaderProgram, "isSkybox"), 0);
 		}
+		if (i == game_state->groundIndex) {
+			glUniform1i(glGetUniformLocation(shaderProgram, "isGround"), 1);
+		}
+		else {
+			glUniform1i(glGetUniformLocation(shaderProgram, "isGround"), 0);
+		}
 		glUniformMatrix4fv(transformGL, 1, false, glm::value_ptr(objects[i].subObjects[0].transform));
 		//bind the texture
 		glActiveTexture(GL_TEXTURE0);

@@ -95,6 +95,7 @@ void Gamestate::InstantiateAllMeshes_Textures_Vehicle() {
 
 void Gamestate::SpawnMap() {
 	int sceneObjectIndex = scene->loadCompObjectInstance(mapMeshTextureIndices[0]);
+	groundIndex = sceneObjectIndex;
 	//int sceneObjectIndex = scene->loadOBJObject(mapMeshList[0], mapTextureList[0]);
 	std::cout << sceneObjectIndex  << "Hello"<< std::endl;
 	int vertsSize = scene->allWorldCompObjects[0].subObjects[0].vertsPhys.size();
@@ -126,37 +127,9 @@ void Gamestate::SpawnStaticObject(int ObjectType, float x, float y, float z, flo
 		//sceneObjectIndex = scene->loadOBJObject(staticObjMeshList[0], staticObjTextureList[0]);
 		skyboxIndex = sceneObjectIndex;
 	}
-	else if (ObjectType == 1) {
-		sceneObjectIndex = scene->loadCompObjectInstance(staticObjMeshTextureIndices[1]);
+	else if ((ObjectType >= 1) && (ObjectType < numOfStaticObjectInstances)) {
+		sceneObjectIndex = scene->loadCompObjectInstance(staticObjMeshTextureIndices[ObjectType]);
 		//sceneObjectIndex = scene->loadOBJObject(staticObjMeshList[1], staticObjTextureList[1]);
-	}
-	else if (ObjectType == 2) {
-		sceneObjectIndex = scene->loadCompObjectInstance(staticObjMeshTextureIndices[2]);
-		//sceneObjectIndex = scene->loadOBJObject(staticObjMeshList[2], staticObjTextureList[2]);
-	}
-	else if (ObjectType == 3) {
-		sceneObjectIndex = scene->loadCompObjectInstance(staticObjMeshTextureIndices[3]);
-		//sceneObjectIndex = scene->loadOBJObject(staticObjMeshList[3], staticObjTextureList[3]);
-	}
-	else if (ObjectType == 4) {
-		sceneObjectIndex = scene->loadCompObjectInstance(staticObjMeshTextureIndices[4]);
-		//sceneObjectIndex = scene->loadOBJObject(staticObjMeshList[4], staticObjTextureList[4]);
-	}
-	else if (ObjectType == 5) {
-		sceneObjectIndex = scene->loadCompObjectInstance(staticObjMeshTextureIndices[5]);
-		//sceneObjectIndex = scene->loadOBJObject(staticObjMeshList[5], staticObjTextureList[5]);
-	}
-	else if (ObjectType == 6) {
-		sceneObjectIndex = scene->loadCompObjectInstance(staticObjMeshTextureIndices[6]);
-		//sceneObjectIndex = scene->loadOBJObject(staticObjMeshList[6], staticObjTextureList[6]);
-	}
-	else if (ObjectType == 7) {
-		sceneObjectIndex = scene->loadCompObjectInstance(staticObjMeshTextureIndices[7]);
-		//sceneObjectIndex = scene->loadOBJObject(staticObjMeshList[7], staticObjTextureList[7]);
-	}
-	else if (ObjectType == 8) {
-		sceneObjectIndex = scene->loadCompObjectInstance(staticObjMeshTextureIndices[8]);
-		//sceneObjectIndex = scene->loadOBJObject(staticObjMeshList[7], staticObjTextureList[7]);
 	}
 	else {
 		objectExists = false;

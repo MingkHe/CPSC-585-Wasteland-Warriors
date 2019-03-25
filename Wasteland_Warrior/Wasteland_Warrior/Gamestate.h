@@ -132,6 +132,7 @@ public:
 	float cameraAngle;
 	int view;
 	int skyboxIndex;
+	int groundIndex;
 	int mapGroundPhysicsIndex;
 
 	//Time
@@ -141,7 +142,7 @@ public:
 	int gstest = 5;
 
 	//Graphics
-	glm::vec3 light = glm::vec3(0.0f, 100.0f, 0.0f);
+	glm::vec3 light = glm::vec3(20.0f, 100.0f, 0.0f);
 	glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
 	float lightAttenuation = 0.000000002f;
 	float lightAmbientCoefficient = 0.00f;
@@ -157,9 +158,9 @@ public:
 
 	std::string UIMode;
 
-	const int numOfStaticObjectInstances = 9;
-	int staticObjMeshTextureIndices[9];
-	const char* staticObjMeshList[9] = {
+	const int numOfStaticObjectInstances = 11;
+	int staticObjMeshTextureIndices[11];
+	const char* staticObjMeshList[11] = {
 		"Objects/SkyBox/skySphere.obj",
 		"Objects/Ruined_Brick_Building/ruined building_brick.obj", 
 		"Objects/Wooden_train_cars/wagon.obj", 
@@ -168,10 +169,12 @@ public:
 		"Objects/checkpointMarker.obj", 
 		"Objects/canyonWalls.obj", 
 		"Objects/Battle_Car_Package/OBJs/staticOilTanker.obj",
-		"Objects/Tunnel/tunnel.obj"
+		"Objects/Tunnel/tunnel.obj", 
+		"Objects/RuinedSmallHouse/Old_house.obj",
+		"Objects/Buildings/Gas Station.obj"
 	};
 
-	const char* staticObjTextureList[9] = {
+	const char* staticObjTextureList[11] = {
 		 "Objects/SkyBox/skySphere_texture.jpg",
 		 "Objects/Ruined_Brick_Building/ruined_building_brick.jpg",
 		 "Objects/Wooden_train_cars/wagon_tex3.png",
@@ -180,7 +183,9 @@ public:
 		 "Textures/blueSmoke.jpg",
 		 "Textures/canyonWallTexture2.png",
 		 "Objects/Battle_Car_Package/tex/Oil Tank.jpg",
-		 "Objects/Tunnel/tunnelWall.jpg"
+		 "Objects/Tunnel/tunnelWall.jpg",
+		 "Objects/RuinedSmallHouse/Old_house.png",
+		 "Objects/Buildings/Gas Station.jpg"
 	 };
 
 	const int numOfDynamicObjectInstances = 6;

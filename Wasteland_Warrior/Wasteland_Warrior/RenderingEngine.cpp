@@ -125,7 +125,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	glUseProgram(shadowshaderProgram);
 	GLint transformGL = glGetUniformLocation(shadowshaderProgram, "transform");
 	//glm::mat4 depthProjectionMatrix = glm::ortho<float>(-10, 10, -10, 10, -10, 20);
-	glm::mat4 depthViewMatrix = glm::lookAt(game_state->light, game_state->playerVehicle.position, glm::cross(game_state->light - game_state->playerVehicle.position, glm::vec3(1, 0, 0)));
+	glm::mat4 depthViewMatrix = glm::lookAt(game_state->light, game_state->playerVehicle.position, glm::vec3(0, 1, 0));
 	glm::mat4 depthModelMatrix = glm::mat4(1.0);
 	glm::mat4 depthMVP = depthperspectiveMatrix * depthViewMatrix;
 	GLuint depthMatrixID = glGetUniformLocation(shadowshaderProgram, "modelViewProjection");

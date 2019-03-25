@@ -275,6 +275,7 @@ void Gamestate::resetOrientation(int physicsIndex) {
 
 
 void Gamestate::DespawnEnemy(Vehicle* vehicle) {
+	score -= 200;	//Points for destroying a vehicle (subtracting increases the final point value)
 
 	glm::mat4 transformMatrix = glm::mat4(
 		2.f, 0.f, 0.f, 0.f,

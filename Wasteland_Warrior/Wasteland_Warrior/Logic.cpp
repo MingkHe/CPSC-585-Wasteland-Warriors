@@ -28,7 +28,7 @@ void Logic::Update(Gamestate *gameState)
 		gameState->restart = false;
 
 		//Reset Car
-		gameState->physics_Controller->setPosition(gameState->playerVehicle.physicsIndex, glm::vec3{ 0, 3, 0 });
+		gameState->physics_Controller->setPosition(gameState->playerVehicle.physicsIndex, glm::vec3{ 100, 2, -170 });
 		gameState->playerVehicle.health = 100;
 		gameState->playerVehicle.maxhealth = 100;
 		gameState->playerVehicle.damageMultiplier = 1;
@@ -41,10 +41,10 @@ void Logic::Update(Gamestate *gameState)
 		gameState->Enemies.clear();
 
 		//Reset Checkpoints
-		for (int i = 0; i < (int)gameState->DynamicObjects.size(); i++) {
-			if (gameState->DynamicObjects[i].type == 0) {
-				gameState->DespawnObject(&gameState->DynamicObjects[i]);
-				gameState->DynamicObjects.erase(gameState->DynamicObjects.begin() + i);
+		for (int i = 0; i < (int)gameState->PowerUps.size(); i++) {
+			if (gameState->PowerUps[i].type == 0) {
+				gameState->DespawnCheckpoint(&gameState->PowerUps[i]);
+				gameState->PowerUps.erase(gameState->PowerUps.begin() + i);
 			}
 		}
 		gameState->checkpoints = 0;

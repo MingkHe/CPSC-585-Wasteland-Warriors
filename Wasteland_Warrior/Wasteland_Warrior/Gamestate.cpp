@@ -78,7 +78,7 @@ void Gamestate::SpawnMap() {
 	}
 
 	int faceVertsSize = scene->allWorldCompObjects[sceneObjectIndex].subObjects[0].faceVertexIndices.size();
-	PxU32* faceVertsPhys = new PxU32[faceVertsSize]; 
+	PxU32* faceVertsPhys = new PxU32[faceVertsSize];
 	PxU32 faceVertHolder = 0;
 	int index = 0;
 	for (int i = 0; i < faceVertsSize; i++) {
@@ -126,7 +126,7 @@ void Gamestate::SpawnStaticObject(int ObjectType, float x, float y, float z) {
 		sceneObjectIndex = scene->loadCompObjectInstance(staticObjMeshTextureIndices[7]);
 		//sceneObjectIndex = scene->loadOBJObject(staticObjMeshList[7], staticObjTextureList[7]);
 	}
-	
+
 	else {
 		objectExists = false;
 	}
@@ -162,7 +162,7 @@ void Gamestate::SpawnStaticObject(int ObjectType, float x, float y, float z) {
 		staticObject.type = ObjectType;
 		StaticObjects.push_back(staticObject);
 	}
-	
+
 }
 
 void Gamestate::SpawnDynamicObject(int ObjectType, float x, float y, float z) {
@@ -173,13 +173,23 @@ void Gamestate::SpawnDynamicObject(int ObjectType, float x, float y, float z) {
 		//CreateBoxObject
 		switch (ObjectType)
 		{
-		case 1:
-			sceneObjectIndex = scene->loadCompObjectInstance(dynamicObjMeshTextureIndices[0]);
-			//sceneObjectIndex = scene->loadOBJObject("Objects/Realistic_Box_Model/box_realistic.obj", "Objects/Realistic_Box_Model/box_texture_color_red.png");
-			break;
-		case 2:
+		case 0://Checkpoint
 			sceneObjectIndex = scene->loadCompObjectInstance(dynamicObjMeshTextureIndices[1]);
-			//sceneObjectIndex = scene->loadOBJObject("Objects/checkpointMarker.obj", "Textures/blueSmoke.jpg");
+			break;
+		case 1://Max Health
+			sceneObjectIndex = scene->loadCompObjectInstance(dynamicObjMeshTextureIndices[0]);
+			break;
+		case 2://Large health boost
+			sceneObjectIndex = scene->loadCompObjectInstance(dynamicObjMeshTextureIndices[0]);
+			break;
+		case 3://Small health boost
+			sceneObjectIndex = scene->loadCompObjectInstance(dynamicObjMeshTextureIndices[0]);
+			break;
+		case 4://Increase armour
+			sceneObjectIndex = scene->loadCompObjectInstance(dynamicObjMeshTextureIndices[0]);
+			break;
+		case 5://Increase damage
+			sceneObjectIndex = scene->loadCompObjectInstance(dynamicObjMeshTextureIndices[0]);
 			break;
 		default:
 			objectExists = false;
@@ -206,7 +216,7 @@ void Gamestate::SpawnDynamicObject(int ObjectType, float x, float y, float z) {
 		newPowerUp.type = ObjectType;
 		PowerUps.push_back(newPowerUp);
 		//DynamicObjects.push_back(Object(physicsIndex, sceneObjectIndex , x, y, z));
-		
+
 }
 
 void Gamestate::SpawnPlayer(float x, float y, float z) {
@@ -226,35 +236,28 @@ void Gamestate::SpawnEnemy(int ObjectType, int AIType, float x, float y, float z
 	physics_Controller->setPosition(physicsIndex, glm::vec3{ x, y, z });
 	int sceneObjectIndex;
 
-	//Different Enemy Mesh/Texture Types *** Add new mesh/textures to this list ***
+	//Different Enemy Mesh/Texture Types
 	switch (ObjectType) {
-	case 0: 
-		//sceneObjectIndex = scene->loadOBJObject("Objects/BladedDragster/bourak.obj", "Objects/BladedDragster/bourak.jpg");
+	case 0:
 		sceneObjectIndex = scene->loadCompObjectInstance(vehicleMeshTextureIndices[1]);
-		//sceneObjectIndex = scene->loadOBJObject("Objects/Battle_Car_Package/OBJs/enemy1_oilBarrelCar.obj", "Objects/Battle_Car_Package/tex/AX materiel 1.jpg");
 		break;
-	case 1: 
+	case 1:
 		sceneObjectIndex = scene->loadCompObjectInstance(vehicleMeshTextureIndices[2]);
-		//sceneObjectIndex = scene->loadOBJObject("Objects/Battle_Car_Package/OBJs/enemy2_truck.obj", "Objects/Battle_Car_Package/tex/Battle Jip.jpg");
 		break;
-	case 2: 
+	case 2:
 		sceneObjectIndex = scene->loadCompObjectInstance(vehicleMeshTextureIndices[3]);
-		//sceneObjectIndex = scene->loadOBJObject("Objects/Battle_Car_Package/OBJs/enemy3_bigBug.obj", "Objects/Battle_Car_Package/tex/Battle Toscar.jpg");
 		break;
-	case 3: 
+	case 3:
 		sceneObjectIndex = scene->loadCompObjectInstance(vehicleMeshTextureIndices[4]);
-		//sceneObjectIndex = scene->loadOBJObject("Objects/Battle_Car_Package/OBJs/enemy4_dragster.obj", "Objects/Battle_Car_Package/tex/4X Car.jpg");
 		break;
 	case 4:
 		sceneObjectIndex = scene->loadCompObjectInstance(vehicleMeshTextureIndices[5]);
-		//sceneObjectIndex = scene->loadOBJObject("Objects/Battle_Car_Package/OBJs/enemy5_bigTruck.obj", "Objects/Battle_Car_Package/tex/Small Truck.jpg");
 		break;
-	case 5: 
+	case 5:
 		sceneObjectIndex = scene->loadCompObjectInstance(vehicleMeshTextureIndices[6]);
-		//sceneObjectIndex = scene->loadOBJObject("Objects/Battle_Car_Package/OBJs/bigBadBoss.obj", "Objects/Battle_Car_Package/tex/Truck Tex.jpg");
 		break;
 	}
-	
+
 	EnemyUnit enemy = EnemyUnit(physicsIndex, sceneObjectIndex);
 	enemy.gameStateIndex = Enemies.size();
 	enemy.AIType = AIType;
@@ -271,10 +274,34 @@ void Gamestate::resetOrientation(int physicsIndex) {
 }
 
 
-void Gamestate::DespawnEnemy(Vehicle* vehicle) { 
+void Gamestate::DespawnEnemy(Vehicle* vehicle) {
+
+	glm::mat4 transformMatrix = glm::mat4(
+		2.f, 0.f, 0.f, 0.f,
+		0.f, 2.f, 0.f, 0.f,
+		0.f, 0.f, 2.f, 0.f,
+		0.f, -20.0f, 0.f, 1.f
+	);
+
+	scene->allWorldCompObjects[vehicle->sceneObjectIndex].subObjects[0].transform = transformMatrix;  //Change location of graphic to out of sight
+
 	vehicle->setActive(0);
 	int offset = vehicle->physicsIndex;
 	physics_Controller->setPosition(vehicle->physicsIndex, glm::vec3{20 * offset, -20, 0});
+}
+
+void Gamestate::DespawnObject(Object* Object) {
+
+	glm::mat4 transformMatrix = glm::mat4(
+		2.f, 0.f, 0.f, 0.f,
+		0.f, 2.f, 0.f, 0.f,
+		0.f, 0.f, 2.f, 0.f,
+		0.f, -20.0f, 0.f, 1.f
+	);
+
+	scene->allWorldCompObjects[Object->sceneObjectIndex].subObjects[0].transform = transformMatrix;  //Change location of graphic to out of sight
+	int offset = Object->physicsIndex;
+	physics_Controller->setPosition(Object->physicsIndex, glm::vec3{ 20 * offset, -20, 0 });
 }
 
 void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse) {
@@ -291,7 +318,7 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse)
 
 	if (entity1 == &playerVehicle)
 		std::cout << "Player and ";
-	
+
 	else
 		std::cout << "Enemy and ";
 
@@ -313,7 +340,7 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse)
 	//Inflict damage
 	//If both vehicles align meaning a rear end
 	if ((entity1AttackLevel >= attackLevelThreshold && entity2AttackLevel >= attackLevelThreshold) ||
-		(entity2AttackLevel <= -attackLevelThreshold && entity1AttackLevel <= -attackLevelThreshold) 
+		(entity2AttackLevel <= -attackLevelThreshold && entity1AttackLevel <= -attackLevelThreshold)
 		&& damage > 5.0f) {
 
 		//Person going slower takes damage
@@ -336,11 +363,11 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse)
 
 	else {
 		//std::cout << "Single collision" << std::endl;
-		//if (abs(entity1AttackLevel) >= attackLevelThreshold && damage > 5.0f) 
+		//if (abs(entity1AttackLevel) >= attackLevelThreshold && damage > 5.0f)
 		if (abs(entity1AttackLevel) >= abs(entity2AttackLevel) && damage > 5.0f)
 			entity2->health -= damage * entity1->damageMultiplier;
 
-		//if (abs(entity2AttackLevel) >= attackLevelThreshold&& damage > 5.0f) 
+		//if (abs(entity2AttackLevel) >= attackLevelThreshold&& damage > 5.0f)
 		if (abs(entity2AttackLevel) >= abs(entity1AttackLevel) && damage > 5.0f)
 			entity1->health -= damage * entity2->damageMultiplier;
 	}
@@ -365,7 +392,7 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse)
 
 void Gamestate::Collision(Vehicle* vehicle, PowerUp* powerUp) {
 	std::cout << "Powerup picked up" << std::endl;		//Placeholder
-	
+
 	glm::mat4 transformMatrix = glm::mat4(
 		2.f, 0.f, 0.f, 0.f,
 		0.f, 2.f, 0.f, 0.f,
@@ -378,13 +405,21 @@ void Gamestate::Collision(Vehicle* vehicle, PowerUp* powerUp) {
 
 	switch (powerUp->type)
 		{
-	case 1:
-		//player fully healed
+	case 0://Checkpoint
+		checkpoints--;
+	case 1://Max Health
 		vehicle->health = 100;
 		break;
-	case 2:
-		//Checkpoint
-		checkpoints--;
+	case 2://Large health boost
+		vehicle->health = vehicle->health + 25;
+		break;
+	case 3://Small health boost
+		vehicle->health = vehicle->health + 10;
+		break;
+	case 4://Increase armour
+		break;
+	case 5://Increase damage
+		break;
 	default:
 		break;
 		}
@@ -444,7 +479,7 @@ void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 
 		//std::cout << "Player direction: [" << playerVehicle.direction.x << "," << playerVehicle.direction.y << "]" << std::endl; //Test statement, delete it if you want
 		//std::cout << "Player position:  X:" << newPosition.x << "  Y:" << newPosition.y << "  Z:" << newPosition.z << std::endl; //Test statement, delete it if you want
 	}
-	
+
 
 	for (int i = 0; i < (int)Enemies.size(); i++) {
 		if (physicsIndex == Enemies[i].physicsIndex) {
@@ -560,4 +595,3 @@ glm::mat4 Gamestate::getEntityTransformation(int sceneObjectIndex) {
 						{0.0f,0.0f,1.0f,0.0f},
 						{0.0f,0.0f,0.0f,1.0f} });
 }
-

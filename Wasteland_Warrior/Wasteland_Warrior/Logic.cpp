@@ -47,7 +47,7 @@ void Logic::Update(Gamestate *gameState)
 		gameState->UIMode = "Lose";
 		gameState->ui_gameplay = false;
 		gameState->restart = true;
-		gameState->score = 2160010000 / (score + 1);
+		gameState->score = (score / 25) + 10;
 		gameState->scoreTime = score / 60;
 	} 
 	else {
@@ -206,7 +206,7 @@ void Logic::spawnPowerUps(Gamestate *gameState) {
 void Logic::modeSelection(Gamestate *gameState) {
 
 	srand((unsigned int)time(NULL));
-	switch (rand() % 5 + 1) {
+	switch (2) {//rand() % 5 + 1) {
 	case 1:
 		survival(gameState);
 		gameState->gameMode = "Survival";
@@ -260,22 +260,22 @@ void Logic::checkpoint(Gamestate *gameState) {
 		switch (i % 4) {
 		case 0:
 			gameState->SpawnEnemy(0, 0, 35.f + (i * 10.f), 5.f, 35.f + (i * 10.f));
-			gameState->SpawnDynamicObject(1, 45.f + (i * 10.f), 0.f, 45.f + (i * 10.f));
+			gameState->SpawnDynamicObject(2, 45.f + (i * 10.f), 0.f, 45.f + (i * 10.f));
 			gameState->Enemies[i].health = 50.f;
 			break;
 		case 1:
 			gameState->SpawnEnemy(0, 0, -35.f - (i * 10.f), 5.f, 35.f + (i * 10.f));
-			gameState->SpawnDynamicObject(1, -45.f - (i * 10.f), 1.f, 45.f + (i * 10.f));
+			gameState->SpawnDynamicObject(2, -45.f - (i * 10.f), 1.f, 45.f + (i * 10.f));
 			gameState->Enemies[i].health = 50.f;
 			break;
 		case 2:
 			gameState->SpawnEnemy(0, 0, 35.f + (i * 10.f), 5.f, -35.f - (i * 10.f));
-			gameState->SpawnDynamicObject(1, 45.f + (i * 10.f), 1.f, -45.f - (i * 10.f));
+			gameState->SpawnDynamicObject(2, 45.f + (i * 10.f), 1.f, -45.f - (i * 10.f));
 			gameState->Enemies[i].health = 50.f;
 			break;
 		case 3:
 			gameState->SpawnEnemy(0, 0, -35.f - (i * 10.f), 5.f, -35.f - (i * 10.f));
-			gameState->SpawnDynamicObject(1, -45.f - (i * 10.f), 1.f, -45.f - (i * 10.f));
+			gameState->SpawnDynamicObject(2, -45.f - (i * 10.f), 1.f, -45.f - (i * 10.f));
 			gameState->Enemies[i].health = 50.f;
 			break;
 		}

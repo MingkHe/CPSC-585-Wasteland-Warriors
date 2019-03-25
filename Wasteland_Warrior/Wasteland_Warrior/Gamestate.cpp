@@ -141,10 +141,20 @@ void Gamestate::SpawnDynamicObject(int ObjectType, float x, float y, float z) {
 	bool objectExists = true;
 	int sceneObjectIndex = 0;
 	PxReal density = 1;
-	if (ObjectType == 1) {
 
 		//CreateBoxObject
-		sceneObjectIndex = scene->loadOBJObject("Objects/Realistic_Box_Model/box_realistic.obj", "Objects/Realistic_Box_Model/box_texture_color_red.png");
+		switch (ObjectType)
+		{
+		case 1:
+			sceneObjectIndex = scene->loadOBJObject("Objects/Realistic_Box_Model/box_realistic.obj", "Objects/Realistic_Box_Model/box_texture_color_red.png");
+			break;
+		case 2:
+			sceneObjectIndex = scene->loadOBJObject("Objects/checkpointMarker.obj", "Textures/blueSmoke.jpg");
+			break;
+		default:
+			objectExists = false;
+			break;
+		}
 
 		density = 1;
 		PxVec3 dimensions = { 2,2,2 };
@@ -166,10 +176,6 @@ void Gamestate::SpawnDynamicObject(int ObjectType, float x, float y, float z) {
 		PowerUps.push_back(newPowerUp);
 		//DynamicObjects.push_back(Object(physicsIndex, sceneObjectIndex , x, y, z));
 		
- 	}
-	else {
-		objectExists = false;
-	}
 }
 
 void Gamestate::SpawnPlayer(float x, float y, float z) {

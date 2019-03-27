@@ -27,6 +27,7 @@ public:
 
 	//Prints system specs to the console
 	void QueryGLVersion();
+	int win_height, win_width;
 
 private:
 	GLFWwindow * window;

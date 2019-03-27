@@ -16,10 +16,16 @@ public:
 
 	bool CheckForStuck();
 
-	int type;
+	int AIType;
+	int AITypeRevert;	//Used to store the original AI type so after becoming unstuck it continues the original behavior
+	int ObjectType;
+
 	int lastMotionTime;
 
 	bool recoveryMode = false;
+	bool forceRelocate = false;
 	int active = 1;
+
+	glm::vec2 destination = glm::vec2(0.0f, 0.0f);
 };
 

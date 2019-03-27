@@ -6,7 +6,7 @@ class PlayerUnit :
 	public Vehicle
 {
 public:
-	glm::vec2 heading;
+	glm::vec3 heading;
 
 	PlayerUnit();
 	PlayerUnit(int newPhysicsIndex, int newSceneObjectIndex);

@@ -22,7 +22,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{8516B0C0-F488-4F9A-AFCB-5C7CBDBA3983}</ProjectGuid>
     <RootNamespace>Wasteland_Warrior</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -223,6 +223,8 @@
     <None Include="..\shaders\needlevertex.glsl" />
     <None Include="..\shaders\radarfragment.glsl" />
     <None Include="..\shaders\radarvertex.glsl" />
+    <None Include="..\shaders\shadowMapFragment.glsl" />
+    <None Include="..\shaders\shadowMapVertex.glsl" />
     <None Include="..\shaders\texFragment.glsl" />
     <None Include="..\shaders\texVertex.glsl" />
     <None Include="..\shaders\vertex.glsl" />

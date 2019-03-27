@@ -9,9 +9,10 @@
 std::queue<std::string> UserInput::inputBuffer;
 
 //Mouse
-double UserInput::MouseXpos;
-double UserInput::MouseYpos;
-bool UserInput::MousePressed;
+float UserInput::MouseXpos;
+float UserInput::MouseYpos;
+bool UserInput::MouseLeft;
+bool UserInput::MouseRight;
 
 //WASD
 bool UserInput::WKey;
@@ -19,6 +20,8 @@ bool UserInput::AKey;
 bool UserInput::SKey;
 bool UserInput::DKey;
 bool UserInput::SPACEKey;
+
+bool UserInput::Reverse;
 
 UserInput::UserInput()
 {
@@ -96,10 +99,10 @@ void UserInput::Update(Gamestate* gameState)
 		}
 	}
 
-	//Mouse Camera Input
-	if (UserInput::MousePressed) {
+	//Mouse Input
+	if (UserInput::MouseLeft) {
 		if (UserInput::MouseXpos != oldMouseXpos) {
-			float angle = gameState->cameraAngle + (oldMouseXpos - UserInput::MouseXpos) * 0.01;
+			float angle = gameState->cameraAngle + (oldMouseXpos - UserInput::MouseXpos) * 0.01f;
 			if (angle < 1.5 && angle > -1.5) {
 				gameState->cameraAngle = angle;
 			}
@@ -108,14 +111,24 @@ void UserInput::Update(Gamestate* gameState)
 	}
 	else {
 		if (gameState->cameraAngle > 0.05){
-			gameState->cameraAngle = gameState->cameraAngle - 0.02;
+			gameState->cameraAngle = gameState->cameraAngle - 0.02f;
 		}
 		else if (gameState->cameraAngle < -0.05) {
-			gameState->cameraAngle = gameState->cameraAngle + 0.02;
+			gameState->cameraAngle = gameState->cameraAngle + 0.02f;
 		}
 		else {
 				gameState->cameraAngle = 0;
 		}
+	}
+	if (UserInput::MouseRight) {
+		gameState->mouseRight = true;
+	}
+	else {
+		gameState->mouseRight = false;
+	}
+
+	if (UserInput::Reverse) {
+		UserInput::inputBuffer.push("REVERSE");
 	}
 }
 
@@ -158,6 +171,11 @@ void UserInput::key(GLFWwindow* window, int key, int scancode, int action, int m
 			//Change View
 		case GLFW_KEY_V:
 			UserInput::inputBuffer.push("VIEW");
+			break;
+
+			//Reverse Cam
+		case GLFW_KEY_E:
+			UserInput::Reverse = true;
 			break;
 
 			//Arrows
@@ -226,6 +244,10 @@ void UserInput::key(GLFWwindow* window, int key, int scancode, int action, int m
 		case GLFW_KEY_SPACE:
 			UserInput::SPACEKey = false;
 			break;
+
+		case GLFW_KEY_E:
+			UserInput::Reverse = false;
+			break;
 		}
 	}
 		break;
@@ -234,16 +256,22 @@ void UserInput::key(GLFWwindow* window, int key, int scancode, int action, int m
 
 void UserInput::cursor(GLFWwindow* window, double xpos, double ypos)
 {
-	UserInput::MouseXpos = xpos;
-	UserInput::MouseYpos = ypos;
+	UserInput::MouseXpos = (float)xpos;
+	UserInput::MouseYpos = (float)ypos;
 }
 
 void UserInput::mouseButton(GLFWwindow* window, int button, int action, int mods)
 {
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-		UserInput::MousePressed = true;
+		UserInput::MouseLeft = true;
 	} else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
-		UserInput::MousePressed = false;
+		UserInput::MouseLeft = false;
+	}
+	if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
+		UserInput::MouseRight = true;
+	}
+	else if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE) {
+		UserInput::MouseRight = false;
 	}
 }
 
@@ -299,7 +327,7 @@ void UserInput::gamepad(int controller, Gamestate* gameState) {
 			UserInput::inputBuffer.push("Y");
 		};
 		if (GLFW_PRESS == buttons[4]) { 
-			UserInput::inputBuffer.push("LB");
+			UserInput::inputBuffer.push("REVERSE");
 		};
 		if (GLFW_PRESS == buttons[5]) {
 			if (view == true) {

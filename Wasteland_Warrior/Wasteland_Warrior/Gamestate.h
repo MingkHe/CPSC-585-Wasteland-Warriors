@@ -16,6 +16,8 @@
 
 #pragma once
 
+# define M_PI           3.14159265358979323846  /* pi */
+
 class Gamestate
 {
 public:
@@ -43,6 +45,8 @@ public:
 	bool SKey;
 	bool DKey;
 	bool SPACEKey;
+
+	bool mouseRight;
 
 	//----------------------Sound Buffer Begin-------------------------------
 
@@ -107,6 +111,7 @@ public:
 	//----------------------UI Buffer Start---------------------------------
 	bool powerText;
 	int textTime;
+	GLFWwindow *window;
 	int loadingPercentage;
 	//----------------------UI Buffer End-----------------------------------
 
@@ -126,6 +131,9 @@ public:
 	Camera camera = Camera(this);
 	float cameraAngle;
 	int view;
+	int skyboxIndex;
+	int groundIndex;
+	int mapGroundPhysicsIndex;
 
 	//Time
 	int time;
@@ -134,9 +142,9 @@ public:
 	int gstest = 5;
 
 	//Graphics
-	glm::vec3 light = glm::vec3(0.0f, 100.0f, 0.0f);
+	glm::vec3 light = glm::vec3(20.0f, 100.0f, 0.0f);
 	glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
-	double lightAttenuation = 0.000000002f;
+	float lightAttenuation = 0.000000002f;
 	float lightAmbientCoefficient = 0.00f;
 
 	glm::vec3 materialSpecularColor = glm::vec3(1.0f, 1.0f, 1.0f);
@@ -150,10 +158,92 @@ public:
 
 	std::string UIMode;
 
+	const int numOfStaticObjectInstances = 11;
+	int staticObjMeshTextureIndices[11];
+	const char* staticObjMeshList[11] = {
+		"Objects/SkyBox/skySphere.obj",
+		"Objects/Ruined_Brick_Building/ruined building_brick.obj", 
+		"Objects/Wooden_train_cars/wagon.obj", 
+		"Objects/Truck/truck.obj", 
+		"Objects/Building1/building_lowpoly.obj",  
+		"Objects/checkpointMarker.obj", 
+		"Objects/canyonWalls.obj", 
+		"Objects/Battle_Car_Package/OBJs/staticOilTanker.obj",
+		"Objects/Tunnel/tunnel.obj", 
+		"Objects/RuinedSmallHouse/Old_house.obj",
+		"Objects/Buildings/Gas Station.obj"
+	};
+
+	const char* staticObjTextureList[11] = {
+		 "Objects/SkyBox/skySphere_texture.jpg",
+		 "Objects/Ruined_Brick_Building/ruined_building_brick.jpg",
+		 "Objects/Wooden_train_cars/wagon_tex3.png",
+		 "Objects/Truck/truck_tex1.png",
+		 "Objects/Building1/building_lowpoly_texture.jpg",
+		 "Textures/blueSmoke.jpg",
+		 "Textures/canyonWallTexture2.png",
+		 "Objects/Battle_Car_Package/tex/Oil Tank.jpg",
+		 "Objects/Tunnel/tunnelWall.jpg",
+		 "Objects/RuinedSmallHouse/Old_house.png",
+		 "Objects/Buildings/Gas Station.jpg"
+	 };
+
+	const int numOfDynamicObjectInstances = 6;
+	int dynamicObjMeshTextureIndices[6];
+	const char* dynamicObjMeshList[6] = {
+	"Objects/Realistic_Box_Model/box_realistic.obj",
+	"Objects/Realistic_Box_Model/box_realistic.obj",
+	"Objects/Realistic_Box_Model/box_realistic.obj",
+	"Objects/Realistic_Box_Model/box_realistic.obj",
+	"Objects/Realistic_Box_Model/box_realistic.obj",
+	"Objects/checkpointMarker.obj"};
+
+	const char* dynamicObjTextureList[6] = {
+	//"Objects/Realistic_Box_Model/box_texture_color_red.png", 
+	"Objects/Realistic_Box_Model/full_health.jpg",
+	"Objects/Realistic_Box_Model/large_health_boost.jpg",
+	"Objects/Realistic_Box_Model/small_health_boost.png",
+	"Objects/Realistic_Box_Model/armour.png",
+	"Objects/Realistic_Box_Model/damage.png",
+	"Textures/blueSmoke.jpg" };
+
+	const int numOfVehicleObjectInstances = 7;
+	int vehicleMeshTextureIndices[7];
+	const char* vehicleMeshList[7] = { 
+	"Objects/Battle_Car_Package/OBJs/playerVehicle.obj",
+	"Objects/Battle_Car_Package/OBJs/enemy1_oilBarrelCar.obj",
+	"Objects/Battle_Car_Package/OBJs/enemy2_truck.obj", 
+	"Objects/Battle_Car_Package/OBJs/enemy3_bigBug.obj", 
+	"Objects/Battle_Car_Package/OBJs/enemy4_dragster.obj", 
+	"Objects/Battle_Car_Package/OBJs/enemy5_bigTruck.obj", 
+	"Objects/Battle_Car_Package/OBJs/bigBadBoss.obj"};
+
+	const char* vehicleTextureList[7] = {
+	"Objects/Battle_Car_Package/tex/Bex Car 4.jpg",
+	"Objects/Battle_Car_Package/tex/AX materiel 1.jpg",
+	"Objects/Battle_Car_Package/tex/Battle Jip.jpg",
+	"Objects/Battle_Car_Package/tex/Battle Toscar.jpg",
+	"Objects/Battle_Car_Package/tex/4X Car.jpg",
+	"Objects/Battle_Car_Package/tex/Small Truck.jpg",
+	"Objects/Battle_Car_Package/tex/Truck Tex.jpg" };
+
+
+	int mapMeshTextureIndices[1];
+	const char* mapMeshList[1] = {
+	"Objects/WorldMapV3Test.obj"};
+
+	const char* mapTextureList[1] = {
+	"Textures/sandTexture.jpg" };
+
+
+
+	
+
 	//Logic
 	int wave;
 	bool restart;
 	int enemiesLeft;
+	int checkpoints;
 	int breakSeconds;
 	int score;
 	int scoreTime;
@@ -162,19 +252,34 @@ public:
 	int window_width;
 	int window_height;
 
+	int powerUpType;
+
 	//Spawning/Despawning Entities
 
-	void SpawnMap();
-	void SpawnStaticObject(int ObjectType, float x, float y, float z);
-	void SpawnDynamicObject(int ObjectType, float x, float y, float z);
-	void SpawnPlayer(float x, float y, float z);
-	void SpawnEnemy(int type, float x, float y, float z);
-	void DespawnEnemy(Vehicle* vehicle);
+	//In order to make showing loading percentage in easier way, break InstantiateAllMeshes_Textures() into serveal part:
+	void InstantiateAllMeshes_Textures();
+	void InstantiateAllMeshes_Textures_Map();
+	void InstantiateAllMeshes_Textures_Static();
+	void InstantiateAllMeshes_Textures_Dynamic();
+	void InstantiateAllMeshes_Textures_Vehicle();
 
-	void Collision(Vehicle* entity1, Vehicle* entity2, glm::vec2 impulse);
+	
+	//--------------------------------------
+
+	void SpawnMap();
+	void SpawnStaticObject(int ObjectType, float x, float y, float z, float xRot, float yRot, float zRot);
+	void SpawnDynamicObject(int ObjectType, float x, float y, float z, float xRot, float yRot, float zRot);
+	void SpawnPlayer(float x, float y, float z, float xRot, float yRot, float zRot);
+	void SpawnEnemy(int ObjectType, int AIType, float x, float y, float z, float xRot, float yRot, float zRot);
+	void DespawnEnemy(Vehicle* vehicle);
+	void DespawnObject(Object* object);
+	void DespawnCheckpoint(PowerUp* checkpoint);
+
+	void Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse);
 	void Collision(Vehicle* vehicle, PowerUp* powerUp);
 	void Collision(Vehicle* vehicle, Object* staticObject);
 
+	glm::mat4 getRotationMatrix(float xRot, float yRot, float zRot);
 	void resetOrientation();
 	void resetOrientation(int physicsIndex);
 

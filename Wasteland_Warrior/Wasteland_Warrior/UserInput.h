@@ -21,11 +21,12 @@ public:
 	static std::queue<std::string> inputBuffer;
 	
 	//Mouse
-	static double MouseXpos;
-	static double MouseYpos;
+	static float MouseXpos;
+	static float MouseYpos;
 	float oldMouseXpos;
 	float oldMouseYpos;
-	static bool MousePressed;
+	static bool MouseLeft;
+	static bool MouseRight;
 
 	//WASD
 	static bool WKey;
@@ -33,6 +34,8 @@ public:
 	static bool SKey;
 	static bool DKey;
 	static bool SPACEKey;
+
+	static bool Reverse;
 
 	void Update(Gamestate* gameState);
 	static void key(GLFWwindow * window, int key, int scancode, int action, int mods);

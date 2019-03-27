@@ -1,7 +1,7 @@
 # --Wasteland Warrior--
-## Milestone #3
+## Milestone #4
 
-For this milestone, we have implemented the game rules, opponent driving AI, 3D rendering engine, audio engine and refine gameplay. Our goal was to connect each system together to create a first playable of our game.
+For this milestone, we have implemented different game modes: Survival, Boss battle, Checkpoint, Head-hunter. Different types of AI have been implemented to serve for different game modes as well. Shadowing has been added and power up systems has more items now. The driving model has been improve a lot and now we can drift! We also recreate the game map to make it closer to our final map.  
 
 ### To Build and Run:
 To build, download or clone the Wasteland Warrior files from https://github.com/MingkHe/CPSC-585-Wasteland-Warriors/tree/Wasteland_Warrior
@@ -25,6 +25,7 @@ be compiled using only the x86 Debug mode.
     Camera:
         Move Mouse while Holding the Left Mouse Button or move the Right Stick to move the camera around the vehicle
         V or Right Shoulder Button to toggle the view between third person,Hood Cam, and Cockpit view
+        Hold down E or Left Shoulder Button to look behind you
 
     Screen:
         UP Arrow or UP on Dpad to move up

@@ -86,6 +86,7 @@ public:
 	Geometry needle;
 	Geometry mirror;
 	Geometry aim;
+	Geometry aimBeam;
 
 	Framebuffer shadow_buffer;
 	Framebuffer rear_view;

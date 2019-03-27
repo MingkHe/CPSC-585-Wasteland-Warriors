@@ -1029,3 +1029,18 @@ void Physics_Controller::cleanupPhysics(bool interactive)
 
 	//printf("SnippetVehicle4W done.\n");*/
 }
+
+bool Physics_Controller::rayCast() {
+	PxVec3 origin = PxVec3(gameState->playerVehicle.position.x+3* gameState->playerVehicle.direction.x, gameState->playerVehicle.position.y+3* gameState->playerVehicle.direction.y, gameState->playerVehicle.position.z+3* gameState->playerVehicle.direction.z);                 // [in] Ray origin
+	PxVec3 unitDir = PxVec3(gameState->playerVehicle.direction.x, gameState->playerVehicle.direction.y, gameState->playerVehicle.direction.z);                // [in] Normalized ray direction
+
+	//PxVec3 origin = PxVec3(gameState->camera.pos.x, gameState->camera.pos.y, gameState->camera.pos.z);                 // [in] Ray origin
+	//PxVec3 unitDir = PxVec3(gameState->camera.dir.x, gameState->camera.dir.y, gameState->camera.dir.z);                // [in] Normalized ray direction
+
+	PxReal maxDistance = 10;            // [in] Raycast max distance
+	PxRaycastBuffer hit;                 // [out] Raycast results
+	bool status = gScene->raycast(origin, unitDir, maxDistance, hit);
+	if (status)
+		printf("hit distance %f \n", hit.block.distance);
+	return status;
+}

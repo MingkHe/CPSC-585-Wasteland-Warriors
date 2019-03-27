@@ -28,6 +28,8 @@ public:
 	int createEnemyVehicle();
 	int createPlayerVehicle();
 
+	bool rayCast();
+
 	ContactReportCallback gContactReportCallback;
 
 

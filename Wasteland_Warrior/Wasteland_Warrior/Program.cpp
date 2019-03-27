@@ -232,6 +232,8 @@ void Program::start() {
 		//Physics Engine
 		if (gameState->UIMode == "Game") {
 			physicsCL.Update();
+			
+			std::cout << physicsCL.rayCast() << std::endl;
 		}
 
 		//Audio Engine

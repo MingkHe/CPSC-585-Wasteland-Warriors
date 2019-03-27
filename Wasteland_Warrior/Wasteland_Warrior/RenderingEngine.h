@@ -79,11 +79,13 @@ public:
 	GLuint basicshaderProgram;
 	GLuint shadowshaderProgram;
 	GLuint needleshaderProgram;
+	GLuint imageShaderProgram;
 	Geometry health;
 	Geometry radar;
 	Geometry speedo;
 	Geometry needle;
 	Geometry mirror;
+	Geometry aim;
 
 	Framebuffer shadow_buffer;
 	Framebuffer rear_view;

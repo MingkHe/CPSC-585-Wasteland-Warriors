@@ -8,6 +8,7 @@
 #define PI_F 3.14159265359f
 #include "RenderingEngine.h"
 #include <iostream>
+#include <algorithm>
 
 
 
@@ -97,8 +98,8 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	assignBuffers(mirror);
 	setBufferData(mirror);
 
-	rear_view = createFramebuffer(game_state->window_width, game_state->window_height);
-	shadow_buffer = createFramebuffer(game_state->window_width, game_state->window_height);
+	rear_view = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1180));
+	shadow_buffer = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1180));
 
 	//the code to load the font, may be do some refactor in the future.
 
@@ -177,12 +178,6 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 		else {
 			glUniform1i(glGetUniformLocation(shaderProgram, "isSkybox"), 0);
 		}
-		if (i == game_state->groundIndex) {
-			glUniform1i(glGetUniformLocation(shaderProgram, "isGround"), 1);
-		}
-		else {
-			glUniform1i(glGetUniformLocation(shaderProgram, "isGround"), 0);
-		}
 		glUniformMatrix4fv(transformGL, 1, false, glm::value_ptr(objects[i].subObjects[0].transform));
 		//bind the texture
 		glActiveTexture(GL_TEXTURE0);
@@ -247,7 +242,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	GLint enemiesGL = glGetUniformLocation(radarshaderProgram, "enemies");
 	GLint numenemiesGL = glGetUniformLocation(radarshaderProgram, "numenemies");
 	GLint highlightsGL = glGetUniformLocation(radarshaderProgram, "highlights");
-	GLint numhighlightGL = glGetUniformLocation(radarshaderProgram, "numhighlight");
+	GLint numhighlightGL = glGetUniformLocation(radarshaderProgram, "numhighlights");
 	GLint playerposGL = glGetUniformLocation(radarshaderProgram, "playerpos");
 	GLint playerdirGL = glGetUniformLocation(radarshaderProgram, "playerdir");
 	GLint radar_distGL = glGetUniformLocation(radarshaderProgram, "radar_dist");

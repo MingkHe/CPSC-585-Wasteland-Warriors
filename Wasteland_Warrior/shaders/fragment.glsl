@@ -22,7 +22,6 @@ uniform vec3 lightColour;
 uniform float lightAttenuation;
 uniform float lightAmbientCoeff;
 uniform int isSkybox;
-uniform int isGround;
 
 in vec2 fragTexCoord;
 in vec3 fragNormal;
@@ -98,9 +97,7 @@ void main() {
 
 		float shadow = 0.0;
 		//shadow
-		if (isGround == 1){
-			shadow = ShadowCalculation(shadowCoord);
-		}
+		shadow = ShadowCalculation(shadowCoord);
 		
 
 		//linear color (color before gamma correction)

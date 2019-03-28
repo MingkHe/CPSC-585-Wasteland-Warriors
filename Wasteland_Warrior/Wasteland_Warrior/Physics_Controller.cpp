@@ -562,6 +562,26 @@ void Physics_Controller::setPosition(int actorIndex, glm::vec3 newLocation){
 	PxActor *actor = userBuffer[actorIndex];
 	PxRigidActor *rigidActor = actor->is<PxRigidActor>();
 	rigidActor->setGlobalPose({ newLocation.x, newLocation.y, newLocation.z });
+
+	const PxVec3 reset = PxVec3{ 0.0f, 0.0f, 0.0f };
+	PxRigidBody* rigidBody = actor->is<PxRigidBody>();
+	rigidBody->setLinearVelocity(reset, true);
+	rigidBody->setAngularVelocity(reset, true);
+}
+
+void Physics_Controller::setPositionStatic(int actorIndex, glm::vec3 newLocation) {
+	PxU32 numOfRidg = gScene->getNbActors(PxActorTypeFlag::eRIGID_STATIC);
+	PxActor *userBuffer[50];
+
+	PxU32 numOfRidgActors = gScene->getActors(PxActorTypeFlag::eRIGID_STATIC, userBuffer, numOfRidg, 0);
+	PxActor *actor = userBuffer[actorIndex];
+	PxRigidActor *rigidActor = actor->is<PxRigidActor>();
+	rigidActor->setGlobalPose({ newLocation.x, newLocation.y, newLocation.z });
+
+	const PxVec3 reset = PxVec3{ 0.0f, 0.0f, 0.0f };
+	PxRigidBody* rigidBody = actor->is<PxRigidBody>();
+	rigidBody->setLinearVelocity(reset, true);
+	rigidBody->setAngularVelocity(reset, true);
 }
 
 void Physics_Controller::resetOrientation(int actorIndex) {

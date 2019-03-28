@@ -354,7 +354,8 @@ void Logic::spawnPowerUps(Gamestate *gameState) {
 }
 
 void Logic::modeSelection(Gamestate *gameState) {
-	switch (rand() % 5 + 1) {
+	switch (1) {
+		//rand() % 5 + 1) {
 	case 1:
 		survival(gameState);
 		gameState->gameMode = "Survival";
@@ -380,7 +381,7 @@ void Logic::modeSelection(Gamestate *gameState) {
 
 //Survival
 void Logic::survival(Gamestate *gameState) {
-	for (int i = 0; i < gameState->wave*2; i++) {
+	for (int i = 0; i < gameState->wave; i++) {
 		switch (i % 4) {
 		case 0: //Spawn Point 1
 			gameState->SpawnEnemy(rand() % 4 + 1, 0, 35.f + (i * 10.f), 5.f, 35.f + (i * 10.f), 0, 0, 0);

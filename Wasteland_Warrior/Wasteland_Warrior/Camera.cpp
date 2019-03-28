@@ -43,14 +43,20 @@ glm::mat4 Camera::viewMatrix() const {
 
 	//Rotation
 	float angle;
-	if (gameState->controller == false) {
+	if (gameState->controller == false && gameState->hapticWheel == false) {
 		angle = pow(gameState->cameraAngle, 5) * 0.20f;
 		if (gameState->view > 0) {
 			angle = -angle;
 		}
 	}
-	else {
+	//If using controller
+	else  if (gameState->controller == true && gameState->hapticWheel == false) {
 		angle = pow(gameState->rightStickX, 5) * 1.5f;
+	}
+	//If using haptic wheel
+	else {
+		angle = 0;
+		//angle = pow(gameState->rightStickX, 5) * 1.5f;
 	}
 
 	//Direction
@@ -96,14 +102,20 @@ glm::mat4 Camera::backviewMatrix() const {
 
 	//Rotation
 	float angle;
-	if (gameState->controller == false) {
+	if (gameState->controller == false && gameState->hapticWheel == false) {
 		angle = pow(gameState->cameraAngle, 5) * 0.20f;
 		if (gameState->view > 0) {
 			angle = -angle;
 		}
 	}
-	else {
+	//If using controller
+	else if (gameState->controller == true && gameState->hapticWheel == false) {
 		angle = pow(gameState->rightStickX, 5) * 1.5f;
+	}
+	//If using haptic wheel
+	else {
+		angle = 0;
+		//angle = pow(gameState->rightStickX, 5) * 1.5f;
 	}
 
 	//Direction

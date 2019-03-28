@@ -597,7 +597,8 @@ void Physics_Controller::resetOrientation(int actorIndex) {
 	std::cout << "orientation reset" << std::endl;
 }
 
-void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DKey, bool SPACEKey, bool hello, float leftStickX, float leftTrigger, float rightTrigger) {
+void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DKey, bool SPACEKey, bool hello, float leftStickX, float leftTrigger, float rightTrigger, float rightStickX) {
+	//Note: RightStickX is just for holding the clutch value for the haptic wheel and serves no other purpose with controller controls
 	releaseAllControls();
 	steerDirection = "";
 	brakeCar = false;
@@ -611,7 +612,7 @@ void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DK
 		gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
 	}
 
-	if (gameState->controller == false) {
+	if (gameState->controller == false && gameState->hapticWheel == false) {
 		if ((WKey) && !(SKey))/*Check if high-order bit is set (1 << 15)*/
 		{
 			if (currentGear < 0) {
@@ -707,12 +708,13 @@ void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DK
 	}
 
 	//Gamepad Driving Input
-	else {
+	else if (gameState->controller == true && gameState->hapticWheel == false) {
 		if (rightTrigger > -1) {
 			if (currentGear < 0) {
 				currentGear = 1;
 				changeToForwardGear = true;
 			}
+			gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
 			gVehicleInputData.setAnalogAccel((rightTrigger + 1)/2);
 		}
 		else if (leftTrigger > -1) {
@@ -730,17 +732,53 @@ void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DK
 			gVehicleInputData.setAnalogHandbrake(1.0f);
 		}
 		else {
-			     gVehicleInputData.setAnalogHandbrake(0.0f);
+			 gVehicleInputData.setAnalogHandbrake(0.0f);
+		}
+	}
+	else {
+		//Note: leftStickX is haptic wheel steering, rightTrigger is accelerate, left Trigger is braking, rightStickX is clutch
+		if (rightStickX > 0 && !clutchStillDown) {
+			clutchStillDown = true;
+			if (currentGear < 0) {
+				currentGear = 1;
+				changeToForwardGear = true;
+				gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
+			}
+			else if (currentGear > 0) {
+				currentGear = -1;
+				changeToReverseGear = true;
+				gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eREVERSE);
+			}
+		}
+		else if (rightStickX < 0 && clutchStillDown) {
+			clutchStillDown = false;
+		}
+		gVehicleInputData.setAnalogAccel((rightTrigger + 1) / 2);
+		gVehicleInputData.setAnalogSteer(-leftStickX);
+		gVehicleInputData.setAnalogBrake((leftTrigger + 1) / 2);
+		if (leftTrigger < 0.99) {
+			gVehicleInputData.setAnalogBrake((leftTrigger + 1) / 2);
+		}
+		else {
+			gVehicleInputData.setAnalogBrake(0.0f);
+		}
+		gVehicleInputData.setAnalogHandbrake(0.0f);
+		if (gameState->button == "B") {
+			gVehicleInputData.setAnalogHandbrake(1.0f);
+		}
+		else {
+			gVehicleInputData.setAnalogHandbrake(0.0f);
 		}
 	}
 
-	//If the mode about to start is eDRIVE_MODE_ACCEL_REVERSE then switch to reverse gears.
+		//If the mode about to start is eDRIVE_MODE_ACCEL_REVERSE then switch to reverse gears.
 	if (changeToReverseGear)
 	{
 		changeToReverseGear = false;
-		gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
+		gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eREVERSE);
 	}
-
+		
+	
 }
 
 void Physics_Controller::stepPhysics(bool interactive)
@@ -760,7 +798,7 @@ void Physics_Controller::stepPhysics(bool interactive)
 	const PxF32 timestep = 1.0f / 60.0f;
 
 	//Update the control inputs for the vehicle.
-	userDriveInput(gameState->WKey, gameState->AKey, gameState->SKey, gameState->DKey, gameState->SPACEKey, true, gameState->leftStickX, gameState->leftTrigger, gameState->rightTrigger);
+	userDriveInput(gameState->WKey, gameState->AKey, gameState->SKey, gameState->DKey, gameState->SPACEKey, true, gameState->leftStickX, gameState->leftTrigger, gameState->rightTrigger, gameState->rightStickX);
 	
 
 	//Update each vehicles drive direction based on input values

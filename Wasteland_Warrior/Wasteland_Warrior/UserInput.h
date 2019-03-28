@@ -13,6 +13,9 @@ private:
 	bool down;
 	bool view;
 
+	bool reverseCameraOn;
+	bool vehicleReset;
+
 public:
 	UserInput();
 	~UserInput();
@@ -41,5 +44,5 @@ public:
 	static void key(GLFWwindow * window, int key, int scancode, int action, int mods);
 	static void cursor(GLFWwindow* window, double xpos, double ypos);
 	static void mouseButton(GLFWwindow* window, int button, int action, int mods);
-	void gamepad(int joystick, Gamestate* gameState);
+	void gamepad(int joystick, int joystick2, Gamestate* gameState);
 };

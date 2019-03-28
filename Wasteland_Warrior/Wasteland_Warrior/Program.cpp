@@ -1,8 +1,6 @@
 /*
 * Program.cpp
 *
-*  Created on: Sep 10, 2018
-*      Author: John Hall
 */
 
 #include <iostream>

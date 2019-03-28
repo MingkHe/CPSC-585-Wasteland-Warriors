@@ -116,7 +116,7 @@ public:
 	//----------------------UI Buffer End-----------------------------------
 
 	bool controller;
-
+	
 	//Joysticks
 	float leftStickX;
 	float leftStickY;
@@ -126,6 +126,10 @@ public:
 	//Triggers
 	float leftTrigger;
 	float rightTrigger;
+
+	//Haptic Wheel 
+	bool hapticWheel;
+	
 
 	//Camera
 	Camera camera = Camera(this);

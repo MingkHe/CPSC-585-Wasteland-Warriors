@@ -17,7 +17,7 @@ public:
 
 	void Update();
 	void updateEntities();
-	void userDriveInput(bool WKey, bool AKey, bool SKey, bool DKey, bool SPACEKey, bool hello, float leftStickX, float leftTrigger, float rightTrigger);
+	void userDriveInput(bool WKey, bool AKey, bool SKey, bool DKey, bool SPACEKey, bool hello, float leftStickX, float leftTrigger, float rightTrigger, float rightStickX);
 
 	void setPosition(int actorIndex, glm::vec3 newLocation);
 	int createMap(const PxVec3* verts, const PxU32 numVerts, const PxU32* indices, const PxU32 triCount);
@@ -35,6 +35,6 @@ public:
 	int rigidStaticActorIndex = -1;
 	Gamestate* gameState;
 
-
+	bool clutchStillDown = false;
 	bool powerupGrabbed = false;
 };

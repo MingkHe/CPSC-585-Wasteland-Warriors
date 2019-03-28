@@ -44,7 +44,7 @@ public:
 	bool AKey;
 	bool SKey;
 	bool DKey;
-	bool SPACEKey;
+	bool Handbrake;
 
 	bool mouseRight;
 

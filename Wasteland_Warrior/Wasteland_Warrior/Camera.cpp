@@ -123,7 +123,7 @@ glm::mat4 Camera::backviewMatrix() const {
 
 	car.x = -distanceBehindCar * xVal + cam.x;
 	car.z = -distanceBehindCar * yVal + cam.z;
-	car.y = car.y + distanceAboveCar;
+	car.y = car.y + distanceAboveCar - 0.5f;
 
 	return glm::lookAt(cam, car, up);
 }

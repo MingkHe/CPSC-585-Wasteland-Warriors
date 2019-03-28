@@ -617,7 +617,7 @@ void Physics_Controller::resetOrientation(int actorIndex) {
 	std::cout << "orientation reset" << std::endl;
 }
 
-void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DKey, bool SPACEKey, bool hello, float leftStickX, float leftTrigger, float rightTrigger) {
+void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DKey, bool Handbrake, bool hello, float leftStickX, float leftTrigger, float rightTrigger) {
 	releaseAllControls();
 	steerDirection = "";
 	brakeCar = false;
@@ -642,7 +642,7 @@ void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DK
 			if ((AKey) && !(DKey))
 			{
 				steerDirection = "left";
-				if (SPACEKey) {
+				if (Handbrake) {
 					startHandbrakeTurnRightMode();
 
 				}
@@ -654,7 +654,7 @@ void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DK
 			else if ((DKey) && !(AKey))
 			{
 				steerDirection = "right";
-				if (SPACEKey) {
+				if (Handbrake) {
 
    					startHandbrakeTurnLeftMode();
 				}
@@ -678,7 +678,7 @@ void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DK
 			if ((AKey) && !(DKey))
 			{
 				steerDirection = "left";
-				if (SPACEKey) {
+				if (Handbrake) {
 					startHandbrakeTurnRightMode();
 
 				}
@@ -690,7 +690,7 @@ void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DK
 			else if ((DKey) && !(AKey))
 			{
 				steerDirection = "right";
-				if (SPACEKey) {
+				if (Handbrake) {
 
 					startHandbrakeTurnLeftMode();
 				}
@@ -780,7 +780,7 @@ void Physics_Controller::stepPhysics(bool interactive)
 	const PxF32 timestep = 1.0f / 60.0f;
 
 	//Update the control inputs for the vehicle.
-	userDriveInput(gameState->WKey, gameState->AKey, gameState->SKey, gameState->DKey, gameState->SPACEKey, true, gameState->leftStickX, gameState->leftTrigger, gameState->rightTrigger);
+	userDriveInput(gameState->WKey, gameState->AKey, gameState->SKey, gameState->DKey, gameState->Handbrake, true, gameState->leftStickX, gameState->leftTrigger, gameState->rightTrigger);
 	
 
 	//Update each vehicles drive direction based on input values

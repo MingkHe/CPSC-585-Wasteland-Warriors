@@ -12,6 +12,10 @@ private:
 	bool up;
 	bool down;
 	bool view;
+	bool select;
+
+	int axesCount;
+	int buttonCount;
 
 public:
 	UserInput();
@@ -28,13 +32,16 @@ public:
 	static bool MouseLeft;
 	static bool MouseRight;
 
-	//WASD
+	//Car controls
 	static bool WKey;
 	static bool AKey;
 	static bool SKey;
 	static bool DKey;
-	static bool SPACEKey;
 
+	//Handbrake
+	static bool Handbrake;
+
+	//Reverse Cam
 	static bool Reverse;
 
 	void Update(Gamestate* gameState);

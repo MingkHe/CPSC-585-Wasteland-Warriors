@@ -140,7 +140,7 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 			GameState->carIdle_sound = false;
 		}
 
-		if (GameState->SPACEKey && GameState->playerVehicle.speed > 0)
+		if (GameState->Handbrake && GameState->playerVehicle.speed > 0)
 		{
 			GameState->carBrake_sound = true;
 		}

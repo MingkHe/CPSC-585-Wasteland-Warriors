@@ -117,7 +117,7 @@ RenderingEngine::~RenderingEngine() {
 
 void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objects) {
 	glm::mat4 perspectiveMatrix = glm::perspective(PI_F*.4f, (float)game_state->window_width / (float)game_state->window_height, .1f, 750.f); // last argument changed from 200 to 500 to increase view range
-	glm::mat4 depthperspectiveMatrix = glm::perspective(PI_F*.2f, (float)game_state->window_width / (float)game_state->window_height, 50.f, 250.f);
+	glm::mat4 depthperspectiveMatrix = glm::perspective(PI_F*.2f, (float)game_state->window_width / (float)game_state->window_height, 50.f, 300.f);
 	//setting up framebuffer stuff
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
@@ -126,7 +126,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	glUseProgram(shadowshaderProgram);
 	GLint transformGL = glGetUniformLocation(shadowshaderProgram, "transform");
 	//glm::mat4 depthProjectionMatrix = glm::ortho<float>(-10, 10, -10, 10, -10, 20);
-	glm::mat4 depthViewMatrix = glm::lookAt(game_state->light, game_state->playerVehicle.position, glm::vec3(0, 1, 0));
+	glm::mat4 depthViewMatrix = glm::lookAt(game_state->light, game_state->playerVehicle.position, glm::vec3(1, 0, 0));
 	glm::mat4 depthModelMatrix = glm::mat4(1.0);
 	glm::mat4 depthMVP = depthperspectiveMatrix * depthViewMatrix;
 	GLuint depthMatrixID = glGetUniformLocation(shadowshaderProgram, "modelViewProjection");
@@ -233,7 +233,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	//render health bar
 	glUseProgram(healthshaderProgram);
 	glUniform1f(glGetUniformLocation(healthshaderProgram, "health"), game_state->playerVehicle.health);
-	glUniform1f(glGetUniformLocation(healthshaderProgram, "maxhealth"), 100);
+	glUniform1f(glGetUniformLocation(healthshaderProgram, "maxhealth"), game_state->playerVehicle.maxhealth);
 	glBindVertexArray(health.vao);
 	glDrawArrays(health.drawMode, 0, health.verts.size());
 

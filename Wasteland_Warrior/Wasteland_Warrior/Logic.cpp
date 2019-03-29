@@ -20,6 +20,8 @@ Logic::~Logic()
 
 void Logic::Update(Gamestate *gameState)
 {
+	std::cout << gameState->playerVehicle.position.x << " " <<  gameState->playerVehicle.position.y << " " << gameState->playerVehicle.position.z << std::endl;
+
 	//Randomization
 	srand((unsigned int)time(NULL));
 
@@ -381,25 +383,35 @@ void Logic::modeSelection(Gamestate *gameState) {
 
 //Survival
 void Logic::survival(Gamestate *gameState) {
-	for (int i = 0; i < gameState->wave; i++) {
-		switch (i % 4) {
+	for (int i = 0; i < gameState->wave*6; i++) {
+		switch (i % 6) {
 		case 0: //Spawn Point 1
-			gameState->SpawnEnemy(rand() % 4 + 1, 0, 35.f + (i * 10.f), 5.f, 35.f + (i * 10.f), 0, 0, 0);
+			gameState->SpawnEnemy(rand() % 4 + 1, 0, 150.f + (i * -5.f), -2.f, -85.f + (i * 5.f), 0, 0, 0);
 			gameState->Enemies[i].health = 25.f;
 			gameState->Enemies[i].maxhealth = 25.f;
 			break;
 		case 1: //Spawn Point 2
-			gameState->SpawnEnemy(rand() % 4 + 1, 0, -35.f - (i * 10.f), 5.f, 35.f + (i * 10.f), 0, 0, 0);
+			gameState->SpawnEnemy(rand() % 4 + 1, 0, 145.f + (i * -5.f), 21.f, 155.f + (i * -5.f), 0, 0, 0);
 			gameState->Enemies[i].health = 25.f;
 			gameState->Enemies[i].maxhealth = 25.f;
 			break;
 		case 2: //Spawn Point 3
-			gameState->SpawnEnemy(rand() % 4 + 1, 0, 35.f + (i * 10.f), 5.f, -35.f - (i * 10.f), 0, 0, 0);
+			gameState->SpawnEnemy(rand() % 4 + 1, 0, -90.f + (i * 5.f), 21.f, 155.f + (i * -5.f), 0, 0, 0);
 			gameState->Enemies[i].health = 25.f;
 			gameState->Enemies[i].maxhealth = 25.f;
 			break;
 		case 3: //Spawn Point 4
-			gameState->SpawnEnemy(rand() % 4 + 1, 0, -35.f - (i * 10.f), 5.f, -35.f - (i * 10.f), 0, 0, 0);
+			gameState->SpawnEnemy(rand() % 4 + 1, 0, -137.f + (i * 5.f), 9.f, 10.f + (i * -5.f), 0, 0, 0);
+			gameState->Enemies[i].health = 25.f;
+			gameState->Enemies[i].maxhealth = 25.f;
+			break;
+		case 4: //Spawn Point 5
+			gameState->SpawnEnemy(rand() % 4 + 1, 0, -137.f + (i * 5.f), 9.f, -30.f + (i * 5.f), 0, 0, 0);
+			gameState->Enemies[i].health = 25.f;
+			gameState->Enemies[i].maxhealth = 25.f;
+			break;
+		case 5: //Spawn Point 6
+			gameState->SpawnEnemy(rand() % 4 + 1, 0, -100.f + (i * 5.f), -2.f, -132.f + (i * 5.f), 0, 0, 0);
 			gameState->Enemies[i].health = 25.f;
 			gameState->Enemies[i].maxhealth = 25.f;
 			break;

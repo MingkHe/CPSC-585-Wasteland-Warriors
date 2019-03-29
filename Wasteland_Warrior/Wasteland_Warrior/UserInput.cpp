@@ -158,6 +158,11 @@ void UserInput::key(GLFWwindow* window, int key, int scancode, int action, int m
 			UserInput::DKey = true;
 			break;
 
+			//Selection
+		case GLFW_KEY_ENTER:
+			UserInput::inputBuffer.push("ENTER");
+			break;
+
 			//Handbrake
 		case GLFW_KEY_SPACE:
 			UserInput::Handbrake = true;

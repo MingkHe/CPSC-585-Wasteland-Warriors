@@ -15,6 +15,7 @@ uniform vec3 cameraPosition; // =cameraPosition
 // material settings
 uniform sampler2D materialTex;
 uniform sampler2D shadowTex;
+uniform sampler2D shadowTextwo;
 uniform float materialShininess;
 uniform vec3 materialSpecularColor;
 
@@ -28,6 +29,7 @@ in vec2 fragTexCoord;
 in vec3 fragNormal;
 in vec3 fragVert;
 in vec4 shadowCoord;
+in vec4 shadowCoordtwo;
 
 layout(location = 0) out vec4 finalColor;
 
@@ -135,6 +137,37 @@ vec2( 0.830954058162f, 0.592161057714f ),
 vec2( 0.614506797369f, 0.135917402293f )
 };
 
+float ShadowCalculationtwo(vec4 fragPosLightSpace)
+{
+    // perform perspective divide
+    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+    // transform to [0,1] range
+    projCoords = projCoords * 0.5 + 0.5;
+	if(projCoords.x < 0 || projCoords.x > 1 || projCoords.y < 0 || projCoords.y > 1) {
+		return 0.f;
+	}
+    // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
+    float closestDepth = texture(shadowTextwo, projCoords.xy).r; 
+    // get depth of current fragment from light's perspective
+    float currentDepth = projCoords.z;
+    // check whether current frag pos is in shadow
+	vec3 surfaceToLight = normalize(lightPosition - fragVert);
+	float bias = max(0.005 * (1.0 - dot(fragNormal, surfaceToLight)), 0.005);
+    //float shadow = currentDepth-bias > closestDepth  ? 1.0 : 0.0;
+
+	float shadow = 0.0;
+	vec2 texelSize = 1.0 / textureSize(shadowTex, 0);
+	for(int i = 0; i < SAMPLE_NUM; i++)
+	{
+		float pcfDepth = texture(shadowTextwo, projCoords.xy + poissonDisk[i] * texelSize).r;
+		shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
+	}
+	shadow /= float(SAMPLE_NUM);
+
+    return shadow;
+}
+
+
 float ShadowCalculation(vec4 fragPosLightSpace)
 {
     // perform perspective divide
@@ -142,7 +175,7 @@ float ShadowCalculation(vec4 fragPosLightSpace)
     // transform to [0,1] range
     projCoords = projCoords * 0.5 + 0.5;
 	if(projCoords.x < 0 || projCoords.x > 1 || projCoords.y < 0 || projCoords.y > 1) {
-		return 0.0;
+		return ShadowCalculationtwo(shadowCoordtwo);
 	}
     // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
     float closestDepth = texture(shadowTex, projCoords.xy).r; 

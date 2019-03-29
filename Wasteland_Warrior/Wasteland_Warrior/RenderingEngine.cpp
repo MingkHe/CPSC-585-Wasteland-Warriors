@@ -100,6 +100,7 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 
 	rear_view = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1180));
 	shadow_buffer = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1180));
+	shadow_buffertwo = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1180));
 
 	//the code to load the font, may be do some refactor in the future.
 
@@ -117,7 +118,7 @@ RenderingEngine::~RenderingEngine() {
 
 void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objects) {
 	glm::mat4 perspectiveMatrix = glm::perspective(PI_F*.4f, (float)game_state->window_width / (float)game_state->window_height, .1f, 750.f); // last argument changed from 200 to 500 to increase view range
-	glm::mat4 depthperspectiveMatrix = glm::perspective(PI_F*.2f, (float)game_state->window_width / (float)game_state->window_height, 50.f, 300.f);
+	glm::mat4 depthperspectiveMatrix = glm::perspective(PI_F*.085f, (float)game_state->window_width / (float)game_state->window_height, 50.f, 300.f);
 	//setting up framebuffer stuff
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
@@ -139,6 +140,25 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 		glBindVertexArray(objects[i].subObjects[0].vao);
 		glDrawArrays(objects[i].subObjects[0].drawMode, 0, objects[i].subObjects[0].verts.size());
 	}
+
+	glm::mat4 depthperspectiveMatrixtwo = glm::perspective(PI_F*.8f, (float)game_state->window_width / (float)game_state->window_height, 50.f, 500.f);
+	glBindFramebuffer(GL_FRAMEBUFFER, shadow_buffertwo.id);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glUseProgram(shadowshaderProgram);
+	//glm::mat4 depthProjectionMatrix = glm::ortho<float>(-10, 10, -10, 10, -10, 20);
+	glm::mat4 depthViewMatrixtwo = glm::lookAt(game_state->light, glm::vec3(0, 0, 0), glm::vec3(1, 0, 0));
+	glm::mat4 depthMVPtwo = depthperspectiveMatrixtwo * depthViewMatrixtwo;
+	depthMatrixID = glGetUniformLocation(shadowshaderProgram, "modelViewProjection");
+	glUniformMatrix4fv(depthMatrixID, 1, GL_FALSE, &depthMVPtwo[0][0]);
+	for (int i = 0; i < (int)objects.size(); i++) {
+		if (i == game_state->skyboxIndex) {
+			continue;
+		}
+		glUniformMatrix4fv(transformGL, 1, false, glm::value_ptr(objects[i].subObjects[0].transform));
+		glBindVertexArray(objects[i].subObjects[0].vao);
+		glDrawArrays(objects[i].subObjects[0].drawMode, 0, objects[i].subObjects[0].verts.size());
+	}
+
 	
 	//Clears the screen to a dark grey background
 	//glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
@@ -157,6 +177,8 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 
 	depthMatrixID = glGetUniformLocation(shaderProgram, "depthViewProjection");
 	glUniformMatrix4fv(depthMatrixID, 1, GL_FALSE, &depthMVP[0][0]);
+	depthMatrixID = glGetUniformLocation(shaderProgram, "depthViewProjectiontwo");
+	glUniformMatrix4fv(depthMatrixID, 1, GL_FALSE, &depthMVPtwo[0][0]);
 
 	glUniform3fv(glGetUniformLocation(shaderProgram, "cameraPosition"), 1, glm::value_ptr(game_state->camera.pos));
 	glUniform3fv(glGetUniformLocation(shaderProgram, "lightPosition"), 1, glm::value_ptr(game_state->light));
@@ -168,8 +190,9 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	glUniform1f(glGetUniformLocation(shaderProgram, "materialShininess"), game_state->materialShininess);
 	glUniform1i(glGetUniformLocation(shaderProgram, "materialTex"), 0);
 	glUniform1i(glGetUniformLocation(shaderProgram, "shadowTex"), 1);
+	glUniform1i(glGetUniformLocation(shaderProgram, "shadowTextwo"), 2);
 
-	//draw rear view
+	//draw actual frame
 	int objectNum = objects.size();
 	for (int i = 0; i < objectNum; i++) {
 		if (i == game_state->skyboxIndex) {
@@ -186,11 +209,14 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, shadow_buffer.depthTextureID);
 
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, shadow_buffertwo.depthTextureID);
+
 		glBindVertexArray(objects[i].subObjects[0].vao);
 		glDrawArrays(objects[i].subObjects[0].drawMode, 0, objects[i].subObjects[0].verts.size());
 	}
 
-	//draw actual frame
+	//draw rear view
 	glBindFramebuffer(GL_FRAMEBUFFER, rear_view.id);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	modelViewProjection = perspectiveMatrix * game_state->camera.backviewMatrix();
@@ -209,6 +235,9 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, shadow_buffer.depthTextureID);
+
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, shadow_buffertwo.depthTextureID);
 
 		glBindVertexArray(objects[i].subObjects[0].vao);
 		glDrawArrays(objects[i].subObjects[0].drawMode, 0, objects[i].subObjects[0].verts.size());

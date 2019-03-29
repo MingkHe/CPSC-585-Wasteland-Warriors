@@ -1,3 +1,5 @@
+#pragma comment(lib, "LogitechSteeringWheelLib.lib") 
+
 #include "Physics_Controller.h"
 #include "Gamestate.h"
 
@@ -14,9 +16,11 @@
 #include "snippetcommon/SnippetPrint.h"
 #include "snippetcommon/SnippetPVD.h"
 #include "snippetutils/SnippetUtils.h"
+#include "LogitechSteeringWheelLib.h"
 
 #include <PxScene.h>
 #include "Scene.h"
+#include "UserInput.h"
 #include <iostream>
 
 using namespace physx;
@@ -61,7 +65,12 @@ int                     currentGear = 1;
 bool					changeToReverseGear = false;
 bool					changeToForwardGear = false;
 
-
+bool	hapticYesInAir = false;
+bool	hapticInAirOn = false;
+float	hapticVehicleForwardVelocity = 0;
+float	hapticVehicleSideVelocity = 0;
+float	hapticNetForceOnWheel = 0;
+bool	hapticCollisionWithPlayer = false;
 
 
 
@@ -210,7 +219,7 @@ VehicleDesc initPlayerVehiclePhysicsDesc()
 
 	//Set up the wheel mass, radius, width, moment of inertia, and number of wheels.
 	//Moment of inertia is just the moment of inertia of a cylinder.
-	const PxF32 wheelMass = 40.0f;
+	const PxF32 wheelMass = 5.0f;
 	const PxF32 wheelRadius = 0.6f;
 	const PxF32 wheelWidth = 0.2f;		//This became needed after uneven driving terrain was added. On
 	const PxF32 wheelMOI = 0.5f*wheelMass*wheelRadius*wheelRadius*2;
@@ -251,7 +260,7 @@ VehicleDesc initEnemyVehiclePhysicsDesc()
 
 	//Set up the wheel mass, radius, width, moment of inertia, and number of wheels.
 	//Moment of inertia is just the moment of inertia of a cylinder.
-	const PxF32 wheelMass = 40.0f;
+	const PxF32 wheelMass = 5.0f;
 	const PxF32 wheelRadius = 0.6f;
 	const PxF32 wheelWidth = 0.01f;		//This became needed after uneven driving terrain was added. On
 	const PxF32 wheelMOI = 0.5f*wheelMass*wheelRadius*wheelRadius * 2;
@@ -852,6 +861,43 @@ void Physics_Controller::stepPhysics(bool interactive)
 		}
 		else {							//If this is the player, record as normal
 			PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, playerSteerVsForwardSpeedTable, gVehicleInputData, timestep, gIsVehicleInAir, *vehiclesVector[i]);
+
+			//PxWheelQueryResult wheelQueryResults[PX_MAX_NB_WHEELS];
+			//PxVehicleWheelQueryResult vehicleQueryResults[1] = { {wheelQueryResults, gVehicle4W->mWheelsSimData.getNbWheels()} };
+			//hapticYesInAir = gVehicle4W->getRigidDynamicActor()->isSleeping() ? false : PxVehicleIsInAir(vehicleQueryResults[0]);
+
+			hapticVehicleForwardVelocity = vehiclesVector[i]->computeForwardSpeed();
+			
+			std::cout << 1+abs(100 - hapticVehicleForwardVelocity * 4) << std::endl;
+			LogiPlaySpringForce(0,0, fmax(100, 100 - hapticVehicleForwardVelocity * 4), fmax(5, 100 - hapticVehicleForwardVelocity * 4));
+			//LogiPlayConstantForce(0, hapticNetForceOnWheel);
+			//LogiPlayConstantForce(0, );
+			LogiPlaySurfaceEffect(0, LOGI_PERIODICTYPE_SINE, abs(hapticVehicleForwardVelocity)/2, 20);
+			//LogiPlaySurfaceEffect(0, LOGI_PERIODICTYPE_SINE, 10, 20);
+			/*if (hapticVehicleForwardVelocity > 0.1) {
+				LogiPlaySurfaceEffect(0, 0, 5*abs(hapticVehicleForwardVelocity), 20);
+				std::cout << "Sand!" << std::endl;
+			}
+			else {
+				LogiStopSurfaceEffect(0);
+			}*/
+			//LogiPlayDamperForce(0,30);
+			//Logitech Wheel Haptics
+			/*if (hapticYesInAir && gameState->updateHapticWheelState) {
+				if (!hapticInAirOn) {
+					std::cout << "a" << std::endl;
+					LogiPlayCarAirborne(0);
+					hapticInAirOn = true;
+				}
+			}
+			else if (!hapticYesInAir && gameState->updateHapticWheelState) {
+				if (hapticInAirOn) {
+					std::cout << "b" << std::endl;
+					LogiStopCarAirborne(0);
+					hapticInAirOn = false;
+				}
+				
+			}*/
 		}
 		
 
@@ -869,6 +915,7 @@ void Physics_Controller::stepPhysics(bool interactive)
 
 		//Work out if the vehicle is in the air.
 		gIsVehicleInAir = gVehicle4W->getRigidDynamicActor()->isSleeping() ? false : PxVehicleIsInAir(vehicleQueryResults[0]);
+
 	}
 
 
@@ -878,7 +925,7 @@ void Physics_Controller::stepPhysics(bool interactive)
 	gScene->simulate(timestep);
 	gScene->fetchResults(true);
 
-
+	
 
 	//Check collisions for Vehicle/Vehicle collisions
 	for (int i = 0; i < (int)gContactReportCallback.gContactActor1s.size(); i++) {
@@ -886,21 +933,28 @@ void Physics_Controller::stepPhysics(bool interactive)
 		Vehicle* vehicle2 = NULL;
 		//std::cout << "gContactReportCallback contact: " << i << "/" << gContactReportCallback.gContactActor1s.size() << std::endl;
 
+		hapticCollisionWithPlayer = false;
 
 		for (int index = 0; index <= rigidDynamicActorIndex; index++) {
 			PxActor *actor = userBufferRD[index];
 			if (gContactReportCallback.gContactActor1s[i] == actor) {
 				vehicle1 = gameState->lookupVUsingPI(index);
+				if (index == gameState->playerVehicle.physicsIndex) {
+					hapticCollisionWithPlayer = true;
+				}
 			}
 			if (gContactReportCallback.gContactActor2s[i] == actor) {
 				vehicle2 = gameState->lookupVUsingPI(index);
+				if (index == gameState->playerVehicle.physicsIndex) {
+					hapticCollisionWithPlayer = true;
+				}
 			}
 		}
 		
 		if (vehicle1 != NULL && vehicle2 != NULL && (gContactReportCallback.gContactImpulses[i] != PxVec3{ 0.0f,0.0f,0.0f })) {
 			//std::cout << "Found 2 vehicles, Contact Impule Vector length is : " << gContactReportCallback.gContactImpulses.size() << std::endl;
 			glm::vec3 impulse = (glm::vec3{ gContactReportCallback.gContactImpulses[i].x, gContactReportCallback.gContactImpulses[i].y, gContactReportCallback.gContactImpulses[i].z });
-			gameState->Collision(vehicle1, vehicle2, impulse);
+			gameState->Collision(vehicle1, vehicle2, impulse, hapticCollisionWithPlayer);
 		}
 	}
 	
@@ -948,12 +1002,17 @@ void Physics_Controller::stepPhysics(bool interactive)
 		Vehicle* vehicle1 = NULL;
 		Object* object = NULL;
 
+		hapticCollisionWithPlayer = false;
+
 		//Try to find player vehicle
 		for (int index = 0; index <= rigidDynamicActorIndex; index++) {
 			PxActor *actor = userBufferRD[index];
 			if (index == gameState->playerVehicle.physicsIndex) {				
 				if ((gContactReportCallback.gContactActor1s[i] == actor || gContactReportCallback.gContactActor2s[i] == actor) && vehicle1 == NULL) {
 					vehicle1 = gameState->lookupVUsingPI(index);
+					if (index == gameState->playerVehicle.physicsIndex) {
+						hapticCollisionWithPlayer = true;
+					}
 				}
 			}
 		}
@@ -971,7 +1030,8 @@ void Physics_Controller::stepPhysics(bool interactive)
 		}
 
 		if (vehicle1 != NULL && object != NULL && object->type != 0) {
-			gameState->Collision(vehicle1, object);
+			glm::vec3 impulse = (glm::vec3{ gContactReportCallback.gContactImpulses[i].x, gContactReportCallback.gContactImpulses[i].y, gContactReportCallback.gContactImpulses[i].z });
+			gameState->Collision(vehicle1, object, impulse, hapticCollisionWithPlayer);
 		}
 	}
 

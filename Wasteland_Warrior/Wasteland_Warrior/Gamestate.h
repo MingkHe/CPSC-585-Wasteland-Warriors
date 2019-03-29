@@ -129,6 +129,7 @@ public:
 
 	//Haptic Wheel 
 	bool hapticWheel;
+	bool updateHapticWheelState;
 	
 
 	//Camera
@@ -279,9 +280,9 @@ public:
 	void DespawnObject(Object* object);
 	void DespawnCheckpoint(PowerUp* checkpoint);
 
-	void Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse);
+	void Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse, bool hapticFeedback);
 	void Collision(Vehicle* vehicle, PowerUp* powerUp);
-	void Collision(Vehicle* vehicle, Object* staticObject);
+	void Collision(Vehicle* vehicle, Object* staticObject, glm::vec3 impulse, bool hapticFeedback);
 
 	glm::mat4 getRotationMatrix(float xRot, float yRot, float zRot);
 	void resetOrientation();

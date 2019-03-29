@@ -1,3 +1,6 @@
+#pragma comment(lib, "LogitechSteeringWheelLib.lib")
+#include "LogitechSteeringWheelLib.h"
+
 #include "Gamestate.h"
 #include "Scene.h"
 #include <iostream>
@@ -323,7 +326,7 @@ void Gamestate::DespawnCheckpoint(PowerUp* powerUp) {
 	physics_Controller->setPosition(powerUp->physicsIndex, glm::vec3{ -1000, -1000, -1000 });     //Change location of physics to out of way
 }
 
-void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse) {
+void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse, bool hapticFeedback) {
 	// play sound when collision happen
 	this->carCrash_sound = true;
 
@@ -359,25 +362,32 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse)
 	//Inflict damage
 	//If both vehicles align meaning a rear end
 	if ((entity1AttackLevel >= attackLevelThreshold && entity2AttackLevel >= attackLevelThreshold) ||
-		(entity2AttackLevel <= -attackLevelThreshold && entity1AttackLevel <= -attackLevelThreshold)
-		&& damage > 5.0f) {
-
-		//Person going slower takes damage
-		if (entity1->speed > entity2->speed) {
-			entity2->health -= damage * entity1->damageMultiplier;
+		(entity2AttackLevel <= -attackLevelThreshold && entity1AttackLevel <= -attackLevelThreshold)) {
+		if (damage > 5.0f) {
+			//Person going slower takes damage
+			if (entity1->speed > entity2->speed) {
+				entity2->health -= damage * entity1->damageMultiplier;
+			}
+			else {
+				entity1->health -= damage * entity2->damageMultiplier;
+			}
 		}
-		else{
-			entity1->health -= damage * entity2->damageMultiplier;
+
+		if (hapticFeedback && updateHapticWheelState) {
+			LogiPlayFrontalCollisionForce(0, damage*3);
 		}
 	}
 
 	//If collision is head on
 	else if ((entity1AttackLevel >= attackLevelThreshold && entity2AttackLevel <= -attackLevelThreshold) ||
-		(entity2AttackLevel >= attackLevelThreshold && entity1AttackLevel <= -attackLevelThreshold)
-		&& damage > 5.0f) {
-
-		entity1->health -= damage * entity2->damageMultiplier;
-		entity2->health -= damage * entity1->damageMultiplier;
+		(entity2AttackLevel >= attackLevelThreshold && entity1AttackLevel <= -attackLevelThreshold)) {
+		if (damage > 5.0f) {
+			entity1->health -= damage * entity2->damageMultiplier;
+			entity2->health -= damage * entity1->damageMultiplier;
+		}
+		if (hapticFeedback && updateHapticWheelState) {
+			LogiPlayFrontalCollisionForce(0, damage * 3);
+		}
 	}
 
 	else {
@@ -389,6 +399,10 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse)
 		//if (abs(entity2AttackLevel) >= attackLevelThreshold&& damage > 5.0f)
 		if (abs(entity2AttackLevel) >= abs(entity1AttackLevel) && damage > 5.0f)
 			entity1->health -= damage * entity2->damageMultiplier;
+
+		if (hapticFeedback && updateHapticWheelState) {
+			LogiPlaySideCollisionForce(0, damage * 3);
+		}
 	}
 	entity1->health += entity1->armour;
 	entity2->health += entity2->armour;
@@ -456,7 +470,10 @@ void Gamestate::Collision(Vehicle* vehicle, PowerUp* powerUp) {
 
 
 
-void Gamestate::Collision(Vehicle* vehicle, Object* staticObject) {
+void Gamestate::Collision(Vehicle* vehicle, Object* staticObject, glm::vec3 impulse, bool hapticFeedback) {
+	float totalForce = glm::length(impulse);
+	float damageScaling = 700;		//Smaller number means more damage
+	float damage = totalForce / damageScaling;
 	if (staticObject->type == 5) {
 		checkpoints--;
 
@@ -470,6 +487,9 @@ void Gamestate::Collision(Vehicle* vehicle, Object* staticObject) {
 		scene->allWorldCompObjects[staticObject->sceneObjectIndex].subObjects[0].transform = transformMatrix;  //Change location of graphic to out of sight
 		physics_Controller->setPosition(staticObject->physicsIndex, glm::vec3{ 0, -10, 0 });     //Change location of physics to out of way
 
+	}
+	if (hapticFeedback && updateHapticWheelState) {
+		LogiPlayFrontalCollisionForce(0, damage * 3);
 	}
 	std::cout << "You ran into a wall, nice driving :P" << std::endl;	//Placeholder
 

@@ -31,6 +31,7 @@ public:
 	static bool MouseLeft;
 	static bool MouseRight;
 
+
 	//WASD
 	static bool WKey;
 	static bool AKey;

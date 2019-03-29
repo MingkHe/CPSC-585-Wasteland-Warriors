@@ -2,6 +2,9 @@
 * Program.cpp
 *
 */
+#pragma comment(lib, "LogitechSteeringWheelLib.lib") 
+
+
 
 #include <iostream>
 #include <string>
@@ -31,9 +34,11 @@
 #include "PlayerUnit.h"
 #include "EnemyUnit.h"
 #include "texture.h"
+#include "LogitechSteeringWheelLib.h"
 
 #include <SDL_mixer.h>
 #include <SDL.h>
+
 
 
 Program::Program() {
@@ -65,6 +70,8 @@ void Program::start() {
 	AI_Interaction aiInteraction = AI_Interaction(gameState);
 	Physics_Controller physicsCL = Physics_Controller(gameState);
 	Audio_Controller audioCL = *Audio_Controller::instance();
+
+	LogiSteeringInitialize(TRUE);
 
 	renderingEngine = new RenderingEngine(gameState);
 
@@ -264,6 +271,7 @@ void Program::start() {
 		elapsed_seconds = 0;
 		gameState->time = currentTime.millitm;
 	}
+	LogiSteeringShutdown();
 	SDL_CloseAudio();
 	SDL_Quit();
 }

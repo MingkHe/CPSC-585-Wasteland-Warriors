@@ -1,5 +1,8 @@
+#pragma comment(lib, "LogitechSteeringWheelLib.lib") 
+
 #include "UserInput.h"
 #include "Program.h"
+#include "LogitechSteeringWheelLib.h"
 
 #include <iostream>
 #include <string>
@@ -280,6 +283,7 @@ void UserInput::gamepad(int controller, int secondJoystick, Gamestate* gameState
 	//Controller is connected
 	if ((controller == 1) && (secondJoystick == 1)) {
 		gameState->controller = true;
+		gameState->updateHapticWheelState = false;
 
 		//Generic Controller Support
 		bool Generic = false;
@@ -503,9 +507,15 @@ void UserInput::gamepad(int controller, int secondJoystick, Gamestate* gameState
 		if (GLFW_PRESS == buttons[21]) {
 			UserInput::inputBuffer.push("LEFT");
 		};
-		
+
+		//
+		if (LogiUpdate()) {
+			gameState->updateHapticWheelState = true;
+		}
+
 	}
 	else {
+		gameState->updateHapticWheelState = false;
 		gameState->controller = false;
 		gameState->hapticWheel = false;
 	}

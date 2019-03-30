@@ -86,6 +86,7 @@ public:
 	Geometry mirror;
 
 	Framebuffer shadow_buffer;
+	Framebuffer shadow_buffertwo;
 	Framebuffer rear_view;
 
 	GLuint textShaderProgram;

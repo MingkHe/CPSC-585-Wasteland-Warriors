@@ -17,11 +17,13 @@ layout(location = 3) in vec2 VertexUV;
 uniform mat4 modelViewProjection;
 uniform mat4 transform;
 uniform mat4 depthViewProjection;
+uniform mat4 depthViewProjectiontwo;
 
 out vec3 fragNormal;
 out vec2 fragTexCoord;
 out vec3 fragVert;
 out vec4 shadowCoord;
+out vec4 shadowCoordtwo;
 
 void main()
 {
@@ -38,4 +40,5 @@ void main()
 	fragVert = (transform*vec4(VertexPosition, 1)).xyz;
 	
 	shadowCoord = depthViewProjection * transform*vec4(VertexPosition, 1.0);
+	shadowCoordtwo = depthViewProjectiontwo * transform*vec4(VertexPosition, 1.0);
 }

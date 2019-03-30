@@ -565,34 +565,34 @@ void RenderingEngine::pushTextObj(std::vector<Geometry>& objects, std::string te
 void RenderingEngine::updateText() {
 	float scale = (float)game_state->window_height / 960.f;
 	if (game_state->UIMode == "Game") {
-		pushTextObj(texObjects, "Wave # " + std::to_string(game_state->wave) + " - " + game_state->gameMode, 0.01f*game_state->window_width, 0.95f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f));
-		if (game_state->breakSeconds == 0) {	
-			pushTextObj(texObjects, "Enemies Left: " + std::to_string(game_state->enemiesLeft), 0.01f*game_state->window_width, 0.9f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f));
+		if (game_state->breakSeconds == 0) {
+			pushTextObj(texObjects, "Wave # " + std::to_string(game_state->wave) + " - " + game_state->gameMode, 0.01f*game_state->window_width, 0.95f*game_state->window_height, scale * 0.8, glm::vec3(0.7f, 0.2f, 0.2f));
+			pushTextObj(texObjects, "Enemies Left: " + std::to_string(game_state->enemiesLeft), 0.01f*game_state->window_width, 0.9f*game_state->window_height, scale * 0.8, glm::vec3(0.7f, 0.2f, 0.2f));
 		}
 		else {
-			pushTextObj(texObjects, "Break Seconds: " + std::to_string(game_state->breakSeconds), 0.01f*game_state->window_width, 0.85f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f));
+			pushTextObj(texObjects, "Next wave: " + std::to_string(game_state->breakSeconds) + " seconds", 0.01f*game_state->window_width, 0.95f*game_state->window_height, scale * 0.8, glm::vec3(0.7f, 0.2f, 0.2f));
 		}
     
 		if (game_state->powerText) {
 			switch (game_state->powerUpType)
 			{
 			case 0:
-				pushTextObj(texObjects, "You have reached a checkpoint!", 0.3f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f));
+				pushTextObj(texObjects, "Checkpoint reached!", 0.4f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f));
 				break;
 			case 1:
-				pushTextObj(texObjects, "You have been healed to full health!", 0.3f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f));
+				pushTextObj(texObjects, "Full health!", 0.4f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f));
 				break;
 			case 2:
-				pushTextObj(texObjects, "You maximum health has been increaced!", 0.3f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f));
+				pushTextObj(texObjects, "Maximum health increaced!", 0.4f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f));
 				break;
 			case 3:
-				pushTextObj(texObjects, "You have recieved a health boost!", 0.3f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f));
+				pushTextObj(texObjects, "Health boost!", 0.4f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f));
 				break;
 			case 4:
-				pushTextObj(texObjects, "You have recieved an armor boost!", 0.3f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f));
+				pushTextObj(texObjects, "Armor boost!", 0.4f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f));
 				break;
 			case 5:
-				pushTextObj(texObjects, "You have recieved a damage boost!", 0.3f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f));
+				pushTextObj(texObjects, "Damage boost!", 0.4f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f));
 				break;
 			default:
 				break;
@@ -602,12 +602,12 @@ void RenderingEngine::updateText() {
 
 	if (game_state->UIMode == "Win") {
 		pushTextObj(texObjects, "Your score was: " + std::to_string(game_state->score), 0.4f*game_state->window_width, 0.45f*game_state->window_height, scale, glm::vec3(.9f, 1.0f, .4f));
-		pushTextObj(texObjects, "You survived in: " + std::to_string(game_state->scoreTime), 0.4f*game_state->window_width, 0.38f*game_state->window_height, scale,glm::vec3(.9f, 1.0f, .4f));
+		pushTextObj(texObjects, "You survived in: " + std::to_string(game_state->scoreTime) + " seconds", 0.4f*game_state->window_width, 0.38f*game_state->window_height, scale,glm::vec3(.9f, 1.0f, .4f));
 	}
 
 	if (game_state->UIMode == "Lose") {
 		pushTextObj(texObjects, "Your score was: " + std::to_string(game_state->score), 0.4f*game_state->window_width, 0.4f*game_state->window_height, scale, glm::vec3(.7f, .2f, .2f));
-		pushTextObj(texObjects, "You died after: " + std::to_string(game_state->scoreTime), 0.4f*game_state->window_width, 0.33f*game_state->window_height, scale, glm::vec3(.7f, .2f, .2f));
+		pushTextObj(texObjects, "You died after: " + std::to_string(game_state->scoreTime) + " seconds", 0.4f*game_state->window_width, 0.33f*game_state->window_height, scale, glm::vec3(.7f, .2f, .2f));
 	}
 
 	if (game_state->UIMode == "Loading") {

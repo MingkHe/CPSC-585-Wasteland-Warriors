@@ -229,20 +229,20 @@ bool Logic::waveFinished(Gamestate *gameState) {
 	else if (gameState->gameMode == "Payload") {
 		checkEnemyHealth(gameState);
 	}
-	else if (gameState->gameMode == "Headhunter") {
+	else if (gameState->gameMode == "Head Hunter") {
 		int huntedEnemiesLeft = 0;
 		for (int i = 0; i < (int)gameState->Enemies.size(); i++) {
-			if (gameState->Enemies[i].headhunter && gameState->Enemies[i].health >= 0) {
-					gameState->Enemies[i].headhunter = false;
-			}
-			else {
+			if (gameState->Enemies[i].headhunter && gameState->Enemies[i].health <= 0) {
 				gameState->Enemies[i].headhunter = false;
 				gameState->DespawnEnemy(&gameState->Enemies[i]);
 				gameState->Enemies.erase(gameState->Enemies.begin() + i);
 			}
+			else if (gameState->Enemies[i].headhunter){
+				huntedEnemiesLeft++;
+			}
 		}
 		checkEnemyHealth(gameState);
-		if (huntedEnemiesLeft <= 0){
+		if (huntedEnemiesLeft == 0){
 			for (int i = 0; i < (int)gameState->Enemies.size(); i++) {
 				gameState->DespawnEnemy(&gameState->Enemies[i]);
 			}
@@ -251,7 +251,7 @@ bool Logic::waveFinished(Gamestate *gameState) {
 			return true;
 		}
 	}
-	else {
+	else if (gameState->gameMode == "Survival" || gameState->gameMode == "Boss Battle") {
 		if (checkEnemyHealth(gameState) == 0) {
 			return true;
 		}

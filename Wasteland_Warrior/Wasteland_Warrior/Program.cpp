@@ -95,7 +95,7 @@ void Program::start() {
 	//Mesh loading
 	gameState->InstantiateAllMeshes_Textures_Map();
 	for (int i = 1; i <= 25; i++) {
-		//Sleep(100);
+		Sleep(100);
 		gameState->loadingPercentage = i;
 		UICL.Update(gameState, window);
 		glfwSwapBuffers(window);
@@ -105,18 +105,18 @@ void Program::start() {
 	gameState->InstantiateAllMeshes_Textures_Static();
 
 	for (int i = 26; i <= 50; i++) {
-		//Sleep(100);
+		Sleep(100);
 		gameState->loadingPercentage = i;
 		UICL.Update(gameState, window);
 		glfwSwapBuffers(window);
 	}
 
-	//Sleep(1000);
+	Sleep(1000);
 
 	gameState->InstantiateAllMeshes_Textures_Dynamic();
 
 	for (int i = 51; i <= 78; i++) {
-		//Sleep(100);
+		Sleep(100);
 		gameState->loadingPercentage = i;
 		UICL.Update(gameState, window);
 		glfwSwapBuffers(window);
@@ -166,14 +166,14 @@ void Program::start() {
 	gameState->SpawnPlayer(0, 0, 0, 0, 0, 0);
 
 	for (int i = 79; i <= 100; i++) {
-		//Sleep(100);
+		Sleep(100);
 		gameState->loadingPercentage = i;
 		UICL.Update(gameState, window);
 		glfwSwapBuffers(window);
 	}
 
 	gameState->UIMode = "Start";
-	//Sleep(1000);
+	Sleep(1000);
 
 	/*
 	while (true) {
@@ -260,15 +260,15 @@ void Program::setupWindow() {
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-	//int width = mode->width;//1280; //640
-	//int height = mode->height;//960; //480
-	int width = 640;
-	int height = 480;
+	int width = mode->width;//1280; //640
+	int height = mode->height;//960; //480
+	//int width = 640;
+	//int height = 480;
 	this->win_height = height;
 	this->win_width = width;
 
-	window = glfwCreateWindow(width, height, "Wasteland Warrior", NULL, NULL);
-	//window = glfwCreateWindow(width, height, "Wasteland Warrior", glfwGetPrimaryMonitor(), NULL);
+	//window = glfwCreateWindow(width, height, "Wasteland Warrior", NULL, NULL);
+	window = glfwCreateWindow(width, height, "Wasteland Warrior", glfwGetPrimaryMonitor(), NULL);
 	if (!window) {
 		std::cout << "Program failed to create GLFW window, TERMINATING" << std::endl;
 		glfwTerminate();

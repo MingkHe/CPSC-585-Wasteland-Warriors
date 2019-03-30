@@ -455,17 +455,17 @@ void Gamestate::Collision(Vehicle* vehicle, PowerUp* powerUp) {
 }
 
 void Gamestate::Collision(Vehicle* vehicle, Object* staticObject) {
-	//if (staticObject->type == 5) {
+	if (staticObject->type == 5) {
 			powerUpType = 0;
 			checkpoints = 0;//checkpoints--;
 			this->carPowerUp_sound = true;
 			this->textTime = 3 * 60;
 
 			DespawnStaticObject(staticObject);
-	//}
-	//else {
-		//this->carCrashStatic_sound = true;
-	//}
+	}
+	else {
+		this->carCrashStatic_sound = true;
+	}
 }
 
 void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 newTransformationMatrix, float newSpeed) {

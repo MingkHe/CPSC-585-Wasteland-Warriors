@@ -7,6 +7,8 @@
 #version 410
 
 #define SAMPLE_NUM 100
+#define SAMPLE_RAD 4.0
+#define FAR_SAMPLE_RAD 3.0
 
 //uniform mat4 model;  //=transform
 uniform mat4 transform;  //=transform
@@ -159,7 +161,7 @@ float ShadowCalculationtwo(vec4 fragPosLightSpace)
 	vec2 texelSize = 1.0 / textureSize(shadowTex, 0);
 	for(int i = 0; i < SAMPLE_NUM; i++)
 	{
-		float pcfDepth = texture(shadowTextwo, projCoords.xy + poissonDisk[i] * texelSize).r;
+		float pcfDepth = texture(shadowTextwo, projCoords.xy + FAR_SAMPLE_RAD*poissonDisk[i] * texelSize).r;
 		shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
 	}
 	shadow /= float(SAMPLE_NUM);
@@ -190,7 +192,7 @@ float ShadowCalculation(vec4 fragPosLightSpace)
 	vec2 texelSize = 1.0 / textureSize(shadowTex, 0);
 	for(int i = 0; i < SAMPLE_NUM; i++)
 	{
-		float pcfDepth = texture(shadowTex, projCoords.xy + poissonDisk[i] * texelSize).r;
+		float pcfDepth = texture(shadowTex, projCoords.xy + SAMPLE_RAD*poissonDisk[i] * texelSize).r;
 		shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
 	}
 	shadow /= float(SAMPLE_NUM);

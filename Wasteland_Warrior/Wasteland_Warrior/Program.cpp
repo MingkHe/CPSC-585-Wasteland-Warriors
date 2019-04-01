@@ -53,6 +53,7 @@ void Program::start() {
 	Gamestate* gameState = new Gamestate();
 	gameState->window_width = this->win_width;//glfwGetVideoMode(glfwGetPrimaryMonitor())->width;
 	gameState->window_height = this->win_height;//glfwGetVideoMode(glfwGetPrimaryMonitor())->height;
+	gameState->fullscreen = this->fullscreen;
 	gameState->UIMode = "Loading";
 
 	struct timeb currentTime;
@@ -268,7 +269,9 @@ void Program::setupWindow() {
 	this->win_width = width;
 
 	//window = glfwCreateWindow(width, height, "Wasteland Warrior", NULL, NULL);
+	//this->fullscreen = false;
 	window = glfwCreateWindow(width, height, "Wasteland Warrior", glfwGetPrimaryMonitor(), NULL);
+	this->fullscreen = true;
 	if (!window) {
 		std::cout << "Program failed to create GLFW window, TERMINATING" << std::endl;
 		glfwTerminate();

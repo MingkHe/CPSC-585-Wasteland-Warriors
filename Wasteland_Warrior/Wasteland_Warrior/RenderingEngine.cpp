@@ -78,14 +78,18 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	assignBuffers(needle);
 	setBufferData(needle);
 
-	/*mirror.verts.push_back(glm::vec3(-1.f, -1.f, 0.f));
-	mirror.verts.push_back(glm::vec3(-1.f, 1.f, 0.f));
-	mirror.verts.push_back(glm::vec3(1.f, -1.f, 0.f));
-	mirror.verts.push_back(glm::vec3(1.f, 1.f, 0.f));
-	mirror.uvs.push_back(glm::vec2(0.f, 0.f));
-	mirror.uvs.push_back(glm::vec2(0.f, 1.f));
-	mirror.uvs.push_back(glm::vec2(1.f, 0.f));
-	mirror.uvs.push_back(glm::vec2(1.f, 1.f));*/
+	square.verts.push_back(glm::vec3(-1.f, -1.f, 0.f));
+	square.verts.push_back(glm::vec3(-1.f, 1.f, 0.f));
+	square.verts.push_back(glm::vec3(1.f, -1.f, 0.f));
+	square.verts.push_back(glm::vec3(1.f, 1.f, 0.f));
+	square.uvs.push_back(glm::vec2(0.f, 0.f));
+	square.uvs.push_back(glm::vec2(0.f, 1.f));
+	square.uvs.push_back(glm::vec2(1.f, 0.f));
+	square.uvs.push_back(glm::vec2(1.f, 1.f));
+	square.drawMode = GL_TRIANGLE_STRIP;
+	assignBuffers(square);
+	setBufferData(square);
+
 	mirror.verts.push_back(glm::vec3(-.4f, .75f, 0.f));
 	mirror.verts.push_back(glm::vec3(-.4f, .95f, 0.f));
 	mirror.verts.push_back(glm::vec3(.4f, .75f, 0.f));
@@ -98,9 +102,18 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	assignBuffers(mirror);
 	setBufferData(mirror);
 
-	rear_view = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1180));
-	shadow_buffer = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1180));
-	shadow_buffertwo = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1180));
+	if (game_state->fullscreen) {
+		rear_view = createFramebuffer(game_state->window_width, game_state->window_height);
+		shadow_buffer = createFramebuffer(game_state->window_width, game_state->window_height);
+		shadow_buffertwo = createFramebuffer(game_state->window_width, game_state->window_height);
+		main_view = createFramebuffer(game_state->window_width, game_state->window_height);
+	}
+	else {
+		rear_view = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1180));
+		shadow_buffer = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1180));
+		shadow_buffertwo = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1180));
+		main_view = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1180));
+	}
 
 	//the code to load the font, may be do some refactor in the future.
 
@@ -165,7 +178,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	//sets uniforms
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, main_view.id);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glm::mat4 modelViewProjection = perspectiveMatrix * game_state->camera.viewMatrix();
 
@@ -247,7 +260,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 
 	glBindVertexArray(0);
 
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, main_view.id);
 	glDisable(GL_DEPTH_TEST);
 
 	//render mirror
@@ -347,6 +360,15 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 
 	glDisable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glUseProgram(basicshaderProgram);
+	glUniform1i(glGetUniformLocation(basicshaderProgram, "materialTex"), 0);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, main_view.colorTextureID);
+	glBindVertexArray(square.vao);
+	glDrawArrays(square.drawMode, 0, square.verts.size());
+	glBindVertexArray(0);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glUseProgram(0);

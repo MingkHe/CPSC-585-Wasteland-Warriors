@@ -26,6 +26,8 @@ public:
 
 	Physics_Controller* physics_Controller;
 
+	bool fullscreen;
+
 	//Entities
 	PlayerUnit playerVehicle;
 	Entity map = Entity();

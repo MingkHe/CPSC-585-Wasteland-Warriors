@@ -599,13 +599,13 @@ void RenderingEngine::updateText() {
 			switch (game_state->powerUpType)
 			{
 			case 0:
-				pushTextObj(texObjects, "Checkpoint reached!", 0.4f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f));
+				pushTextObj(texObjects, "Checkpoint reached!", 0.35f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f));
 				break;
 			case 1:
 				pushTextObj(texObjects, "Full health!", 0.4f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f));
 				break;
 			case 2:
-				pushTextObj(texObjects, "Maximum health increaced!", 0.4f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f));
+				pushTextObj(texObjects, "Maximum health increaced!", 0.3f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f));
 				break;
 			case 3:
 				pushTextObj(texObjects, "Health boost!", 0.4f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f));

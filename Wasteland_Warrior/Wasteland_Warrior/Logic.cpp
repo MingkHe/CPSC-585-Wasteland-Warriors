@@ -66,7 +66,7 @@ void Logic::Update(Gamestate *gameState)
 		gameState->wave = 1;
 		score = 0;
 		waveBreak = 1;
-		breakTime = 1800;
+		breakTime = 600;
 		modeSelection(gameState);
 	}
 
@@ -93,7 +93,7 @@ void Logic::Update(Gamestate *gameState)
 			gameState->breakSeconds = breakTime / 60;
 			if (breakTime <= 0) {
 				waveBreak = 2;
-				breakTime = 1800;
+				breakTime = 600;
 				modeSelection(gameState);
 			}
 			breakTime--;
@@ -113,7 +113,7 @@ void Logic::Update(Gamestate *gameState)
 			gameState->breakSeconds = breakTime / 60;
 			if (breakTime <= 0) {
 				waveBreak = 3;
-				breakTime = 1800;
+				breakTime = 600;
 				modeSelection(gameState);
 			}
 			breakTime--;
@@ -133,7 +133,7 @@ void Logic::Update(Gamestate *gameState)
 			gameState->breakSeconds = breakTime / 60;
 			if (breakTime <= 0) {
 				waveBreak = 4;
-				breakTime = 1800;
+				breakTime = 600;
 				modeSelection(gameState);
 			}
 			breakTime--;
@@ -152,7 +152,7 @@ void Logic::Update(Gamestate *gameState)
 			gameState->breakSeconds = breakTime / 60;
 			if (breakTime <= 0) {
 				waveBreak = 5;
-				breakTime = 1800;
+				breakTime = 600;
 				modeSelection(gameState);
 			}
 			breakTime--;
@@ -172,7 +172,7 @@ void Logic::Update(Gamestate *gameState)
 			gameState->breakSeconds = breakTime / 60;
 			if (breakTime <= 0) {
 				waveBreak = -1;
-				//breakTime = 1800;
+				//breakTime = 600;
 				//modeSelection(gameState);
 			}
 			breakTime--;

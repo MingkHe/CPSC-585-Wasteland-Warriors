@@ -205,6 +205,9 @@ define anything not defined on this platform to 0
 /*
 define anything not defined through the command line to 0
 */
+#ifndef NDEBUG
+#define NDEBUG 0
+#endif
 #ifndef PX_DEBUG
 #define PX_DEBUG 0
 #endif

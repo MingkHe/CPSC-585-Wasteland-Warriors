@@ -161,9 +161,9 @@ void Gamestate::SpawnStaticObject(int ObjectType, float x, float y, float z, flo
 		);
 		transformMatrix = transformMatrix * getRotationMatrix(xRot, yRot, zRot);
 		scene->allWorldCompObjects[sceneObjectIndex].subObjects[0].transform = transformMatrix;
-		/*if (ObjectType == 1) {
-			scene->allWorldCompObjects[sceneObjectIndex].transparent = 1.0f;
-		}*/
+		if (ObjectType == 5) {
+			scene->allWorldCompObjects[sceneObjectIndex].transparent = .5f;
+		}
 		Object staticObject = Object(physicsIndex, sceneObjectIndex, x, y, z);
 		staticObject.type = ObjectType;
 		if (ObjectType == 5) {

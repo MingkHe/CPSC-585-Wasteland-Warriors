@@ -8,11 +8,12 @@ layout(location = 1) in vec3 Color;
 out vec3 fragColor;
 
 uniform mat4 modelViewProjection;
+uniform mat4 transform;
 
 void main()
 {
     // assign vertex position without modification
-    gl_Position = modelViewProjection*vec4(VertexPosition, 1.0);
+    gl_Position = modelViewProjection*transform*vec4(VertexPosition, 1.0);
 
     // assign output colour to be interpolated
 	fragColor = Color;

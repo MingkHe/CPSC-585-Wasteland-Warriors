@@ -1,0 +1,251 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{8516B0C0-F488-4F9A-AFCB-5C7CBDBA3983}</ProjectGuid>
+    <RootNamespace>Wasteland_Warrior</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)include;</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;$(SolutionDir)lib;</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\middleware\freetype\include;$(ProjectDir)..\middleware\SDL2_mixer-2.0.4\include;$(ProjectDir)..\middleware\SDL2-2.0.9\include;$(ProjectDir)..\middleware\glfw\include;$(ProjectDir)..\middleware\glad\include;$(ProjectDir)..\middleware\glm-0.9.8.2;$(ProjectDir)..\middleware;$(ProjectDir)..\include;$(ProjectDir)..\include\common;$(ProjectDir)..\include\geometry;$(ProjectDir)..\include\geomutils;$(ProjectDir)..\middleware\glut-3.7.6-bin;$(ProjectDir)..\include\snippetFiles;$(ProjectDir)..\include\snippetFiles\snippetvehiclecommon;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\middleware\freetype\win32;$(ProjectDir)..\middleware\SDL2_mixer-2.0.4\lib\x86;$(ProjectDir)..\middleware\SDL2-2.0.9\lib\x86;$(ProjectDir)..\middleware\glfw\lib;$(ProjectDir)..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>freetype.lib;opengl32.lib;glfw3.lib;SDL2_mixer.lib;SDL2.lib;SDL2main.lib;%(AdditionalDependencies);$(ProjectDir)..\lib\FastXml_static_32.lib;$(ProjectDir)..\lib\LowLevel_static_32.lib;$(ProjectDir)..\lib\LowLevelAABB_static_32.lib;$(ProjectDir)..\lib\LowLevelDynamics_static_32.lib;$(ProjectDir)..\lib\PhysX_32.lib;$(ProjectDir)..\lib\PhysXCharacterKinematic_static_32.lib;$(ProjectDir)..\lib\PhysXCommon_32.lib;$(ProjectDir)..\lib\PhysXCooking_32.lib;$(ProjectDir)..\lib\PhysXExtensions_static_32.lib;$(ProjectDir)..\lib\PhysXFoundation_32.lib;$(ProjectDir)..\lib\PhysXPvdSDK_static_32.lib;$(ProjectDir)..\lib\PhysXTask_static_32.lib;$(ProjectDir)..\lib\PhysXVehicle_static_32.lib;$(ProjectDir)..\lib\SampleBase_static_32.lib;$(ProjectDir)..\lib\SampleFramework_static_32.lib;$(ProjectDir)..\lib\SamplesToolkit_static_32.lib;$(ProjectDir)..\lib\SceneQuery_static_32.lib;$(ProjectDir)..\lib\SimulationController_static_32.lib;$(ProjectDir)..\lib\SnippetRender_static_32.lib;$(ProjectDir)..\lib\SnippetUtils_static_32.lib;$(ProjectDir)..\middleware\glut-3.7.6-bin\glut32.lib</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\middleware\glfw\include;$(ProjectDir)..\middleware\glad\include;$(ProjectDir)..\middleware\glm-0.9.8.2;$(ProjectDir)..\middleware;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\middleware\glfw\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\middleware\SDL2-2.0.9\include;$(ProjectDir)..\middleware\glfw\include;$(ProjectDir)..\middleware\SDL2_mixer-2.0.4\include;$(ProjectDir)..\middleware\glad\include;$(ProjectDir)..\middleware\glm-0.9.8.2;$(ProjectDir)..\middleware;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <ShowProgress>LinkVerbose</ShowProgress>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\middleware\SDL2-2.0.9\lib\x86;$(ProjectDir)..\middleware\SDL2_mixer-2.0.4\lib\x86;$(ProjectDir)..\middleware\glfw\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;SDL2_mixer.lib;SDL2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\middleware\glfw\include;$(ProjectDir)..\middleware\glad\include;$(ProjectDir)..\middleware\glm-0.9.8.2;$(ProjectDir)..\middleware;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <ShowProgress>LinkVerbose</ShowProgress>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\middleware\glfw\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\include\snippetFiles\snippetvehiclecommon\SnippetVehicle4WCreate.cpp" />
+    <ClCompile Include="..\include\snippetFiles\snippetvehiclecommon\SnippetVehicle4WRender.cpp" />
+    <ClCompile Include="..\include\snippetFiles\snippetvehiclecommon\SnippetVehicleCreate.cpp" />
+    <ClCompile Include="..\include\snippetFiles\snippetvehiclecommon\SnippetVehicleFilterShader.cpp" />
+    <ClCompile Include="..\include\snippetFiles\snippetvehiclecommon\SnippetVehicleSceneQuery.cpp" />
+    <ClCompile Include="..\include\snippetFiles\snippetvehiclecommon\SnippetVehicleTireFriction.cpp" />
+    <ClCompile Include="..\middleware\glad\src\glad.c" />
+    <ClCompile Include="Audio_Controller.cpp" />
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="EnemyUnit.cpp" />
+    <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="Framebuffer.cpp" />
+    <ClCompile Include="Gamestate.cpp" />
+    <ClCompile Include="Geometry.cpp" />
+    <ClCompile Include="Logic.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="MusicPool.cpp" />
+    <ClCompile Include="Object.cpp" />
+    <ClCompile Include="Physics_Controller.cpp" />
+    <ClCompile Include="PlayerUnit.cpp" />
+    <ClCompile Include="PowerUp.cpp" />
+    <ClCompile Include="Program.cpp" />
+    <ClCompile Include="ContactReportCallback.cpp" />
+    <ClCompile Include="RenderingEngine.cpp" />
+    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="SceneMainMenu.cpp" />
+    <ClCompile Include="SFXPool.cpp" />
+    <ClCompile Include="ShaderTools.cpp" />
+    <ClCompile Include="AI_Interaction.cpp" />
+    <ClCompile Include="texture.cpp" />
+    <ClCompile Include="UI_Controller.cpp" />
+    <ClCompile Include="UserInput.cpp" />
+    <ClCompile Include="Vehicle.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\snippetFiles\snippetvehiclecommon\SnippetVehicleCreate.h" />
+    <ClInclude Include="Audio_Controller.h" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="CompositeWorldObject.h" />
+    <ClInclude Include="EnemyUnit.h" />
+    <ClInclude Include="Entity.h" />
+    <ClInclude Include="Framebuffer.h" />
+    <ClInclude Include="Gamestate.h" />
+    <ClInclude Include="Geometry.h" />
+    <ClInclude Include="AI_Interaction.h" />
+    <ClInclude Include="Logic.h" />
+    <ClInclude Include="MusicPool.h" />
+    <ClInclude Include="Object.h" />
+    <ClInclude Include="Physics_Controller.h" />
+    <ClInclude Include="PlayerUnit.h" />
+    <ClInclude Include="PowerUp.h" />
+    <ClInclude Include="Program.h" />
+    <ClInclude Include="ContactReportCallback.h" />
+    <ClInclude Include="RenderingEngine.h" />
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="SceneMainMenu.h" />
+    <ClInclude Include="SFXPool.h" />
+    <ClInclude Include="ShaderTools.h" />
+    <ClInclude Include="snippetFiles\snippetvehiclecommon\SnippetVehicleCreate.h" />
+    <ClInclude Include="SnippetPVD.h" />
+    <ClInclude Include="texture.h" />
+    <ClInclude Include="UI_Controller.h" />
+    <ClInclude Include="UserInput.h" />
+    <ClInclude Include="Vehicle.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Wasteland_Warrior.vcxproj.filters.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\shaders\basicFrag.glsl" />
+    <None Include="..\shaders\basicfragment.glsl" />
+    <None Include="..\shaders\basicVer.glsl" />
+    <None Include="..\shaders\needlefragment.glsl" />
+    <None Include="..\shaders\basicvertex.glsl" />
+    <None Include="..\shaders\fragment.glsl" />
+    <None Include="..\shaders\fragmentMainMenu.glsl" />
+    <None Include="..\shaders\geometry.glsl" />
+    <None Include="..\shaders\healthfragment.glsl" />
+    <None Include="..\shaders\healthvertex.glsl" />
+    <None Include="..\shaders\needlevertex.glsl" />
+    <None Include="..\shaders\radarfragment.glsl" />
+    <None Include="..\shaders\radarvertex.glsl" />
+    <None Include="..\shaders\shadowMapFragment.glsl" />
+    <None Include="..\shaders\shadowMapVertex.glsl" />
+    <None Include="..\shaders\texFragment.glsl" />
+    <None Include="..\shaders\texVertex.glsl" />
+    <None Include="..\shaders\vertex.glsl" />
+    <None Include="..\shaders\vertexMainMenu.glsl" />
+    <None Include="libFLAC-8.dll" />
+    <None Include="libmodplug-1.dll" />
+    <None Include="libmpg123-0.dll" />
+    <None Include="libogg-0.dll" />
+    <None Include="libopus-0.dll" />
+    <None Include="libopusfile-0.dll" />
+    <None Include="libvorbis-0.dll" />
+    <None Include="libvorbisfile-3.dll" />
+    <None Include="SDL2.dll" />
+    <None Include="SDL2_mixer.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="bgm.mp3" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

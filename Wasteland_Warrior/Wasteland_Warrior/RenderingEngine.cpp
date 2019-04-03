@@ -79,7 +79,7 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	assignBuffers(needle);
 	setBufferData(needle);
 
-	aimBeam.verts.push_back(glm::vec3(gameState->playerVehicle.position.x + 3 * gameState->playerVehicle.direction.x, gameState->playerVehicle.position.y + 3 * gameState->playerVehicle.direction.y, gameState->playerVehicle.position.z + 3 * gameState->playerVehicle.direction.z));
+	aimBeam.verts.push_back(glm::vec3(gameState->playerVehicle.position.x , gameState->playerVehicle.position.y, gameState->playerVehicle.position.z));
 	aimBeam.verts.push_back(glm::vec3(gameState->playerVehicle.position.x + 13 * gameState->playerVehicle.direction.x, gameState->playerVehicle.position.y + 13 * gameState->playerVehicle.direction.y, gameState->playerVehicle.position.z + 13 * gameState->playerVehicle.direction.z));
 	aimBeam.colors.push_back(glm::vec3(.0f,.0f,1.0f));
 	aimBeam.colors.push_back(glm::vec3(.0f, .0f, 1.0f));
@@ -317,6 +317,8 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 
 
 	glUseProgram(lineShaderProgram);
+	transformGL = glGetUniformLocation(lineShaderProgram, "transform");
+	glUniformMatrix4fv(transformGL, 1, false, glm::value_ptr(game_state->playerVehicle.transformationMatrix));
 	glUniformMatrix4fv(glGetUniformLocation(lineShaderProgram, "modelViewProjection"), 1, false, glm::value_ptr(modelViewProjection));
 	glBindVertexArray(aimBeam.vao);
 	glDrawArrays(aimBeam.drawMode, 0, aimBeam.verts.size());

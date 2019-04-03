@@ -240,7 +240,7 @@ void Program::start() {
 					printf("raycast detected..\n");
 					printf("test: %f\n", glm::distance(pos, gameState->Enemies[i].position));
 					if (glm::distance(pos, gameState->Enemies[i].position) <= 3.0f) {
-						gameState->Enemies[i].health = 0;
+						gameState->Enemies[i].health = -1;
 						printf("attack!!!\n");
 					}
 				}

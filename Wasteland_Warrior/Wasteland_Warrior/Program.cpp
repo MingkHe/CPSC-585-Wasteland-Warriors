@@ -268,10 +268,10 @@ void Program::setupWindow() {
 	this->win_height = height;
 	this->win_width = width;
 
-	//window = glfwCreateWindow(width, height, "Wasteland Warrior", NULL, NULL);
-	//this->fullscreen = false;
-	window = glfwCreateWindow(width, height, "Wasteland Warrior", glfwGetPrimaryMonitor(), NULL);
-	this->fullscreen = true;
+	window = glfwCreateWindow(width, height, "Wasteland Warrior", NULL, NULL);
+	this->fullscreen = false;
+	//window = glfwCreateWindow(width, height, "Wasteland Warrior", glfwGetPrimaryMonitor(), NULL);
+	//this->fullscreen = true;
 	if (!window) {
 		std::cout << "Program failed to create GLFW window, TERMINATING" << std::endl;
 		glfwTerminate();

@@ -88,6 +88,7 @@ public:
 
 	Framebuffer shadow_buffer;
 	Framebuffer shadow_buffertwo;
+	Framebuffer shadow_bufferthree;
 	Framebuffer rear_view;
 	Framebuffer main_view;
 
@@ -95,7 +96,7 @@ public:
 
 	std::vector<Geometry> texObjects;
 
-	
+	float bias;
 };
 
 #endif /* RENDERINGENGINE_H_ */

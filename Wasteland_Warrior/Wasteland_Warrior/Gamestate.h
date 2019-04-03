@@ -33,6 +33,7 @@ public:
 	Entity map = Entity();
 	std::vector<EnemyUnit> Enemies;
 	std::vector<PowerUp> PowerUps;
+	std::vector<Object> Checkpoints;
 	std::vector<Object> StaticObjects;
 	std::vector<Object> DynamicObjects;
 
@@ -245,7 +246,6 @@ public:
 	int wave;
 	bool restart;
 	int enemiesLeft;
-	int checkpoints;
 	int breakSeconds;
 	int score;
 	int scoreTime;

@@ -953,7 +953,7 @@ void Physics_Controller::stepPhysics(bool interactive)
 			}
 
 			if (vehicle1 != NULL && object != NULL && object->type != 0) {
-				std::cout << "Checkpoint activating" << std::endl;
+				//std::cout << "Checkpoint activating" << std::endl;
 					gameState->Collision(vehicle1, object);
 			}
 		}

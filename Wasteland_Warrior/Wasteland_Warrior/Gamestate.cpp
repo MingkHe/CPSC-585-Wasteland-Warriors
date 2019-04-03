@@ -287,7 +287,7 @@ void Gamestate::DespawnEnemy(Vehicle* vehicle) {
 		2.f, 0.f, 0.f, 0.f,
 		0.f, 2.f, 0.f, 0.f,
 		0.f, 0.f, 2.f, 0.f,
-		-50.f, -50.0f, 0.f, 1.f
+		-30.f, -30.0f, 0.f, 1.f
 	);
 
 	scene->allWorldCompObjects[vehicle->sceneObjectIndex].subObjects[0].transform = transformMatrix;  //Change location of graphic to out of sight
@@ -303,10 +303,10 @@ void Gamestate::DespawnObject(Object* Object) {
 		2.f, 0.f, 0.f, 0.f,
 		0.f, 2.f, 0.f, 0.f,
 		0.f, 0.f, 2.f, 0.f,
-		-50.f, -50.0f, 0.f, 1.f
+		-30.f, -30.0f, 0.f, 1.f
 	);
 
-	//scene->allWorldCompObjects[Object->sceneObjectIndex].subObjects[0].transform = transformMatrix;  //Change location of graphic to out of sight
+	scene->allWorldCompObjects[Object->sceneObjectIndex].subObjects[0].transform = transformMatrix;  //Change location of graphic to out of sight
 
 
 	int offset = Object->physicsIndex;
@@ -322,7 +322,7 @@ void Gamestate::DespawnStaticObject(Object* Object) {
 		-500.f, -500.f, -500.f, 1.f
 	);
 
-	//scene->allWorldCompObjects[Object->sceneObjectIndex].subObjects[0].transform = transformMatrix;  //Change location of graphic to out of sight
+	scene->allWorldCompObjects[Object->sceneObjectIndex].subObjects[0].transform = transformMatrix;  //Change location of graphic to out of sight
 
 	int offset = Object->physicsIndex;
 	physics_Controller->setPositionStatic(Object->physicsIndex, glm::vec3{ 20 * offset, -30, 0 });
@@ -330,14 +330,14 @@ void Gamestate::DespawnStaticObject(Object* Object) {
 
 void Gamestate::DespawnPowerUp(PowerUp* powerUp) {
 
-	glm::mat4 transformMatrix = glm::mat4(
-		2.f, 0.f, 0.f, 0.f,
-		0.f, 2.f, 0.f, 0.f,
-		0.f, 0.f, 2.f, 0.f,
-		-50.f, -50.f, -50.f, 1.f
-	);
+	//glm::mat4 transformMatrix = glm::mat4(
+		//2.f, 0.f, 0.f, 0.f,
+		//0.f, 2.f, 0.f, 0.f,
+		//0.f, 0.f, 2.f, 0.f,
+		//-30.f, -30.f, -30.f, 1.f
+	//);
 
-	scene->allWorldCompObjects[powerUp->sceneObjectIndex].subObjects[0].transform = transformMatrix;  //Change location of graphic to out of sight
+	//scene->allWorldCompObjects[powerUp->sceneObjectIndex].subObjects[0].transform = transformMatrix;  //Change location of graphic to out of sight
 
 	int offset = powerUp->physicsIndex;
 	physics_Controller->setPosition(powerUp->physicsIndex, glm::vec3{ 20 * offset, -30, 0 });

@@ -154,6 +154,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="EnemyUnit.cpp" />
     <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="Framebuffer.cpp" />
     <ClCompile Include="Gamestate.cpp" />
     <ClCompile Include="Geometry.cpp" />
     <ClCompile Include="Logic.cpp" />
@@ -183,6 +184,7 @@
     <ClInclude Include="CompositeWorldObject.h" />
     <ClInclude Include="EnemyUnit.h" />
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="Framebuffer.h" />
     <ClInclude Include="Gamestate.h" />
     <ClInclude Include="Geometry.h" />
     <ClInclude Include="AI_Interaction.h" />
@@ -210,13 +212,19 @@
     <Text Include="Wasteland_Warrior.vcxproj.filters.txt" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\shaders\basicfragment.glsl" />
+    <None Include="..\shaders\needlefragment.glsl" />
+    <None Include="..\shaders\basicvertex.glsl" />
     <None Include="..\shaders\fragment.glsl" />
     <None Include="..\shaders\fragmentMainMenu.glsl" />
     <None Include="..\shaders\geometry.glsl" />
     <None Include="..\shaders\healthfragment.glsl" />
     <None Include="..\shaders\healthvertex.glsl" />
+    <None Include="..\shaders\needlevertex.glsl" />
     <None Include="..\shaders\radarfragment.glsl" />
     <None Include="..\shaders\radarvertex.glsl" />
+    <None Include="..\shaders\shadowMapFragment.glsl" />
+    <None Include="..\shaders\shadowMapVertex.glsl" />
     <None Include="..\shaders\texFragment.glsl" />
     <None Include="..\shaders\texVertex.glsl" />
     <None Include="..\shaders\vertex.glsl" />

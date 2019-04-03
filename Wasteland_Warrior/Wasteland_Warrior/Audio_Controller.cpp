@@ -82,7 +82,7 @@ int Audio_Controller::playSound(Gamestate* gameState)
 	if (gameState->carRunning_sound && gameState->ui_gameplay)
 	{
 		//printf("speed volumn: %f\n", 20+MIX_MAX_VOLUME*gameState->playerVehicle.speed/10.0f);
-		Mix_Volume(2, MIX_MAX_VOLUME*gameState->playerVehicle.speed/10.0f);
+		Mix_Volume(2, (int)(MIX_MAX_VOLUME*gameState->playerVehicle.speed/10.0f));
 		if (!Mix_Playing(2)) {	
 			Mix_PlayChannel(2, car_run, -1);
 		}	
@@ -158,7 +158,7 @@ int Audio_Controller::playSound(Gamestate* gameState)
 
 	if (gameState->ui_menu)
 	{
-		Mix_VolumeMusic(MIX_MAX_VOLUME / 2.5);
+		Mix_VolumeMusic((int)(MIX_MAX_VOLUME / 2.5));
 		playMusic();
 	}
 	else if (gameState->ui_pauseMenu)

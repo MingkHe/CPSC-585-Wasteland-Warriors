@@ -37,7 +37,6 @@
 #include <SDL_mixer.h>
 #include <SDL.h>
 
-//https://stackoverflow.com/questions/997946/how-to-get-current-time-and-date-in-c
 
 Program::Program() {
 	setupWindow();
@@ -52,8 +51,10 @@ Program::~Program() {
 void Program::start() {
 	//Initialization
 	Gamestate* gameState = new Gamestate();
-	gameState->window_width = glfwGetVideoMode(glfwGetPrimaryMonitor())->width;
-	gameState->window_height = glfwGetVideoMode(glfwGetPrimaryMonitor())->height;
+	gameState->window_width = this->win_width;//glfwGetVideoMode(glfwGetPrimaryMonitor())->width;
+	gameState->window_height = this->win_height;//glfwGetVideoMode(glfwGetPrimaryMonitor())->height;
+	gameState->fullscreen = this->fullscreen;
+	gameState->UIMode = "Loading";
 
 	struct timeb currentTime;
 	ftime(&currentTime);
@@ -80,38 +81,111 @@ void Program::start() {
 
 	renderingEngine->LoadShaderProgram("menuShader", vertexMenuFile, fragmentMenuFile);
 
+	
+
 	UI_Controller UICL = UI_Controller(gameState,renderingEngine);
 
 	scene = new Scene(renderingEngine, gameState);
 
-	//Spawn Static Entities
+	UICL.Update(gameState,window);
+	glfwSwapBuffers(window);
+
+	printf("finished loading\n");
+	//gameState->InstantiateAllMeshes_Textures();
+
+	//Mesh loading
+	gameState->InstantiateAllMeshes_Textures_Map();
+	for (int i = 1; i <= 25; i++) {
+		Sleep(100);
+		gameState->loadingPercentage = i;
+		UICL.Update(gameState, window);
+		glfwSwapBuffers(window);
+	}
+	gameState->loadingPercentage = 25;
+
+	gameState->InstantiateAllMeshes_Textures_Static();
+
+	for (int i = 26; i <= 50; i++) {
+		Sleep(100);
+		gameState->loadingPercentage = i;
+		UICL.Update(gameState, window);
+		glfwSwapBuffers(window);
+	}
+
+	Sleep(1000);
+
+	gameState->InstantiateAllMeshes_Textures_Dynamic();
+
+	for (int i = 51; i <= 78; i++) {
+		Sleep(100);
+		gameState->loadingPercentage = i;
+		UICL.Update(gameState, window);
+		glfwSwapBuffers(window);
+	}
+
+	gameState->InstantiateAllMeshes_Textures_Vehicle();
+
+	//Spawn Map, Skybox and Canyon Walls
 	gameState->SpawnMap();
-
-	gameState->SpawnStaticObject(0, 0, 0, 0);
-	gameState->SpawnStaticObject(1, 88, -6.25, 113);
-	gameState->SpawnStaticObject(1, 138, -6.25, 83);
-	gameState->SpawnStaticObject(1, -88, 0, 113);
-	gameState->SpawnStaticObject(1, -108, 0, 93);
+	gameState->SpawnStaticObject(0, 0, 0, 0, 0, 0, 0);
+	gameState->SpawnStaticObject(6, 0, 0, 0, 0, 0, 0);
 	
-	gameState->SpawnStaticObject(2, 93, -0.75, -45);
-	gameState->SpawnStaticObject(3, 63, 0, -25);
-	gameState->SpawnStaticObject(2, 123, -0.75, -95);
-	gameState->SpawnStaticObject(3, 148, 0, -55);
-	gameState->SpawnStaticObject(2, 133, -0.75, -145);
-	gameState->SpawnStaticObject(3, 73, 0, -125);
-	gameState->SpawnStaticObject(4, -150, 4.25, -120);
+	//Spawn Various Static Objects
+	gameState->SpawnStaticObject(2, 93, -0.75, -45, 0, 0, 0);
 
-	//Spawn Power Ups
-	gameState->SpawnDynamicObject(1, 53, 1, -35);
-	gameState->SpawnDynamicObject(1, -100, 5.25, -100);
-	gameState->SpawnDynamicObject(1, 100, -5.25, 100);
-	gameState->SpawnDynamicObject(1, -100, 1, 100);
+	gameState->SpawnStaticObject(3, 63, 0, -25, 0, 0, 0);
+	gameState->SpawnStaticObject(2, 123, -6.7, -95, 0, 0, 0);
+	gameState->SpawnStaticObject(3, 148, -6.2, -55, 0, 0, 0);
+	gameState->SpawnStaticObject(2, 143, -6.7, -125, 0, 0, 0);
+	gameState->SpawnStaticObject(3, 73, 0, -125, 0, 0, 0);
+
+	
+	gameState->SpawnStaticObject(7, 0, 0, 173, 0, 0, 0);
+	//Tunnels
+	gameState->SpawnStaticObject(8, 0, 0, 190, 0, 180, 0);
+	gameState->SpawnStaticObject(8, 100, 0, -180, 0, 0, 0);
+
+	//Buildings & Ruined Buildings
+	gameState->SpawnStaticObject(1, 20, 0, 20, 0, 0, 0);
+	gameState->SpawnStaticObject(1, -40, 0, -30, 0, 0, 0);
+	gameState->SpawnStaticObject(1, 60, 0, -13, 0, 0, 0);
+	gameState->SpawnStaticObject(1, -80, 0, 53, 0, 0, 0);
+	gameState->SpawnStaticObject(1, 100, 0, 93, 0, 0, 0);
+	gameState->SpawnStaticObject(1, -120, 0, -43, 0, 0, 0);
+	gameState->SpawnStaticObject(1, 140, 0, 73, 0, 0, 0);
+	gameState->SpawnStaticObject(1, -100, 0, -53, 0, 0, 0);
+
+	gameState->SpawnStaticObject(1, 20, 0, -123, 0, 0, 0);
+	gameState->SpawnStaticObject(1, -30, 0, -145, 0, 0, 0);
+
+	gameState->SpawnStaticObject(9, -20, 0, -100, 0, 0, 0);
+	gameState->SpawnStaticObject(4, 0, 0, -100, 0, 0, 0);
+	gameState->SpawnStaticObject(9, 40, 0, -100, 0, 0, 0);
+	gameState->SpawnStaticObject(10, 20, 0, -100, 0, 0, 0);
 
 	//Spawn Player
-	gameState->SpawnPlayer(0, 0, 0);
+	gameState->SpawnPlayer(0, 0, 0, 0, 0, 0);
 
-	//Initialize Enemies
-	gameState->SpawnEnemy(0, 10000, 10000, 10000);
+	for (int i = 79; i <= 100; i++) {
+		Sleep(100);
+		gameState->loadingPercentage = i;
+		UICL.Update(gameState, window);
+		glfwSwapBuffers(window);
+	}
+
+	gameState->UIMode = "Start";
+	Sleep(1000);
+
+	/*
+	while (true) {
+		usrInput.Update(gameState);
+		if (gameState->button == "Enter") {
+			break;
+		}
+	}
+	*/
+
+	
 
 	//Main render loop
 	while (!glfwWindowShouldClose(window)) {
@@ -168,7 +242,6 @@ void Program::start() {
 	}
 	SDL_CloseAudio();
 	SDL_Quit();
-
 }
 
 void Program::setupWindow() {
@@ -190,8 +263,15 @@ void Program::setupWindow() {
 	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 	int width = mode->width;//1280; //640
 	int height = mode->height;//960; //480
-	window = glfwCreateWindow(width, height, "Wasteland Warrior", NULL, NULL);
-	//window = glfwCreateWindow(width, height, "Wasteland Warrior", glfwGetPrimaryMonitor(), NULL);
+	//int width = 640;
+	//int height = 480;
+	this->win_height = height;
+	this->win_width = width;
+
+	//window = glfwCreateWindow(width, height, "Wasteland Warrior", NULL, NULL);
+	//this->fullscreen = false;
+	window = glfwCreateWindow(width, height, "Wasteland Warrior", glfwGetPrimaryMonitor(), NULL);
+	this->fullscreen = true;
 	if (!window) {
 		std::cout << "Program failed to create GLFW window, TERMINATING" << std::endl;
 		glfwTerminate();

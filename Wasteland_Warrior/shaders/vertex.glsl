@@ -16,10 +16,14 @@ layout(location = 3) in vec2 VertexUV;
 // output to be interpolated between vertices and passed to the fragment stage
 uniform mat4 modelViewProjection;
 uniform mat4 transform;
+uniform mat4 depthViewProjection;
+uniform mat4 depthViewProjectiontwo;
 
 out vec3 fragNormal;
 out vec2 fragTexCoord;
 out vec3 fragVert;
+out vec4 shadowCoord;
+out vec4 shadowCoordtwo;
 
 void main()
 {
@@ -31,8 +35,10 @@ void main()
 	fragTexCoord = VertexUV;
 	//fragNormal = VertexNormal;
 	//fragVert = VertexPosition;
+	//fragNormal = normalize((transform*vec4(VertexNormal.x, VertexNormal.z, -VertexNormal.y , 0)).xyz);
 	fragNormal = normalize((transform*vec4(VertexNormal, 0)).xyz);
 	fragVert = (transform*vec4(VertexPosition, 1)).xyz;
 	
-	
+	shadowCoord = depthViewProjection * transform*vec4(VertexPosition, 1.0);
+	shadowCoordtwo = depthViewProjectiontwo * transform*vec4(VertexPosition, 1.0);
 }

@@ -65,13 +65,24 @@ PxRigidStatic* createDrivablePlane(const PxFilterData& simFilterData, PxMaterial
 	//Add a plane to the scene.
 	PxRigidStatic* groundPlane = PxCreatePlane(*physics, PxPlane(0, 1, 0, 0), *material);
 
+	PxTransform orientation = groundPlane->getGlobalPose();
+	PxVec3 location = orientation.p;
+	PxQuat rotation = orientation.q;
+
+	PxTransform newO = PxTransform(orientation.p - PxVec3{0,24,0}, orientation.q);
+
+	groundPlane->setGlobalPose(newO);
+
+	//PxTransform startTransform(PxVec3(0.0f, 5.0f, -5.0f), PxQuat(PxIdentity));
+	//groundPlane->setGlobalPose(startTransform);
+
 	//Get the plane shape so we can set query and simulation filter data.
 	PxShape* shapes[1];
 	groundPlane->getShapes(shapes, 1);
 
-	//Set the query filter data of the ground plane so that the vehicle raycasts can hit the ground.
+	//Set the query filter data of the ground plane so that the vehicle raycasts cannot hit the ground.
 	PxFilterData qryFilterData;
-	setupDrivableSurface(qryFilterData);
+	setupNonDrivableSurface(qryFilterData);
 	shapes[0]->setQueryFilterData(qryFilterData);
 
 	//Set the simulation filter data of the ground plane so that it collides with the chassis of a vehicle but not the wheels.
@@ -129,16 +140,14 @@ PxRigidStatic* createRigidTriangleMeshDrivable(const PxVec3* verts, const PxU32 
 	PxRigidStatic* rigidStaticMesh = PxCreateStatic(physics, PxTransform(PxIdentity), triGeom, *material);
 
 	//Get the plane shape so we can set query and simulation filter data.
-	PxShape* shapes[1];
-	rigidStaticMesh->getShapes(shapes, 1);
-
+	PxShape* mapShapes = PxRigidActorExt::createExclusiveShape(*rigidStaticMesh, triGeom, *material);
 	//Set the query filter data of the ground plane so that the vehicle raycasts can hit the ground.
 	PxFilterData qryFilterData;
 	setupDrivableSurface(qryFilterData);
-	shapes[0]->setQueryFilterData(qryFilterData);
+	mapShapes->setQueryFilterData(qryFilterData);
 
 	//Set the simulation filter data of the ground plane so that it collides with the chassis of a vehicle but not the wheels.
-	shapes[0]->setSimulationFilterData(simFilterData);
+	mapShapes->setSimulationFilterData(simFilterData);
 	
 	return rigidStaticMesh;
 }
@@ -170,6 +179,18 @@ PxRigidStatic* createRigidTriangleMeshStatic(const PxVec3* verts, const PxU32 nu
 	triGeom.triangleMesh = triangleMesh;
 
 	PxRigidStatic* rigidStaticMesh = PxCreateStatic(physics, PxTransform(PxIdentity), triGeom, *material);
+
+	//Get the plane shape so we can set query and simulation filter data.
+	PxShape* shapes = PxRigidActorExt::createExclusiveShape(*rigidStaticMesh, triGeom, *material);
+	//Set the query filter data of the ground plane so that the vehicle raycasts can hit the ground.
+	PxFilterData qryFilterData;
+	setupNonDrivableSurface(qryFilterData);
+	//setupDrivableSurface(qryFilterData);
+	shapes->setQueryFilterData(qryFilterData);
+	PxFilterData obstacleSimFilterData = PxFilterData(COLLISION_FLAG_OBSTACLE, COLLISION_FLAG_OBSTACLE_AGAINST, 0, 0);
+	//Set the simulation filter data of the ground plane so that it collides with the chassis of a vehicle but not the wheels.
+	shapes->setSimulationFilterData(obstacleSimFilterData);
+
 	return rigidStaticMesh;
 }
 
@@ -223,18 +244,18 @@ PxConvexMesh* createChassisMesh(const PxVec3 dims, PxPhysics& physics, PxCooking
 
 PxConvexMesh* createWheelMesh(const PxF32 width, const PxF32 radius, PxPhysics& physics, PxCooking& cooking)
 {
-	PxVec3 points[2*16];
-	for(PxU32 i = 0; i < 16; i++)
+	PxVec3 points[2*256];
+	for(PxU32 i = 0; i < 256; i++)
 	{
-		const PxF32 cosTheta = PxCos(i*PxPi*2.0f/16.0f);
-		const PxF32 sinTheta = PxSin(i*PxPi*2.0f/16.0f);
+		const PxF32 cosTheta = PxCos(i*PxPi*2.0f/256.0f);
+		const PxF32 sinTheta = PxSin(i*PxPi*2.0f/256.0f);
 		const PxF32 y = radius*cosTheta;
 		const PxF32 z = radius*sinTheta;
 		points[2*i+0] = PxVec3(-width/2.0f, y, z);
 		points[2*i+1] = PxVec3(+width/2.0f, y, z);
 	}
 
-	return createConvexMesh(points,32,physics,cooking);
+	return createConvexMesh(points,8,physics,cooking);
 }
 
 PxRigidDynamic* createVehicleActor

@@ -11,6 +11,11 @@ class UserInput
 private:
 	bool up;
 	bool down;
+	bool view;
+	bool select;
+
+	int axesCount;
+	int buttonCount;
 
 public:
 	UserInput();
@@ -20,18 +25,24 @@ public:
 	static std::queue<std::string> inputBuffer;
 	
 	//Mouse
-	static double MouseXpos;
-	static double MouseYpos;
+	static float MouseXpos;
+	static float MouseYpos;
 	float oldMouseXpos;
 	float oldMouseYpos;
-	static bool MousePressed;
+	static bool MouseLeft;
+	static bool MouseRight;
 
-	//WASD
+	//Car controls
 	static bool WKey;
 	static bool AKey;
 	static bool SKey;
 	static bool DKey;
-	static bool SPACEKey;
+
+	//Handbrake
+	static bool Handbrake;
+
+	//Reverse Cam
+	static bool Reverse;
 
 	void Update(Gamestate* gameState);
 	static void key(GLFWwindow * window, int key, int scancode, int action, int mods);

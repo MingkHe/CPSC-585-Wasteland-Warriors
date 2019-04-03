@@ -32,17 +32,26 @@ public:
 
 	//Send geometry to the renderer
 	void displayScene();
-	int loadOBJObject(const char* filepath, const char* textureFilepath);
+	int loadOBJObjectInstance(const char* filepath, const char* textureFilepath);
 
 	RenderingEngine * renderer;
 
 	//list of objects in the scene
-	std::vector<CompositeWorldObject> objects;
+	std::vector<CompositeWorldObject> allWorldCompObjects;
+	std::vector<CompositeWorldObject> compObjectInstances;
 	int generateRectPrism(float length, float width, float height);
 
-	int sceneObjectIndex = 0;
+	int sceneObjectIndex = -1;
+	int sceneCompObjectIndex = -1;
+	int objectInstanceIndex = -1;
+	char previousHeader = 'v';
 
+	int loadCompObjectInstance(int compObjIndex);
 private:
+
+	void createObjectInstance(const char* textureFilepath, CompositeWorldObject OBJobjectComp, Geometry OBJobject,
+		std::vector< unsigned int > vertexIndices, std::vector< unsigned int > uvIndices, std::vector< unsigned int > normalIndices,
+		std::vector< glm::vec3 > temp_vertices, std::vector< glm::vec2 > temp_uvs, std::vector< glm::vec3 > temp_normals);
 };
 
 

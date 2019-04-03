@@ -9,21 +9,26 @@
 std::queue<std::string> UserInput::inputBuffer;
 
 //Mouse
-double UserInput::MouseXpos;
-double UserInput::MouseYpos;
-bool UserInput::MousePressed;
+float UserInput::MouseXpos;
+float UserInput::MouseYpos;
+bool UserInput::MouseLeft;
+bool UserInput::MouseRight;
 
-//WASD
+//Driving controls
 bool UserInput::WKey;
 bool UserInput::AKey;
 bool UserInput::SKey;
 bool UserInput::DKey;
-bool UserInput::SPACEKey;
+
+//Handbrake
+bool UserInput::Handbrake;
+
+//Reverse Cam
+bool UserInput::Reverse;
 
 UserInput::UserInput()
 {
 }
-
 
 UserInput::~UserInput()
 {
@@ -31,13 +36,15 @@ UserInput::~UserInput()
 
 void UserInput::Update(Gamestate* gameState)
 {
-	//Gamepad input
+	//Reset Gamepad
 	gameState->leftStickX = 0.0;
 	gameState->leftStickY = 0.0;
 	gameState->rightStickX = 0.0;
 	gameState->rightStickY = 0.0;
 	gameState->leftTrigger = 0.0;
 	gameState->rightTrigger = 0.0; 
+
+	//Gamepad input
 	gamepad(glfwJoystickPresent(GLFW_JOYSTICK_1), gameState);
 
 	//Get input from buffer
@@ -49,36 +56,39 @@ void UserInput::Update(Gamestate* gameState)
 		gameState->button = "";
 	}
 
-	//WASD car control
-	if (UserInput::WKey == true) {
+	//Car control
+	if (UserInput::WKey) {
 		gameState->WKey = true;
 	}
 	else {
 		gameState->WKey = false;
 	}
-	if (UserInput::AKey == true) {
+	if (UserInput::AKey) {
 		gameState->AKey = true;
 	}
 	else {
 		gameState->AKey = false;
 	}
-	if (UserInput::SKey == true) {
+	if (UserInput::SKey) {
 		gameState->SKey = true;
 	}
 	else{
 		gameState->SKey = false;
 	}
-	if (UserInput::DKey == true) {
+	if (UserInput::DKey) {
 		gameState->DKey = true;
 	}
 	else {
 		gameState->DKey = false;
 	}
-	if (UserInput::SPACEKey == true) {
-		gameState->SPACEKey = true;
+	if (UserInput::Handbrake) {
+		gameState->Handbrake = true;
 	}
 	else {
-		gameState->SPACEKey = false;
+		gameState->Handbrake = false;
+	}
+	if (UserInput::Reverse) {
+		UserInput::inputBuffer.push("REVERSE");
 	}
 
 	//Reset Orientation
@@ -96,10 +106,10 @@ void UserInput::Update(Gamestate* gameState)
 		}
 	}
 
-	//Mouse Camera Input
-	if (UserInput::MousePressed) {
+	//Mouse Input
+	if (UserInput::MouseLeft) {
 		if (UserInput::MouseXpos != oldMouseXpos) {
-			float angle = gameState->cameraAngle + (oldMouseXpos - UserInput::MouseXpos) * 0.01;
+			float angle = gameState->cameraAngle + (oldMouseXpos - UserInput::MouseXpos) * 0.01f;
 			if (angle < 1.5 && angle > -1.5) {
 				gameState->cameraAngle = angle;
 			}
@@ -108,14 +118,20 @@ void UserInput::Update(Gamestate* gameState)
 	}
 	else {
 		if (gameState->cameraAngle > 0.05){
-			gameState->cameraAngle = gameState->cameraAngle - 0.02;
+			gameState->cameraAngle = gameState->cameraAngle - 0.02f;
 		}
 		else if (gameState->cameraAngle < -0.05) {
-			gameState->cameraAngle = gameState->cameraAngle + 0.02;
+			gameState->cameraAngle = gameState->cameraAngle + 0.02f;
 		}
 		else {
 				gameState->cameraAngle = 0;
 		}
+	}
+	if (UserInput::MouseRight) {
+		gameState->mouseRight = true;
+	}
+	else {
+		gameState->mouseRight = false;
 	}
 }
 
@@ -141,8 +157,15 @@ void UserInput::key(GLFWwindow* window, int key, int scancode, int action, int m
 		case GLFW_KEY_D:
 			UserInput::DKey = true;
 			break;
+
+			//Selection
+		case GLFW_KEY_ENTER:
+			UserInput::inputBuffer.push("ENTER");
+			break;
+
+			//Handbrake
 		case GLFW_KEY_SPACE:
-			UserInput::SPACEKey = true;
+			UserInput::Handbrake = true;
 			break;
 
 			//Escape
@@ -160,6 +183,11 @@ void UserInput::key(GLFWwindow* window, int key, int scancode, int action, int m
 			UserInput::inputBuffer.push("VIEW");
 			break;
 
+			//Reverse Cam
+		case GLFW_KEY_E:
+			UserInput::Reverse = true;
+			break;
+
 			//Arrows
 		case GLFW_KEY_RIGHT:
 			UserInput::inputBuffer.push("RIGHT");
@@ -172,17 +200,6 @@ void UserInput::key(GLFWwindow* window, int key, int scancode, int action, int m
 			break;
 		case GLFW_KEY_UP:
 			UserInput::inputBuffer.push("UP");
-			break;
-
-			//Controls
-		case GLFW_KEY_ENTER:
-			UserInput::inputBuffer.push("ENTER");
-			break;
-		case GLFW_KEY_LEFT_SHIFT:
-			UserInput::inputBuffer.push("LSHIFT");
-			break;
-		case GLFW_KEY_RIGHT_SHIFT:
-			UserInput::inputBuffer.push("RSHIFT");
 			break;
 
 			//Testing Input
@@ -210,6 +227,7 @@ void UserInput::key(GLFWwindow* window, int key, int scancode, int action, int m
 	case GLFW_RELEASE:
 	{
 		switch (key) {
+
 			//Car Controls
 		case GLFW_KEY_W:
 			UserInput::WKey = false;
@@ -223,8 +241,15 @@ void UserInput::key(GLFWwindow* window, int key, int scancode, int action, int m
 		case GLFW_KEY_D:
 			UserInput::DKey = false;
 			break;
+
+			//Handbrake
 		case GLFW_KEY_SPACE:
-			UserInput::SPACEKey = false;
+			UserInput::Handbrake = false;
+			break;
+
+			//Reverse Cam
+		case GLFW_KEY_E:
+			UserInput::Reverse = false;
 			break;
 		}
 	}
@@ -234,16 +259,22 @@ void UserInput::key(GLFWwindow* window, int key, int scancode, int action, int m
 
 void UserInput::cursor(GLFWwindow* window, double xpos, double ypos)
 {
-	UserInput::MouseXpos = xpos;
-	UserInput::MouseYpos = ypos;
+	UserInput::MouseXpos = (float)xpos;
+	UserInput::MouseYpos = (float)ypos;
 }
 
 void UserInput::mouseButton(GLFWwindow* window, int button, int action, int mods)
 {
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-		UserInput::MousePressed = true;
+		UserInput::MouseLeft = true;
 	} else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
-		UserInput::MousePressed = false;
+		UserInput::MouseLeft = false;
+	}
+	if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
+		UserInput::MouseRight = true;
+	}
+	else if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE) {
+		UserInput::MouseRight = false;
 	}
 }
 
@@ -251,124 +282,172 @@ void UserInput::gamepad(int controller, Gamestate* gameState) {
 
 	//Controller is connected
 	if (controller == 1) {
-
-		//Generic Controller Support
-		bool Generic = false;
+		gameState->controller = true;
 		std::string name = glfwGetJoystickName(GLFW_JOYSTICK_1);
-		if (name == "Wireless Controller") { Generic = true; }
-
-		//Gamepad joystick and triggers 
-		int axesCount;
 		const float *axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &axesCount);
-
-		//Joysticks
-		gameState->leftStickX = axes[0];
-		gameState->leftStickY = axes[1];
-		gameState->rightStickX = axes[2];
-		gameState->rightStickY = axes[3];
-
-		//Triggers
-		gameState->leftTrigger = axes[4];
-		gameState->rightTrigger = axes[5];
-
-		//Gamepad buttons
-		int buttonCount;
 		const unsigned char *buttons = glfwGetJoystickButtons(GLFW_JOYSTICK_1, &buttonCount);
 
-		if (GLFW_PRESS == buttons[0]) { 
-			UserInput::inputBuffer.push("A");
-		};
-		if (GLFW_PRESS == buttons[1] && Generic == true) {
-			UserInput::inputBuffer.push("A");
+		if (name == "Wireless Controller") { 
+
+			//Joysticks
+			gameState->leftStickX = axes[0];
+			gameState->leftStickY = axes[1];
+			gameState->rightStickX = axes[2];
+			gameState->rightStickY = axes[5];
+
+			//Triggers
+			gameState->leftTrigger = axes[3];
+			gameState->rightTrigger = axes[4];
+
+			//Buttons
+			if (GLFW_PRESS == buttons[0]) {
+				UserInput::inputBuffer.push("X");
+			};
+			if (GLFW_PRESS == buttons[1]) {
+				if (select == true) {
+					UserInput::inputBuffer.push("A");
+				}
+				select = false;
+			};
+			if (GLFW_RELEASE == buttons[1]) {
+				select = true;
+			};
+			if (GLFW_PRESS == buttons[2]) {
+				UserInput::inputBuffer.push("B");
+			};
+			if (GLFW_PRESS == buttons[3]) {
+				UserInput::inputBuffer.push("Y");
+			};
+			if (GLFW_PRESS == buttons[4]) {
+				UserInput::inputBuffer.push("REVERSE");
+			};
+			if (GLFW_PRESS == buttons[5]) {
+				if (view == true) {
+					UserInput::inputBuffer.push("VIEW");
+				}
+				view = false;
+			};
+			if (GLFW_RELEASE == buttons[5]) {
+				view = true;
+			};
+			if (GLFW_PRESS == buttons[6]) {
+				UserInput::inputBuffer.push("OPTION");
+			};
+			if (GLFW_PRESS == buttons[7]) {
+				//Right trigger as button
+			};
+			if (GLFW_PRESS == buttons[8]) {
+				//Left trigger as button
+			};
+			if (GLFW_PRESS == buttons[9]) {
+				UserInput::inputBuffer.push("MENU");
+			};
+			if (GLFW_PRESS == buttons[14]) {
+				if (up == true) {
+					UserInput::inputBuffer.push("UP");
+				}
+				up = false;
+			};
+			if (GLFW_RELEASE == buttons[14]) {
+				up = true;
+			};
+			if (GLFW_PRESS == buttons[15]) {
+				UserInput::inputBuffer.push("RIGHT");
+			};
+			if (GLFW_PRESS == buttons[16]) {
+				if (down == true) {
+					UserInput::inputBuffer.push("DOWN");
+				}
+				down = false;
+			};
+			if (GLFW_RELEASE == buttons[16]) {
+				down = true;
+			};
+			if (GLFW_PRESS == buttons[17]) {
+				UserInput::inputBuffer.push("LEFT");
+			};
 		}
 		else {
-			UserInput::inputBuffer.push("B");
-		};
-		if (GLFW_PRESS == buttons[2]) {
-			UserInput::inputBuffer.push("X");
-		};
-		if (GLFW_PRESS == buttons[3]) { 
-			UserInput::inputBuffer.push("Y");
-		};
-		if (GLFW_PRESS == buttons[4]) { 
-			UserInput::inputBuffer.push("LB");
-		};
-		if (GLFW_PRESS == buttons[5]) { 
-			UserInput::inputBuffer.push("VIEW");
-		};
-		if (GLFW_PRESS == buttons[6]) { 
-			UserInput::inputBuffer.push("OPTION");
-		};
-		if (GLFW_PRESS == buttons[7] && Generic == false) { 
-			UserInput::inputBuffer.push("MENU");
-		};
-		if (GLFW_PRESS == buttons[8]) { 
-			UserInput::inputBuffer.push("LS");
-			std::cout << "1" << std::endl;
-		};
-		if (GLFW_PRESS == buttons[9]) { 
-			UserInput::inputBuffer.push("RS");
-			std::cout << "2" << std::endl;
-		};
-		if (GLFW_PRESS == buttons[10] && Generic == false) {
+			//Joysticks
+			gameState->leftStickX = axes[0];
+			gameState->leftStickY = axes[1];
+			gameState->rightStickX = axes[2];
+			gameState->rightStickY = axes[3];
+
+			//Triggers
+			gameState->leftTrigger = axes[4];
+			gameState->rightTrigger = axes[5];
+
+			//Buttons
+			if (GLFW_PRESS == buttons[0]) {
+				if (select == true) {
+					UserInput::inputBuffer.push("A");
+				}
+				select = false;
+			};
+			if (GLFW_RELEASE == buttons[0]) {
+				select = true;
+			};
+			if (GLFW_PRESS == buttons[1]) {
+					UserInput::inputBuffer.push("B");
+			};
+			if (GLFW_PRESS == buttons[2]) {
+					UserInput::inputBuffer.push("X");
+			};
+			if (GLFW_PRESS == buttons[3]) {
+				UserInput::inputBuffer.push("Y");
+			};
+			if (GLFW_PRESS == buttons[4]) {
+				UserInput::inputBuffer.push("REVERSE");
+			};
+			if (GLFW_PRESS == buttons[5]) {
+				if (view == true) {
+					UserInput::inputBuffer.push("VIEW");
+				}
+				view = false;
+			};
+			if (GLFW_RELEASE == buttons[5]) {
+				view = true;
+			};
+			if (GLFW_PRESS == buttons[6]) {
+				UserInput::inputBuffer.push("OPTION");
+			};
+			if (GLFW_PRESS == buttons[7]) {
+				UserInput::inputBuffer.push("MENU");
+			};
+			if (GLFW_PRESS == buttons[8]) {
+				UserInput::inputBuffer.push("LS");
+			};
+			if (GLFW_PRESS == buttons[9]) {
+				UserInput::inputBuffer.push("RS");
+			};
+			if (GLFW_PRESS == buttons[10]) {
 			if (up == true) {
 				UserInput::inputBuffer.push("UP");
 			}
-			up = false;
-		};
-		if (GLFW_RELEASE == buttons[10]) {
-			up = true;
-		};
-		if (GLFW_PRESS == buttons[11]) {
-			UserInput::inputBuffer.push("RIGHT");
-		};
-		if (GLFW_PRESS == buttons[12] && Generic == false) {
-			if (down == true) {
-				UserInput::inputBuffer.push("DOWN");
-			}
-			down = false;
-		};
-		if (GLFW_RELEASE == buttons[12] && Generic == false) {
-			down = true;
-		};
-		if (GLFW_PRESS == buttons[13]) {
-			UserInput::inputBuffer.push("LEFT");
-		};
-
-		//Generic Dpad
-		if (GLFW_PRESS == buttons[14]) {
-			if (up == true) {
-				UserInput::inputBuffer.push("UP");
-			}
-			up = false;
-		};
-		if (GLFW_RELEASE == buttons[14]) {
-			up = true;
-		};
-		if (GLFW_PRESS == buttons[15]) {
-			UserInput::inputBuffer.push("RIGHT");
-		};
-		if (GLFW_PRESS == buttons[16]) {
-			if (down == true) {
-				UserInput::inputBuffer.push("DOWN");
-			}
-			down = false;
-		};
-		if (GLFW_RELEASE == buttons[16]) {
-			down = true;
-		};
-		if (GLFW_PRESS == buttons[17]) {
-			UserInput::inputBuffer.push("LEFT");
-		};
-
-		//Generic Controller Trigger/Joystick Remapping
-		if (Generic = true) {
-			float lt = gameState->rightStickY;
-			float rt = gameState->leftTrigger;
-			float ry = gameState->rightTrigger;
-			gameState->rightStickY = ry;
-			gameState->leftTrigger = lt;
-			gameState->rightTrigger = rt;
+				up = false;
+			};
+			if (GLFW_RELEASE == buttons[10]) {
+				up = true;
+			};
+			if (GLFW_PRESS == buttons[11]) {
+				UserInput::inputBuffer.push("RIGHT");
+			};
+			if (GLFW_PRESS == buttons[12]) {
+				if (down == true) {
+					UserInput::inputBuffer.push("DOWN");
+				}
+				down = false;
+			};
+			if (GLFW_RELEASE == buttons[12]) {
+				down = true;
+			};
+			if (GLFW_PRESS == buttons[13]) {
+				UserInput::inputBuffer.push("LEFT");
+			};
 		}
+	}
+	else {
+		gameState->controller = false;
 	}
 }

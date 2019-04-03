@@ -21,6 +21,8 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
+#include "Framebuffer.h"
+
 //Forward declaration of classes
 //(note this is necessary because these are pointers and it allows the #include to appear in the .cpp file)
 struct GLFWwindow;
@@ -46,7 +48,7 @@ public:
 	//load font [normal use 128 font]
 	void loadFont(const char* ttfFile);
 	//push render text into geometry array
-	void pushTextObj(std::vector<Geometry>& objects, std::string text, float x, float y, float scale);
+	void pushTextObj(std::vector<Geometry>& objects, std::string text, float x, float y, float scale, glm::vec3 color);
 	//update text information
 	void updateText();
 
@@ -75,14 +77,25 @@ public:
 	GLuint healthshaderProgram;
 	GLuint radarshaderProgram;
 	GLuint basicshaderProgram;
+	GLuint shadowshaderProgram;
+	GLuint needleshaderProgram;
 	Geometry health;
 	Geometry radar;
 	Geometry speedo;
 	Geometry needle;
+	Geometry mirror;
+	Geometry square;
+
+	Framebuffer shadow_buffer;
+	Framebuffer shadow_buffertwo;
+	Framebuffer rear_view;
+	Framebuffer main_view;
 
 	GLuint textShaderProgram;
 
 	std::vector<Geometry> texObjects;
+
+	
 };
 
 #endif /* RENDERINGENGINE_H_ */

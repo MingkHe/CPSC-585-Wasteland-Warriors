@@ -11,3 +11,12 @@ Vehicle::Vehicle()
 Vehicle::~Vehicle()
 {
 }
+
+
+int Vehicle::getActive() {
+	return active;
+}
+
+void Vehicle::setActive(int activeState) {
+	active = activeState;
+}

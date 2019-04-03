@@ -26,7 +26,7 @@ Scene::Scene(RenderingEngine* renderer, Gamestate* newGamestate) : renderer(rend
 	gameState = newGamestate;
 	gameState->scene = this;
 
-	CompositeWorldObject groundComp;
+	/*CompositeWorldObject groundComp;
 	Geometry ground;
 
 	ground.textureFilePath = "Texture/redLines.jpg";
@@ -52,9 +52,9 @@ Scene::Scene(RenderingEngine* renderer, Gamestate* newGamestate) : renderer(rend
 	ground.drawMode = GL_TRIANGLE_STRIP;
 	RenderingEngine::assignBuffers(ground);
 	RenderingEngine::setBufferData(ground);
-	groundComp.geometry.push_back(ground);
-	objects.push_back(groundComp);
-	
+	groundComp.subObjects.push_back(ground);
+	allWorldCompObjects.push_back(groundComp);
+	*/
 	//loadOBJObject("Objects/testLevel.obj", "Textures/redLines.jpg");
 
 
@@ -64,7 +64,8 @@ void Scene::setGamestate(Gamestate* newGamestate) {
 	gameState = newGamestate;
 }
 
-int Scene::loadOBJObject(const char* filepath, const char* textureFilepath) {
+
+int Scene::loadOBJObjectInstance(const char* filepath, const char* textureFilepath) {
 	CompositeWorldObject OBJobjectComp;
 	Geometry OBJobject;
 	std::vector< unsigned int > vertexIndices, uvIndices, normalIndices;
@@ -73,6 +74,8 @@ int Scene::loadOBJObject(const char* filepath, const char* textureFilepath) {
 	std::vector< glm::vec3 > temp_normals;
 	bool openSuccessful = true;
 	int count = 0;
+	int subobjectIndex = 0;
+	previousHeader = 'v';
 	//printf("1\n");
 	FILE * file = fopen(filepath, "r");
 	if (file == NULL) {
@@ -93,25 +96,34 @@ int Scene::loadOBJObject(const char* filepath, const char* textureFilepath) {
 		// else : parse lineHeader
 		if (strcmp(lineHeader, "v") == 0) {
 			//printf("6\n");
+			if (previousHeader == 'f') {
+				//createObject(textureFilepath, OBJobjectComp, OBJobject, vertexIndices, uvIndices, normalIndices, temp_vertices, temp_uvs, temp_normals);
+			}
+			previousHeader = 'v';
 			glm::vec3 vertex;
 			fscanf(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z);
 			temp_vertices.push_back(vertex);
 		}
 		else if (strcmp(lineHeader, "vt") == 0) {
+			//previousHeader = 't';
 			//printf("7\n");
 			glm::vec2 uv;
 			fscanf(file, "%f %f\n", &uv.x, &uv.y);
+			uv.x = uv.x - floor(uv.x);
+			uv.y = uv.y - floor(uv.y);
 			temp_uvs.push_back(uv);
 
 		}
 		else if (strcmp(lineHeader, "vn") == 0) {
 			//printf("8\n");
+			//previousHeader = 'n';
 			glm::vec3 normal;
 			fscanf(file, "%f %f %f\n", &normal.x, &normal.y, &normal.z);
 			temp_normals.push_back(normal);
 		}
 		else if (strcmp(lineHeader, "f") == 0) {
 			//printf("9\n");
+			previousHeader = 'f';
 			std::string vertex1, vertex2, vertex3;
 			unsigned int vertexIndex[3], uvIndex[3], normalIndex[3];
 			int matches = fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n", &vertexIndex[0], &uvIndex[0], &normalIndex[0], &vertexIndex[1], &uvIndex[1], &normalIndex[1], &vertexIndex[2], &uvIndex[2], &normalIndex[2]);
@@ -130,6 +142,28 @@ int Scene::loadOBJObject(const char* filepath, const char* textureFilepath) {
 			normalIndices.push_back(normalIndex[2]);
 		}
 	}
+
+	createObjectInstance(textureFilepath, OBJobjectComp, OBJobject, vertexIndices, uvIndices, normalIndices, temp_vertices, temp_uvs, temp_normals);
+	printf("%da\n", allWorldCompObjects.size());
+
+	printf("%db\n", allWorldCompObjects.size());
+
+
+	OBJobjectComp.transform = glm::mat4(
+		1.f, 0.f, 0.f, 0.f,
+		0.f, 1.f, 0.f, 0.f,
+		0.f, 0.f, 1.f, 0.f,
+		0.f, 0.f, 0.f, 1.f
+	);
+
+	objectInstanceIndex++;
+	printf("%dc\n", objectInstanceIndex);
+	return(objectInstanceIndex);
+}
+
+void Scene::createObjectInstance(const char* textureFilepath, CompositeWorldObject OBJobjectComp, Geometry OBJobject,
+	std::vector< unsigned int > vertexIndices, std::vector< unsigned int > uvIndices, std::vector< unsigned int > normalIndices,
+	std::vector< glm::vec3 > temp_vertices, std::vector< glm::vec2 > temp_uvs, std::vector< glm::vec3 > temp_normals) {
 
 	OBJobject.transform = glm::mat4(
 		1.f, 0.f, 0.f, 0.f,
@@ -154,18 +188,40 @@ int Scene::loadOBJObject(const char* filepath, const char* textureFilepath) {
 		//std::cout << " " << temp_uvs[uvIndices[j] - 1].x << " " << temp_uvs[uvIndices[j] - 1].y << std::endl;
 	}
 	for (unsigned int k = 0; k < normalIndices.size(); k++) {
-		OBJobject.colors.push_back(glm::vec3(0.5,0.5,0.5));
+		OBJobject.colors.push_back(glm::vec3(0.5, 0.5, 0.5));
 		OBJobject.normals.push_back(temp_normals[normalIndices[k] - 1]);
 	}
 	OBJobject.drawMode = GL_TRIANGLES;
 	RenderingEngine::assignBuffers(OBJobject);
 	RenderingEngine::setBufferData(OBJobject);
-	OBJobjectComp.geometry.push_back(OBJobject);
-	objects.push_back(OBJobjectComp);
+	OBJobjectComp.subObjects.push_back(OBJobject);
+
+	vertexIndices.clear();
+	uvIndices.clear();
+	normalIndices.clear();
+	temp_vertices.clear();
+	temp_uvs.clear();
+	temp_normals.clear();
 
 	sceneObjectIndex++;
-	return(sceneObjectIndex);
+	OBJobjectComp.subobjectIndices.push_back(sceneObjectIndex);
+	compObjectInstances.push_back(OBJobjectComp);
 }
+
+
+int Scene::loadCompObjectInstance(int compObjIndex) {
+	std::cout << compObjectInstances.size() << std::endl;
+	if (compObjIndex < compObjectInstances.size()) {
+		allWorldCompObjects.push_back(compObjectInstances[compObjIndex]);
+		sceneCompObjectIndex++;
+		//printf("%dc\n", sceneCompObjectIndex);
+		return(sceneCompObjectIndex);
+	}
+	else {
+		throw "Error loading comp object instance!";
+	}
+}
+
 
 int Scene::generateRectPrism(float length, float width, float height) {
 	CompositeWorldObject boxComp;
@@ -256,8 +312,8 @@ int Scene::generateRectPrism(float length, float width, float height) {
 	box.drawMode = GL_TRIANGLE_STRIP;
 	RenderingEngine::assignBuffers(box);
 	RenderingEngine::setBufferData(box);
-	boxComp.geometry.push_back(box);
-	objects.push_back(boxComp);
+	boxComp.subObjects.push_back(box);
+	allWorldCompObjects.push_back(boxComp);
 	
 	sceneObjectIndex++;
 	return(sceneObjectIndex);
@@ -278,27 +334,22 @@ void Scene::displayScene() {
 	glUseProgram(renderer->shaderProgram);
 	//Update Player Position
 	int vehicleIndex = gameState->playerVehicle.sceneObjectIndex;
-	objects[vehicleIndex].geometry[0].transform = gameState->getEntityTransformation(vehicleIndex);
+	allWorldCompObjects[vehicleIndex].subObjects[0].transform = gameState->getEntityTransformation(vehicleIndex);
 
 	int numOfEnemies = gameState->Enemies.size();
 	int index = 0;
 	for (int i = 0; i < numOfEnemies; i++) {
 		index = gameState->Enemies[i].sceneObjectIndex;
-		objects[index].geometry[0].transform = gameState->getEntityTransformation(index);
-		
-
+		allWorldCompObjects[index].subObjects[0].transform = gameState->getEntityTransformation(index);
 	}
-	/*int numOfPowerUps = gameState->DynamicObjects.size();
+
+	int numOfPowerUps = gameState->PowerUps.size();
 	index = 0;
 	for (int i = 0; i < numOfPowerUps; i++) {
-		index = gameState->DynamicObjects[i].sceneObjectIndex;
-		std::cout << index << std::endl;
-		objects[index].geometry[0].transform = gameState->getEntityTransformation(index);
-		std::cout << objects[index].geometry[0].transform[0][3] << " " << objects[index].geometry[0].transform[1][3] << " " << objects[index].geometry[0].transform[2][3] << " " <<std::endl;
+		index = gameState->PowerUps[i].sceneObjectIndex;
+		allWorldCompObjects[index].subObjects[0].transform = gameState->getEntityTransformation(index);
+	}
 
-	}*/
-	renderer->RenderScene(objects);
+	renderer->RenderScene(allWorldCompObjects);
 	
-
-
 }

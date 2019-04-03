@@ -11,6 +11,7 @@ public:
 	Camera(Gamestate* newGamestate);
 
 	glm::mat4 viewMatrix() const;
+	glm::mat4 backviewMatrix() const;
 
 	Gamestate* gameState;
 };

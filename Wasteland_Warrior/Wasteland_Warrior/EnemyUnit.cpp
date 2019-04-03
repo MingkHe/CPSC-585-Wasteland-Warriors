@@ -14,7 +14,7 @@ EnemyUnit::EnemyUnit(int newPhysicsIndex, int newSceneObjectIndex) {
 
 	struct timeb currentTime;
 	ftime(&currentTime);
-	lastMotionTime = currentTime.time;
+	lastMotionTime = (int)(currentTime.time);
 }
 
 EnemyUnit::~EnemyUnit()
@@ -24,17 +24,15 @@ EnemyUnit::~EnemyUnit()
 bool EnemyUnit::CheckForStuck(){
 	struct timeb currentTime;
 	ftime(&currentTime);
-	double elapsed_seconds = currentTime.time - lastMotionTime;
+	double elapsed_seconds = (double)(currentTime.time) - (double)(lastMotionTime);
 
 	//std::cout << "Current time: " << currentTime.time << "     and last movement was at: " << lastMotionTime << std::endl;
 	//std::cout << "Elapsed stuck seconds = " << elapsed_seconds << std::endl;
 
-	
-	
 	if (recoveryMode == false) {			//Car is not currently marked as stuck
 		//std::cout << "Recovery mode OFF" << std::endl;
 		if (speed > 1) {				//Check if car is moving
-			lastMotionTime = currentTime.time;
+			lastMotionTime = (int)(currentTime.time);
 			//std::cout << "lastMotionTime updated to: " << lastMotionTime << std::endl;
 			return false;
 		}
@@ -51,9 +49,17 @@ bool EnemyUnit::CheckForStuck(){
 	else {
 		//std::cout << "Recovery mode ON" << std::endl;
 		if (elapsed_seconds >= 4) {	//For 2 more seconds remain in recovery mode
+
+			if (speed < 1)			//If still stuck
+				forceRelocate = true;
+
 			recoveryMode = false;
+
+			destination = glm::vec2(position.x + (rand() % 60) - 30, position.z + (rand() % 60) - 30);		//Move to a new location before chasing player
+			AITypeRevert = AIType;
+			AIType = 2;
 			//std::cout << "Recovery mode turned OFF" << std::endl;
-			lastMotionTime = currentTime.time;
+			lastMotionTime = (int)(currentTime.time);
 			//std::cout << "lastMotionTime updated to: " << lastMotionTime << std::endl;
 			return false;
 		}

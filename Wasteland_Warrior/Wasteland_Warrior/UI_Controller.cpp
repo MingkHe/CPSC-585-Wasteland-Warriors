@@ -61,6 +61,18 @@ UI_Controller::UI_Controller(Gamestate* gameState, RenderingEngine* render)
 	InitializeTexture(&texture, "Image/title3.png", GL_TEXTURE_RECTANGLE);
 	textureArray.push_back(texture);
 
+	//13
+	InitializeTexture(&texture, "Image/loading.png", GL_TEXTURE_RECTANGLE);
+	textureArray.push_back(texture);
+
+	//14
+	InitializeTexture(&texture, "Image/story.jpg", GL_TEXTURE_RECTANGLE);
+	textureArray.push_back(texture);
+
+	//15
+	InitializeTexture(&texture, "Image/control.png", GL_TEXTURE_RECTANGLE);
+	textureArray.push_back(texture);
+
 	mainScene_bg = new SceneMainMenu(renderingEngine);
 	mainScene_start = new SceneMainMenu(renderingEngine);
 	mainScene_quit = new SceneMainMenu(renderingEngine);
@@ -76,7 +88,7 @@ UI_Controller::UI_Controller(Gamestate* gameState, RenderingEngine* render)
 	lose_bg = new SceneMainMenu(renderingEngine);
 
 	win_text = new SceneMainMenu(renderingEngine);
-	lose_text = lose_bg = new SceneMainMenu(renderingEngine);
+	lose_text  = new SceneMainMenu(renderingEngine);
 }
 
 UI_Controller::~UI_Controller()
@@ -128,7 +140,7 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 			GameState->carIdle_sound = false;
 		}
 
-		if (GameState->SPACEKey && GameState->playerVehicle.speed > 0)
+		if (GameState->Handbrake && GameState->playerVehicle.speed > 0)
 		{
 			GameState->carBrake_sound = true;
 		}
@@ -342,8 +354,8 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 		//delete mainScene_quit;
 		delete mainScene_pointer;
 
-		if (pointerState == 0 && input == "ENTER" || pausePointerState == 0 && input == "A") {
-			GameState->UIMode = "Game";
+		if (pointerState == 0 && input == "ENTER" || pointerState == 0 && input == "A") {
+			GameState->UIMode = "Story";
 			GameState->ui_enter = true;
 			GameState->carStart_sound = true;
 			GameState->ui_menu = false;
@@ -413,6 +425,49 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 		if (input == "ENTER" || input == "A") {
 			GameState->UIMode = "Start";
 			GameState->ui_lose = false;
+		}
+	}
+	else if (GameState->UIMode == "Loading")
+	{
+		position.push_back(glm::vec3(-1.0f, -1.0f, 1.0f));
+		position.push_back(glm::vec3(1.0f, -1.0f, 1.0f));
+		position.push_back(glm::vec3(1.0f, 1.0f, 1.0f));
+		position.push_back(glm::vec3(-1.0f, 1.0f, 1.0f));
+
+		mainScene_bg->displayTexture(textureArray[13],position);
+		printf("Loading...\n");
+		position.clear();
+	}
+	else if (GameState->UIMode == "Story")
+	{
+		std::string input = GameState->button;
+		GameState->ui_menu = true;
+
+		position.push_back(glm::vec3(-1.0f, -1.0f, 1.0f));
+		position.push_back(glm::vec3(1.0f, -1.0f, 1.0f));
+		position.push_back(glm::vec3(1.0f, 1.0f, 1.0f));
+		position.push_back(glm::vec3(-1.0f, 1.0f, 1.0f));
+
+		mainScene_bg->displayTexture(textureArray[14], position);
+
+		if (input == "ENTER" || input == "A") {
+			GameState->UIMode = "Control";
+			GameState->ui_menu = false;
+		}
+	}
+	else if (GameState->UIMode == "Control")
+	{
+		std::string input = GameState->button;
+
+		position.push_back(glm::vec3(-1.0f, -1.0f, 1.0f));
+		position.push_back(glm::vec3(1.0f, -1.0f, 1.0f));
+		position.push_back(glm::vec3(1.0f, 1.0f, 1.0f));
+		position.push_back(glm::vec3(-1.0f, 1.0f, 1.0f));
+
+		mainScene_bg->displayTexture(textureArray[15], position);
+
+		if (input == "ENTER" || input == "A") {
+			GameState->UIMode = "Game";
 		}
 	}
 }

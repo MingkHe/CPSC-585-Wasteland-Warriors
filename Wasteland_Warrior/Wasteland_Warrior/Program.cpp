@@ -53,6 +53,7 @@ void Program::start() {
 	Gamestate* gameState = new Gamestate();
 	gameState->window_width = this->win_width;//glfwGetVideoMode(glfwGetPrimaryMonitor())->width;
 	gameState->window_height = this->win_height;//glfwGetVideoMode(glfwGetPrimaryMonitor())->height;
+	gameState->fullscreen = this->fullscreen;
 	gameState->UIMode = "Loading";
 
 	struct timeb currentTime;
@@ -111,7 +112,7 @@ void Program::start() {
 		glfwSwapBuffers(window);
 	}
 
-	//Sleep(1000);
+	Sleep(1000);
 
 	gameState->InstantiateAllMeshes_Textures_Dynamic();
 
@@ -162,34 +163,7 @@ void Program::start() {
 	gameState->SpawnStaticObject(9, 40, 0, -100, 0, 0, 0);
 	gameState->SpawnStaticObject(10, 20, 0, -100, 0, 0, 0);
 
-	
-	
-	//Spawn Power Ups
-	gameState->SpawnDynamicObject(1, 53, 1, -35, 0, 0, 0);
-	gameState->SpawnDynamicObject(1, -100, 5.25, -100, 0, 0, 0);
-	gameState->SpawnDynamicObject(1, 100, -5.25, 100, 0, 0, 0);
-	gameState->SpawnDynamicObject(1, -100, 1, 100, 0, 0, 0);
-
-
-	/*
-	//testing power box textures
-	//Max Health
-	gameState->SpawnDynamicObject(1, -4, 1, 10,0,0,0);
-	//Large health boost
-	gameState->SpawnDynamicObject(2, -2, 1, 10, 0, 0, 0);
-	//Small health boost
-	gameState->SpawnDynamicObject(3, 0, 1, 10, 0, 0, 0);
-	//Increase armour
-	gameState->SpawnDynamicObject(4, 2, 1, 10, 0, 0, 0);
-	//Increase damage
-	gameState->SpawnDynamicObject(5, 4, 1, 10, 0, 0, 0);
-	*/
-
-
-	
-	
 	//Spawn Player
-	
 	gameState->SpawnPlayer(0, 0, 0, 0, 0, 0);
 
 	for (int i = 79; i <= 100; i++) {
@@ -307,8 +281,10 @@ void Program::setupWindow() {
 	this->win_height = height;
 	this->win_width = width;
 
-	window = glfwCreateWindow(width, height, "Wasteland Warrior", NULL, NULL);
-	//window = glfwCreateWindow(width, height, "Wasteland Warrior", glfwGetPrimaryMonitor(), NULL);
+	//window = glfwCreateWindow(width, height, "Wasteland Warrior", NULL, NULL);
+	//this->fullscreen = false;
+	window = glfwCreateWindow(width, height, "Wasteland Warrior", glfwGetPrimaryMonitor(), NULL);
+	this->fullscreen = true;
 	if (!window) {
 		std::cout << "Program failed to create GLFW window, TERMINATING" << std::endl;
 		glfwTerminate();

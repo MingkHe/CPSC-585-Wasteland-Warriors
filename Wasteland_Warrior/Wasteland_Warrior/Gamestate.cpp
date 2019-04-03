@@ -178,9 +178,6 @@ void Gamestate::SpawnDynamicObject(int ObjectType, float x, float y, float z, fl
 		//CreateBoxObject
 		switch (ObjectType)
 		{
-		case 0://Checkpoint
-			sceneObjectIndex = scene->loadCompObjectInstance(dynamicObjMeshTextureIndices[5]);
-			break;
 		case 1://Max Health
 			sceneObjectIndex = scene->loadCompObjectInstance(dynamicObjMeshTextureIndices[0]);
 			break;
@@ -190,7 +187,7 @@ void Gamestate::SpawnDynamicObject(int ObjectType, float x, float y, float z, fl
 		case 3://Small health boost
 			sceneObjectIndex = scene->loadCompObjectInstance(dynamicObjMeshTextureIndices[2]);
 			break;
-		case 4://Increase armour
+		case 4://Increase armor
 			sceneObjectIndex = scene->loadCompObjectInstance(dynamicObjMeshTextureIndices[3]);
 			break;
 		case 5://Increase damage
@@ -286,14 +283,14 @@ void Gamestate::DespawnEnemy(Vehicle* vehicle) {
 		2.f, 0.f, 0.f, 0.f,
 		0.f, 2.f, 0.f, 0.f,
 		0.f, 0.f, 2.f, 0.f,
-		0.f, -20.0f, 0.f, 1.f
+		-50.f, -50.0f, 0.f, 1.f
 	);
 
 	scene->allWorldCompObjects[vehicle->sceneObjectIndex].subObjects[0].transform = transformMatrix;  //Change location of graphic to out of sight
 
 	vehicle->setActive(0);
 	int offset = vehicle->physicsIndex;
-	physics_Controller->setPosition(vehicle->physicsIndex, glm::vec3{20 * offset, -20, 0});
+	physics_Controller->setPosition(vehicle->physicsIndex, glm::vec3{20 * offset, -30, 0});
 }
 
 void Gamestate::DespawnObject(Object* Object) {
@@ -302,25 +299,44 @@ void Gamestate::DespawnObject(Object* Object) {
 		2.f, 0.f, 0.f, 0.f,
 		0.f, 2.f, 0.f, 0.f,
 		0.f, 0.f, 2.f, 0.f,
-		0.f, -20.0f, 0.f, 1.f
+		-50.f, -50.0f, 0.f, 1.f
 	);
 
 	scene->allWorldCompObjects[Object->sceneObjectIndex].subObjects[0].transform = transformMatrix;  //Change location of graphic to out of sight
+
+
 	int offset = Object->physicsIndex;
-	physics_Controller->setPosition(Object->physicsIndex, glm::vec3{ 20 * offset, -20, 0 });
+	physics_Controller->setPosition(Object->physicsIndex, glm::vec3{ 20 * offset, -30, 0 });
 }
 
-void Gamestate::DespawnCheckpoint(PowerUp* powerUp) {
+void Gamestate::DespawnStaticObject(Object* Object) {
 
 	glm::mat4 transformMatrix = glm::mat4(
 		2.f, 0.f, 0.f, 0.f,
 		0.f, 2.f, 0.f, 0.f,
 		0.f, 0.f, 2.f, 0.f,
-		-1000.f, -100.0f, -100.f, 1.f
+		-500.f, -500.0f, 0.f, 1.f
+	);
+
+	scene->allWorldCompObjects[Object->sceneObjectIndex].subObjects[0].transform = transformMatrix;  //Change location of graphic to out of sight
+
+	int offset = Object->physicsIndex;
+	physics_Controller->setPositionStatic(Object->physicsIndex, glm::vec3{ 20 * offset, -30, 0 });
+}
+
+void Gamestate::DespawnPowerUp(PowerUp* powerUp) {
+
+	glm::mat4 transformMatrix = glm::mat4(
+		2.f, 0.f, 0.f, 0.f,
+		0.f, 2.f, 0.f, 0.f,
+		0.f, 0.f, 2.f, 0.f,
+		-50.f, -50.0f, 0.f, 1.f
 	);
 
 	scene->allWorldCompObjects[powerUp->sceneObjectIndex].subObjects[0].transform = transformMatrix;  //Change location of graphic to out of sight
-	physics_Controller->setPosition(powerUp->physicsIndex, glm::vec3{ -1000, -1000, -1000 });     //Change location of physics to out of way
+
+	int offset = powerUp->physicsIndex;
+	physics_Controller->setPosition(powerUp->physicsIndex, glm::vec3{ 20 * offset, -30, 0 });
 }
 
 void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse) {
@@ -411,22 +427,9 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse)
 
 
 void Gamestate::Collision(Vehicle* vehicle, PowerUp* powerUp) {
-	std::cout << "Powerup picked up" << std::endl;		//Placeholder
-
-	glm::mat4 transformMatrix = glm::mat4(
-		2.f, 0.f, 0.f, 0.f,
-		0.f, 2.f, 0.f, 0.f,
-		0.f, 0.f, 2.f, 0.f,
-		0.f, -3.0f, 0.f, 1.f
-	);
-
-	scene->allWorldCompObjects[powerUp->sceneObjectIndex].subObjects[0].transform = transformMatrix;  //Change location of graphic to out of sight
-	physics_Controller->setPosition(powerUp->physicsIndex, glm::vec3{ 0, -1000, 0 });     //Change location of physics to out of way
 
 	switch (powerUp->type)
 		{
-	case 0://Checkpoint
-		checkpoints--;
 	case 1://Heal to full health
 		vehicle->health = vehicle->maxhealth;
 		break;
@@ -435,7 +438,7 @@ void Gamestate::Collision(Vehicle* vehicle, PowerUp* powerUp) {
 	case 3://Health boost
 		vehicle->health = vehicle->health + 10;
 		break;
-	case 4://Increase armour
+	case 4://Increase armor
 		vehicle->armour + 0.1;
 		break;
 	case 5://Increase damage
@@ -446,35 +449,23 @@ void Gamestate::Collision(Vehicle* vehicle, PowerUp* powerUp) {
 		}
 
 	powerUpType = powerUp->type;
-
-	// play sound when car collect power up
 	this->carPowerUp_sound = true;
-	// start counter for display the power up text
-	this->textTime = 3 * 60; // borrow the code from loghic.h counting the break time
+	this->textTime = 3 * 60;
+	DespawnPowerUp(powerUp);
 }
-
-
-
 
 void Gamestate::Collision(Vehicle* vehicle, Object* staticObject) {
 	if (staticObject->type == 5) {
-		checkpoints--;
+			powerUpType = 0;
+			checkpoints = 0;//checkpoints--;
+			this->carPowerUp_sound = true;
+			this->textTime = 3 * 60;
 
-		glm::mat4 transformMatrix = glm::mat4(
-			2.f, 0.f, 0.f, 0.f,
-			0.f, 2.f, 0.f, 0.f,
-			0.f, 0.f, 2.f, 0.f,
-			0.f, -3.0f, 0.f, 1.f
-		);
-
-		scene->allWorldCompObjects[staticObject->sceneObjectIndex].subObjects[0].transform = transformMatrix;  //Change location of graphic to out of sight
-		physics_Controller->setPosition(staticObject->physicsIndex, glm::vec3{ 0, -10, 0 });     //Change location of physics to out of way
-
+			DespawnStaticObject(staticObject);
 	}
-	std::cout << "You ran into a wall, nice driving :P" << std::endl;	//Placeholder
-
-	// play sound when car crash to static object
-	this->carCrashStatic_sound = true;
+	else {
+		this->carCrashStatic_sound = true;
+	}
 }
 
 void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 newTransformationMatrix, float newSpeed) {

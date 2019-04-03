@@ -88,9 +88,12 @@ public:
 	Geometry mirror;
 	Geometry aim;
 	Geometry aimBeam;
+	Geometry square;
 
 	Framebuffer shadow_buffer;
+	Framebuffer shadow_buffertwo;
 	Framebuffer rear_view;
+	Framebuffer main_view;
 
 	GLuint textShaderProgram;
 

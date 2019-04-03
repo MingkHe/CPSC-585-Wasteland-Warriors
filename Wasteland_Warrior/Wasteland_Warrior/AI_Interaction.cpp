@@ -55,7 +55,7 @@ int AI_Interaction::Update()
 		else if (enemy->AIType == 2) {
 			if (distFromDest < triggerRadious)
 			{
-				enemy->AIType = enemy->AITypeRevert;
+				//enemy->AIType = enemy->AITypeRevert;
 			}
 		}
 

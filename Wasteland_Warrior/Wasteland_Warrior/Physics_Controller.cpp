@@ -117,18 +117,18 @@ void Physics_Controller::Update()
 
 PxF32 playerSteerVsForwardSpeedData[2 * 5] =
 {
-	0.0f,		1.0f,
-	5.0f,		0.9f,	
+	0.0f,		1.00f,
+	5.0f,		0.90f,	
 	30.0f,		0.50f,
-	120.0f,		0.9f,
+	120.0f,		0.30f,
 	PX_MAX_F32, PX_MAX_F32
 };
 
 PxF32 enemySteerVsForwardSpeedData[2 * 5] =
 {
-	0.0f,		0.5f,
-	5.0f,		0.35f,
-	30.0f,		0.2f,
+	0.0f,		0.55f,
+	5.0f,		0.40f,
+	30.0f,		0.25f,
 	120.0f,		0.15f,
 	PX_MAX_F32, PX_MAX_F32
 };
@@ -512,7 +512,7 @@ int Physics_Controller::createDynamicObject(PxU32 objectType, PxVec3 dimensions,
 
 int Physics_Controller::createEnemyVehicle() {
 	//Create a vehicle that will drive on the plane.
-	VehicleDesc vehicleDesc = initEnemyVehiclePhysicsDesc();;
+	VehicleDesc vehicleDesc = initEnemyVehiclePhysicsDesc();
 	enemyVehicle = createEnemyVehicle4W(vehicleDesc, gPhysics, gCooking);
 	PxTransform startTransform(PxVec3(0, (vehicleDesc.chassisDims.y*0.5f + vehicleDesc.wheelRadius + 1.0f), 0.0f), PxQuat(PxIdentity));
 	enemyVehicle->getRigidDynamicActor()->setGlobalPose(startTransform);
@@ -813,7 +813,13 @@ void Physics_Controller::stepPhysics(bool interactive)
 
 					if (gameState->Enemies[gameStateIndex].forceRelocate) {		//If vehicle has finished trying to get unstuck and is still not moving, relocate
 						EnemyUnit enemy = gameState->Enemies[gameStateIndex];
-						setPosition(enemy.physicsIndex, glm::vec3(enemy.position.x, enemy.position.y, enemy.position.z) + glm::vec3(0.2f, 0.0f, 0.0f));
+
+						//Randomly shunt vehicle left or right
+						float shift = 0.2f;
+						if ((rand() % 100) < 50)
+							shift = -shift;
+
+						setPosition(enemy.physicsIndex, glm::vec3(enemy.position.x, enemy.position.y, enemy.position.z) + glm::vec3(shift, 0.0f, 0.0f));
 					}
 				}
 
@@ -883,6 +889,9 @@ void Physics_Controller::stepPhysics(bool interactive)
 			//std::cout << "Found 2 vehicles, Contact Impule Vector length is : " << gContactReportCallback.gContactImpulses.size() << std::endl;
 			glm::vec3 impulse = (glm::vec3{ gContactReportCallback.gContactImpulses[i].x, gContactReportCallback.gContactImpulses[i].y, gContactReportCallback.gContactImpulses[i].z });
 			gameState->Collision(vehicle1, vehicle2, impulse);
+		}
+		else if (vehicle1 != NULL && vehicle2 != NULL) {
+			std::cout << "TWO CARS but impulse was 0" << std::endl;
 		}
 	}
 	

@@ -291,6 +291,7 @@ public:
 	PowerUp* lookupPUUsingPI(int physicsIndex);
 	Vehicle* lookupVUsingPI(int physicsIndex);
 	int lookupGSIUsingPI(int physicsIndex);
+	void shoot();
 
 	glm::mat4 getEntityTransformation(int sceneObjectIndex);
 };

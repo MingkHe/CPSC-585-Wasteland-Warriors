@@ -629,3 +629,18 @@ glm::mat4 Gamestate::getRotationMatrix(float xRot, float yRot, float zRot) {
 
 }
 
+void Gamestate::shoot() {
+	glm::vec3 pos;
+	//std::cout << physicsCL.rayCast(pos) << std::endl;
+	//std::cout << "pos: x:" << pos.x << " y:" << pos.y << " z:" << pos.z << std::endl;
+	if (physics_Controller->rayCast(pos)) {
+		for (int i = 0; i < Enemies.size(); i++) {
+			printf("raycast detected..\n");
+			printf("test: %f\n", glm::distance(pos, Enemies[i].position));
+			if (glm::distance(pos, Enemies[i].position) <= 3.0f) {
+				Enemies[i].health = -1;
+				printf("attack!!!\n");
+			}
+		}
+	}
+}

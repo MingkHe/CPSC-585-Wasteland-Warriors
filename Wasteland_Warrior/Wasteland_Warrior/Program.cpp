@@ -33,6 +33,7 @@
 #include "PlayerUnit.h"
 #include "EnemyUnit.h"
 #include "texture.h"
+#include "Weapon_Controller.h"
 
 #include <SDL_mixer.h>
 #include <SDL.h>
@@ -84,6 +85,8 @@ void Program::start() {
 	
 
 	UI_Controller UICL = UI_Controller(gameState,renderingEngine);
+
+	Weapon_Controller weaponCL = Weapon_Controller();
 
 	scene = new Scene(renderingEngine, gameState);
 
@@ -206,19 +209,11 @@ void Program::start() {
 		//Physics Engine
 		if (gameState->UIMode == "Game") {
 			physicsCL.Update();
-			glm::vec3 pos;
-			//std::cout << physicsCL.rayCast(pos) << std::endl;
-			//std::cout << "pos: x:" << pos.x << " y:" << pos.y << " z:" << pos.z << std::endl;
-			if (physicsCL.rayCast(pos)) {
-				for (int i = 0; i < gameState->Enemies.size(); i++) {
-					printf("raycast detected..\n");
-					printf("test: %f\n", glm::distance(pos, gameState->Enemies[i].position));
-					if (glm::distance(pos, gameState->Enemies[i].position) <= 3.0f) {
-						gameState->Enemies[i].health = -1;
-						printf("attack!!!\n");
-					}
-				}
-			}
+		}
+
+		//Weapon Controller
+		if (gameState->UIMode == "Game") {
+			weaponCL.update(gameState);
 		}
 
 		//Audio Engine

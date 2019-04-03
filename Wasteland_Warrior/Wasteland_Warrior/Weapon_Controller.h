@@ -8,7 +8,6 @@ public:
 	Weapon_Controller();
 	~Weapon_Controller();
 
-	void aim(Gamestate* gameState);
-	void shoot(Gamestate* gameState);
+	void update(Gamestate* gameState);
 
 };

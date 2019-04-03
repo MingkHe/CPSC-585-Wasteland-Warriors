@@ -8,12 +8,10 @@ Weapon_Controller::~Weapon_Controller()
 {
 }
 
-void Weapon_Controller::aim(Gamestate* gameState) 
+void Weapon_Controller::update(Gamestate* gameState)
 {
+	if (gameState->button == "A") {
+		gameState->shoot();
+	}
 	
-}
-
-void Weapon_Controller::shoot(Gamestate* gameState)
-{
-
 }

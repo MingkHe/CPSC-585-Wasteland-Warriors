@@ -43,13 +43,10 @@ void Logic::Update(Gamestate *gameState)
 		gameState->Enemies.clear();
 
 		//Reset Checkpoints
-		for (int i = 0; i < (int)gameState->StaticObjects.size(); i++) {
-			if (gameState->StaticObjects[i].type == 5) {
-				gameState->DespawnStaticObject(&gameState->StaticObjects[i]);
-				gameState->StaticObjects.erase(gameState->StaticObjects.begin() + i);
-			}
+		for (int i = 0; i < (int)gameState->Checkpoints.size(); i++) {
+			gameState->DespawnStaticObject(&gameState->Checkpoints[i]);
 		}
-		gameState->checkpoints = 0;
+		gameState->Checkpoints.clear();
 
 		//Reset powerups
 		for (int i = 0; i < (int)gameState->PowerUps.size(); i++) {
@@ -210,19 +207,22 @@ bool Logic::waveFinished(Gamestate *gameState) {
 
 	if (gameState->gameMode == "Checkpoint") {
 		checkEnemyHealth(gameState);
-		if (gameState->checkpoints <= 0) {
-			for (int i = 0; i < (int)gameState->StaticObjects.size(); i++) {
-				if (gameState->StaticObjects[i].type == 5) {
-					gameState->DespawnStaticObject(&gameState->StaticObjects[i]);
-					gameState->StaticObjects.erase(gameState->StaticObjects.begin() + i);
-				}
+		int checkpoints = 0;
+		for (int i = 0; i < (int)gameState->Checkpoints.size(); i++) {
+			if (gameState->Checkpoints[i].active) {
+				checkpoints++;
 			}
+		}
+		if (checkpoints == 0) {
+			for (int i = 0; i < (int)gameState->Checkpoints.size(); i++) {
+					gameState->DespawnStaticObject(&gameState->Checkpoints[i]);
+			}
+			gameState->Checkpoints.clear();
 			for (int i = 0; i < (int)gameState->Enemies.size(); i++) {
 				gameState->DespawnEnemy(&gameState->Enemies[i]);
 			}
 			gameState->Enemies.clear();
 			gameState->enemiesLeft = 0;
-			gameState->checkpoints = 0;
 			return true;
 		}
 	}
@@ -281,7 +281,7 @@ void Logic::spawnPowerUps(Gamestate *gameState) {
 }
 
 void Logic::modeSelection(Gamestate *gameState) {
-	switch (rand() % 3 + 1) {
+	switch (4){// rand() % 3 + 1) {
 	case 1:
 		survival(gameState);
 		gameState->gameMode = "Survival";
@@ -361,7 +361,6 @@ void Logic::checkpoint(Gamestate *gameState) {
 			break;
 		}
 	}
-	gameState->checkpoints = gameState->wave + 1;
 
 	//Spawn Enemies
 	for (int i = 0; i < gameState->wave + 1; i++) {
@@ -430,7 +429,6 @@ void Logic::payload(Gamestate *gameState) {
 			break;
 		}
 	}
-	gameState->checkpoints = gameState->wave;
 }
 
 //Head hunter

@@ -80,6 +80,7 @@ public:
 	GLuint shadowshaderProgram;
 	GLuint needleshaderProgram;
 	GLuint imageShaderProgram;
+	GLuint lineShaderProgram;
 	Geometry health;
 	Geometry radar;
 	Geometry speedo;

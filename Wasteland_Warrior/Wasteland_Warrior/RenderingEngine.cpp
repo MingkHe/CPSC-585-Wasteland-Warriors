@@ -23,6 +23,7 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	needleshaderProgram = ShaderTools::InitializeShaders("../shaders/needlevertex.glsl", "../shaders/needlefragment.glsl");
 	shadowshaderProgram = ShaderTools::InitializeShaders("../shaders/shadowMapVertex.glsl", "../shaders/shadowMapFragment.glsl");
 	imageShaderProgram = ShaderTools::InitializeShaders("../shaders/vertexMainMenu.glsl", "../shaders/fragmentMainMenu.glsl");
+	lineShaderProgram = ShaderTools::InitializeShaders("../shaders/basicVer.glsl", "../shaders/basicFrag.glsl");
 	
 	textShaderProgram = ShaderTools::InitializeShaders("../shaders/texVertex.glsl", "../shaders/texFragment.glsl");
 	float aspect_ratio = game_state->window_height / game_state->window_width;
@@ -77,6 +78,14 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	needle.drawMode = GL_TRIANGLES;
 	assignBuffers(needle);
 	setBufferData(needle);
+
+	aimBeam.verts.push_back(glm::vec3(gameState->playerVehicle.position.x + 3 * gameState->playerVehicle.direction.x, gameState->playerVehicle.position.y + 3 * gameState->playerVehicle.direction.y, gameState->playerVehicle.position.z + 3 * gameState->playerVehicle.direction.z));
+	aimBeam.verts.push_back(glm::vec3(gameState->playerVehicle.position.x + 13 * gameState->playerVehicle.direction.x, gameState->playerVehicle.position.y + 13 * gameState->playerVehicle.direction.y, gameState->playerVehicle.position.z + 13 * gameState->playerVehicle.direction.z));
+	aimBeam.colors.push_back(glm::vec3(.0f,.0f,1.0f));
+	aimBeam.colors.push_back(glm::vec3(.0f, .0f, 1.0f));
+	aimBeam.drawMode = GL_LINES;
+	assignBuffers(aimBeam);
+	setBufferData(aimBeam);
 
 	/*mirror.verts.push_back(glm::vec3(-1.f, -1.f, 0.f));
 	mirror.verts.push_back(glm::vec3(-1.f, 1.f, 0.f));
@@ -306,9 +315,18 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	glDrawArrays(needle.drawMode, 0, needle.verts.size());
 	glBindVertexArray(0);
 
+
+	glUseProgram(lineShaderProgram);
+	glUniformMatrix4fv(glGetUniformLocation(lineShaderProgram, "modelViewProjection"), 1, false, glm::value_ptr(modelViewProjection));
+	glBindVertexArray(aimBeam.vao);
+	glDrawArrays(aimBeam.drawMode, 0, aimBeam.verts.size());
+	glBindVertexArray(0);
+	glUseProgram(0);
+
 	//render aim
 	//GLuint shader = GetShaderProgram("menuShader");
 	//SwitchShaderProgram(shader);
+	/*
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -324,6 +342,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	glUseProgram(0);
 
 	glDisable(GL_BLEND);
+	*/
 
 	//render text
 	//glClearColor(0.2f, 0.2f, 0.2f, 1.0f);

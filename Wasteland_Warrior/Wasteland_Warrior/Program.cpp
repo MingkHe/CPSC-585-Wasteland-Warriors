@@ -232,8 +232,19 @@ void Program::start() {
 		//Physics Engine
 		if (gameState->UIMode == "Game") {
 			physicsCL.Update();
-			
-			std::cout << physicsCL.rayCast() << std::endl;
+			glm::vec3 pos;
+			//std::cout << physicsCL.rayCast(pos) << std::endl;
+			//std::cout << "pos: x:" << pos.x << " y:" << pos.y << " z:" << pos.z << std::endl;
+			if (physicsCL.rayCast(pos)) {
+				for (int i = 0; i < gameState->Enemies.size(); i++) {
+					printf("raycast detected..\n");
+					printf("test: %f\n", glm::distance(pos, gameState->Enemies[i].position));
+					if (glm::distance(pos, gameState->Enemies[i].position) <= 3.0f) {
+						gameState->Enemies[i].health = 0;
+						printf("attack!!!\n");
+					}
+				}
+			}
 		}
 
 		//Audio Engine

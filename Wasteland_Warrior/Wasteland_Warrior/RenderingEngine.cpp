@@ -25,7 +25,7 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	shadowshaderProgram = ShaderTools::InitializeShaders("../shaders/shadowMapVertex.glsl", "../shaders/shadowMapFragment.glsl");
 	
 	textShaderProgram = ShaderTools::InitializeShaders("../shaders/texVertex.glsl", "../shaders/texFragment.glsl");
-	float aspect_ratio = game_state->window_height / game_state->window_width;
+	float aspect_ratio = (float)game_state->window_height / (float)game_state->window_width;
 	health.verts.push_back(glm::vec3(.5f, .8f, 0.f));
 	health.verts.push_back(glm::vec3(.5f, .9f, 0.f));
 	health.verts.push_back(glm::vec3(.9f, .8f, 0.f));
@@ -621,11 +621,11 @@ void RenderingEngine::updateText() {
 	float scale = (float)game_state->window_height / 960.f;
 	if (game_state->UIMode == "Game") {
 		if (game_state->breakSeconds == 0) {
-			pushTextObj(texObjects, "Wave # " + std::to_string(game_state->wave) + " - " + game_state->gameMode, 0.01f*game_state->window_width, 0.95f*game_state->window_height, scale * 0.8, glm::vec3(0.7f, 0.2f, 0.2f));
-			pushTextObj(texObjects, "Enemies Left: " + std::to_string(game_state->enemiesLeft), 0.01f*game_state->window_width, 0.9f*game_state->window_height, scale * 0.8, glm::vec3(0.7f, 0.2f, 0.2f));
+			pushTextObj(texObjects, "Wave # " + std::to_string(game_state->wave) + " - " + game_state->gameMode, 0.01f*game_state->window_width, 0.95f*game_state->window_height, scale * 0.8f, glm::vec3(0.7f, 0.2f, 0.2f));
+			pushTextObj(texObjects, "Enemies Left: " + std::to_string(game_state->enemiesLeft), 0.01f*game_state->window_width, 0.9f*game_state->window_height, scale * 0.8f, glm::vec3(0.7f, 0.2f, 0.2f));
 		}
 		else {
-			pushTextObj(texObjects, "Next wave: " + std::to_string(game_state->breakSeconds) + " seconds", 0.01f*game_state->window_width, 0.95f*game_state->window_height, scale * 0.8, glm::vec3(0.7f, 0.2f, 0.2f));
+			pushTextObj(texObjects, "Next wave: " + std::to_string(game_state->breakSeconds) + " seconds", 0.01f*game_state->window_width, 0.95f*game_state->window_height, scale * 0.8f, glm::vec3(0.7f, 0.2f, 0.2f));
 		}
     
 		if (game_state->powerText) {
@@ -686,7 +686,7 @@ void RenderingEngine::LoadShaderProgram(std::string name, const char* vertexFile
 		shaderProgramList[name] = ShaderTools::InitializeShaders(vertexFile, fragmentFile);
 
 		if (shaderProgramList[name] == NULL) {
-			printf("Shader loading error: Program %s Error\n", name);
+			std::cout << "Shader loading error: Program " << name << " Error" << std::endl;
 		}
 
 	}
@@ -696,7 +696,7 @@ void RenderingEngine::LoadShaderProgram(std::string name, const char* vertexFile
 GLuint RenderingEngine::GetShaderProgram(std::string name) {
 	if (shaderProgramList[name] == NULL)
 	{
-		printf("Shader haven't loaded yet. Please load shader first. Error Shader name: %s Error\n", name);
+		std::cout << "Shader haven't loaded yet. Please load shader first. Error Shader name: " << name << " Error" << std::endl;
 	}
 	return shaderProgramList[name];
 }

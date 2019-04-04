@@ -90,7 +90,7 @@ void Program::start() {
 	UICL.Update(gameState,window);
 	glfwSwapBuffers(window);
 
-	printf("finished loading\n");
+	//printf("finished loading\n");
 	//gameState->InstantiateAllMeshes_Textures();
 
 	//Mesh loading
@@ -134,9 +134,9 @@ void Program::start() {
 	gameState->SpawnStaticObject(2, 93, -0.75, -45, 0, 0, 0);
 
 	gameState->SpawnStaticObject(3, 63, 0, -25, 0, 0, 0);
-	gameState->SpawnStaticObject(2, 123, -6.7, -95, 0, 0, 0);
-	gameState->SpawnStaticObject(3, 148, -6.2, -55, 0, 0, 0);
-	gameState->SpawnStaticObject(2, 143, -6.7, -125, 0, 0, 0);
+	gameState->SpawnStaticObject(2, 123, -6.7f, -95, 0, 0, 0);
+	gameState->SpawnStaticObject(3, 148, -6.2f, -55, 0, 0, 0);
+	gameState->SpawnStaticObject(2, 143, -6.7f, -125, 0, 0, 0);
 	gameState->SpawnStaticObject(3, 73, 0, -125, 0, 0, 0);
 
 	
@@ -272,6 +272,7 @@ void Program::setupWindow() {
 	this->fullscreen = false;
 	//window = glfwCreateWindow(width, height, "Wasteland Warrior", glfwGetPrimaryMonitor(), NULL);
 	//this->fullscreen = true;
+
 	if (!window) {
 		std::cout << "Program failed to create GLFW window, TERMINATING" << std::endl;
 		glfwTerminate();

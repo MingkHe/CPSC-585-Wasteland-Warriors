@@ -935,7 +935,6 @@ void Physics_Controller::stepPhysics(bool interactive)
 	
 	
 	//Check collisions for Player/Static Object collisions
-	if (checkpointCollected == false) {
 		for (int i = 0; i < (int)gContactReportCallback.gContactActor1s.size(); i++) {
 			Vehicle* vehicle1 = NULL;
 			Object* object = NULL;
@@ -963,21 +962,10 @@ void Physics_Controller::stepPhysics(bool interactive)
 			}
 
 			if (vehicle1 != NULL && object != NULL && object->type != 0) {
-				//if (object->type == 5) {
-				std::cout << "Checkpoint activating" << std::endl;
+				//std::cout << "Checkpoint activating" << std::endl;
 					gameState->Collision(vehicle1, object);
-					checkpointCollected = true;
-					break;
-				//}
-				//else {
-					//gameState->Collision(vehicle1, object);
-				//}
 			}
 		}
-	}
-	else {
-		checkpointCollected = false;
-	}
 
 	//Clear contact report
 	gContactReportCallback.gContactActor1s.clear();

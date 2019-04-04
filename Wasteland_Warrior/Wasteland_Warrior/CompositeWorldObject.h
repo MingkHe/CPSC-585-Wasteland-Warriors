@@ -12,6 +12,7 @@ public:
 	std::vector<Geometry> subObjects;
 	glm::mat4 transform;
 	std::vector<int> subobjectIndices;
+	float transparent = 1.f;
 };
 
 #endif /* NODE_H_ */

@@ -38,7 +38,6 @@ Gamestate::Gamestate()
 	wave = 0;
 	restart = false;
 	enemiesLeft = 0;
-	checkpoints = 0;
 }
 
 Gamestate::~Gamestate()
@@ -162,10 +161,17 @@ void Gamestate::SpawnStaticObject(int ObjectType, float x, float y, float z, flo
 		);
 		transformMatrix = transformMatrix * getRotationMatrix(xRot, yRot, zRot);
 		scene->allWorldCompObjects[sceneObjectIndex].subObjects[0].transform = transformMatrix;
-
+		if (ObjectType == 5) {
+			scene->allWorldCompObjects[sceneObjectIndex].transparent = .5f;
+		}
 		Object staticObject = Object(physicsIndex, sceneObjectIndex, x, y, z);
 		staticObject.type = ObjectType;
-		StaticObjects.push_back(staticObject);
+		if (ObjectType == 5) {
+			Checkpoints.push_back(staticObject);
+		}
+		else {
+			StaticObjects.push_back(staticObject);
+		}
 	}
 
 }
@@ -283,7 +289,7 @@ void Gamestate::DespawnEnemy(Vehicle* vehicle) {
 		2.f, 0.f, 0.f, 0.f,
 		0.f, 2.f, 0.f, 0.f,
 		0.f, 0.f, 2.f, 0.f,
-		-50.f, -50.0f, 0.f, 1.f
+		-30.f, -30.0f, 0.f, 1.f
 	);
 
 	scene->allWorldCompObjects[vehicle->sceneObjectIndex].subObjects[0].transform = transformMatrix;  //Change location of graphic to out of sight
@@ -299,7 +305,7 @@ void Gamestate::DespawnObject(Object* Object) {
 		2.f, 0.f, 0.f, 0.f,
 		0.f, 2.f, 0.f, 0.f,
 		0.f, 0.f, 2.f, 0.f,
-		-50.f, -50.0f, 0.f, 1.f
+		-30.f, -30.0f, 0.f, 1.f
 	);
 
 	scene->allWorldCompObjects[Object->sceneObjectIndex].subObjects[0].transform = transformMatrix;  //Change location of graphic to out of sight
@@ -315,7 +321,7 @@ void Gamestate::DespawnStaticObject(Object* Object) {
 		2.f, 0.f, 0.f, 0.f,
 		0.f, 2.f, 0.f, 0.f,
 		0.f, 0.f, 2.f, 0.f,
-		-500.f, -500.0f, 0.f, 1.f
+		-500.f, -500.f, -500.f, 1.f
 	);
 
 	scene->allWorldCompObjects[Object->sceneObjectIndex].subObjects[0].transform = transformMatrix;  //Change location of graphic to out of sight
@@ -326,14 +332,14 @@ void Gamestate::DespawnStaticObject(Object* Object) {
 
 void Gamestate::DespawnPowerUp(PowerUp* powerUp) {
 
-	glm::mat4 transformMatrix = glm::mat4(
-		2.f, 0.f, 0.f, 0.f,
-		0.f, 2.f, 0.f, 0.f,
-		0.f, 0.f, 2.f, 0.f,
-		-50.f, -50.0f, 0.f, 1.f
-	);
+	//glm::mat4 transformMatrix = glm::mat4(
+		//2.f, 0.f, 0.f, 0.f,
+		//0.f, 2.f, 0.f, 0.f,
+		//0.f, 0.f, 2.f, 0.f,
+		//-30.f, -30.f, -30.f, 1.f
+	//);
 
-	scene->allWorldCompObjects[powerUp->sceneObjectIndex].subObjects[0].transform = transformMatrix;  //Change location of graphic to out of sight
+	//scene->allWorldCompObjects[powerUp->sceneObjectIndex].subObjects[0].transform = transformMatrix;  //Change location of graphic to out of sight
 
 	int offset = powerUp->physicsIndex;
 	physics_Controller->setPosition(powerUp->physicsIndex, glm::vec3{ 20 * offset, -30, 0 });
@@ -439,10 +445,10 @@ void Gamestate::Collision(Vehicle* vehicle, PowerUp* powerUp) {
 		vehicle->health = vehicle->health + 10;
 		break;
 	case 4://Increase armor
-		vehicle->armour += 0.1;
+		vehicle->armour += 0.1f;
 		break;
 	case 5://Increase damage
-		vehicle->damageMultiplier += 0.1;
+		vehicle->damageMultiplier += 0.1f;
 		break;
 	default:
 		break;
@@ -457,10 +463,10 @@ void Gamestate::Collision(Vehicle* vehicle, PowerUp* powerUp) {
 void Gamestate::Collision(Vehicle* vehicle, Object* staticObject) {
 	if (staticObject->type == 5) {
 			powerUpType = 0;
-			checkpoints = 0;//checkpoints--;
 			this->carPowerUp_sound = true;
 			this->textTime = 3 * 60;
 
+			staticObject->active = false;
 			DespawnStaticObject(staticObject);
 	}
 	else {
@@ -542,6 +548,11 @@ Object* Gamestate::lookupSOUsingPI(int physicsIndex) {
 	for (int i = 0; i < (int)StaticObjects.size(); i++) {
 		if (physicsIndex == StaticObjects[i].physicsIndex) {
 			object = &StaticObjects[i];
+		}
+	}
+	for (int i = 0; i < (int)Checkpoints.size(); i++) {
+		if (physicsIndex == Checkpoints[i].physicsIndex) {
+			object = &Checkpoints[i];
 		}
 	}
 	return object;

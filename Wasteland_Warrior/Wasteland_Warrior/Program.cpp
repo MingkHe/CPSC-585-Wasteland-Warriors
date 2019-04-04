@@ -261,18 +261,18 @@ void Program::setupWindow() {
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-	//int width = mode->width;//1280; //640
-	//int height = mode->height;//960; //480
-	int width = 640;
-	int height = 480;
+	int width = mode->width;//1280; //640
+	int height = mode->height;//960; //480
+	//int width = 640;
+	//int height = 480;
 	this->win_height = height;
 	this->win_width = width;
 
-	//window = glfwCreateWindow(width, height, "Wasteland Warrior", NULL, NULL);
-	//this->fullscreen = false;
-	//window = glfwCreateWindow(width, height, "Wasteland Warrior", glfwGetPrimaryMonitor(), NULL);
 	window = glfwCreateWindow(width, height, "Wasteland Warrior", NULL, NULL);
-	this->fullscreen = true;
+	this->fullscreen = false;
+	//window = glfwCreateWindow(width, height, "Wasteland Warrior", glfwGetPrimaryMonitor(), NULL);
+	//this->fullscreen = true;
+
 	if (!window) {
 		std::cout << "Program failed to create GLFW window, TERMINATING" << std::endl;
 		glfwTerminate();

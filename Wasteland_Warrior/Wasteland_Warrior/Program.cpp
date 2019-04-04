@@ -1,8 +1,4 @@
-/*Make next point backwards
-Fix AI
-fix collision
-warnings
-
+/*
 * Program.cpp
 *
 *  Created on: Sep 10, 2018

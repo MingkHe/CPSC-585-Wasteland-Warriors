@@ -577,11 +577,6 @@ void Physics_Controller::setPositionStatic(int actorIndex, glm::vec3 newLocation
 	PxActor *actor = userBuffer[actorIndex];
 	PxRigidActor *rigidActor = actor->is<PxRigidActor>();
 	rigidActor->setGlobalPose({ newLocation.x, newLocation.y, newLocation.z });
-
-	//const PxVec3 reset = PxVec3{ 0.0f, 0.0f, 0.0f };
-	//PxRigidBody* rigidBody = actor->is<PxRigidBody>();
-	//rigidBody->setLinearVelocity(reset, true);
-	//rigidBody->setAngularVelocity(reset, true);
 }
 
 void Physics_Controller::resetOrientation(int actorIndex) {
@@ -886,11 +881,9 @@ void Physics_Controller::stepPhysics(bool interactive)
 		}
 	}
 	
+	//Powerup Collisions
 	if (powerupGrabbed == false) {
-		//std::cout << "Starting Powerup check" << std::endl;
-		//Check collisions for Player/PowerUp collisions
 		for (int i = 0; i < (int)gContactReportCallback.gContactActor1s.size(); i++) {
-			//std::cout << "..." << std::endl;
 			Vehicle* vehicle1 = NULL;
 			PowerUp* powerUp = NULL;
 
@@ -898,22 +891,18 @@ void Physics_Controller::stepPhysics(bool interactive)
 				PxActor *actor = userBufferRD[index];
 
 				if (index == gameState->playerVehicle.physicsIndex) {
-					//std::cout << "Checking if either actor is the player" << std::endl;
 					if ((gContactReportCallback.gContactActor1s[i] == actor || gContactReportCallback.gContactActor2s[i] == actor) && vehicle1 == NULL) {
 						vehicle1 = gameState->lookupVUsingPI(index);
-						//std::cout << "Player was involved with contact!!!!!!!!!!!!!!!!!!!" << std::endl;
 					}
 				}
 
-				//std::cout << "Checking rigidDynamicActorIndex of: " << index << std::endl;
 				if ((gContactReportCallback.gContactActor1s[i] == actor || gContactReportCallback.gContactActor2s[i] == actor) && powerUp == NULL) {
 					powerUp = gameState->lookupPUUsingPI(index);
-					//std::cout << "Found powerup" << std::endl;
 				}
 			}
 
 			if (vehicle1 != NULL && powerUp != NULL) {
-				std::cout << "Powerup activating" << std::endl;
+				std::cout << "Powerup" << std::endl;
 				gameState->Collision(vehicle1, powerUp);
 				powerupGrabbed = true;
 				break;
@@ -924,7 +913,38 @@ void Physics_Controller::stepPhysics(bool interactive)
 		powerupGrabbed = false;
 	}
 	
-	
+	//Checkpoint Collisions
+	if (checkpointGrabbed == false) {
+		for (int i = 0; i < (int)gContactReportCallback.gContactActor1s.size(); i++) {
+			Vehicle* vehicle1 = NULL;
+			Object* checkpoint = NULL;
+
+			for (int index = 0; index <= rigidDynamicActorIndex; index++) {
+				PxActor *actor = userBufferRD[index];
+
+				if (index == gameState->playerVehicle.physicsIndex) {
+					if ((gContactReportCallback.gContactActor1s[i] == actor || gContactReportCallback.gContactActor2s[i] == actor) && vehicle1 == NULL) {
+						vehicle1 = gameState->lookupVUsingPI(index);
+					}
+				}
+
+				if ((gContactReportCallback.gContactActor1s[i] == actor || gContactReportCallback.gContactActor2s[i] == actor) && checkpoint == NULL) {
+					checkpoint = gameState->lookupCPUsingPI(index);
+				}
+			}
+
+			if (vehicle1 != NULL && checkpoint != NULL) {
+				std::cout << "Checkpoint" << std::endl;
+				gameState->CollisionCheckpoint(vehicle1, checkpoint);
+				checkpointGrabbed = true;
+				break;
+			}
+		}
+	}
+	else {
+		checkpointGrabbed = false;
+	}
+
 	//Check collisions for Player/Static Object collisions
 		for (int i = 0; i < (int)gContactReportCallback.gContactActor1s.size(); i++) {
 			Vehicle* vehicle1 = NULL;
@@ -943,17 +963,14 @@ void Physics_Controller::stepPhysics(bool interactive)
 			//Try to find static object
 			for (int index = 0; index <= rigidStaticActorIndex; index++) {
 				PxActor *actor = userBufferRS[index];
-				//printf("%d\n", index);
 				if (index != gameState->mapGroundPhysicsIndex + 1) {
 					if ((gContactReportCallback.gContactActor1s[i] == actor || gContactReportCallback.gContactActor2s[i] == actor)) {
-						object = gameState->lookupSOUsingPI(index);	//Since it does not matter at this point, object refrence is not accurate
-						//std::cout << "Collision with object with index: " << index << std::endl;
+						object = gameState->lookupSOUsingPI(index);	
 					}
 				}
 			}
 
 			if (vehicle1 != NULL && object != NULL && object->type != 0) {
-				//std::cout << "Checkpoint activating" << std::endl;
 					gameState->Collision(vehicle1, object);
 			}
 		}

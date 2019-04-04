@@ -15,7 +15,7 @@ public:
 
 	float health;
 	float maxhealth;
-	float armour = 0.0;
+	float armor = 0.0;
 
 	//Used for disableing AI vehicles
 	int getActive();

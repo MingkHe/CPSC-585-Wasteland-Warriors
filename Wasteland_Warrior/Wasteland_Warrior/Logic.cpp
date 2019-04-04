@@ -25,6 +25,15 @@ void Logic::Update(Gamestate *gameState)
 	//Randomization
 	srand((unsigned int)time(NULL));
 
+	//Player has beaten all 5 waves
+	if (gameState->wave == 6 || waveBreak == 6) {
+	gameState->UIMode = "Win";
+	gameState->ui_gameplay = false;
+	gameState->restart = true;
+	gameState->score = 2160010000 / (score + 1);
+	gameState->scoreTime = score / 60;
+	}
+
 	//Restart
 	if (gameState->restart) {
 
@@ -41,7 +50,8 @@ void Logic::Update(Gamestate *gameState)
 		gameState->playerVehicle.health = 100;
 		gameState->playerVehicle.maxhealth = 100;
 		gameState->playerVehicle.damageMultiplier = 1;
-		gameState->playerVehicle.armour = 0.0;
+		gameState->playerVehicle.armor = 0.0;
+		gameState->view = 0;
 
 		//Reset Enemies
 		for (int i = 0; i < (int)gameState->Enemies.size(); i++) {
@@ -51,7 +61,7 @@ void Logic::Update(Gamestate *gameState)
 
 		//Reset Checkpoints
 		for (int i = 0; i < (int)gameState->Checkpoints.size(); i++) {
-			gameState->DespawnStaticObject(&gameState->Checkpoints[i]);
+			gameState->DespawnCheckpoint(&gameState->Checkpoints[i]);
 		}
 		gameState->Checkpoints.clear();
 
@@ -74,20 +84,6 @@ void Logic::Update(Gamestate *gameState)
 		gameState->restart = true;
 		gameState->score = (score / 25) * 10;
 		gameState->scoreTime = score / 60;
-	}
-		//Player has beaten all 5 waves
-	else if (gameState->wave == 6) {
-		gameState->UIMode = "Win";
-		gameState->ui_gameplay = false;
-		gameState->restart = true;
-		gameState->score = 2160010000 / (score + 1);
-		gameState->scoreTime = score / 60;
-
-		gameState->wave = 1;
-		score = 0;
-		waveBreak = 1;
-		breakTime = 600;
-		modeSelection(gameState);
 	}
 	else {
 
@@ -183,8 +179,6 @@ void Logic::Update(Gamestate *gameState)
 			gameState->breakSeconds = breakTime / 60;
 			if (breakTime <= 0) {
 				waveBreak = 6;
-				//breakTime = 600;
-				//modeSelection(gameState);
 			}
 			breakTime--;
 		}
@@ -213,18 +207,17 @@ bool Logic::waveFinished(Gamestate *gameState) {
 	if (gameState->gameMode == "Checkpoint") {
 		checkEnemyHealth(gameState);
 		int checkpoints = 0;
-		for (int i = 0; i < (int)gameState->Checkpoints.size(); i++) {
-			if (gameState->Checkpoints[i].active) {
-				checkpoints++;
-			}
-			else {
-				gameState->DespawnStaticObject(&gameState->Checkpoints[i]);
-				gameState->Checkpoints.erase(gameState->Checkpoints.begin() + i);
+		for (int i = 0; i < (int)gameState->PowerUps.size(); i++) {
+			if (gameState->PowerUps[i].type == 0) {
+				gameState->resetOrientation(gameState->PowerUps[i].physicsIndex);
+				if (gameState->PowerUps[i].active) {
+					checkpoints++;
+				}
 			}
 		}
 		if (checkpoints == 0) {
 			for (int i = 0; i < (int)gameState->Checkpoints.size(); i++) {
-					gameState->DespawnStaticObject(&gameState->Checkpoints[i]);
+					gameState->DespawnCheckpoint(&gameState->Checkpoints[i]);
 			}
 			gameState->Checkpoints.clear();
 			for (int i = 0; i < (int)gameState->Enemies.size(); i++) {
@@ -290,7 +283,7 @@ void Logic::spawnPowerUps(Gamestate *gameState) {
 }
 
 void Logic::modeSelection(Gamestate *gameState) {
-	switch (rand() % 4 + 1) {
+	switch (4){//rand() % 4 + 1) {
 	case 1:
 		survival(gameState);
 		gameState->gameMode = "Survival";
@@ -354,20 +347,19 @@ void Logic::survival(Gamestate *gameState) {
 
 //Checkpoint
 void Logic::checkpoint(Gamestate *gameState) {
-	for (int i = 0; i < 1; i++) {
-		//gameState->wave; i++) {
+	for (int i = 0; i < gameState->wave + 1; i++) {
 		switch (i % 4) {
 		case 0:
-			gameState->SpawnStaticObject(5, 45.f + (i * 10.f), 0.f, 45.f + (i * 10.f), 0, 0, 0);
+			gameState->SpawnDynamicObject(0, 45.f + (i * 10.f), 5.f, 45.f + (i * 10.f), 0, 0, 0);
 			break;
 		case 1:
-			gameState->SpawnStaticObject(5, -45.f - (i * 10.f), 0.f, 45.f + (i * 10.f), 0, 0, 0);
+			gameState->SpawnDynamicObject(0, -45.f - (i * 10.f), 5.f, 45.f + (i * 10.f), 0, 0, 0);
 			break;
 		case 2:
-			gameState->SpawnStaticObject(5, 45.f + (i * 10.f), 0.f, -45.f - (i * 10.f), 0, 0, 0);
+			gameState->SpawnDynamicObject(0, 45.f + (i * 10.f), 5.f, -45.f - (i * 10.f), 0, 0, 0);
 			break;
 		case 3:
-			gameState->SpawnStaticObject(5, -45.f - (i * 10.f), 0.f, -45.f - (i * 10.f), 0, 0, 0);
+			gameState->SpawnDynamicObject(0, -45.f - (i * 10.f), 5.f, -45.f - (i * 10.f), 0, 0, 0);
 			break;
 		}
 	}

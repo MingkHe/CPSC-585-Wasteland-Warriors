@@ -211,7 +211,7 @@ void Scene::createObjectInstance(const char* textureFilepath, CompositeWorldObje
 
 int Scene::loadCompObjectInstance(int compObjIndex) {
 	std::cout << compObjectInstances.size() << std::endl;
-	if (compObjIndex < compObjectInstances.size()) {
+	if (compObjIndex < (int)compObjectInstances.size()) {
 		allWorldCompObjects.push_back(compObjectInstances[compObjIndex]);
 		sceneCompObjectIndex++;
 		//printf("%dc\n", sceneCompObjectIndex);

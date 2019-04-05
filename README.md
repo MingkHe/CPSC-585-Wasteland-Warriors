@@ -14,10 +14,11 @@ Then build and run the program.
 
 ### Gameplay:
 
-    As the Wasteland Warrior your goal is to survive the apocolypse and escape to freedom. You will face 5 waves of enemies
-    who are trying to destroy your vehicle. Once you complete all the waves, the game will end. There are two ways to attack
-    your enemies: You can either ram them until their vehicles are destroyed, or if you have amunition you can shoot them.
-    During each wave you will have different objectives. The wave will not end until all the objetives are completed.
+    As the Wasteland Warrior your goal is to survive the apocolypse and escape to freedom. You will face 5
+    waves of enemies who are trying to destroy your vehicle. Once you complete all the waves, the game will end.
+    There are two ways to attack your enemies: You can either ram them until their vehicles are destroyed, or
+    if you have amunition you can shoot them. During each wave you will have different objectives. The wave will
+    not end until all the objetives are completed.
     
     Game Modes:
         Survival:
@@ -47,7 +48,7 @@ Then build and run the program.
          *** add gun controls ***
 
     Camera:
-        Move Mouse while Holding the Left Mouse Button or move the Right Stick to move the camera around the vehicle
+        Move Mouse while holding the Left Mouse Button or move the Right Stick to move the camera
         V or Right Shoulder Button to toggle the view between third person, Hood Cam, and Cockpit view
         Hold down E or Left Shoulder Button to look behind you
 

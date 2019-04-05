@@ -224,6 +224,7 @@ bool Logic::waveFinished(Gamestate *gameState) {
 				}
 			}
 		}
+		gameState->checkpointsLeft = checkpoints;
 		if (checkpoints == 0) {
 			for (int i = 0; i < (int)gameState->PowerUps.size(); i++) {
 				if (gameState->PowerUps[i].type == 0) {
@@ -298,14 +299,6 @@ void Logic::modeSelection(Gamestate *gameState) {
 		survival(gameState);
 		gameState->gameMode = "Survival";
 		break;
-	case 4:
-		checkpoint(gameState);
-		gameState->gameMode = "Checkpoint";
-		break;
-	case 5:
-		payload(gameState);
-		gameState->gameMode = "Payload";
-		break;
 	case 2:
 		headHunter(gameState);
 		gameState->gameMode = "Head Hunter";
@@ -313,6 +306,14 @@ void Logic::modeSelection(Gamestate *gameState) {
 	case 3:
 		bossBattle(gameState);
 		gameState->gameMode = "Boss Battle";
+		break;
+	case 4:
+		checkpoint(gameState);
+		gameState->gameMode = "Checkpoint";
+		break;
+	case 5:
+		payload(gameState);
+		gameState->gameMode = "Payload";
 		break;
 	}
 }

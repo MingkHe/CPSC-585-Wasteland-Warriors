@@ -623,6 +623,9 @@ void RenderingEngine::updateText() {
 		if (game_state->breakSeconds == 0) {
 			pushTextObj(texObjects, "Wave # " + std::to_string(game_state->wave) + " - " + game_state->gameMode, 0.01f*game_state->window_width, 0.95f*game_state->window_height, scale * 0.8f, glm::vec3(0.7f, 0.2f, 0.2f));
 			pushTextObj(texObjects, "Enemies Left: " + std::to_string(game_state->enemiesLeft), 0.01f*game_state->window_width, 0.9f*game_state->window_height, scale * 0.8f, glm::vec3(0.7f, 0.2f, 0.2f));
+			if (game_state->gameMode == "Checkpoint") {
+				pushTextObj(texObjects, "Checkpoints Left: " + std::to_string(game_state->checkpointsLeft), 0.01f*game_state->window_width, 0.85f*game_state->window_height, scale * 0.8f, glm::vec3(0.7f, 0.2f, 0.2f));
+			}
 		}
 		else {
 			pushTextObj(texObjects, "Next wave: " + std::to_string(game_state->breakSeconds) + " seconds", 0.01f*game_state->window_width, 0.95f*game_state->window_height, scale * 0.8f, glm::vec3(0.7f, 0.2f, 0.2f));

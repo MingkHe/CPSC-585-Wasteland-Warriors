@@ -245,6 +245,7 @@ public:
 	int wave;
 	bool restart;
 	int enemiesLeft;
+	int checkpointsLeft;
 	int breakSeconds;
 	int score;
 	int enemyscore;

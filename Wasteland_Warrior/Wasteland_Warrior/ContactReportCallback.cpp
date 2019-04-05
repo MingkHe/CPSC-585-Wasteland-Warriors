@@ -47,7 +47,7 @@ void ContactReportCallback::onContact(const PxContactPairHeader& pairHeader, con
 
 
 
-		if (contactCount)
+		if (contactCount > 0)
 		{
 			contactPoints.resize(contactCount);
 			pairs[i].extractContacts(&contactPoints[0], contactCount);
@@ -58,7 +58,7 @@ void ContactReportCallback::onContact(const PxContactPairHeader& pairHeader, con
 
 		else {
 			gContactPositions.push_back(PxVec3{0.0f,0.0f,0.0f});
-			gContactImpulses.push_back(PxVec3{ 0.0f,0.0f,0.0f });
+			gContactImpulses.push_back(PxVec3{ 100.0f,0.0f,0.0f });
 		}
 	}
 }

@@ -97,7 +97,7 @@ int Scene::loadOBJObjectInstance(const char* filepath, const char* textureFilepa
 		if (strcmp(lineHeader, "v") == 0) {
 			//printf("6\n");
 			if (previousHeader == 'f') {
-				//createObject(textureFilepath, OBJobjectComp, OBJobject, vertexIndices, uvIndices, normalIndices, temp_vertices, temp_uvs, temp_normals);
+				//createObjectInstance(textureFilepath, OBJobjectComp, OBJobject, vertexIndices, uvIndices, normalIndices, temp_vertices, temp_uvs, temp_normals);
 			}
 			previousHeader = 'v';
 			glm::vec3 vertex;
@@ -211,7 +211,7 @@ void Scene::createObjectInstance(const char* textureFilepath, CompositeWorldObje
 
 int Scene::loadCompObjectInstance(int compObjIndex) {
 	std::cout << compObjectInstances.size() << std::endl;
-	if (compObjIndex < compObjectInstances.size()) {
+	if (compObjIndex < (int)compObjectInstances.size()) {
 		allWorldCompObjects.push_back(compObjectInstances[compObjIndex]);
 		sceneCompObjectIndex++;
 		//printf("%dc\n", sceneCompObjectIndex);

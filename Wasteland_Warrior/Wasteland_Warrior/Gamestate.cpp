@@ -408,10 +408,10 @@ void Gamestate::Collision(Vehicle* vehicle, PowerUp* powerUp) {
 		vehicle->health = vehicle->health + 10;
 		break;
 	case 4://Increase armor
-		vehicle->armor + 0.1;
+		vehicle->armour += 0.1f;
 		break;
 	case 5://Increase damage
-		vehicle->damageMultiplier + 0.1;
+		vehicle->damageMultiplier += 0.1f;
 		break;
 	default:
 		break;
@@ -584,9 +584,9 @@ glm::mat4 Gamestate::getEntityTransformation(int sceneObjectIndex) {
 }
 
 glm::mat4 Gamestate::getRotationMatrix(float xRot, float yRot, float zRot) {
-	xRot = xRot * M_PI / 180;
-	yRot = yRot * M_PI / 180;
-	zRot = zRot * M_PI / 180;
+	xRot = xRot * (float)(M_PI / 180);
+	yRot = yRot * (float)(M_PI / 180);
+	zRot = zRot * (float)(M_PI / 180);
 
 	glm::mat4 Rx = glm::mat4{{1.0f,0.0f,0.0f,0.0f},
 							{0.0f,cos(xRot),sin(xRot),0.0f},
@@ -603,4 +603,3 @@ glm::mat4 Gamestate::getRotationMatrix(float xRot, float yRot, float zRot) {
 	return(Rz*Ry*Rx);
 
 }
-

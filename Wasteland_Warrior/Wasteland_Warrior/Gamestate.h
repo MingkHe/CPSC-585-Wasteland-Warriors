@@ -33,7 +33,6 @@ public:
 	Entity map = Entity();
 	std::vector<EnemyUnit> Enemies;
 	std::vector<PowerUp> PowerUps;
-	std::vector<Object> Checkpoints;
 	std::vector<Object> StaticObjects;
 	std::vector<Object> DynamicObjects;
 
@@ -248,6 +247,7 @@ public:
 	int enemiesLeft;
 	int breakSeconds;
 	int score;
+	int enemyscore;
 	int scoreTime;
 	std::string gameMode;
 
@@ -275,12 +275,10 @@ public:
 	void SpawnEnemy(int ObjectType, int AIType, float x, float y, float z, float xRot, float yRot, float zRot);
 	void DespawnEnemy(Vehicle* vehicle);
 	void DespawnPowerUp(PowerUp* powerUp);
-	void DespawnCheckpoint(Object* object);
 
 	void Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse);
 	void Collision(Vehicle* vehicle, PowerUp* powerUp);
 	void Collision(Vehicle* vehicle, Object* staticObject);
-	void CollisionCheckpoint(Vehicle* vehicle, Object* checkpoint);
 
 	glm::mat4 getRotationMatrix(float xRot, float yRot, float zRot);
 	void resetOrientation();
@@ -288,7 +286,6 @@ public:
 
 	void updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 newTransformationMatrix, float newSpeed);
 	Object* lookupSOUsingPI(int physicsIndex);
-	Object* lookupCPUsingPI(int physicsIndex);
 	PowerUp* lookupPUUsingPI(int physicsIndex);
 	Vehicle* lookupVUsingPI(int physicsIndex);
 	int lookupGSIUsingPI(int physicsIndex);

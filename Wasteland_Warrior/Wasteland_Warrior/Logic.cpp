@@ -25,25 +25,13 @@ void Logic::Update(Gamestate *gameState)
 	//Randomization
 	srand((unsigned int)time(NULL));
 
-	//Player has beaten all 5 waves
-	if (gameState->wave == 6 || waveBreak == 6) {
-	gameState->UIMode = "Win";
-	gameState->ui_gameplay = false;
-	gameState->restart = true;
-	gameState->score = 2160010000 / (score + 1);
-	gameState->scoreTime = score / 60;
+	//Stabilize powerups and checkpoints
+	for (int i = 0; i < (int)gameState->PowerUps.size(); i++) {
+		gameState->resetOrientation(gameState->PowerUps[i].physicsIndex);
 	}
 
 	//Restart
 	if (gameState->restart) {
-
-		//Reset Game
-		gameState->restart = false;
-		gameState->wave = 1;
-		score = 0;
-		waveBreak = 1;
-		breakTime = 600;
-		modeSelection(gameState);
 
 		//Reset Car
 		gameState->physics_Controller->setPosition(gameState->playerVehicle.physicsIndex, glm::vec3{ 100, 2, -170 });
@@ -60,10 +48,11 @@ void Logic::Update(Gamestate *gameState)
 		gameState->Enemies.clear();
 
 		//Reset Checkpoints
-		for (int i = 0; i < (int)gameState->Checkpoints.size(); i++) {
-			gameState->DespawnCheckpoint(&gameState->Checkpoints[i]);
+		for (int i = 0; i < (int)gameState->PowerUps.size(); i++) {
+			if (gameState->PowerUps[i].type == 0) {
+				gameState->DespawnPowerUp(&gameState->PowerUps[i]);
+			}
 		}
-		gameState->Checkpoints.clear();
 
 		//Reset powerups
 		for (int i = 0; i < (int)gameState->PowerUps.size(); i++) {
@@ -75,6 +64,14 @@ void Logic::Update(Gamestate *gameState)
 		gameState->SpawnDynamicObject(1, 100, -5.25, 100, 0, 0, 0);
 		gameState->SpawnDynamicObject(1, -100, 1, 100, 0, 0, 0);
 
+		//Reset Game
+		gameState->restart = false;
+		gameState->wave = 1;
+		score = 0;
+		gameState->enemyscore = 0;
+		waveBreak = 1;
+		breakTime = 600;
+		modeSelection(gameState);
 	}
 
 	//Player has lost all health
@@ -82,7 +79,7 @@ void Logic::Update(Gamestate *gameState)
 		gameState->UIMode = "Lose";
 		gameState->ui_gameplay = false;
 		gameState->restart = true;
-		gameState->score = (score / 25) * 10;
+		gameState->score = ((score / 25) * 10) + gameState->enemyscore;
 		gameState->scoreTime = score / 60;
 	}
 	else {
@@ -169,7 +166,7 @@ void Logic::Update(Gamestate *gameState)
 		else if (gameState->wave == 5) {
 			if (waveFinished(gameState)) {
 				spawnPowerUps(gameState);
-				gameState->wave = 6;
+				gameState->wave = -1;
 			}
 		}
 
@@ -178,13 +175,23 @@ void Logic::Update(Gamestate *gameState)
 		else if (waveBreak == 5) {
 			gameState->breakSeconds = breakTime / 60;
 			if (breakTime <= 0) {
-				waveBreak = 6;
+				waveBreak = -1;
 			}
 			breakTime--;
 		}
 
-		score++;
+		//Player has beaten all 5 waves
+		else if (gameState->wave == -1 || waveBreak == -1) {
+			gameState->UIMode = "Win";
+			gameState->ui_gameplay = false;
+			gameState->restart = true;
+			gameState->score = (int)(2160010000 / (score + 1)) + gameState->enemyscore;
+			gameState->scoreTime = (int)(score / 60);
+		}
+
 	}
+
+	score++;
 }
 
 int Logic::checkEnemyHealth(Gamestate *gameState) {
@@ -209,17 +216,20 @@ bool Logic::waveFinished(Gamestate *gameState) {
 		int checkpoints = 0;
 		for (int i = 0; i < (int)gameState->PowerUps.size(); i++) {
 			if (gameState->PowerUps[i].type == 0) {
-				gameState->resetOrientation(gameState->PowerUps[i].physicsIndex);
 				if (gameState->PowerUps[i].active) {
 					checkpoints++;
+				}
+				else {
+					gameState->DespawnPowerUp(&gameState->PowerUps[i]);
 				}
 			}
 		}
 		if (checkpoints == 0) {
-			for (int i = 0; i < (int)gameState->Checkpoints.size(); i++) {
-					gameState->DespawnCheckpoint(&gameState->Checkpoints[i]);
+			for (int i = 0; i < (int)gameState->PowerUps.size(); i++) {
+				if (gameState->PowerUps[i].type == 0) {
+					gameState->DespawnPowerUp(&gameState->PowerUps[i]);
+				}
 			}
-			gameState->Checkpoints.clear();
 			for (int i = 0; i < (int)gameState->Enemies.size(); i++) {
 				gameState->DespawnEnemy(&gameState->Enemies[i]);
 			}
@@ -267,23 +277,23 @@ void Logic::spawnPowerUps(Gamestate *gameState) {
 		int mode = i % 4;
 		switch (mode) {
 		case 0: //Spawn Point 1
-			gameState->SpawnDynamicObject(rand() % 5 + 1, 25.f + (i * 10.f), 1.f, 25.f + (i * 10.f), 0, 0, 0);
+			gameState->SpawnDynamicObject(rand() % 5 + 1, 25.f + (i * 10.f), 0.f, 25.f + (i * 10.f), 0, 0, 0);
 			break;
 		case 1: //Spawn Point 2
-			gameState->SpawnDynamicObject(rand() % 5 + 1, -25.f - (i * 10.f), 1.f, 25.f + (i * 10.f), 0, 0, 0);
+			gameState->SpawnDynamicObject(rand() % 5 + 1, -25.f - (i * 10.f), 0.f, 25.f + (i * 10.f), 0, 0, 0);
 			break;
 		case 2: //Spawn Point 3
-			gameState->SpawnDynamicObject(rand() % 5 + 1, 25.f + (i * 10.f), 1.f, -25.f - (i * 10.f), 0, 0, 0);
+			gameState->SpawnDynamicObject(rand() % 5 + 1, 25.f + (i * 10.f), 0.f, -25.f - (i * 10.f), 0, 0, 0);
 			break;
 		case 3: //Spawn Point 4
-			gameState->SpawnDynamicObject(rand() % 5 + 1, -25.f - (i * 10.f), 1.f, -25.f - (i * 10.f), 0, 0, 0);
+			gameState->SpawnDynamicObject(rand() % 5 + 1, -25.f - (i * 10.f), 0.f, -25.f - (i * 10.f), 0, 0, 0);
 			break;
 		}
 	}
 }
 
 void Logic::modeSelection(Gamestate *gameState) {
-	switch (4){//rand() % 4 + 1) {
+	switch (rand() % 4 + 1) {
 	case 1:
 		survival(gameState);
 		gameState->gameMode = "Survival";
@@ -350,16 +360,16 @@ void Logic::checkpoint(Gamestate *gameState) {
 	for (int i = 0; i < gameState->wave + 1; i++) {
 		switch (i % 4) {
 		case 0:
-			gameState->SpawnDynamicObject(0, 45.f + (i * 10.f), 5.f, 45.f + (i * 10.f), 0, 0, 0);
+			gameState->SpawnDynamicObject(0, 45.f + (i * 10.f), 1.f, 45.f + (i * 10.f), 0, 0, 0);
 			break;
 		case 1:
-			gameState->SpawnDynamicObject(0, -45.f - (i * 10.f), 5.f, 45.f + (i * 10.f), 0, 0, 0);
+			gameState->SpawnDynamicObject(0, -45.f - (i * 10.f), 0.f, 45.f + (i * 10.f), 0, 0, 0);
 			break;
 		case 2:
-			gameState->SpawnDynamicObject(0, 45.f + (i * 10.f), 5.f, -45.f - (i * 10.f), 0, 0, 0);
+			gameState->SpawnDynamicObject(0, 45.f + (i * 10.f), 0.f, -45.f - (i * 10.f), 0, 0, 0);
 			break;
 		case 3:
-			gameState->SpawnDynamicObject(0, -45.f - (i * 10.f), 5.f, -45.f - (i * 10.f), 0, 0, 0);
+			gameState->SpawnDynamicObject(0, -45.f - (i * 10.f), 0.f, -45.f - (i * 10.f), 0, 0, 0);
 			break;
 		}
 	}

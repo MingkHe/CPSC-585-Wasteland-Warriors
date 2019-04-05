@@ -594,10 +594,13 @@ void Physics_Controller::resetOrientation(int actorIndex) {
 	PxVec3 yRotation = rotation.getBasisVector1();
 	PxVec3 zRotation = rotation.getBasisVector2();
 
-
-	//int gsi = gameState->lookupGSIUsingPI(actorIndex);
-	
-	glm::vec3 heading = gameState->playerVehicle.direction;
+	glm::vec3 heading;
+	if (gameState->playerVehicle.physicsIndex == actorIndex) {
+		heading = gameState->playerVehicle.direction;
+	}
+	else {
+		heading = glm::vec3{ 0.0f, 0.0f, 0.0f };
+	}
 
 	float angle = atan2(heading.x, heading.z); // Note: I expected atan2(z,x) but OP reported success with atan2(x,z) instead! Switch around if you see 90?off.
 	float qx = 0;
@@ -609,7 +612,15 @@ void Physics_Controller::resetOrientation(int actorIndex) {
 
 	PxTransform resetTransform = PxTransform(location, relativeQuatReset);
 	rigidActor->setGlobalPose(resetTransform);
-	std::cout << "orientation reset" << std::endl;
+
+	if (gameState->playerVehicle.physicsIndex != actorIndex) {
+		const PxVec3 reset = PxVec3{ 0.0f, 0.0f, 0.0f };
+		PxRigidBody* rigidBody = actor->is<PxRigidBody>();
+		rigidBody->setLinearVelocity(reset, true);
+		rigidBody->setAngularVelocity(reset, true);
+	}
+
+	//std::cout << "orientation reset" << std::endl;
 }
 
 void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DKey, bool Handbrake, bool hello, float leftStickX, float leftTrigger, float rightTrigger) {
@@ -922,38 +933,6 @@ void Physics_Controller::stepPhysics(bool interactive)
 		powerupGrabbed = false;
 	}
 	
-	//Checkpoint Collisions
-	if (checkpointGrabbed == false) {
-		for (int i = 0; i < (int)gContactReportCallback.gContactActor1s.size(); i++) {
-			Vehicle* vehicle1 = NULL;
-			Object* checkpoint = NULL;
-
-			for (int index = 0; index <= rigidDynamicActorIndex; index++) {
-				PxActor *actor = userBufferRD[index];
-
-				if (index == gameState->playerVehicle.physicsIndex) {
-					if ((gContactReportCallback.gContactActor1s[i] == actor || gContactReportCallback.gContactActor2s[i] == actor) && vehicle1 == NULL) {
-						vehicle1 = gameState->lookupVUsingPI(index);
-					}
-				}
-
-				if ((gContactReportCallback.gContactActor1s[i] == actor || gContactReportCallback.gContactActor2s[i] == actor) && checkpoint == NULL) {
-					checkpoint = gameState->lookupCPUsingPI(index);
-				}
-			}
-
-			if (vehicle1 != NULL && checkpoint != NULL) {
-				std::cout << "Checkpoint" << std::endl;
-				gameState->CollisionCheckpoint(vehicle1, checkpoint);
-				checkpointGrabbed = true;
-				break;
-			}
-		}
-	}
-	else {
-		checkpointGrabbed = false;
-	}
-
 	//Check collisions for Player/Static Object collisions
 		for (int i = 0; i < (int)gContactReportCallback.gContactActor1s.size(); i++) {
 			Vehicle* vehicle1 = NULL;

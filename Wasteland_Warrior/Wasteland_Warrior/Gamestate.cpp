@@ -202,7 +202,6 @@ void Gamestate::SpawnDynamicObject(int ObjectType, float x, float y, float z, fl
 			break;
 		}
 
-		density = 1;
 		PxVec3 dimensions = { 2,2,2 };
 		PxU32 mass = 1;
 		PxVec3 objectMOI
@@ -218,18 +217,11 @@ void Gamestate::SpawnDynamicObject(int ObjectType, float x, float y, float z, fl
 		);
 		scene->allWorldCompObjects[sceneObjectIndex].subObjects[0].transform = transformMatrix;
 
-		//if (ObjectType == 0){
-			//Object newObject = Object(physicsIndex, sceneObjectIndex, x, y, z);
-			//newObject.gameStateIndex = Checkpoints.size();
-			//newObject.type = ObjectType;
-			//Checkpoints.push_back(newObject);
-		//}
-		//else {
+
 			PowerUp newPowerUp = PowerUp(1, physicsIndex, sceneObjectIndex, x, y, z);
 			newPowerUp.gameStateIndex = PowerUps.size();
 			newPowerUp.type = ObjectType;
 			PowerUps.push_back(newPowerUp);
-		//}
 }
 
 void Gamestate::SpawnPlayer(float x, float y, float z, float xRot, float yRot, float zRot) {
@@ -288,23 +280,36 @@ void Gamestate::resetOrientation(int physicsIndex) {
 
 
 void Gamestate::DespawnEnemy(Vehicle* vehicle) {
-	score -= 200;	//Points for destroying a vehicle (subtracting increases the final point value)
+	enemyscore += 200;
+
+	int offset = vehicle->physicsIndex;
+	glm::mat4 transformMatrix = glm::mat4(
+		2.f, 0.f, 0.f, 0.f,
+		0.f, 2.f, 0.f, 0.f,
+		0.f, 0.f, 2.f, 0.f,
+		(-100 * offset), -500.f, -500.f, 1.f
+	);
+
+	scene->allWorldCompObjects[vehicle->sceneObjectIndex].subObjects[0].transform = transformMatrix;  //Change location of graphic to out of sight
+
 
 	vehicle->setActive(0);
-	int offset = vehicle->physicsIndex;
-	physics_Controller->setPosition(vehicle->physicsIndex, glm::vec3{20 * offset, -30, 0});
-}
-
-void Gamestate::DespawnCheckpoint(Object* Object) {
-
-	int offset = Object->physicsIndex;
-	physics_Controller->setPosition(Object->physicsIndex, glm::vec3{ 20 * offset, -30, 0 });
+	physics_Controller->setPosition(vehicle->physicsIndex, glm::vec3{-100 * offset, -500, -500});
 }
 
 void Gamestate::DespawnPowerUp(PowerUp* powerUp) {
 
 	int offset = powerUp->physicsIndex;
-	physics_Controller->setPosition(powerUp->physicsIndex, glm::vec3{ 20 * offset, -30, 0 });
+
+	glm::mat4 transformMatrix = glm::mat4(
+		2.f, 0.f, 0.f, 0.f,
+		0.f, 2.f, 0.f, 0.f,
+		0.f, 0.f, 2.f, 0.f,
+		(-100 * offset), -500.f, -500.f, 1.f
+	);
+
+	scene->allWorldCompObjects[powerUp->sceneObjectIndex].subObjects[0].transform = transformMatrix;  //Change location of graphic to out of sight
+	physics_Controller->setPosition(powerUp->physicsIndex, glm::vec3{ -100 * offset, -500, -500 });
 }
 
 void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse) {
@@ -408,7 +413,7 @@ void Gamestate::Collision(Vehicle* vehicle, PowerUp* powerUp) {
 		vehicle->health = vehicle->health + 10;
 		break;
 	case 4://Increase armor
-		vehicle->armour += 0.1f;
+		vehicle->armor += 0.1f;
 		break;
 	case 5://Increase damage
 		vehicle->damageMultiplier += 0.1f;
@@ -421,16 +426,6 @@ void Gamestate::Collision(Vehicle* vehicle, PowerUp* powerUp) {
 	this->carPowerUp_sound = true;
 	this->textTime = 3 * 60;
 	DespawnPowerUp(powerUp);
-}
-
-void Gamestate::CollisionCheckpoint(Vehicle* vehicle, Object* checkpoint) {
-
-	checkpoint->active = false;
-	powerUpType = 0;
-	this->carPowerUp_sound = true;
-	this->textTime = 3 * 60;
-	DespawnCheckpoint(checkpoint);
-
 }
 
 void Gamestate::Collision(Vehicle* vehicle, Object* staticObject) {
@@ -476,13 +471,6 @@ void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 
 		}
 	}
 
-	for (int i = 0; i < (int)Checkpoints.size(); i++) {
-		if (physicsIndex == Checkpoints[i].physicsIndex) {
-			entityToUpdate = &Checkpoints[i];
-			found = true;
-		}
-	}
-
 	if (found) {
 		entityToUpdate->acceleration = ((newSpeed - entityToUpdate->speed)/60);
 		entityToUpdate->speed = newSpeed;
@@ -507,16 +495,6 @@ Object* Gamestate::lookupSOUsingPI(int physicsIndex) {
 	for (int i = 0; i < (int)StaticObjects.size(); i++) {
 		if (physicsIndex == StaticObjects[i].physicsIndex) {
 			object = &StaticObjects[i];
-		}
-	}
-	return object;
-}
-
-Object* Gamestate::lookupCPUsingPI(int physicsIndex) {
-	Object* object = NULL;
-	for (int i = 0; i < (int)Checkpoints.size(); i++) {
-		if (physicsIndex == Checkpoints[i].physicsIndex) {
-			object = &Checkpoints[i];
 		}
 	}
 	return object;

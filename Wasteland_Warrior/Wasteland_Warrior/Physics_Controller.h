@@ -39,5 +39,5 @@ public:
 
 
 	bool powerupGrabbed = false;
-	bool checkpointCollected = false;
+	bool checkpointGrabbed = false;
 };

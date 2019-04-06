@@ -351,7 +351,7 @@ void startTurnHardLeftMode()
 	}
 	else
 	{
-		gVehicleInputData.setAnalogAccel(true);
+		gVehicleInputData.setAnalogAccel(1.0f);
 		gVehicleInputData.setAnalogSteer(-1.0f);
 	}
 }
@@ -756,7 +756,7 @@ void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DK
 			gVehicleInputData.setAnalogHandbrake(1.0f);
 		}
 		else {
-			     gVehicleInputData.setAnalogHandbrake(0.0f);
+			gVehicleInputData.setAnalogHandbrake(0.0f);
 		}
 	}
 

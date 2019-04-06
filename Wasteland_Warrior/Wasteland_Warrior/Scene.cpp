@@ -68,7 +68,7 @@ void Scene::setGamestate(Gamestate* newGamestate) {
 }
 
 
-int Scene::loadOBJObjectInstance(const char* filepath, const char* textureFilepath) {
+int Scene::loadOBJObjectInstance(std::vector<const char*> filepath, std::vector<const char*> textureFilepath) {
 	CompositeWorldObject OBJobjectComposite;
 	std::vector< unsigned int > vertexIndices[10], uvIndices[10], normalIndices[10];
 	//std::vector < std::vector< std::vector< unsigned int > > > vertexIndices, uvIndices, normalIndices;
@@ -84,7 +84,7 @@ int Scene::loadOBJObjectInstance(const char* filepath, const char* textureFilepa
 	int subobjectIndex = 0;
 	previousHeader = 'v';
 	printf("NewObject\n");
-	FILE * file = fopen(filepath, "r");
+	FILE * file = fopen(filepath[0], "r");
 	if (file == NULL) {
 		printf("Impossible to open the file !\n");
 		openSuccessful = false;
@@ -186,8 +186,13 @@ int Scene::loadOBJObjectInstance(const char* filepath, const char* textureFilepa
 	//temp_uvs[materialIndex].push_back(uv_holder);
 	//temp_normals[materialIndex].push_back(normal_holder);
 	//subObject_by_Material_count[materialIndex]++;
+	std::cout << materialNames.size() << std::endl;
 	for (int objIndex = 0; objIndex < materialNames.size(); objIndex++) {
-		OBJobjectComposite.subObjects.push_back(createObjectInstance(textureFilepath, vertexIndices[objIndex], uvIndices[objIndex], normalIndices[objIndex], vertice_holder, uv_holder, normal_holder, objIndex));
+		int textureIndex = objIndex;
+		if (textureIndex >= textureFilepath.size()) {
+			textureIndex = 0;
+		}
+		OBJobjectComposite.subObjects.push_back(createObjectInstance(textureFilepath[textureIndex], vertexIndices[objIndex], uvIndices[objIndex], normalIndices[objIndex], vertice_holder, uv_holder, normal_holder, objIndex));
 		sceneObjectIndex++;
 		OBJobjectComposite.subobjectIndices.push_back(sceneObjectIndex);
 		OBJobjectComposite.textureObjectIndexMap.push_back(objIndex);

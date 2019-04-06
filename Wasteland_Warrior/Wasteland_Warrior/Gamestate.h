@@ -162,80 +162,80 @@ public:
 
 	const int numOfStaticObjectInstances = 11;
 	int staticObjMeshTextureIndices[11];
-	const char* staticObjMeshList[11] = {
-		"Objects/SkyBox/skySphere.obj",
-		"Objects/Ruined_Brick_Building/ruined building_brick.obj", 
-		"Objects/Wooden_train_cars/wagon.obj", 
-		"Objects/Truck/truck.obj", 
-		"Objects/Building1/building_lowpoly.obj",  
-		"Objects/checkpointMarker.obj", 
-		"Objects/canyonWalls.obj", 
-		"Objects/Battle_Car_Package/OBJs/staticOilTanker.obj",
-		"Objects/Tunnel/tunnel.obj", 
-		"Objects/RuinedSmallHouse/Old_house.obj",
-		"Objects/Buildings/Gas Station.obj"
+	std::vector<const char*> staticObjMeshList[11] = { 
+		{"Objects/SkyBox/skySphere.obj"},
+		{"Objects/Ruined_Brick_Building/ruined building_brick.obj"},
+		{"Objects/Wooden_train_cars/wagon.obj"},
+		{"Objects/Truck/truck.obj"},
+		{"Objects/Building1/building_lowpoly.obj"},
+		{"Objects/checkpointMarker.obj"},
+		{"Objects/canyonWalls.obj"},
+		{"Objects/Battle_Car_Package/OBJs/staticOilTanker.obj"},
+		{"Objects/Tunnel/tunnel.obj"},
+		{"Objects/RuinedSmallHouse/Old_house.obj"},
+		{"Objects/Buildings/Gas Station.obj"}
 	};
 
-	const char* staticObjTextureList[11] = {
-		 "Objects/SkyBox/skySphere_texture.jpg",
-		 "Objects/Ruined_Brick_Building/ruined_building_brick.jpg",
-		 "Objects/Wooden_train_cars/wagon_tex3.png",
-		 "Objects/Truck/truck_tex1.png",
-		 "Objects/Building1/building_lowpoly_texture.jpg",
-		 "Textures/blueSmoke.jpg",
-		 "Textures/canyonWallTexture2.png",
-		 "Objects/Battle_Car_Package/tex/Oil Tank.jpg",
-		 "Objects/Tunnel/tunnelWall.jpg",
-		 "Objects/RuinedSmallHouse/Old_house.png",
-		 "Objects/Buildings/Gas Station.jpg"
+	std::vector<const char*> staticObjTextureList[11] = {
+		 {"Objects/SkyBox/skySphere_texture.jpg"},
+		 {"Objects/Ruined_Brick_Building/ruined_building_brick.jpg"},
+		 {"Objects/Wooden_train_cars/wagon_tex3.png"},
+		 {"Objects/Truck/truck_tex1.png"},
+		 {"Objects/Building1/building_lowpoly_texture.jpg"},
+		 {"Textures/blueSmoke.jpg"},
+		 {"Textures/canyonWallTexture2.png"},
+		 {"Objects/Battle_Car_Package/tex/Oil Tank.jpg"},
+		 {"Objects/Tunnel/tunnelWall.jpg"},
+		 {"Objects/RuinedSmallHouse/Old_house.png"},
+		 {"Objects/Buildings/Gas Station.jpg"}
 	 };
 
 	const int numOfDynamicObjectInstances = 6;
 	int dynamicObjMeshTextureIndices[6];
-	const char* dynamicObjMeshList[6] = {
-	"Objects/Realistic_Box_Model/box_realistic.obj",
-	"Objects/Realistic_Box_Model/box_realistic.obj",
-	"Objects/Realistic_Box_Model/box_realistic.obj",
-	"Objects/Realistic_Box_Model/box_realistic.obj",
-	"Objects/Realistic_Box_Model/box_realistic.obj",
-	"Objects/checkpointMarker.obj"};
+	std::vector<const char*> dynamicObjMeshList[6] = {
+	{"Objects/Realistic_Box_Model/box_realistic.obj"},
+	{"Objects/Realistic_Box_Model/box_realistic.obj"},
+	{"Objects/Realistic_Box_Model/box_realistic.obj"},
+	{"Objects/Realistic_Box_Model/box_realistic.obj"},
+	{"Objects/Realistic_Box_Model/box_realistic.obj"},
+	{"Objects/checkpointMarker.obj"}};
 
-	const char* dynamicObjTextureList[6] = {
+	std::vector<const char*> dynamicObjTextureList[6] = {
 	//"Objects/Realistic_Box_Model/box_texture_color_red.png", 
-	"Objects/Realistic_Box_Model/full_health.jpg",
-	"Objects/Realistic_Box_Model/large_health_boost.jpg",
-	"Objects/Realistic_Box_Model/small_health_boost.png",
-	"Objects/Realistic_Box_Model/armour.png",
-	"Objects/Realistic_Box_Model/damage.png",
-	"Textures/blueSmoke.jpg" };
+	{"Objects/Realistic_Box_Model/full_health.jpg"},
+	{"Objects/Realistic_Box_Model/large_health_boost.jpg"},
+	{"Objects/Realistic_Box_Model/small_health_boost.png"},
+	{"Objects/Realistic_Box_Model/armour.png"},
+	{"Objects/Realistic_Box_Model/damage.png"},
+	{"Textures/blueSmoke.jpg" }};
 
 	const int numOfVehicleObjectInstances = 7;
 	int vehicleMeshTextureIndices[7];
-	const char* vehicleMeshList[7] = { 
-	"Objects/Battle_Car_Package/OBJs/playerVehicle.obj",
-	"Objects/Battle_Car_Package/OBJs/enemy1_oilBarrelCar.obj",
-	"Objects/Battle_Car_Package/OBJs/enemy2_truck.obj", 
-	"Objects/Battle_Car_Package/OBJs/enemy3_bigBug.obj", 
-	"Objects/Battle_Car_Package/OBJs/enemy4_dragster.obj", 
-	"Objects/Battle_Car_Package/OBJs/enemy5_bigTruck.obj", 
-	"Objects/Battle_Car_Package/OBJs/bigBadBoss.obj"};
+	std::vector<const char*> vehicleMeshList[7] = {
+	{"Objects/Battle_Car_Package/OBJs/playerVehicle.obj"},
+	{"Objects/Battle_Car_Package/OBJs/enemy1_oilBarrelCar.obj"},
+	{"Objects/Battle_Car_Package/OBJs/enemy2_truck.obj"},
+	{"Objects/Battle_Car_Package/OBJs/enemy3_bigBug.obj"},
+	{"Objects/Battle_Car_Package/OBJs/enemy4_dragster.obj"},
+	{"Objects/Battle_Car_Package/OBJs/enemy5_bigTruck.obj"},
+	{"Objects/Battle_Car_Package/OBJs/bigBadBoss.obj"} };
 
-	const char* vehicleTextureList[7] = {
-	"Objects/Battle_Car_Package/tex/Bex Car 4.jpg",
-	"Objects/Battle_Car_Package/tex/AX materiel 1.jpg",
-	"Objects/Battle_Car_Package/tex/Battle Jip.jpg",
-	"Objects/Battle_Car_Package/tex/Battle Toscar.jpg",
-	"Objects/Battle_Car_Package/tex/4X Car.jpg",
-	"Objects/Battle_Car_Package/tex/Small Truck.jpg",
-	"Objects/Battle_Car_Package/tex/Truck Tex.jpg" };
+	std::vector<const char*> vehicleTextureList[7] = {
+	{"Objects/Battle_Car_Package/tex/Bex Car 4.jpg","Objects/Battle_Car_Package/tex/Apparatus.png", "Objects/Battle_Car_Package/tex/Armor.jpg", "Objects/Battle_Car_Package/tex/Attack buffer 1.jpg" },
+	{"Objects/Battle_Car_Package/tex/AX materiel 1.jpg","Objects/Battle_Car_Package/tex/Apparatus.png", "Objects/Battle_Car_Package/tex/Attack buffer 1.jpg", "Objects/Battle_Car_Package/tex/oll.png"},
+	{"Objects/Battle_Car_Package/tex/Battle Jip.jpg","Objects/Battle_Car_Package/tex/oll.png",  "Objects/Battle_Car_Package/tex/Appara.png", "Objects/Battle_Car_Package/tex/Appara.png",  "Objects/Battle_Car_Package/tex/Attack buffer 1.jpg"}, //Tires Not Mapping Properly
+	{"Objects/Battle_Car_Package/tex/Battle Toscar.jpg","Objects/Battle_Car_Package/tex/Apparatus.png"},
+	{"Objects/Battle_Car_Package/tex/4X Car.jpg","Objects/Battle_Car_Package/tex/Apparatus.png"},
+	{"Objects/Battle_Car_Package/tex/Small Truck.jpg","Objects/Battle_Car_Package/tex/Apparatus.png"},
+	{"Objects/Battle_Car_Package/tex/Truck Tex.jpg","Objects/Battle_Car_Package/tex/Apparatus.png" }};
 
 
 	int mapMeshTextureIndices[1];
-	const char* mapMeshList[1] = {
-	"Objects/WorldMapV3Test.obj"};
+	std::vector<const char*> mapMeshList[1] = {
+	{"Objects/WorldMapV3Test.obj"} };
 
-	const char* mapTextureList[1] = {
-	"Textures/sandTexture.jpg" };
+	std::vector<const char*> mapTextureList[1] = {
+	{"Textures/sandTexture.jpg" } };
 
 
 

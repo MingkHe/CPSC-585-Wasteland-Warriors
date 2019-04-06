@@ -32,7 +32,7 @@ public:
 
 	//Send geometry to the renderer
 	void displayScene();
-	int loadOBJObjectInstance(const char* filepath, const char* textureFilepath);
+	int loadOBJObjectInstance(std::vector<const char*> filepath, std::vector<const char*> textureFilepath);
 
 	RenderingEngine * renderer;
 

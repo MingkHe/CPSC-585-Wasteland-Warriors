@@ -442,7 +442,7 @@ void Gamestate::Collision(Vehicle* vehicle, PowerUp* powerUp) {
 
 	switch (powerUp->type)
 		{
-	case 0://Heal to full health
+	case 0://Checkpoint
 		powerUp->active = false;
 		break;
 	case 1://Heal to full health

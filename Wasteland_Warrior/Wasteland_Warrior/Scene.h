@@ -49,9 +49,13 @@ public:
 	int loadCompObjectInstance(int compObjIndex);
 private:
 
-	void createObjectInstance(const char* textureFilepath, CompositeWorldObject OBJobjectComp, Geometry OBJobject,
+	/*CompositeWorldObject createObjectInstance(const char* textureFilepath, CompositeWorldObject OBJobjectComp,
 		std::vector< unsigned int > vertexIndices, std::vector< unsigned int > uvIndices, std::vector< unsigned int > normalIndices,
-		std::vector< glm::vec3 > temp_vertices, std::vector< glm::vec2 > temp_uvs, std::vector< glm::vec3 > temp_normals);
+		std::vector< glm::vec3 > temp_vertices, std::vector< glm::vec2 > temp_uvs, std::vector< glm::vec3 > temp_normals, int textureIndex);*/
+
+	Geometry createObjectInstance(const char* textureFilepath, 
+		std::vector< unsigned int > vertexIndices, std::vector< unsigned int > uvIndices, std::vector< unsigned int > normalIndices,
+		std::vector< glm::vec3 > temp_vertices, std::vector< glm::vec2 > temp_uvs, std::vector< glm::vec3 > temp_normals, int materialIndex);
 };
 
 

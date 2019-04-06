@@ -156,9 +156,12 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 		if (i == game_state->skyboxIndex) {
 			continue;
 		}
-		glUniformMatrix4fv(transformGL, 1, false, glm::value_ptr(objects[i].subObjects[0].transform));
-		glBindVertexArray(objects[i].subObjects[0].vao);
-		glDrawArrays(objects[i].subObjects[0].drawMode, 0, objects[i].subObjects[0].verts.size());
+		//int s = 0;//--------------------------------------------------
+		for (int s = 0; s < objects[i].subObjectsCount; s++) {
+			glUniformMatrix4fv(transformGL, 1, false, glm::value_ptr(objects[i].subObjects[s].transform));
+			glBindVertexArray(objects[i].subObjects[s].vao);
+			glDrawArrays(objects[i].subObjects[s].drawMode, 0, objects[i].subObjects[s].verts.size());
+		}
 	}
 
 	//low quality
@@ -174,9 +177,12 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 		if (i == game_state->skyboxIndex) {
 			continue;
 		}
-		glUniformMatrix4fv(transformGL, 1, false, glm::value_ptr(objects[i].subObjects[0].transform));
-		glBindVertexArray(objects[i].subObjects[0].vao);
-		glDrawArrays(objects[i].subObjects[0].drawMode, 0, objects[i].subObjects[0].verts.size());
+		//int s = 0;//--------------------------------------------------
+		for (int s = 0; s < objects[i].subObjectsCount; s++) {
+			glUniformMatrix4fv(transformGL, 1, false, glm::value_ptr(objects[i].subObjects[s].transform));
+			glBindVertexArray(objects[i].subObjects[s].vao);
+			glDrawArrays(objects[i].subObjects[s].drawMode, 0, objects[i].subObjects[s].verts.size());
+		}
 	}
 
 	//mid quality
@@ -191,9 +197,12 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 		if (i == game_state->skyboxIndex) {
 			continue;
 		}
-		glUniformMatrix4fv(transformGL, 1, false, glm::value_ptr(objects[i].subObjects[0].transform));
-		glBindVertexArray(objects[i].subObjects[0].vao);
-		glDrawArrays(objects[i].subObjects[0].drawMode, 0, objects[i].subObjects[0].verts.size());
+		//int s = 0;//--------------------------------------------------
+		for (int s = 0; s < objects[i].subObjectsCount; s++) {
+			glUniformMatrix4fv(transformGL, 1, false, glm::value_ptr(objects[i].subObjects[s].transform));
+			glBindVertexArray(objects[i].subObjects[s].vao);
+			glDrawArrays(objects[i].subObjects[s].drawMode, 0, objects[i].subObjects[s].verts.size());
+		}
 	}
 	
 	//Clears the screen to a dark grey background
@@ -242,23 +251,26 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 		else {
 			glUniform1i(glGetUniformLocation(shaderProgram, "isSkybox"), 0);
 		}
-		glUniformMatrix4fv(transformGL, 1, false, glm::value_ptr(objects[i].subObjects[0].transform));
-		glUniform1f(transparent, objects[i].transparent);
-		//bind the texture
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, objects[i].subObjects[0].texture.textureID);
+		//int s = 0;//--------------------------------------------------
+		for (int s = 0; s < objects[i].subObjectsCount; s++) {
+			glUniformMatrix4fv(transformGL, 1, false, glm::value_ptr(objects[i].subObjects[s].transform));
+			glUniform1f(transparent, objects[i].transparent);
+			//bind the texture
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, objects[i].subObjects[s].texture.textureID);
 
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, shadow_buffer.depthTextureID);
+			glActiveTexture(GL_TEXTURE1);
+			glBindTexture(GL_TEXTURE_2D, shadow_buffer.depthTextureID);
 
-		glActiveTexture(GL_TEXTURE2);
-		glBindTexture(GL_TEXTURE_2D, shadow_buffertwo.depthTextureID);
+			glActiveTexture(GL_TEXTURE2);
+			glBindTexture(GL_TEXTURE_2D, shadow_buffertwo.depthTextureID);
 
-		glActiveTexture(GL_TEXTURE3);
-		glBindTexture(GL_TEXTURE_2D, shadow_bufferthree.depthTextureID);
+			glActiveTexture(GL_TEXTURE3);
+			glBindTexture(GL_TEXTURE_2D, shadow_bufferthree.depthTextureID);
 
-		glBindVertexArray(objects[i].subObjects[0].vao);
-		glDrawArrays(objects[i].subObjects[0].drawMode, 0, objects[i].subObjects[0].verts.size());
+			glBindVertexArray(objects[i].subObjects[s].vao);
+			glDrawArrays(objects[i].subObjects[s].drawMode, 0, objects[i].subObjects[s].verts.size());
+		}
 	}
 
 	//draw rear view
@@ -273,20 +285,23 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 		else {
 			glUniform1i(glGetUniformLocation(shaderProgram, "isSkybox"), 0);
 		}
-		glUniformMatrix4fv(transformGL, 1, false, glm::value_ptr(objects[i].subObjects[0].transform));
-		glUniform1f(transparent, objects[i].transparent);
-		//bind the texture
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, objects[i].subObjects[0].texture.textureID);
+		//int s = 0;//--------------------------------------------------
+		for (int s = 0; s < objects[i].subObjectsCount; s++) {
+			glUniformMatrix4fv(transformGL, 1, false, glm::value_ptr(objects[i].subObjects[s].transform));
+			glUniform1f(transparent, objects[i].transparent);
+			//bind the texture
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, objects[i].subObjects[s].texture.textureID);
 
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, shadow_buffer.depthTextureID);
+			glActiveTexture(GL_TEXTURE1);
+			glBindTexture(GL_TEXTURE_2D, shadow_buffer.depthTextureID);
 
-		glActiveTexture(GL_TEXTURE2);
-		glBindTexture(GL_TEXTURE_2D, shadow_buffertwo.depthTextureID);
+			glActiveTexture(GL_TEXTURE2);
+			glBindTexture(GL_TEXTURE_2D, shadow_buffertwo.depthTextureID);
 
-		glBindVertexArray(objects[i].subObjects[0].vao);
-		glDrawArrays(objects[i].subObjects[0].drawMode, 0, objects[i].subObjects[0].verts.size());
+			glBindVertexArray(objects[i].subObjects[s].vao);
+			glDrawArrays(objects[i].subObjects[s].drawMode, 0, objects[i].subObjects[s].verts.size());
+		}
 
 		// reset state to default (no shader or geometry bound)
 	}

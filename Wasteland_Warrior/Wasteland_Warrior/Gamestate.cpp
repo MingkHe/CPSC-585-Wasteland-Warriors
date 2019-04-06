@@ -95,27 +95,45 @@ void Gamestate::InstantiateAllMeshes_Textures_Vehicle() {
 void Gamestate::SpawnMap() {
 	int sceneObjectIndex = scene->loadCompObjectInstance(mapMeshTextureIndices[0]);
 	groundIndex = sceneObjectIndex;
+	//std::cout << groundIndex  << "Ground--------------------------"<< std::endl;
 	//int sceneObjectIndex = scene->loadOBJObject(mapMeshList[0], mapTextureList[0]);
-	std::cout << sceneObjectIndex  << "Hello"<< std::endl;
-	int vertsSize = scene->allWorldCompObjects[0].subObjects[0].vertsPhys.size();
-	PxVec3* vertsPhysArray = new PxVec3[vertsSize];
-	glm::vec3 vertHolder = { -1,1,1 };
-	for (int i = 0; i < vertsSize; i++) {
-		vertHolder = scene->allWorldCompObjects[sceneObjectIndex].subObjects[0].vertsPhys[i];
-		vertsPhysArray[i] = PxVec3(vertHolder.x, vertHolder.y, vertHolder.z);
+	//std::cout << sceneObjectIndex  << "Hello"<< std::endl;
+	//int s = 0;//--------------------------------------------------
+	int totalVertSize = 0;
+	int totalFaceVertSize = 0;
+	int currentVertCount = 0;
+	int currentFacesCount = 0;
+	for (int t = 0; t < scene->allWorldCompObjects[groundIndex].subObjectsCount; t++) {
+		totalVertSize += scene->allWorldCompObjects[groundIndex].subObjects[t].vertsPhys.size();
+		totalFaceVertSize += scene->allWorldCompObjects[groundIndex].subObjects[t].faceVertexIndices.size();
 	}
+	PxVec3* vertsPhysArray = new PxVec3[totalVertSize];
+	PxU32* faceVertsPhys = new PxU32[totalFaceVertSize];
+	for (int s = 0; s < scene->allWorldCompObjects[groundIndex].subObjectsCount; s++) {
+	
+		int vertsSize = scene->allWorldCompObjects[groundIndex].subObjects[s].vertsPhys.size();
+		//totalVertSize += vertsSize;
+		
+		glm::vec3 vertHolder = { -1,1,1 };
+		for (int i = 0; i < vertsSize; i++) {
+			vertHolder = scene->allWorldCompObjects[groundIndex].subObjects[s].vertsPhys[i];
+			vertsPhysArray[currentVertCount+i] = PxVec3(vertHolder.x, vertHolder.y, vertHolder.z);
+		}
+		currentVertCount += vertsSize;
 
-	int faceVertsSize = scene->allWorldCompObjects[sceneObjectIndex].subObjects[0].faceVertexIndices.size();
-	PxU32* faceVertsPhys = new PxU32[faceVertsSize];
-	PxU32 faceVertHolder = 0;
-	int index = 0;
-	for (int i = 0; i < faceVertsSize; i++) {
-		faceVertHolder = scene->allWorldCompObjects[sceneObjectIndex].subObjects[0].faceVertexIndices[i];
-		faceVertHolder--;
-		faceVertsPhys[i] = PxU32(faceVertHolder);
+		int faceVertsSize = scene->allWorldCompObjects[groundIndex].subObjects[s].faceVertexIndices.size();
+		//totalFaceVertSize += faceVertsSize;
+		PxU32 faceVertHolder = 0;
+		int index = 0;
+		for (int i = 0; i < faceVertsSize; i++) {
+			faceVertHolder = scene->allWorldCompObjects[groundIndex].subObjects[s].faceVertexIndices[i];
+			faceVertHolder--;
+			faceVertsPhys[currentFacesCount+i] = PxU32(faceVertHolder);
 
+		}
+		currentFacesCount += faceVertsSize;
 	}
-	mapGroundPhysicsIndex = physics_Controller->createMap(vertsPhysArray, vertsSize, faceVertsPhys, faceVertsSize/3);
+	mapGroundPhysicsIndex = physics_Controller->createMap(vertsPhysArray, totalVertSize, faceVertsPhys, totalFaceVertSize /3);
 }
 
 void Gamestate::SpawnStaticObject(int ObjectType, float x, float y, float z, float xRot, float yRot, float zRot) {
@@ -134,25 +152,38 @@ void Gamestate::SpawnStaticObject(int ObjectType, float x, float y, float z, flo
 		objectExists = false;
 	}
 	if (objectExists) {
-		int vertsSize = scene->allWorldCompObjects[sceneObjectIndex].subObjects[0].vertsPhys.size();
-		PxVec3* vertsPhysArray = new PxVec3[vertsSize];
-		glm::vec3 vertHolder = { -1,1,1 };
-		for (int i = 0; i < vertsSize; i++) {
-			vertHolder = scene->allWorldCompObjects[sceneObjectIndex].subObjects[0].vertsPhys[i];
-			vertsPhysArray[i] = PxVec3(vertHolder.x, vertHolder.y, vertHolder.z);
+		int totalVertSize = 0;
+		int totalFaceVertSize = 0;
+		int currentVertCount = 0;
+		int currentFacesCount = 0;
+		for (int t = 0; t < scene->allWorldCompObjects[sceneObjectIndex].subObjectsCount; t++) {
+			totalVertSize += scene->allWorldCompObjects[sceneObjectIndex].subObjects[t].vertsPhys.size();
+			totalFaceVertSize += scene->allWorldCompObjects[sceneObjectIndex].subObjects[t].faceVertexIndices.size();
 		}
+		PxVec3* vertsPhysArray = new PxVec3[totalVertSize];
+		PxU32* faceVertsPhys = new PxU32[totalFaceVertSize];
+		//int s = 0; //-------------------------------------
+		for (int s = 0; s < scene->allWorldCompObjects[sceneObjectIndex].subObjectsCount; s++) {
 
-		int faceVertsSize = scene->allWorldCompObjects[sceneObjectIndex].subObjects[0].faceVertexIndices.size();
-		PxU32* faceVertsPhys = new PxU32[faceVertsSize];
-		PxU32 faceVertHolder = 0;
-		int index = 0;
-		for (int i = 0; i < faceVertsSize; i++) {
-			faceVertHolder = scene->allWorldCompObjects[sceneObjectIndex].subObjects[0].faceVertexIndices[i];
-			faceVertHolder--;
-			faceVertsPhys[i] = PxU32(faceVertHolder);
+			int vertsSize = scene->allWorldCompObjects[sceneObjectIndex].subObjects[s].vertsPhys.size();
+			glm::vec3 vertHolder = { -1,1,1 };
+			for (int i = 0; i < vertsSize; i++) {
+				vertHolder = scene->allWorldCompObjects[sceneObjectIndex].subObjects[s].vertsPhys[i];
+				vertsPhysArray[currentVertCount+i] = PxVec3(vertHolder.x, vertHolder.y, vertHolder.z);
+			}
+			currentVertCount += vertsSize;
 
+			int faceVertsSize = scene->allWorldCompObjects[sceneObjectIndex].subObjects[s].faceVertexIndices.size();
+			PxU32 faceVertHolder = 0;
+			for (int i = 0; i < faceVertsSize; i++) {
+				faceVertHolder = scene->allWorldCompObjects[sceneObjectIndex].subObjects[s].faceVertexIndices[i];
+				faceVertHolder--;
+				faceVertsPhys[currentFacesCount+i] = PxU32(faceVertHolder);
+
+			}
+			currentFacesCount += faceVertsSize;
 		}
-		int physicsIndex = physics_Controller->createStaticObject(vertsPhysArray, vertsSize, faceVertsPhys, faceVertsSize / 3, x, y, z);
+		int physicsIndex = physics_Controller->createStaticObject(vertsPhysArray, totalVertSize, faceVertsPhys, totalFaceVertSize / 3, x, y, z);
 		glm::mat4 transformMatrix = glm::mat4(
 			1.f, 0.f, 0.f, 0.f,
 			0.f, 1.f, 0.f, 0.f,
@@ -160,7 +191,11 @@ void Gamestate::SpawnStaticObject(int ObjectType, float x, float y, float z, flo
 			x, y, z, 1.f
 		);
 		transformMatrix = transformMatrix * getRotationMatrix(xRot, yRot, zRot);
-		scene->allWorldCompObjects[sceneObjectIndex].subObjects[0].transform = transformMatrix;
+		//int t = 0; //---------------------------------------------------
+		for (int t = 0; t < scene->allWorldCompObjects[sceneObjectIndex].subObjectsCount; t++) {
+			scene->allWorldCompObjects[sceneObjectIndex].subObjects[t].transform = transformMatrix;
+		}
+		
 		if (ObjectType == 5) {
 			scene->allWorldCompObjects[sceneObjectIndex].transparent = .5f;
 		}
@@ -176,46 +211,49 @@ void Gamestate::SpawnDynamicObject(int ObjectType, float x, float y, float z, fl
 	int sceneObjectIndex = 0;
 	PxReal density = 1;
 
-		//CreateBoxObject
-		switch (ObjectType)
-		{
-		case 0://Checkpoint
-			sceneObjectIndex = scene->loadCompObjectInstance(dynamicObjMeshTextureIndices[5]);
-			break;
-		case 1://Max Health
-			sceneObjectIndex = scene->loadCompObjectInstance(dynamicObjMeshTextureIndices[0]);
-			break;
-		case 2://Large health boost
-			sceneObjectIndex = scene->loadCompObjectInstance(dynamicObjMeshTextureIndices[1]);
-			break;
-		case 3://Small health boost
-			sceneObjectIndex = scene->loadCompObjectInstance(dynamicObjMeshTextureIndices[2]);
-			break;
-		case 4://Increase armor
-			sceneObjectIndex = scene->loadCompObjectInstance(dynamicObjMeshTextureIndices[3]);
-			break;
-		case 5://Increase damage
-			sceneObjectIndex = scene->loadCompObjectInstance(dynamicObjMeshTextureIndices[4]);
-			break;
-		default:
-			objectExists = false;
-			break;
-		}
+	//CreateBoxObject
+	switch (ObjectType)
+	{
+	case 0://Checkpoint
+		sceneObjectIndex = scene->loadCompObjectInstance(dynamicObjMeshTextureIndices[5]);
+		break;
+	case 1://Max Health
+		sceneObjectIndex = scene->loadCompObjectInstance(dynamicObjMeshTextureIndices[0]);
+		break;
+	case 2://Large health boost
+		sceneObjectIndex = scene->loadCompObjectInstance(dynamicObjMeshTextureIndices[1]);
+		break;
+	case 3://Small health boost
+		sceneObjectIndex = scene->loadCompObjectInstance(dynamicObjMeshTextureIndices[2]);
+		break;
+	case 4://Increase armor
+		sceneObjectIndex = scene->loadCompObjectInstance(dynamicObjMeshTextureIndices[3]);
+		break;
+	case 5://Increase damage
+		sceneObjectIndex = scene->loadCompObjectInstance(dynamicObjMeshTextureIndices[4]);
+		break;
+	default:
+		objectExists = false;
+		break;
+	}
 
-		PxVec3 dimensions = { 2,2,2 };
-		PxU32 mass = 1;
-		PxVec3 objectMOI
-		((dimensions.y*dimensions.y + dimensions.z*dimensions.z)*mass / 12.0f,
-			(dimensions.x*dimensions.x + dimensions.z*dimensions.z)*mass / 12.0f,
-			(dimensions.x*dimensions.x + dimensions.y*dimensions.y)*mass / 12.0f);
-		int physicsIndex = physics_Controller->createDynamicObject(ObjectType, dimensions, objectMOI, mass, density, x, y, z);
-		glm::mat4 transformMatrix = glm::mat4(
-			1.f, 0.f, 0.f, 0.f,
-			0.f, 1.f, 0.f, 0.f,
-			0.f, 0.f, 1.f, 0.f,
-			x, y, z, 1.f
-		);
-		scene->allWorldCompObjects[sceneObjectIndex].subObjects[0].transform = transformMatrix;
+	PxVec3 dimensions = { 2,2,2 };
+	PxU32 mass = 1;
+	PxVec3 objectMOI
+	((dimensions.y*dimensions.y + dimensions.z*dimensions.z)*mass / 12.0f,
+		(dimensions.x*dimensions.x + dimensions.z*dimensions.z)*mass / 12.0f,
+		(dimensions.x*dimensions.x + dimensions.y*dimensions.y)*mass / 12.0f);
+	int physicsIndex = physics_Controller->createDynamicObject(ObjectType, dimensions, objectMOI, mass, density, x, y, z);
+	glm::mat4 transformMatrix = glm::mat4(
+		1.f, 0.f, 0.f, 0.f,
+		0.f, 1.f, 0.f, 0.f,
+		0.f, 0.f, 1.f, 0.f,
+		x, y, z, 1.f
+	);
+	//int s = 0; //-----------------------------------------
+	for (int s = 0; s < scene->allWorldCompObjects[sceneObjectIndex].subObjectsCount; s++) {
+		scene->allWorldCompObjects[sceneObjectIndex].subObjects[s].transform = transformMatrix;
+	}
 
 
 			PowerUp newPowerUp = PowerUp(1, physicsIndex, sceneObjectIndex, x, y, z);
@@ -289,9 +327,10 @@ void Gamestate::DespawnEnemy(Vehicle* vehicle) {
 		0.f, 0.f, 2.f, 0.f,
 		(-100 * offset), -500.f, -500.f, 1.f
 	);
-
-	scene->allWorldCompObjects[vehicle->sceneObjectIndex].subObjects[0].transform = transformMatrix;  //Change location of graphic to out of sight
-
+	//int s = 0; //-------------------------------------------------------
+	for (int s = 0; s < scene->allWorldCompObjects[vehicle->sceneObjectIndex].subObjectsCount; s++) {
+		scene->allWorldCompObjects[vehicle->sceneObjectIndex].subObjects[s].transform = transformMatrix;  //Change location of graphic to out of sight
+	}
 
 	vehicle->setActive(0);
 	physics_Controller->setPosition(vehicle->physicsIndex, glm::vec3{-100 * offset, -500, -500});
@@ -307,8 +346,10 @@ void Gamestate::DespawnPowerUp(PowerUp* powerUp) {
 		0.f, 0.f, 2.f, 0.f,
 		(-100 * offset), -500.f, -500.f, 1.f
 	);
-
-	scene->allWorldCompObjects[powerUp->sceneObjectIndex].subObjects[0].transform = transformMatrix;  //Change location of graphic to out of sight
+	//int s = 0; //-------------------------------------------------------
+	for (int s = 0; s < scene->allWorldCompObjects[powerUp->sceneObjectIndex].subObjectsCount; s++) {
+		scene->allWorldCompObjects[powerUp->sceneObjectIndex].subObjects[s].transform = transformMatrix;  //Change location of graphic to out of sight
+	}
 	physics_Controller->setPosition(powerUp->physicsIndex, glm::vec3{ -100 * offset, -500, -500 });
 }
 

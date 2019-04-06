@@ -110,11 +110,11 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 		main_view = createFramebuffer(game_state->window_width, game_state->window_height);
 	}
 	else {
-		rear_view = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1180));
-		shadow_buffer = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1180));
-		shadow_buffertwo = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1180));
-		shadow_bufferthree = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1180));
-		main_view = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1180));
+		rear_view = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1061));
+		shadow_buffer = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1061));
+		shadow_buffertwo = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1061));
+		shadow_bufferthree = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1061));
+		main_view = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1061));
 	}
 
 	bias = 1200/game_state->window_height;

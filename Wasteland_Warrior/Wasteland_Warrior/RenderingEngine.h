@@ -84,15 +84,19 @@ public:
 	Geometry speedo;
 	Geometry needle;
 	Geometry mirror;
+	Geometry square;
 
 	Framebuffer shadow_buffer;
+	Framebuffer shadow_buffertwo;
+	Framebuffer shadow_bufferthree;
 	Framebuffer rear_view;
+	Framebuffer main_view;
 
 	GLuint textShaderProgram;
 
 	std::vector<Geometry> texObjects;
 
-	
+	float bias;
 };
 
 #endif /* RENDERINGENGINE_H_ */

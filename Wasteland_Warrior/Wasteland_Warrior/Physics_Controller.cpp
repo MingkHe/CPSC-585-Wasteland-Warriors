@@ -117,18 +117,18 @@ void Physics_Controller::Update()
 
 PxF32 playerSteerVsForwardSpeedData[2 * 5] =
 {
-	0.0f,		1.0f,
-	5.0f,		0.9f,	
+	0.0f,		1.00f,
+	5.0f,		0.90f,	
 	30.0f,		0.50f,
-	120.0f,		0.9f,
+	120.0f,		0.30f,
 	PX_MAX_F32, PX_MAX_F32
 };
 
 PxF32 enemySteerVsForwardSpeedData[2 * 5] =
 {
-	0.0f,		0.5f,
-	5.0f,		0.35f,
-	30.0f,		0.2f,
+	0.0f,		0.55f,
+	5.0f,		0.40f,
+	30.0f,		0.25f,
 	120.0f,		0.15f,
 	PX_MAX_F32, PX_MAX_F32
 };
@@ -512,7 +512,7 @@ int Physics_Controller::createDynamicObject(PxU32 objectType, PxVec3 dimensions,
 
 int Physics_Controller::createEnemyVehicle() {
 	//Create a vehicle that will drive on the plane.
-	VehicleDesc vehicleDesc = initEnemyVehiclePhysicsDesc();;
+	VehicleDesc vehicleDesc = initEnemyVehiclePhysicsDesc();
 	enemyVehicle = createEnemyVehicle4W(vehicleDesc, gPhysics, gCooking);
 	PxTransform startTransform(PxVec3(0, (vehicleDesc.chassisDims.y*0.5f + vehicleDesc.wheelRadius + 1.0f), 0.0f), PxQuat(PxIdentity));
 	enemyVehicle->getRigidDynamicActor()->setGlobalPose(startTransform);
@@ -562,6 +562,21 @@ void Physics_Controller::setPosition(int actorIndex, glm::vec3 newLocation){
 	PxActor *actor = userBuffer[actorIndex];
 	PxRigidActor *rigidActor = actor->is<PxRigidActor>();
 	rigidActor->setGlobalPose({ newLocation.x, newLocation.y, newLocation.z });
+
+	const PxVec3 reset = PxVec3{ 0.0f, 0.0f, 0.0f };
+	PxRigidBody* rigidBody = actor->is<PxRigidBody>();
+	rigidBody->setLinearVelocity(reset, true);
+	rigidBody->setAngularVelocity(reset, true);
+}
+
+void Physics_Controller::setPositionStatic(int actorIndex, glm::vec3 newLocation) {
+	PxU32 numOfRidg = gScene->getNbActors(PxActorTypeFlag::eRIGID_STATIC);
+	PxActor *userBuffer[50];
+
+	PxU32 numOfRidgActors = gScene->getActors(PxActorTypeFlag::eRIGID_STATIC, userBuffer, numOfRidg, 0);
+	PxActor *actor = userBuffer[actorIndex];
+	PxRigidActor *rigidActor = actor->is<PxRigidActor>();
+	rigidActor->setGlobalPose({ newLocation.x, newLocation.y, newLocation.z });
 }
 
 void Physics_Controller::resetOrientation(int actorIndex) {
@@ -579,10 +594,13 @@ void Physics_Controller::resetOrientation(int actorIndex) {
 	PxVec3 yRotation = rotation.getBasisVector1();
 	PxVec3 zRotation = rotation.getBasisVector2();
 
-
-	//int gsi = gameState->lookupGSIUsingPI(actorIndex);
-	
-	glm::vec3 heading = gameState->playerVehicle.direction;
+	glm::vec3 heading;
+	if (gameState->playerVehicle.physicsIndex == actorIndex) {
+		heading = gameState->playerVehicle.direction;
+	}
+	else {
+		heading = glm::vec3{ 0.0f, 0.0f, 0.0f };
+	}
 
 	float angle = atan2(heading.x, heading.z); // Note: I expected atan2(z,x) but OP reported success with atan2(x,z) instead! Switch around if you see 90?off.
 	float qx = 0;
@@ -594,10 +612,18 @@ void Physics_Controller::resetOrientation(int actorIndex) {
 
 	PxTransform resetTransform = PxTransform(location, relativeQuatReset);
 	rigidActor->setGlobalPose(resetTransform);
-	std::cout << "orientation reset" << std::endl;
+
+	if (gameState->playerVehicle.physicsIndex != actorIndex) {
+		const PxVec3 reset = PxVec3{ 0.0f, 0.0f, 0.0f };
+		PxRigidBody* rigidBody = actor->is<PxRigidBody>();
+		rigidBody->setLinearVelocity(reset, true);
+		rigidBody->setAngularVelocity(reset, true);
+	}
+
+	//std::cout << "orientation reset" << std::endl;
 }
 
-void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DKey, bool SPACEKey, bool hello, float leftStickX, float leftTrigger, float rightTrigger) {
+void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DKey, bool Handbrake, bool hello, float leftStickX, float leftTrigger, float rightTrigger) {
 	releaseAllControls();
 	steerDirection = "";
 	brakeCar = false;
@@ -622,7 +648,7 @@ void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DK
 			if ((AKey) && !(DKey))
 			{
 				steerDirection = "left";
-				if (SPACEKey) {
+				if (Handbrake) {
 					startHandbrakeTurnRightMode();
 
 				}
@@ -634,7 +660,7 @@ void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DK
 			else if ((DKey) && !(AKey))
 			{
 				steerDirection = "right";
-				if (SPACEKey) {
+				if (Handbrake) {
 
    					startHandbrakeTurnLeftMode();
 				}
@@ -658,7 +684,7 @@ void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DK
 			if ((AKey) && !(DKey))
 			{
 				steerDirection = "left";
-				if (SPACEKey) {
+				if (Handbrake) {
 					startHandbrakeTurnRightMode();
 
 				}
@@ -670,7 +696,7 @@ void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DK
 			else if ((DKey) && !(AKey))
 			{
 				steerDirection = "right";
-				if (SPACEKey) {
+				if (Handbrake) {
 
 					startHandbrakeTurnLeftMode();
 				}
@@ -760,7 +786,7 @@ void Physics_Controller::stepPhysics(bool interactive)
 	const PxF32 timestep = 1.0f / 60.0f;
 
 	//Update the control inputs for the vehicle.
-	userDriveInput(gameState->WKey, gameState->AKey, gameState->SKey, gameState->DKey, gameState->SPACEKey, true, gameState->leftStickX, gameState->leftTrigger, gameState->rightTrigger);
+	userDriveInput(gameState->WKey, gameState->AKey, gameState->SKey, gameState->DKey, gameState->Handbrake, true, gameState->leftStickX, gameState->leftTrigger, gameState->rightTrigger);
 	
 
 	//Update each vehicles drive direction based on input values
@@ -793,7 +819,13 @@ void Physics_Controller::stepPhysics(bool interactive)
 
 					if (gameState->Enemies[gameStateIndex].forceRelocate) {		//If vehicle has finished trying to get unstuck and is still not moving, relocate
 						EnemyUnit enemy = gameState->Enemies[gameStateIndex];
-						setPosition(enemy.physicsIndex, glm::vec3(enemy.position.x, enemy.position.y, enemy.position.z) + glm::vec3(0.2f, 0.0f, 0.0f));
+
+						//Randomly shunt vehicle left or right
+						float shift = 0.2f;
+						if ((rand() % 100) < 50)
+							shift = -shift;
+
+						setPosition(enemy.physicsIndex, glm::vec3(enemy.position.x, enemy.position.y, enemy.position.z) + glm::vec3(shift, 0.0f, 0.0f));
 					}
 				}
 
@@ -864,13 +896,14 @@ void Physics_Controller::stepPhysics(bool interactive)
 			glm::vec3 impulse = (glm::vec3{ gContactReportCallback.gContactImpulses[i].x, gContactReportCallback.gContactImpulses[i].y, gContactReportCallback.gContactImpulses[i].z });
 			gameState->Collision(vehicle1, vehicle2, impulse);
 		}
+		else if (vehicle1 != NULL && vehicle2 != NULL) {
+			std::cout << "TWO CARS but impulse was 0" << std::endl;
+		}
 	}
 	
+	//Powerup Collisions
 	if (powerupGrabbed == false) {
-		//std::cout << "Starting Powerup check" << std::endl;
-		//Check collisions for Player/PowerUp collisions
 		for (int i = 0; i < (int)gContactReportCallback.gContactActor1s.size(); i++) {
-			//std::cout << "..." << std::endl;
 			Vehicle* vehicle1 = NULL;
 			PowerUp* powerUp = NULL;
 
@@ -878,22 +911,18 @@ void Physics_Controller::stepPhysics(bool interactive)
 				PxActor *actor = userBufferRD[index];
 
 				if (index == gameState->playerVehicle.physicsIndex) {
-					//std::cout << "Checking if either actor is the player" << std::endl;
 					if ((gContactReportCallback.gContactActor1s[i] == actor || gContactReportCallback.gContactActor2s[i] == actor) && vehicle1 == NULL) {
 						vehicle1 = gameState->lookupVUsingPI(index);
-						//std::cout << "Player was involved with contact!!!!!!!!!!!!!!!!!!!" << std::endl;
 					}
 				}
 
-				//std::cout << "Checking rigidDynamicActorIndex of: " << index << std::endl;
 				if ((gContactReportCallback.gContactActor1s[i] == actor || gContactReportCallback.gContactActor2s[i] == actor) && powerUp == NULL) {
 					powerUp = gameState->lookupPUUsingPI(index);
-					//std::cout << "Found powerup" << std::endl;
 				}
 			}
 
 			if (vehicle1 != NULL && powerUp != NULL) {
-				std::cout << "Powerup activating" << std::endl;
+				std::cout << "Powerup" << std::endl;
 				gameState->Collision(vehicle1, powerUp);
 				powerupGrabbed = true;
 				break;
@@ -904,43 +933,35 @@ void Physics_Controller::stepPhysics(bool interactive)
 		powerupGrabbed = false;
 	}
 	
-	
 	//Check collisions for Player/Static Object collisions
-	for (int i = 0; i < (int)gContactReportCallback.gContactActor1s.size(); i++) {
-		Vehicle* vehicle1 = NULL;
-		Object* object = NULL;
+		for (int i = 0; i < (int)gContactReportCallback.gContactActor1s.size(); i++) {
+			Vehicle* vehicle1 = NULL;
+			Object* object = NULL;
 
-		//Try to find player vehicle
-		for (int index = 0; index <= rigidDynamicActorIndex; index++) {
-			PxActor *actor = userBufferRD[index];
-			if (index == gameState->playerVehicle.physicsIndex) {				
-				if ((gContactReportCallback.gContactActor1s[i] == actor || gContactReportCallback.gContactActor2s[i] == actor) && vehicle1 == NULL) {
-					vehicle1 = gameState->lookupVUsingPI(index);
+			//Try to find player vehicle
+			for (int index = 0; index <= rigidDynamicActorIndex; index++) {
+				PxActor *actor = userBufferRD[index];
+				if (index == gameState->playerVehicle.physicsIndex) {
+					if ((gContactReportCallback.gContactActor1s[i] == actor || gContactReportCallback.gContactActor2s[i] == actor) && vehicle1 == NULL) {
+						vehicle1 = gameState->lookupVUsingPI(index);
+					}
 				}
 			}
-		}
 
-		//Try to find static object
-		for (int index = 0; index <= rigidStaticActorIndex; index++) {
-			PxActor *actor = userBufferRS[index];
-			//printf("%d\n", index);
-			if (index != gameState->mapGroundPhysicsIndex+1) {
-				if ((gContactReportCallback.gContactActor1s[i] == actor || gContactReportCallback.gContactActor2s[i] == actor)){
-					object = gameState->lookupSOUsingPI(index);	//Since it does not matter at this point, object refrence is not accurate
-					//std::cout << "Collision with object with index: " << index << std::endl;
+			//Try to find static object
+			for (int index = 0; index <= rigidStaticActorIndex; index++) {
+				PxActor *actor = userBufferRS[index];
+				if (index != gameState->mapGroundPhysicsIndex + 1) {
+					if ((gContactReportCallback.gContactActor1s[i] == actor || gContactReportCallback.gContactActor2s[i] == actor)) {
+						object = gameState->lookupSOUsingPI(index);	
+					}
 				}
 			}
+
+			if (vehicle1 != NULL && object != NULL && object->type != 0) {
+					gameState->Collision(vehicle1, object);
+			}
 		}
-
-		if (vehicle1 != NULL && object != NULL && object->type != 0) {
-			gameState->Collision(vehicle1, object);
-		}
-	}
-
-
-
-
-
 
 	//Clear contact report
 	gContactReportCallback.gContactActor1s.clear();

@@ -92,7 +92,7 @@ glm::mat4 Camera::backviewMatrix() const {
 
 
 	float distanceBehindCar = 4.f;
-	float distanceAboveCar = 1.f;
+	float distanceAboveCar = 0.f;
 
 	//Rotation
 	float angle;
@@ -123,7 +123,7 @@ glm::mat4 Camera::backviewMatrix() const {
 
 	car.x = -distanceBehindCar * xVal + cam.x;
 	car.z = -distanceBehindCar * yVal + cam.z;
-	car.y = car.y + distanceAboveCar;
+	car.y = car.y + distanceAboveCar - 0.5f;
 
 	return glm::lookAt(cam, car, up);
 }

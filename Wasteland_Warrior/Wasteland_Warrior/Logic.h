@@ -14,6 +14,7 @@ public:
 
 	void Update(Gamestate* gameState);
 	int checkEnemyHealth(Gamestate *gameState);
+	bool waveFinished(Gamestate *gameState);
 	void spawnPowerUps(Gamestate *gameState);
 	void modeSelection(Gamestate *gameState);
 	void survival(Gamestate *gameState);

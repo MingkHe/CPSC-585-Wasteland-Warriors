@@ -26,6 +26,8 @@ public:
 
 	Physics_Controller* physics_Controller;
 
+	bool fullscreen;
+
 	//Entities
 	PlayerUnit playerVehicle;
 	Entity map = Entity();
@@ -44,7 +46,7 @@ public:
 	bool AKey;
 	bool SKey;
 	bool DKey;
-	bool SPACEKey;
+	bool Handbrake;
 
 	bool mouseRight;
 
@@ -145,13 +147,13 @@ public:
 	glm::vec3 light = glm::vec3(20.0f, 100.0f, 0.0f);
 	glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
 	float lightAttenuation = 0.000000002f;
-	float lightAmbientCoefficient = 0.00f;
+	float lightAmbientCoefficient = 0.3f;
 
 	glm::vec3 materialSpecularColor = glm::vec3(1.0f, 1.0f, 1.0f);
 	float materialShininess = 90000;
 
 	unsigned char shading_model = 0;
-	float radar_view = 1.f / 40.f;//this needs to be the inverse of the view distance
+	float radar_view = 1.f / 300.f;//this needs to be the inverse of the view distance
 
 	glm::vec3 cubeLocation = glm::vec3{ 0.0f, 0.0f, 0.0f};
 	Scene *scene;
@@ -243,9 +245,10 @@ public:
 	int wave;
 	bool restart;
 	int enemiesLeft;
-	int checkpoints;
+	int checkpointsLeft;
 	int breakSeconds;
 	int score;
+	int enemyscore;
 	int scoreTime;
 	std::string gameMode;
 
@@ -272,8 +275,7 @@ public:
 	void SpawnPlayer(float x, float y, float z, float xRot, float yRot, float zRot);
 	void SpawnEnemy(int ObjectType, int AIType, float x, float y, float z, float xRot, float yRot, float zRot);
 	void DespawnEnemy(Vehicle* vehicle);
-	void DespawnObject(Object* object);
-	void DespawnCheckpoint(PowerUp* checkpoint);
+	void DespawnPowerUp(PowerUp* powerUp);
 
 	void Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse);
 	void Collision(Vehicle* vehicle, PowerUp* powerUp);

@@ -38,7 +38,6 @@ Gamestate::Gamestate()
 	wave = 0;
 	restart = false;
 	enemiesLeft = 0;
-	checkpoints = 0;
 }
 
 Gamestate::~Gamestate()
@@ -162,7 +161,9 @@ void Gamestate::SpawnStaticObject(int ObjectType, float x, float y, float z, flo
 		);
 		transformMatrix = transformMatrix * getRotationMatrix(xRot, yRot, zRot);
 		scene->allWorldCompObjects[sceneObjectIndex].subObjects[0].transform = transformMatrix;
-
+		if (ObjectType == 5) {
+			scene->allWorldCompObjects[sceneObjectIndex].transparent = .5f;
+		}
 		Object staticObject = Object(physicsIndex, sceneObjectIndex, x, y, z);
 		staticObject.type = ObjectType;
 		StaticObjects.push_back(staticObject);
@@ -190,7 +191,7 @@ void Gamestate::SpawnDynamicObject(int ObjectType, float x, float y, float z, fl
 		case 3://Small health boost
 			sceneObjectIndex = scene->loadCompObjectInstance(dynamicObjMeshTextureIndices[2]);
 			break;
-		case 4://Increase armour
+		case 4://Increase armor
 			sceneObjectIndex = scene->loadCompObjectInstance(dynamicObjMeshTextureIndices[3]);
 			break;
 		case 5://Increase damage
@@ -201,7 +202,6 @@ void Gamestate::SpawnDynamicObject(int ObjectType, float x, float y, float z, fl
 			break;
 		}
 
-		density = 1;
 		PxVec3 dimensions = { 2,2,2 };
 		PxU32 mass = 1;
 		PxVec3 objectMOI
@@ -216,12 +216,12 @@ void Gamestate::SpawnDynamicObject(int ObjectType, float x, float y, float z, fl
 			x, y, z, 1.f
 		);
 		scene->allWorldCompObjects[sceneObjectIndex].subObjects[0].transform = transformMatrix;
-		PowerUp newPowerUp = PowerUp(1, physicsIndex, sceneObjectIndex, x, y, z);
-		newPowerUp.gameStateIndex = PowerUps.size();
-		newPowerUp.type = ObjectType;
-		PowerUps.push_back(newPowerUp);
-		//DynamicObjects.push_back(Object(physicsIndex, sceneObjectIndex , x, y, z));
 
+
+			PowerUp newPowerUp = PowerUp(1, physicsIndex, sceneObjectIndex, x, y, z);
+			newPowerUp.gameStateIndex = PowerUps.size();
+			newPowerUp.type = ObjectType;
+			PowerUps.push_back(newPowerUp);
 }
 
 void Gamestate::SpawnPlayer(float x, float y, float z, float xRot, float yRot, float zRot) {
@@ -280,47 +280,36 @@ void Gamestate::resetOrientation(int physicsIndex) {
 
 
 void Gamestate::DespawnEnemy(Vehicle* vehicle) {
-	score -= 200;	//Points for destroying a vehicle (subtracting increases the final point value)
+	enemyscore += 200;
 
+	int offset = vehicle->physicsIndex;
 	glm::mat4 transformMatrix = glm::mat4(
 		2.f, 0.f, 0.f, 0.f,
 		0.f, 2.f, 0.f, 0.f,
 		0.f, 0.f, 2.f, 0.f,
-		0.f, -20.0f, 0.f, 1.f
+		(-100 * offset), -500.f, -500.f, 1.f
 	);
 
 	scene->allWorldCompObjects[vehicle->sceneObjectIndex].subObjects[0].transform = transformMatrix;  //Change location of graphic to out of sight
 
+
 	vehicle->setActive(0);
-	int offset = vehicle->physicsIndex;
-	physics_Controller->setPosition(vehicle->physicsIndex, glm::vec3{20 * offset, -20, 0});
+	physics_Controller->setPosition(vehicle->physicsIndex, glm::vec3{-100 * offset, -500, -500});
 }
 
-void Gamestate::DespawnObject(Object* Object) {
+void Gamestate::DespawnPowerUp(PowerUp* powerUp) {
+
+	int offset = powerUp->physicsIndex;
 
 	glm::mat4 transformMatrix = glm::mat4(
 		2.f, 0.f, 0.f, 0.f,
 		0.f, 2.f, 0.f, 0.f,
 		0.f, 0.f, 2.f, 0.f,
-		0.f, -20.0f, 0.f, 1.f
-	);
-
-	scene->allWorldCompObjects[Object->sceneObjectIndex].subObjects[0].transform = transformMatrix;  //Change location of graphic to out of sight
-	int offset = Object->physicsIndex;
-	physics_Controller->setPosition(Object->physicsIndex, glm::vec3{ 20 * offset, -20, 0 });
-}
-
-void Gamestate::DespawnCheckpoint(PowerUp* powerUp) {
-
-	glm::mat4 transformMatrix = glm::mat4(
-		2.f, 0.f, 0.f, 0.f,
-		0.f, 2.f, 0.f, 0.f,
-		0.f, 0.f, 2.f, 0.f,
-		-1000.f, -100.0f, -100.f, 1.f
+		(-100 * offset), -500.f, -500.f, 1.f
 	);
 
 	scene->allWorldCompObjects[powerUp->sceneObjectIndex].subObjects[0].transform = transformMatrix;  //Change location of graphic to out of sight
-	physics_Controller->setPosition(powerUp->physicsIndex, glm::vec3{ -1000, -1000, -1000 });     //Change location of physics to out of way
+	physics_Controller->setPosition(powerUp->physicsIndex, glm::vec3{ -100 * offset, -500, -500 });
 }
 
 void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse) {
@@ -390,8 +379,8 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse)
 		if (abs(entity2AttackLevel) >= abs(entity1AttackLevel) && damage > 5.0f)
 			entity1->health -= damage * entity2->damageMultiplier;
 	}
-	entity1->health += entity1->armour;
-	entity2->health += entity2->armour;
+	entity1->health += entity1->armor;
+	entity2->health += entity2->armor;
 
 	//Resolve effects of damage
 	if (entity1->health <= 0)
@@ -408,25 +397,13 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse)
 	std::cout << "New health values: " << entity1->health << " | " << entity2->health << std::endl << std::endl;
 }
 
-
-
 void Gamestate::Collision(Vehicle* vehicle, PowerUp* powerUp) {
-	std::cout << "Powerup picked up" << std::endl;		//Placeholder
-
-	glm::mat4 transformMatrix = glm::mat4(
-		2.f, 0.f, 0.f, 0.f,
-		0.f, 2.f, 0.f, 0.f,
-		0.f, 0.f, 2.f, 0.f,
-		0.f, -3.0f, 0.f, 1.f
-	);
-
-	scene->allWorldCompObjects[powerUp->sceneObjectIndex].subObjects[0].transform = transformMatrix;  //Change location of graphic to out of sight
-	physics_Controller->setPosition(powerUp->physicsIndex, glm::vec3{ 0, -1000, 0 });     //Change location of physics to out of way
 
 	switch (powerUp->type)
 		{
-	case 0://Checkpoint
-		checkpoints--;
+	case 0://Heal to full health
+		powerUp->active = false;
+		break;
 	case 1://Heal to full health
 		vehicle->health = vehicle->maxhealth;
 		break;
@@ -435,45 +412,24 @@ void Gamestate::Collision(Vehicle* vehicle, PowerUp* powerUp) {
 	case 3://Health boost
 		vehicle->health = vehicle->health + 10;
 		break;
-	case 4://Increase armour
-		vehicle->armour + 0.1;
+	case 4://Increase armor
+		vehicle->armor += 0.1f;
 		break;
 	case 5://Increase damage
-		vehicle->damageMultiplier + 0.1;
+		vehicle->damageMultiplier += 0.1f;
 		break;
 	default:
 		break;
 		}
 
 	powerUpType = powerUp->type;
-
-	// play sound when car collect power up
 	this->carPowerUp_sound = true;
-	// start counter for display the power up text
-	this->textTime = 3 * 60; // borrow the code from loghic.h counting the break time
+	this->textTime = 3 * 60;
+	DespawnPowerUp(powerUp);
 }
 
-
-
-
 void Gamestate::Collision(Vehicle* vehicle, Object* staticObject) {
-	if (staticObject->type == 5) {
-		checkpoints--;
 
-		glm::mat4 transformMatrix = glm::mat4(
-			2.f, 0.f, 0.f, 0.f,
-			0.f, 2.f, 0.f, 0.f,
-			0.f, 0.f, 2.f, 0.f,
-			0.f, -3.0f, 0.f, 1.f
-		);
-
-		scene->allWorldCompObjects[staticObject->sceneObjectIndex].subObjects[0].transform = transformMatrix;  //Change location of graphic to out of sight
-		physics_Controller->setPosition(staticObject->physicsIndex, glm::vec3{ 0, -10, 0 });     //Change location of physics to out of way
-
-	}
-	std::cout << "You ran into a wall, nice driving :P" << std::endl;	//Placeholder
-
-	// play sound when car crash to static object
 	this->carCrashStatic_sound = true;
 }
 
@@ -496,11 +452,7 @@ void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 
 		playerVehicle.direction = glm::vec3{ -newDirection.x , newDirection.y, newDirection.z };
 
 		newTransformationMatrix[3] = newTransformationMatrix[3] - (playerOffSet* vehicleNormal);
-
-		//std::cout << "Player direction: [" << playerVehicle.direction.x << "," << playerVehicle.direction.y << "]" << std::endl; //Test statement, delete it if you want
-		//std::cout << "Player position:  X:" << newPosition.x << "  Y:" << newPosition.y << "  Z:" << newPosition.z << std::endl; //Test statement, delete it if you want
 	}
-
 
 	for (int i = 0; i < (int)Enemies.size(); i++) {
 		if (physicsIndex == Enemies[i].physicsIndex) {
@@ -514,12 +466,10 @@ void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 
 
 	for (int i = 0; i < (int)PowerUps.size(); i++) {
 		if (physicsIndex == PowerUps[i].physicsIndex) {
-			//PowerUps[i].direction = glm::vec3{ -newDirection.x , newDirection.y, newDirection.z };
 			entityToUpdate = &PowerUps[i];
 			found = true;
 		}
 	}
-
 
 	if (found) {
 		entityToUpdate->acceleration = ((newSpeed - entityToUpdate->speed)/60);
@@ -527,13 +477,8 @@ void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 
 		entityToUpdate->position = newPosition;
 		entityToUpdate->transformationMatrix = newTransformationMatrix;
 	}
-	else{
-		//std::cout << "Gamestate failed to locate the physicsIndex, entity not updated" << std::endl;
-	}
 
 }
-
-
 
 PowerUp* Gamestate::lookupPUUsingPI(int physicsIndex) {
 	PowerUp* powerUp = NULL;
@@ -544,7 +489,6 @@ PowerUp* Gamestate::lookupPUUsingPI(int physicsIndex) {
 	}
 	return powerUp;
 }
-
 
 Object* Gamestate::lookupSOUsingPI(int physicsIndex) {
 	Object* object = NULL;
@@ -618,9 +562,9 @@ glm::mat4 Gamestate::getEntityTransformation(int sceneObjectIndex) {
 }
 
 glm::mat4 Gamestate::getRotationMatrix(float xRot, float yRot, float zRot) {
-	xRot = xRot * M_PI / 180;
-	yRot = yRot * M_PI / 180;
-	zRot = zRot * M_PI / 180;
+	xRot = xRot * (float)(M_PI / 180);
+	yRot = yRot * (float)(M_PI / 180);
+	zRot = zRot * (float)(M_PI / 180);
 
 	glm::mat4 Rx = glm::mat4{{1.0f,0.0f,0.0f,0.0f},
 							{0.0f,cos(xRot),sin(xRot),0.0f},
@@ -637,4 +581,3 @@ glm::mat4 Gamestate::getRotationMatrix(float xRot, float yRot, float zRot) {
 	return(Rz*Ry*Rx);
 
 }
-

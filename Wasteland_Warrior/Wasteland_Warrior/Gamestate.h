@@ -113,6 +113,7 @@ public:
 
 	//----------------------UI Buffer Start---------------------------------
 	bool powerText;
+	bool modeText;
 	int textTime;
 	GLFWwindow *window;
 	int loadingPercentage;

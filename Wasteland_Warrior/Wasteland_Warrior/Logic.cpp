@@ -138,7 +138,12 @@ bool Logic::waveFinished(Gamestate *gameState) {
 		checkEnemyHealth(gameState);
 		return hunted;
 	}
-	else if (gameState->gameMode == "Survival" || gameState->gameMode == "Boss Battle") {
+	else if (gameState->gameMode == "Boss Battle") {
+		bool boss = bossRemaining(gameState);
+		checkEnemyHealth(gameState);
+		return boss;
+	}
+	else if (gameState->gameMode == "Survival") {
 		if (checkEnemyHealth(gameState) == 0) {
 			return true;
 		}
@@ -197,6 +202,23 @@ bool Logic::huntedEnemiesRemaining(Gamestate *gameState) {
 		}
 	}
 	if (huntedEnemiesLeft == 0) {
+		return true;
+	}
+	return false;
+}
+
+//Boss Remaining
+bool Logic::bossRemaining(Gamestate *gameState) {
+	int boss = 0;
+	for (int i = 0; i < (int)gameState->Enemies.size(); i++) {
+		if (gameState->Enemies[i].boss) {
+			boss++;
+			if (gameState->Enemies[i].health <= 0) {
+				gameState->Enemies[i].boss = false;
+			}
+		}
+	}
+	if (boss == 0) {
 		return true;
 	}
 	return false;
@@ -411,26 +433,37 @@ void Logic::bossBattle(Gamestate *gameState) {
 			gameState->SpawnEnemy(5, 0, -137.f, 9.f, 10.f, 0, 0, 0);
 			gameState->Enemies[0].health = 50.f;
 			gameState->Enemies[0].maxhealth = 50.f;
+			gameState->Enemies[0].boss = true;
 			break;
 		case 2:
 			gameState->SpawnEnemy(5, 0, -137.f, 9.f, 10.f, 0, 0, 0);
 			gameState->Enemies[0].health = 75.f;
 			gameState->Enemies[0].maxhealth = 75.f;
+			gameState->Enemies[0].boss = true;
 			break;
 		case 3:
 			gameState->SpawnEnemy(5, 0, -137.f, 9.f, 10.f, 0, 0, 0);
 			gameState->Enemies[0].health = 100.f;
 			gameState->Enemies[0].maxhealth = 100.f;
+			gameState->Enemies[0].boss = true;
 			break;
 		case 4:
 			gameState->SpawnEnemy(5, 0, -137.f, 9.f, 10.f, 0, 0, 0);
 			gameState->Enemies[0].health = 150.f;
 			gameState->Enemies[0].maxhealth = 150.f;
+			gameState->Enemies[0].boss = true;
 			break;
 		case 5:
 			gameState->SpawnEnemy(5, 0, -137.f, 9.f, 10.f, 0, 0, 0);
 			gameState->Enemies[0].health = 200.f;
 			gameState->Enemies[0].maxhealth = 200.f;
+			gameState->Enemies[0].boss = true;
+			break;
+		default:
+			gameState->SpawnEnemy(5, 0, -137.f, 9.f, 10.f, 0, 0, 0);
+			gameState->Enemies[0].health = 100.f;
+			gameState->Enemies[0].maxhealth = 100.f;
+			gameState->Enemies[0].boss = true;
 			break;
 		}
 }

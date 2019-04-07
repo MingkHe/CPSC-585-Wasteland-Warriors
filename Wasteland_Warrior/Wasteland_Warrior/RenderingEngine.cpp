@@ -339,7 +339,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	std::vector<glm::vec2> enemy_locations;
 	std::vector<glm::vec2> highlighted_locations;
 	for (int i = 0; i < (int)game_state->Enemies.size(); i++) {
-		if (game_state->Enemies[i].headhunter) {
+		if (game_state->Enemies[i].headhunter || game_state->Enemies[i].boss) {
 			highlighted_locations.push_back(glm::vec2(game_state->Enemies[i].position.x, game_state->Enemies[i].position.z));
 		} else {
 			enemy_locations.push_back(glm::vec2(game_state->Enemies[i].position.x, game_state->Enemies[i].position.z));

@@ -20,6 +20,7 @@ public:
 	int AITypeRevert = -1;	//Used to store the original AI type so after becoming unstuck it continues the original behavior
 	int ObjectType;
 	bool headhunter = false;
+	bool boss = false;
 
 	int lastMotionTime;
 

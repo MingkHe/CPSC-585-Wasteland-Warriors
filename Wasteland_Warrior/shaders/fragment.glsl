@@ -8,6 +8,7 @@
 
 #define SAMPLE_NUM 100
 #define SAMPLE_RAD 4.0
+#define MID_SAMPLE_RAD 3.5
 #define FAR_SAMPLE_RAD 3.0
 
 //uniform mat4 model;  //=transform
@@ -158,17 +159,20 @@ float ShadowCalculationtwo(vec4 fragPosLightSpace)
     float currentDepth = projCoords.z;
     // check whether current frag pos is in shadow
 	vec3 surfaceToLight = normalize(lightPosition - fragVert);
-	float bias = max(0.005*bias_scale * (1.0 - dot(fragNormal, surfaceToLight)), 0.005*bias_scale);
+	float bias = max(0.007*bias_scale * (1.0 - dot(fragNormal, surfaceToLight)), 0.007*bias_scale);
     //float shadow = currentDepth-bias > closestDepth  ? 1.0 : 0.0;
 
-	float shadow = 0.0;
 	vec2 texelSize = 1.0 / textureSize(shadowTextwo, 0);
+	float shadow = 0.0;
+	float lightdepth = texture(shadowTextwo, projCoords.xy).r;
 	for(int i = 0; i < SAMPLE_NUM; i++)
 	{
-		float pcfDepth = texture(shadowTextwo, projCoords.xy + FAR_SAMPLE_RAD*poissonDisk[i] * texelSize).r;
+		float scale = max(1.0*(length(surfaceToLight)-lightdepth)*(length(surfaceToLight)-lightdepth)*FAR_SAMPLE_RAD, FAR_SAMPLE_RAD);
+		float pcfDepth = texture(shadowTextwo, projCoords.xy + scale*(poissonDisk[i]-vec2(.5,.5)) * texelSize).r;
 		shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
 	}
 	shadow /= float(SAMPLE_NUM);
+	shadow = pow(shadow, 3.0);
 
     return shadow;
 }
@@ -188,17 +192,20 @@ float ShadowCalculationthree(vec4 fragPosLightSpace)
     float currentDepth = projCoords.z;
     // check whether current frag pos is in shadow
 	vec3 surfaceToLight = normalize(lightPosition - fragVert);
-	float bias = max(0.002*bias_scale * (1.0 - dot(fragNormal, surfaceToLight)), 0.002*bias_scale);
+	float bias = max(0.0015*bias_scale * (1.0 - dot(fragNormal, surfaceToLight)), 0.0015*bias_scale);
     //float shadow = currentDepth-bias > closestDepth  ? 1.0 : 0.0;
 
-	float shadow = 0.0;
 	vec2 texelSize = 1.0 / textureSize(shadowTexthree, 0);
+	float shadow = 0.0;
+	float lightdepth = texture(shadowTexthree, projCoords.xy).r;
 	for(int i = 0; i < SAMPLE_NUM; i++)
 	{
-		float pcfDepth = texture(shadowTexthree, projCoords.xy + SAMPLE_RAD*poissonDisk[i] * texelSize).r;
+		float scale = max(10.0*(length(surfaceToLight)-lightdepth)*(length(surfaceToLight)-lightdepth)*MID_SAMPLE_RAD, MID_SAMPLE_RAD);
+		float pcfDepth = texture(shadowTexthree, projCoords.xy + scale*(poissonDisk[i]-vec2(.5,.5)) * texelSize).r;
 		shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
 	}
 	shadow /= float(SAMPLE_NUM);
+	shadow = pow(shadow, 3.0);
 
     return shadow;
 }
@@ -218,17 +225,20 @@ float ShadowCalculation(vec4 fragPosLightSpace)
     float currentDepth = projCoords.z;
     // check whether current frag pos is in shadow
 	vec3 surfaceToLight = normalize(lightPosition - fragVert);
-	float bias = max(0.0005*bias_scale * (1.0 - dot(fragNormal, surfaceToLight)), 0.0005*bias_scale);
+	float bias = max(0.00075*bias_scale * (1.0 - dot(fragNormal, surfaceToLight)), 0.00075*bias_scale);
     //float shadow = currentDepth-bias > closestDepth  ? 1.0 : 0.0;
-
-	float shadow = 0.0;
+	
 	vec2 texelSize = 1.0 / textureSize(shadowTex, 0);
+	float shadow = 0.0;
+	float lightdepth = texture(shadowTex, projCoords.xy).r;
 	for(int i = 0; i < SAMPLE_NUM; i++)
 	{
-		float pcfDepth = texture(shadowTex, projCoords.xy + SAMPLE_RAD*poissonDisk[i] * texelSize).r;
+		float scale = max(20.0*(length(surfaceToLight)-lightdepth)*(length(surfaceToLight)-lightdepth)*SAMPLE_RAD, SAMPLE_RAD);
+		float pcfDepth = texture(shadowTex, projCoords.xy + scale*(poissonDisk[i]-vec2(.5,.5)) * texelSize).r;
 		shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
 	}
 	shadow /= float(SAMPLE_NUM);
+	shadow = pow(shadow, 3.0);
 
     return shadow;
 }

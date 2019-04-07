@@ -232,6 +232,9 @@ void Gamestate::SpawnDynamicObject(int ObjectType, float x, float y, float z, fl
 	case 5://Increase damage
 		sceneObjectIndex = scene->loadCompObjectInstance(dynamicObjMeshTextureIndices[4]);
 		break;
+	case 6://Payload
+		sceneObjectIndex = scene->loadCompObjectInstance(dynamicObjMeshTextureIndices[6]);
+		break;
 	default:
 		objectExists = false;
 		break;

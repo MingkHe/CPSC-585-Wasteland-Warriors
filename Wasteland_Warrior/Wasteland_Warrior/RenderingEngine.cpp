@@ -23,6 +23,8 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	basicshaderProgram = ShaderTools::InitializeShaders("../shaders/basicvertex.glsl", "../shaders/basicfragment.glsl");
 	needleshaderProgram = ShaderTools::InitializeShaders("../shaders/needlevertex.glsl", "../shaders/needlefragment.glsl");
 	shadowshaderProgram = ShaderTools::InitializeShaders("../shaders/shadowMapVertex.glsl", "../shaders/shadowMapFragment.glsl");
+	//vblurProgram = ShaderTools::InitializeShaders("../shaders/vblurvertex.glsl", "../shaders/vblurfragment.glsl");
+	//hblurProgram = ShaderTools::InitializeShaders("../shaders/hblurvertex.glsl", "../shaders/hblurfragment.glsl");
 	
 	textShaderProgram = ShaderTools::InitializeShaders("../shaders/texVertex.glsl", "../shaders/texFragment.glsl");
 	float aspect_ratio = (float)game_state->window_height / (float)game_state->window_width;
@@ -108,6 +110,7 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 		shadow_buffertwo = createFramebuffer(game_state->window_width, game_state->window_height);
 		shadow_bufferthree = createFramebuffer(game_state->window_width, game_state->window_height);
 		main_view = createFramebuffer(game_state->window_width, game_state->window_height);
+		//blur = createFramebuffer(game_state->window_width, game_state->window_height);
 	}
 	else {
 		rear_view = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1061));
@@ -115,6 +118,7 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 		shadow_buffertwo = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1061));
 		shadow_bufferthree = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1061));
 		main_view = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1061));
+		//blur = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1061));
 	}
 
 	bias = 1200/game_state->window_height;
@@ -140,20 +144,19 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	//high quality
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
-	glEnable(GL_ALPHA);
 	glEnable(GL_BLEND);
 	glBindFramebuffer(GL_FRAMEBUFFER, shadow_buffer.id);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glUseProgram(shadowshaderProgram);
 	GLint transformGL = glGetUniformLocation(shadowshaderProgram, "transform");
 	//glm::mat4 depthProjectionMatrix = glm::ortho<float>(-10, 10, -10, 10, -10, 20);
-	glm::mat4 depthViewMatrix = glm::lookAt(game_state->light, game_state->playerVehicle.position, glm::vec3(1, 0, 0));
+	glm::mat4 depthViewMatrix = glm::lookAt(game_state->light, game_state->playerVehicle.position, glm::vec3(0, 1, 0));
 	glm::mat4 depthModelMatrix = glm::mat4(1.0);
 	glm::mat4 depthMVP = depthperspectiveMatrix * depthViewMatrix;
 	GLuint depthMatrixID = glGetUniformLocation(shadowshaderProgram, "modelViewProjection");
 	glUniformMatrix4fv(depthMatrixID, 1, GL_FALSE, &depthMVP[0][0]);
 	for (int i = 0; i < (int)objects.size(); i++) {
-		if (i == game_state->skyboxIndex) {
+		if (i == game_state->skyboxIndex || objects[i].transparent < .99f) {
 			continue;
 		}
 		//int s = 0;//--------------------------------------------------
@@ -164,17 +167,35 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 		}
 	}
 
+	/*glBindFramebuffer(GL_FRAMEBUFFER, blur.id);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glUseProgram(vblurProgram);
+	glUniform1i(glGetUniformLocation(vblurProgram, "materialTex"), 0);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, shadow_buffer.depthTextureID);
+	glBindVertexArray(square.vao);
+	glDrawArrays(square.drawMode, 0, square.verts.size());
+
+	glBindFramebuffer(GL_FRAMEBUFFER, shadow_buffer.id);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glUseProgram(hblurProgram);
+	glUniform1i(glGetUniformLocation(hblurProgram, "materialTex"), 0);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, blur.depthTextureID);
+	glBindVertexArray(square.vao);
+	glDrawArrays(square.drawMode, 0, square.verts.size());*/
+
 	//low quality
 	glm::mat4 depthperspectiveMatrixtwo = glm::perspective(PI_F*.8f, (float)game_state->window_width / (float)game_state->window_height, 50.f, 600.f);
 	glBindFramebuffer(GL_FRAMEBUFFER, shadow_buffertwo.id);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glUseProgram(shadowshaderProgram);
-	glm::mat4 depthViewMatrixtwo = glm::lookAt(game_state->light, glm::vec3(0, 0, 0), glm::vec3(1, 0, 0));
+	glm::mat4 depthViewMatrixtwo = glm::lookAt(game_state->light, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
 	glm::mat4 depthMVPtwo = depthperspectiveMatrixtwo * depthViewMatrixtwo;
 	depthMatrixID = glGetUniformLocation(shadowshaderProgram, "modelViewProjection");
 	glUniformMatrix4fv(depthMatrixID, 1, GL_FALSE, &depthMVPtwo[0][0]);
 	for (int i = 0; i < (int)objects.size(); i++) {
-		if (i == game_state->skyboxIndex) {
+		if (i == game_state->skyboxIndex || objects[i].transparent < .99f) {
 			continue;
 		}
 		//int s = 0;//--------------------------------------------------
@@ -194,7 +215,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	depthMatrixID = glGetUniformLocation(shadowshaderProgram, "modelViewProjection");
 	glUniformMatrix4fv(depthMatrixID, 1, GL_FALSE, &depthMVPthree[0][0]);
 	for (int i = 0; i < (int)objects.size(); i++) {
-		if (i == game_state->skyboxIndex) {
+		if (i == game_state->skyboxIndex || objects[i].transparent < .99f) {
 			continue;
 		}
 		//int s = 0;//--------------------------------------------------

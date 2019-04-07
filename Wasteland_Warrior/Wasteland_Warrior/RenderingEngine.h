@@ -79,6 +79,8 @@ public:
 	GLuint basicshaderProgram;
 	GLuint shadowshaderProgram;
 	GLuint needleshaderProgram;
+	//GLuint vblurProgram;
+	//GLuint hblurProgram;
 	Geometry health;
 	Geometry radar;
 	Geometry speedo;
@@ -91,6 +93,7 @@ public:
 	Framebuffer shadow_bufferthree;
 	Framebuffer rear_view;
 	Framebuffer main_view;
+	//Framebuffer blur;
 
 	GLuint textShaderProgram;
 

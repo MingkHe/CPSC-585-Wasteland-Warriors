@@ -17,18 +17,22 @@ Then build and run the program.
     As the Wasteland Warrior your goal is to survive the apocolypse and escape to freedom. You will face 5
     waves of enemies who are trying to destroy your vehicle. Once you complete all the waves, the game will end.
     There are two ways to attack your enemies: You can either ram them until their vehicles are destroyed, or
-    if you have amunition you can shoot them. During each wave you will have different objectives. The wave will
+    if you have amunition, you can shoot them. During each wave you will have different objectives. The wave will
     not end until all the objetives are completed.
     
     Game Modes:
         Survival:
             Defeat all the enemies.
+            
         Headhunter:
-            An enemies is trying to escape, If this enemy (Purple on the radar) is defeated, the wave will end.
+            An enemy is trying to escape, If this enemy (Purple on the radar) is defeated, the wave will end.
+            
         Checkpoint:
             Reach all the checkpoints to end the wave.
+            
         Payload:
-            Collect the payload and deliver it to the checkpoint to end the wave.
+            Collect the payload and deliver it to the checkpoints to end the wave.
+            
         Boss Battle
             Defeat the boss to continue.
     

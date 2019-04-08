@@ -20,7 +20,8 @@ public:
 	int checkEnemyHealth(Gamestate *gameState);
 	bool checkpointsRemaining(Gamestate *gameState);
 	bool huntedEnemiesRemaining(Gamestate *gameState);
-	bool payloadCollected(Gamestate *gameState);
+	bool bossRemaining(Gamestate *gameState);
+	int payloadCollected(Gamestate *gameState);
 	void spawnPowerUps(Gamestate *gameState);
 	
 	//Game Modes

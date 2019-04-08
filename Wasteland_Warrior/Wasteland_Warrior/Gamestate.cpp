@@ -29,6 +29,7 @@ Gamestate::Gamestate()
 	ui_lose = false;
 
 	powerText = false;
+	modeText = false;
 	textTime = 0;
 	loadingPercentage = 0;
 
@@ -462,6 +463,9 @@ void Gamestate::Collision(Vehicle* vehicle, PowerUp* powerUp) {
 	case 5://Increase damage
 		vehicle->damageMultiplier += 0.1f;
 		break;
+	case 6://Payload
+		powerUp->active = false;
+		break;
 	default:
 		break;
 		}
@@ -469,6 +473,7 @@ void Gamestate::Collision(Vehicle* vehicle, PowerUp* powerUp) {
 	powerUpType = powerUp->type;
 	this->carPowerUp_sound = true;
 	this->textTime = 3 * 60;
+	this->powerText = true;
 	DespawnPowerUp(powerUp);
 }
 

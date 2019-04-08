@@ -99,10 +99,6 @@
     <None Include="..\shaders\needlevertex.glsl" />
     <None Include="..\shaders\shadowMapFragment.glsl" />
     <None Include="..\shaders\shadowMapVertex.glsl" />
-    <None Include="..\shaders\vblurvertex.glsl" />
-    <None Include="..\shaders\vblurfragment.glsl" />
-    <None Include="..\shaders\hblurfragment.glsl" />
-    <None Include="..\shaders\hblurvertex.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Wasteland_Warrior.vcxproj.filters.txt" />

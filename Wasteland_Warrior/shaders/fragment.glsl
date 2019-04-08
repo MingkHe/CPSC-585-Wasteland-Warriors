@@ -10,6 +10,8 @@
 #define SAMPLE_RAD 4.0
 #define MID_SAMPLE_RAD 3.5
 #define FAR_SAMPLE_RAD 3.0
+#define SHADOW_DROPOFF 1.5
+#define SHADOW_SCALE 1.7
 
 //uniform mat4 model;  //=transform
 uniform mat4 transform;  //=transform
@@ -167,12 +169,13 @@ float ShadowCalculationtwo(vec4 fragPosLightSpace)
 	float lightdepth = texture(shadowTextwo, projCoords.xy).r;
 	for(int i = 0; i < SAMPLE_NUM; i++)
 	{
-		float scale = max(1.0*(length(surfaceToLight)-lightdepth)*(length(surfaceToLight)-lightdepth)*FAR_SAMPLE_RAD, FAR_SAMPLE_RAD);
+		float scale = max(1.0*(length(surfaceToLight)*(length(surfaceToLight)-lightdepth*lightdepth)), FAR_SAMPLE_RAD);
 		float pcfDepth = texture(shadowTextwo, projCoords.xy + scale*(poissonDisk[i]-vec2(.5,.5)) * texelSize).r;
 		shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
 	}
 	shadow /= float(SAMPLE_NUM);
 	shadow = pow(shadow, 3.0);
+	shadow *= SHADOW_SCALE*pow(1-(length(surfaceToLight)*(length(surfaceToLight)-lightdepth*lightdepth)), SHADOW_DROPOFF);
 
     return shadow;
 }
@@ -200,12 +203,13 @@ float ShadowCalculationthree(vec4 fragPosLightSpace)
 	float lightdepth = texture(shadowTexthree, projCoords.xy).r;
 	for(int i = 0; i < SAMPLE_NUM; i++)
 	{
-		float scale = max(10.0*(length(surfaceToLight)-lightdepth)*(length(surfaceToLight)-lightdepth)*MID_SAMPLE_RAD, MID_SAMPLE_RAD);
+		float scale = max(10.0*(length(surfaceToLight)*(length(surfaceToLight)-lightdepth*lightdepth)), MID_SAMPLE_RAD);
 		float pcfDepth = texture(shadowTexthree, projCoords.xy + scale*(poissonDisk[i]-vec2(.5,.5)) * texelSize).r;
 		shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
 	}
 	shadow /= float(SAMPLE_NUM);
 	shadow = pow(shadow, 3.0);
+	shadow *= SHADOW_SCALE*pow(1-(length(surfaceToLight)*(length(surfaceToLight)-lightdepth*lightdepth)), SHADOW_DROPOFF);
 
     return shadow;
 }
@@ -233,12 +237,13 @@ float ShadowCalculation(vec4 fragPosLightSpace)
 	float lightdepth = texture(shadowTex, projCoords.xy).r;
 	for(int i = 0; i < SAMPLE_NUM; i++)
 	{
-		float scale = max(20.0*(length(surfaceToLight)-lightdepth)*(length(surfaceToLight)-lightdepth)*SAMPLE_RAD, SAMPLE_RAD);
+		float scale = max(20.0*(length(surfaceToLight)*(length(surfaceToLight)-lightdepth*lightdepth)), SAMPLE_RAD);
 		float pcfDepth = texture(shadowTex, projCoords.xy + scale*(poissonDisk[i]-vec2(.5,.5)) * texelSize).r;
 		shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
 	}
 	shadow /= float(SAMPLE_NUM);
 	shadow = pow(shadow, 3.0);
+	shadow *= SHADOW_SCALE*pow(1-(length(surfaceToLight)*(length(surfaceToLight)-lightdepth*lightdepth)), SHADOW_DROPOFF);
 
     return shadow;
 }

@@ -213,8 +213,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\shaders\basicfragment.glsl" />
-    <None Include="..\shaders\hblurfragment.glsl" />
-    <None Include="..\shaders\hblurvertex.glsl" />
     <None Include="..\shaders\needlefragment.glsl" />
     <None Include="..\shaders\basicvertex.glsl" />
     <None Include="..\shaders\fragment.glsl" />
@@ -229,8 +227,6 @@
     <None Include="..\shaders\shadowMapVertex.glsl" />
     <None Include="..\shaders\texFragment.glsl" />
     <None Include="..\shaders\texVertex.glsl" />
-    <None Include="..\shaders\vblurfragment.glsl" />
-    <None Include="..\shaders\vblurvertex.glsl" />
     <None Include="..\shaders\vertex.glsl" />
     <None Include="..\shaders\vertexMainMenu.glsl" />
     <None Include="libFLAC-8.dll" />

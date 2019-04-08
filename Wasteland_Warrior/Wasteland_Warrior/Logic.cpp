@@ -48,13 +48,15 @@ void Logic::Update(Gamestate *gameState)
 			//Reset Enemies
 			checkEnemyHealth(gameState);
 			for (int i = 0; i < (int)gameState->Enemies.size(); i++) {
-				gameState->DespawnEnemy(&gameState->Enemies[i]);
+				EnemyUnit* enemy = &gameState->Enemies[i];
+				gameState->DespawnEnemy(enemy);
 			}
 			gameState->Enemies.clear();
 
 			//Reset Powerups/Checkpoints
 			for (int i = 0; i < (int)gameState->PowerUps.size(); i++) {
-				gameState->DespawnPowerUp(&gameState->PowerUps[i]);
+				PowerUp* powerUp = &gameState->PowerUps[i];
+				gameState->DespawnPowerUp(powerUp);
 			}
 			gameState->PowerUps.clear();
 			spawnPowerUps(gameState);
@@ -155,17 +157,18 @@ bool Logic::waveFinished(Gamestate *gameState) {
 int Logic::checkEnemyHealth(Gamestate *gameState) {
 	int enemiesLeft = 0;
 	for (int i = 0; i < (int)gameState->Enemies.size(); i++) {
-		if (gameState->Enemies[i].health >= 0) {
+		EnemyUnit* enemy = &gameState->Enemies[i];
+		if (enemy->health >= 0) {
 			enemiesLeft++;
 		}
 		else {
-			if (gameState->Enemies[i].headhunter) {
-				gameState->Enemies[i].headhunter = false;
+			if (enemy->headhunter) {
+				enemy->headhunter = false;
 			}
-			if (gameState->Enemies[i].boss) {
-				gameState->Enemies[i].boss = false;
+			if (enemy->boss) {
+				enemy->boss = false;
 			}
-			gameState->DespawnEnemy(&gameState->Enemies[i]);
+			gameState->DespawnEnemy(enemy);
 			gameState->Enemies.erase(gameState->Enemies.begin() + i);
 		}
 	}
@@ -177,8 +180,9 @@ int Logic::checkEnemyHealth(Gamestate *gameState) {
 bool Logic::checkpointsRemaining(Gamestate *gameState) {
 	int checkpoints = 0;
 	for (int i = 0; i < (int)gameState->PowerUps.size(); i++) {
-		if (gameState->PowerUps[i].type == 0) {
-			if (gameState->PowerUps[i].active) {
+		PowerUp* powerUp = &gameState->PowerUps[i];
+		if (powerUp->type == 0) {
+			if (powerUp->active) {
 				checkpoints++;
 			} 
 		}
@@ -187,8 +191,9 @@ bool Logic::checkpointsRemaining(Gamestate *gameState) {
 	checkEnemyHealth(gameState);
 	if (checkpoints == 0) {
 		for (int i = 0; i < (int)gameState->PowerUps.size(); i++) {
-			if (gameState->PowerUps[i].type == 0) {
-				gameState->DespawnPowerUp(&gameState->PowerUps[i]);
+			PowerUp* powerUp = &gameState->PowerUps[i];
+			if (powerUp->type == 0) {
+				gameState->DespawnPowerUp(powerUp);
 				gameState->PowerUps.erase(gameState->PowerUps.begin() + i);
 			}
 		}
@@ -201,7 +206,8 @@ bool Logic::checkpointsRemaining(Gamestate *gameState) {
 bool Logic::huntedEnemiesRemaining(Gamestate *gameState) {
 	int huntedEnemiesLeft = 0;
 	for (int i = 0; i < (int)gameState->Enemies.size(); i++) {
-		if (gameState->Enemies[i].headhunter) {
+		EnemyUnit* enemy = &gameState->Enemies[i];
+		if (enemy->headhunter) {
 			huntedEnemiesLeft++;
 		}
 	}
@@ -216,7 +222,8 @@ bool Logic::huntedEnemiesRemaining(Gamestate *gameState) {
 bool Logic::bossRemaining(Gamestate *gameState) {
 	int boss = 0;
 	for (int i = 0; i < (int)gameState->Enemies.size(); i++) {
-		if (gameState->Enemies[i].boss) {
+		EnemyUnit* enemy = &gameState->Enemies[i];
+		if (enemy->boss) {
 			boss++;
 		}
 	}
@@ -231,8 +238,9 @@ bool Logic::bossRemaining(Gamestate *gameState) {
 int Logic::payloadCollected(Gamestate *gameState) {
 	int payload = 0;
 	for (int i = 0; i < (int)gameState->PowerUps.size(); i++) {
-		if (gameState->PowerUps[i].type == 6) {
-			if (gameState->PowerUps[i].active) {
+		PowerUp* powerUp = &gameState->PowerUps[i];
+		if (powerUp->type == 6) {
+			if (powerUp->active) {
 				payload++;
 			}
 		}
@@ -266,7 +274,7 @@ void Logic::spawnPowerUps(Gamestate *gameState) {
 
 //Game Modes
 void Logic::modeSelection(Gamestate *gameState) {
-	switch (5){//rand() % 5 + 1) {
+	switch (rand() % 5 + 1) {
 	case 1:
 		survival(gameState);
 		gameState->gameMode = "Survival";

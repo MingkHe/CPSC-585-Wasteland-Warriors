@@ -88,6 +88,7 @@ public:
 	Geometry speedo;
 	Geometry needle;
 	Geometry mirror;
+	Geometry mirror_back;
 	Geometry aim;
 	Geometry aimBeam;
 	Geometry square;

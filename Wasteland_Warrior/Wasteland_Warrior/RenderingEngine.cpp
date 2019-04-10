@@ -750,11 +750,11 @@ void RenderingEngine::updateText() {
 		}
 		
 		if (game_state->weaponState == 0) {
-			pushTextObj(texObjects, "Weapon: OFF", 0.01f*game_state->window_width, 0.85f*game_state->window_height, scale * 0.8, glm::vec3(0.7f, 0.2f, 0.2f),false);
+			pushTextObj(texObjects, "Weapon: OFF", 0.01f*game_state->window_width, 0.8f*game_state->window_height, scale * 0.8, glm::vec3(0.7f, 0.2f, 0.2f),false);
 		}
 		else {
-			pushTextObj(texObjects, "Weapon: ON", 0.01f*game_state->window_width, 0.85f*game_state->window_height, scale * 0.8, glm::vec3(0.7f, 0.2f, 0.2f),false);
-			pushTextObj(texObjects, "Ammo: " + std::to_string(game_state->ammo), 0.01f*game_state->window_width, 0.8f*game_state->window_height, scale * 0.8, glm::vec3(0.7f, 0.2f, 0.2f),false);
+			pushTextObj(texObjects, "Weapon: ON", 0.01f*game_state->window_width, 0.8f*game_state->window_height, scale * 0.8, glm::vec3(0.7f, 0.2f, 0.2f),false);
+			pushTextObj(texObjects, "Ammo: " + std::to_string(game_state->ammo), 0.01f*game_state->window_width, 0.75f*game_state->window_height, scale * 0.8, glm::vec3(0.7f, 0.2f, 0.2f),false);
 		}
 		
 		if (game_state->powerText) {

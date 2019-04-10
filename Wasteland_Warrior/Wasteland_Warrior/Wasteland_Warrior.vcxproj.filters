@@ -34,6 +34,7 @@
     <ClCompile Include="Vehicle.cpp" />
     <ClCompile Include="SFXPool.cpp" />
     <ClCompile Include="Framebuffer.cpp" />
+    <ClCompile Include="Weapon_Controller.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\snippetFiles\snippetvehiclecommon\SnippetVehicleCreate.h" />
@@ -67,6 +68,7 @@
     <ClInclude Include="SFXPool.h" />
     <ClInclude Include="CompositeWorldObject.h" />
     <ClInclude Include="Framebuffer.h" />
+    <ClInclude Include="Weapon_Controller.h" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="bgm.mp3" />

@@ -33,6 +33,7 @@
 #include "PlayerUnit.h"
 #include "EnemyUnit.h"
 #include "texture.h"
+#include "Weapon_Controller.h"
 
 #include <SDL_mixer.h>
 #include <SDL.h>
@@ -85,6 +86,8 @@ void Program::start() {
 	
 
 	UI_Controller UICL = UI_Controller(gameState,renderingEngine);
+
+	Weapon_Controller weaponCL = Weapon_Controller();
 
 	scene = new Scene(renderingEngine, gameState);
 
@@ -210,6 +213,11 @@ void Program::start() {
 		//Physics Engine
 		if (gameState->UIMode == "Game") {
 			physicsCL.Update();
+		}
+
+		//Weapon Controller
+		if (gameState->UIMode == "Game") {
+			weaponCL.update(gameState);
 		}
 
 		//Audio Engine

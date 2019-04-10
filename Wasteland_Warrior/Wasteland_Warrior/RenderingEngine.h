@@ -81,11 +81,15 @@ public:
 	GLuint needleshaderProgram;
 	//GLuint vblurProgram;
 	//GLuint hblurProgram;
+	GLuint imageShaderProgram;
+	GLuint lineShaderProgram;
 	Geometry health;
 	Geometry radar;
 	Geometry speedo;
 	Geometry needle;
 	Geometry mirror;
+	Geometry aim;
+	Geometry aimBeam;
 	Geometry square;
 
 	Framebuffer shadow_buffer;

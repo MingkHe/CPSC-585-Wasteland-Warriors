@@ -19,6 +19,16 @@ Gamestate::Gamestate()
 	carCrashStatic_sound = false;
 	carPowerUp_sound = false;
 
+	weaponMachineGun_sound = false;
+	weaponEmptyAmmo_sound = false;
+	weaponHit_sound = false;
+	weaponReload_sound = false;
+	weaponShellDrop_sound = false;
+	weaponSwap_sound = false;
+
+	ammo = 1000;
+	weaponState = 0;
+
 	ui_enter = false;
 	ui_switch = false;
 	ui_menu = false;
@@ -629,4 +639,21 @@ glm::mat4 Gamestate::getRotationMatrix(float xRot, float yRot, float zRot) {
 							{0.0f,0.0f,0.0f,1.0f} };
 	return(Rz*Ry*Rx);
 
+}
+
+void Gamestate::shoot() {
+	glm::vec3 pos;
+	//std::cout << physicsCL.rayCast(pos) << std::endl;
+	//std::cout << "pos: x:" << pos.x << " y:" << pos.y << " z:" << pos.z << std::endl;
+	if (physics_Controller->rayCast(pos)) {
+		for (int i = 0; i < Enemies.size(); i++) {
+			printf("raycast detected..\n");
+			printf("test: %f\n", glm::distance(pos, Enemies[i].position));
+			if (glm::distance(pos, Enemies[i].position) <= 3.0f) {
+				Enemies[i].health -= 1;
+				weaponHit_sound = true;
+				printf("attack!!!\n");
+			}
+		}
+	}
 }

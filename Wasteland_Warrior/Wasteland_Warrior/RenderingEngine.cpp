@@ -23,6 +23,8 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	basicshaderProgram = ShaderTools::InitializeShaders("../shaders/basicvertex.glsl", "../shaders/basicfragment.glsl");
 	needleshaderProgram = ShaderTools::InitializeShaders("../shaders/needlevertex.glsl", "../shaders/needlefragment.glsl");
 	shadowshaderProgram = ShaderTools::InitializeShaders("../shaders/shadowMapVertex.glsl", "../shaders/shadowMapFragment.glsl");
+	imageShaderProgram = ShaderTools::InitializeShaders("../shaders/vertexMainMenu.glsl", "../shaders/fragmentMainMenu.glsl");
+	lineShaderProgram = ShaderTools::InitializeShaders("../shaders/basicVer.glsl", "../shaders/basicFrag.glsl");
 	//vblurProgram = ShaderTools::InitializeShaders("../shaders/vblurvertex.glsl", "../shaders/vblurfragment.glsl");
 	//hblurProgram = ShaderTools::InitializeShaders("../shaders/hblurvertex.glsl", "../shaders/hblurfragment.glsl");
 	
@@ -80,6 +82,22 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	assignBuffers(needle);
 	setBufferData(needle);
 
+	aimBeam.verts.push_back(glm::vec3(gameState->playerVehicle.position.x , gameState->playerVehicle.position.y, gameState->playerVehicle.position.z));
+	aimBeam.verts.push_back(glm::vec3(gameState->playerVehicle.position.x + 13 * gameState->playerVehicle.direction.x, gameState->playerVehicle.position.y + 13 * gameState->playerVehicle.direction.y, gameState->playerVehicle.position.z + 13 * gameState->playerVehicle.direction.z));
+	aimBeam.colors.push_back(glm::vec3(.0f,.0f,1.0f));
+	aimBeam.colors.push_back(glm::vec3(.0f, .0f, 1.0f));
+	aimBeam.drawMode = GL_LINES;
+	assignBuffers(aimBeam);
+	setBufferData(aimBeam);
+
+	/*mirror.verts.push_back(glm::vec3(-1.f, -1.f, 0.f));
+	mirror.verts.push_back(glm::vec3(-1.f, 1.f, 0.f));
+	mirror.verts.push_back(glm::vec3(1.f, -1.f, 0.f));
+	mirror.verts.push_back(glm::vec3(1.f, 1.f, 0.f));
+	mirror.uvs.push_back(glm::vec2(0.f, 0.f));
+	mirror.uvs.push_back(glm::vec2(0.f, 1.f));
+	mirror.uvs.push_back(glm::vec2(1.f, 0.f));
+	mirror.uvs.push_back(glm::vec2(1.f, 1.f));*/
 	square.verts.push_back(glm::vec3(-1.f, -1.f, 0.f));
 	square.verts.push_back(glm::vec3(-1.f, 1.f, 0.f));
 	square.verts.push_back(glm::vec3(1.f, -1.f, 0.f));
@@ -104,6 +122,25 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	assignBuffers(mirror);
 	setBufferData(mirror);
 
+	aim.verts.push_back(glm::vec3(-0.1f,-0.1f,.0f));
+	aim.verts.push_back(glm::vec3(0.1f, -0.1f, .0f));
+	aim.verts.push_back(glm::vec3(0.1f, 0.1f, .0f));
+	aim.verts.push_back(glm::vec3(-0.1f, -0.1f, .0f));
+	aim.verts.push_back(glm::vec3(0.1f, 0.1f, .0f));
+	aim.verts.push_back(glm::vec3(-0.1f, 0.1f, .0f));
+	aim.uvs.push_back(glm::vec2(.0f, .0f));
+	aim.uvs.push_back(glm::vec2(1.f, .0f));
+	aim.uvs.push_back(glm::vec2(1.f, 1.f));
+	aim.uvs.push_back(glm::vec2(.0f, .0f));
+	aim.uvs.push_back(glm::vec2(1.f, 1.f));
+	aim.uvs.push_back(glm::vec2(0.f, 1.f));
+	aim.drawMode = GL_TRIANGLES;
+	InitializeTexture(&aim.texture, "Image/aim2.png");
+	assignBuffers(aim);
+	setBufferData(aim);
+
+	rear_view = createFramebuffer(game_state->window_width, game_state->window_height);
+	shadow_buffer = createFramebuffer(game_state->window_width, game_state->window_height);
 	if (game_state->fullscreen) {
 		rear_view = createFramebuffer(game_state->window_width, game_state->window_height);
 		shadow_buffer = createFramebuffer(game_state->window_width, game_state->window_height);
@@ -394,6 +431,38 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	glDrawArrays(needle.drawMode, 0, needle.verts.size());
 	glBindVertexArray(0);
 
+	/*
+	glUseProgram(lineShaderProgram);
+	transformGL = glGetUniformLocation(lineShaderProgram, "transform");
+	glUniformMatrix4fv(transformGL, 1, false, glm::value_ptr(game_state->playerVehicle.transformationMatrix));
+	glUniformMatrix4fv(glGetUniformLocation(lineShaderProgram, "modelViewProjection"), 1, false, glm::value_ptr(modelViewProjection));
+	glBindVertexArray(aimBeam.vao);
+	glDrawArrays(aimBeam.drawMode, 0, aimBeam.verts.size());
+	glBindVertexArray(0);
+	glUseProgram(0);
+	*/
+
+	//render aim
+	//GLuint shader = GetShaderProgram("menuShader");
+	//SwitchShaderProgram(shader);
+	/*
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	glUseProgram(basicshaderProgram);
+	glBindVertexArray(aim.vao);
+	glUniform1i(glGetUniformLocation(basicshaderProgram, "materialTex"), 0);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, aim.texture.textureID);
+
+	glDrawArrays(aim.drawMode, 0, aim.verts.size());
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glUseProgram(0);
+
+	glDisable(GL_BLEND);
+	*/
+
 	//render text
 	//glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -427,6 +496,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	
 	texObjects.clear();
 
+	glUseProgram(textShaderProgram);
 	glDisable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
 
@@ -444,7 +514,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 
 	// check for an report any OpenGL errors
 	CheckGLErrors();
-
+	
 
 }
 
@@ -678,7 +748,15 @@ void RenderingEngine::updateText() {
 		else {
 			pushTextObj(texObjects, "Next wave: " + std::to_string(game_state->breakSeconds) + " seconds", 0.01f*game_state->window_width, 0.95f*game_state->window_height, scale * 0.75f, glm::vec3(0.7f, 0.2f, 0.2f), false);
 		}
-    
+		
+		if (game_state->weaponState == 0) {
+			pushTextObj(texObjects, "Weapon: OFF", 0.01f*game_state->window_width, 0.8f*game_state->window_height, scale * 0.8, glm::vec3(0.7f, 0.2f, 0.2f),false);
+		}
+		else {
+			pushTextObj(texObjects, "Weapon: ON", 0.01f*game_state->window_width, 0.8f*game_state->window_height, scale * 0.8, glm::vec3(0.7f, 0.2f, 0.2f),false);
+			pushTextObj(texObjects, "Ammo: " + std::to_string(game_state->ammo), 0.01f*game_state->window_width, 0.75f*game_state->window_height, scale * 0.8, glm::vec3(0.7f, 0.2f, 0.2f),false);
+		}
+		
 		if (game_state->powerText) {
 			switch (game_state->powerUpType)
 			{

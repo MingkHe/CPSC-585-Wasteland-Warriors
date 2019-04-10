@@ -30,6 +30,8 @@ public:
 	int createEnemyVehicle();
 	int createPlayerVehicle();
 
+	bool rayCast(glm::vec3 &pos);
+
 	ContactReportCallback gContactReportCallback;
 
 

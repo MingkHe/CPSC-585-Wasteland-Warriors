@@ -39,7 +39,7 @@
 
 
 Program::Program() {
-	//Sleep(10000);
+	//Sleep(7000);
 	setupWindow();
 }
 

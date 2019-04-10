@@ -281,13 +281,13 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 			glBindTexture(GL_TEXTURE_2D, objects[i].subObjects[s].texture.textureID);
 
 			glActiveTexture(GL_TEXTURE1);
-			glBindTexture(GL_TEXTURE_2D, shadow_buffer.depthTextureID);
+			glBindTexture(GL_TEXTURE_2D, shadow_buffer.colorTextureID);
 
 			glActiveTexture(GL_TEXTURE2);
-			glBindTexture(GL_TEXTURE_2D, shadow_buffertwo.depthTextureID);
+			glBindTexture(GL_TEXTURE_2D, shadow_buffertwo.colorTextureID);
 
 			glActiveTexture(GL_TEXTURE3);
-			glBindTexture(GL_TEXTURE_2D, shadow_bufferthree.depthTextureID);
+			glBindTexture(GL_TEXTURE_2D, shadow_bufferthree.colorTextureID);
 
 			glBindVertexArray(objects[i].subObjects[s].vao);
 			glDrawArrays(objects[i].subObjects[s].drawMode, 0, objects[i].subObjects[s].verts.size());

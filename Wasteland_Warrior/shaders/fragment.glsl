@@ -12,6 +12,7 @@
 #define FAR_SAMPLE_RAD 3.0
 #define SHADOW_DROPOFF 1.5
 #define SHADOW_SCALE 1.7
+#define SAMPLES 3
 
 //uniform mat4 model;  //=transform
 uniform mat4 transform;  //=transform
@@ -146,14 +147,14 @@ vec2( 0.830954058162f, 0.592161057714f ),
 vec2( 0.614506797369f, 0.135917402293f )
 };
 
-float ShadowCalculationtwo(vec4 fragPosLightSpace)
+/*float ShadowCalculationtwo(vec4 fragPosLightSpace)
 {
     // perform perspective divide
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
     // transform to [0,1] range
     projCoords = projCoords * 0.5 + 0.5;
 	if(projCoords.x < 0 || projCoords.x > 1 || projCoords.y < 0 || projCoords.y > 1) {
-		return 0.f;
+		return 1.f;
 	}
     // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
     float closestDepth = texture(shadowTextwo, projCoords.xy).r; 
@@ -167,9 +168,9 @@ float ShadowCalculationtwo(vec4 fragPosLightSpace)
 	vec2 texelSize = 1.0 / textureSize(shadowTextwo, 0);
 	float shadow = 0.0;
 	float lightdepth = texture(shadowTextwo, projCoords.xy).r;
+	float scale = max(1.0*(length(surfaceToLight)*(length(surfaceToLight)-lightdepth*lightdepth)), FAR_SAMPLE_RAD);
 	for(int i = 0; i < SAMPLE_NUM; i++)
 	{
-		float scale = max(1.0*(length(surfaceToLight)*(length(surfaceToLight)-lightdepth*lightdepth)), FAR_SAMPLE_RAD);
 		float pcfDepth = texture(shadowTextwo, projCoords.xy + scale*(poissonDisk[i]-vec2(.5,.5)) * texelSize).r;
 		shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
 	}
@@ -177,7 +178,7 @@ float ShadowCalculationtwo(vec4 fragPosLightSpace)
 	shadow = pow(shadow, 3.0);
 	shadow *= SHADOW_SCALE*pow(1-(length(surfaceToLight)*(length(surfaceToLight)-lightdepth*lightdepth)), SHADOW_DROPOFF);
 
-    return shadow;
+    return 1.0-shadow;
 }
 
 float ShadowCalculationthree(vec4 fragPosLightSpace)
@@ -201,9 +202,9 @@ float ShadowCalculationthree(vec4 fragPosLightSpace)
 	vec2 texelSize = 1.0 / textureSize(shadowTexthree, 0);
 	float shadow = 0.0;
 	float lightdepth = texture(shadowTexthree, projCoords.xy).r;
+	float scale = max(10.0*(length(surfaceToLight)*(length(surfaceToLight)-lightdepth*lightdepth)), MID_SAMPLE_RAD);
 	for(int i = 0; i < SAMPLE_NUM; i++)
 	{
-		float scale = max(10.0*(length(surfaceToLight)*(length(surfaceToLight)-lightdepth*lightdepth)), MID_SAMPLE_RAD);
 		float pcfDepth = texture(shadowTexthree, projCoords.xy + scale*(poissonDisk[i]-vec2(.5,.5)) * texelSize).r;
 		shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
 	}
@@ -211,7 +212,7 @@ float ShadowCalculationthree(vec4 fragPosLightSpace)
 	shadow = pow(shadow, 3.0);
 	shadow *= SHADOW_SCALE*pow(1-(length(surfaceToLight)*(length(surfaceToLight)-lightdepth*lightdepth)), SHADOW_DROPOFF);
 
-    return shadow;
+    return 1.0-shadow;
 }
 
 float ShadowCalculation(vec4 fragPosLightSpace)
@@ -223,6 +224,7 @@ float ShadowCalculation(vec4 fragPosLightSpace)
 	if(projCoords.x < 0 || projCoords.x > 1 || projCoords.y < 0 || projCoords.y > 1) {
 		return ShadowCalculationthree(shadowCoordthree);
 	}
+
     // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
     float closestDepth = texture(shadowTex, projCoords.xy).r; 
     // get depth of current fragment from light's perspective
@@ -235,16 +237,101 @@ float ShadowCalculation(vec4 fragPosLightSpace)
 	vec2 texelSize = 1.0 / textureSize(shadowTex, 0);
 	float shadow = 0.0;
 	float lightdepth = texture(shadowTex, projCoords.xy).r;
+	float scale = SAMPLE_RAD;
 	for(int i = 0; i < SAMPLE_NUM; i++)
 	{
-		float scale = max(20.0*(length(surfaceToLight)*(length(surfaceToLight)-lightdepth*lightdepth)), SAMPLE_RAD);
 		float pcfDepth = texture(shadowTex, projCoords.xy + scale*(poissonDisk[i]-vec2(.5,.5)) * texelSize).r;
 		shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
 	}
 	shadow /= float(SAMPLE_NUM);
-	shadow = pow(shadow, 3.0);
-	shadow *= SHADOW_SCALE*pow(1-(length(surfaceToLight)*(length(surfaceToLight)-lightdepth*lightdepth)), SHADOW_DROPOFF);
 
+    return 1.0-shadow;
+}*/
+
+
+float ShadowCalculationtwo(vec4 fragPosLightSpace)
+{
+	vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+    projCoords = projCoords * 0.5 + 0.5;
+	if(projCoords.x < 0 || projCoords.x > 1 || projCoords.y < 0 || projCoords.y > 1) {
+		return 1.f;
+	}
+
+	float shadow = 0.f;
+	vec2 texelSize = 1.0 / textureSize(shadowTextwo, 0);
+	for(int i = 0; i < SAMPLE_NUM; i++) {
+		vec2 moments = texture(shadowTextwo, projCoords.xy + SAMPLES*(poissonDisk[i]-vec2(.5,.5)) * texelSize).xy;
+		float mean = projCoords.z;
+		float minVar = 0.00001f;
+		if(mean <= moments.x) {
+			shadow += 1.f;
+		} else {
+			float variance = max(moments.y - (moments.x*moments.x), minVar);
+			float d = mean - moments.x;
+			float shadowtmp = variance / (variance + (d*d));
+			float amount = 0.5f;
+	        shadowtmp = clamp((shadowtmp - amount) / (1.0f - amount), 0.0f, 1.0f);
+			shadow += shadowtmp;
+		}
+	}
+	shadow /= float(SAMPLE_NUM);
+    return shadow;
+}
+float ShadowCalculationthree(vec4 fragPosLightSpace)
+{
+	vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+    projCoords = projCoords * 0.5 + 0.5;
+	if(projCoords.x < 0 || projCoords.x > 1 || projCoords.y < 0 || projCoords.y > 1) {
+		return ShadowCalculationtwo(shadowCoordtwo);
+	}
+
+	float shadow = 0.f;
+	vec2 texelSize = 1.0 / textureSize(shadowTexthree, 0);
+	for(int i = 0; i < SAMPLE_NUM; i++) {
+		vec2 moments = texture(shadowTexthree, projCoords.xy + SAMPLES*(poissonDisk[i]-vec2(.5,.5)) * texelSize).xy;
+		float mean = projCoords.z;
+		float minVar = 0.00001f;
+		if(mean <= moments.x) {
+			shadow += 1.f;
+		} else {
+			float variance = max(moments.y - (moments.x*moments.x), minVar);
+			float d = mean - moments.x;
+			float shadowtmp = variance / (variance + (d*d));
+			float amount = 0.5f;
+	        shadowtmp = clamp((shadowtmp - amount) / (1.0f - amount), 0.0f, 1.0f);
+			shadow += shadowtmp;
+		}
+	}
+	shadow /= float(SAMPLE_NUM);
+    return shadow;
+}
+
+float ShadowCalculation(vec4 fragPosLightSpace)
+{
+	vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+    projCoords = projCoords * 0.5 + 0.5;
+	if(projCoords.x < 0 || projCoords.x > 1 || projCoords.y < 0 || projCoords.y > 1) {
+		return ShadowCalculationthree(shadowCoordthree);
+	}
+
+	float shadow = 0.f;
+	vec2 texelSize = 1.0 / textureSize(shadowTex, 0);
+	for(int i = 0; i < SAMPLE_NUM; i++) {
+		vec2 moments = texture(shadowTex, projCoords.xy + SAMPLES*(poissonDisk[i]-vec2(.5,.5)) * texelSize).xy;
+		float mean = projCoords.z;
+		float minVar = 0.00001f;
+		if(mean <= moments.x) {
+			shadow += 1.f;
+		} else {
+			float variance = max(moments.y - (moments.x*moments.x), minVar);
+			float d = mean - moments.x;
+			float shadowtmp = variance / (variance + (d*d));
+			float amount = 0.5f;
+	        shadowtmp = clamp((shadowtmp - amount) / (1.0f - amount), 0.0f, 1.0f);
+			shadow += shadowtmp;
+		}
+	}
+	shadow /= float(SAMPLE_NUM);
     return shadow;
 }
 
@@ -260,6 +347,7 @@ void main() {
     vec3 surfaceToLight = normalize(lightPosition - surfacePos);
     vec3 surfaceToCamera = normalize(cameraPosition - surfacePos);
 	vec3 linearColor = surfaceColor.rgb;
+	float shadow = 0.0;
 	if (isSkybox != 1){
 		//ambient
 		vec3 ambient = lightAmbientCoeff * surfaceColor.rgb * lightColour;
@@ -279,18 +367,18 @@ void main() {
 		//float attenuation = 1.0/(1.0 + lightAttenuation * distanceToLight);
 		float attenuation = 1.0 / (1.0 + lightAttenuation * pow(distanceToLight, 2));
 
-		float shadow = 0.0;
 		//shadow
 		shadow = ShadowCalculation(shadowCoord);
 		
 
 		//linear color (color before gamma correction)
-		linearColor = ambient + (1.0-shadow)*attenuation*(diffuse + specular);
+		linearColor = ambient + shadow*attenuation*(diffuse + specular);
 	}
     
 
-    finalColor = vec4(linearColor, transparent);
+    finalColor = vec4(linearColor, surfaceColor.a*transparent);
     //final color (after gamma correction)
     //vec3 gamma = vec3(1.0/2.2);
     //finalColor = vec4(pow(linearColor, gamma), surfaceColor.a);
+	//finalColor = vec4(shadow, shadow, shadow, 1);
 }

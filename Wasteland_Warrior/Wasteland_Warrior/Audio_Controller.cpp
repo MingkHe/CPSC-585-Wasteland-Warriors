@@ -272,7 +272,7 @@ int Audio_Controller::playSound(Gamestate* gameState)
 	}
 	else if (gameState->ui_gameplay)
 	{
-		Mix_VolumeMusic(MIX_MAX_VOLUME/3);
+		Mix_VolumeMusic(MIX_MAX_VOLUME/2);
 		if (!Mix_PlayingMusic()) {
 			Mix_PlayMusic(bgm_gamePlay, -1);
 		}

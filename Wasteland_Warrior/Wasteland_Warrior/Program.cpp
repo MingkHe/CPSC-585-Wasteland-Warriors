@@ -40,6 +40,7 @@
 
 
 Program::Program() {
+	//Sleep(10000);
 	setupWindow();
 }
 
@@ -93,13 +94,13 @@ void Program::start() {
 	UICL.Update(gameState,window);
 	glfwSwapBuffers(window);
 
-	printf("finished loading\n");
+	//printf("finished loading\n");
 	//gameState->InstantiateAllMeshes_Textures();
 
 	//Mesh loading
 	gameState->InstantiateAllMeshes_Textures_Map();
 	for (int i = 1; i <= 25; i++) {
-		Sleep(100);
+		//Sleep(100);
 		gameState->loadingPercentage = i;
 		UICL.Update(gameState, window);
 		glfwSwapBuffers(window);
@@ -109,18 +110,18 @@ void Program::start() {
 	gameState->InstantiateAllMeshes_Textures_Static();
 
 	for (int i = 26; i <= 50; i++) {
-		Sleep(100);
+		//Sleep(100);
 		gameState->loadingPercentage = i;
 		UICL.Update(gameState, window);
 		glfwSwapBuffers(window);
 	}
 
-	Sleep(1000);
+	//Sleep(1000);
 
 	gameState->InstantiateAllMeshes_Textures_Dynamic();
 
 	for (int i = 51; i <= 78; i++) {
-		Sleep(100);
+		//Sleep(100);
 		gameState->loadingPercentage = i;
 		UICL.Update(gameState, window);
 		glfwSwapBuffers(window);
@@ -137,9 +138,9 @@ void Program::start() {
 	gameState->SpawnStaticObject(2, 93, -0.75, -45, 0, 0, 0);
 
 	gameState->SpawnStaticObject(3, 63, 0, -25, 0, 0, 0);
-	gameState->SpawnStaticObject(2, 123, -6.7, -95, 0, 0, 0);
-	gameState->SpawnStaticObject(3, 148, -6.2, -55, 0, 0, 0);
-	gameState->SpawnStaticObject(2, 143, -6.7, -125, 0, 0, 0);
+	gameState->SpawnStaticObject(2, 123, -6.7f, -95, 0, 0, 0);
+	gameState->SpawnStaticObject(3, 148, -6.2f, -55, 0, 0, 0);
+	gameState->SpawnStaticObject(2, 143, -6.7f, -125, 0, 0, 0);
 	gameState->SpawnStaticObject(3, 73, 0, -125, 0, 0, 0);
 
 	
@@ -158,6 +159,9 @@ void Program::start() {
 	gameState->SpawnStaticObject(1, 140, 0, 73, 0, 0, 0);
 	gameState->SpawnStaticObject(1, -100, 0, -53, 0, 0, 0);
 
+	//gameState->SpawnStaticObject(1, -140, 4, -73, 0, 0, 0);
+	//gameState->SpawnStaticObject(1, -140, 6, -53, 0, 0, 0);
+
 	gameState->SpawnStaticObject(1, 20, 0, -123, 0, 0, 0);
 	gameState->SpawnStaticObject(1, -30, 0, -145, 0, 0, 0);
 
@@ -170,7 +174,7 @@ void Program::start() {
 	gameState->SpawnPlayer(0, 0, 0, 0, 0, 0);
 
 	for (int i = 79; i <= 100; i++) {
-		Sleep(100);
+		//Sleep(100);
 		gameState->loadingPercentage = i;
 		UICL.Update(gameState, window);
 		glfwSwapBuffers(window);
@@ -276,10 +280,11 @@ void Program::setupWindow() {
 	this->win_height = height;
 	this->win_width = width;
 
-	//window = glfwCreateWindow(width, height, "Wasteland Warrior", NULL, NULL);
-	//this->fullscreen = false;
-	window = glfwCreateWindow(width, height, "Wasteland Warrior", glfwGetPrimaryMonitor(), NULL);
-	this->fullscreen = true;
+	window = glfwCreateWindow(width, height, "Wasteland Warrior", NULL, NULL);
+	this->fullscreen = false;
+	//window = glfwCreateWindow(width, height, "Wasteland Warrior", glfwGetPrimaryMonitor(), NULL);
+	//this->fullscreen = true;
+
 	if (!window) {
 		std::cout << "Program failed to create GLFW window, TERMINATING" << std::endl;
 		glfwTerminate();

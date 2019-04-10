@@ -48,7 +48,7 @@ public:
 	//load font [normal use 128 font]
 	void loadFont(const char* ttfFile);
 	//push render text into geometry array
-	void pushTextObj(std::vector<Geometry>& objects, std::string text, float x, float y, float scale, glm::vec3 color);
+	void pushTextObj(std::vector<Geometry>& objects, std::string text, float x, float y, float scale, glm::vec3 color, bool center);
 	//update text information
 	void updateText();
 
@@ -79,6 +79,8 @@ public:
 	GLuint basicshaderProgram;
 	GLuint shadowshaderProgram;
 	GLuint needleshaderProgram;
+	//GLuint vblurProgram;
+	//GLuint hblurProgram;
 	GLuint imageShaderProgram;
 	GLuint lineShaderProgram;
 	Geometry health;
@@ -92,14 +94,16 @@ public:
 
 	Framebuffer shadow_buffer;
 	Framebuffer shadow_buffertwo;
+	Framebuffer shadow_bufferthree;
 	Framebuffer rear_view;
 	Framebuffer main_view;
+	//Framebuffer blur;
 
 	GLuint textShaderProgram;
 
 	std::vector<Geometry> texObjects;
 
-	
+	float bias;
 };
 
 #endif /* RENDERINGENGINE_H_ */

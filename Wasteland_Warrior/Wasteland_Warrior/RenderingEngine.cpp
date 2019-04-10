@@ -25,9 +25,11 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	shadowshaderProgram = ShaderTools::InitializeShaders("../shaders/shadowMapVertex.glsl", "../shaders/shadowMapFragment.glsl");
 	imageShaderProgram = ShaderTools::InitializeShaders("../shaders/vertexMainMenu.glsl", "../shaders/fragmentMainMenu.glsl");
 	lineShaderProgram = ShaderTools::InitializeShaders("../shaders/basicVer.glsl", "../shaders/basicFrag.glsl");
+	//vblurProgram = ShaderTools::InitializeShaders("../shaders/vblurvertex.glsl", "../shaders/vblurfragment.glsl");
+	//hblurProgram = ShaderTools::InitializeShaders("../shaders/hblurvertex.glsl", "../shaders/hblurfragment.glsl");
 	
 	textShaderProgram = ShaderTools::InitializeShaders("../shaders/texVertex.glsl", "../shaders/texFragment.glsl");
-	float aspect_ratio = game_state->window_height / game_state->window_width;
+	float aspect_ratio = (float)game_state->window_height / (float)game_state->window_width;
 	health.verts.push_back(glm::vec3(.5f, .8f, 0.f));
 	health.verts.push_back(glm::vec3(.5f, .9f, 0.f));
 	health.verts.push_back(glm::vec3(.9f, .8f, 0.f));
@@ -143,14 +145,20 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 		rear_view = createFramebuffer(game_state->window_width, game_state->window_height);
 		shadow_buffer = createFramebuffer(game_state->window_width, game_state->window_height);
 		shadow_buffertwo = createFramebuffer(game_state->window_width, game_state->window_height);
+		shadow_bufferthree = createFramebuffer(game_state->window_width, game_state->window_height);
 		main_view = createFramebuffer(game_state->window_width, game_state->window_height);
+		//blur = createFramebuffer(game_state->window_width, game_state->window_height);
 	}
 	else {
-		rear_view = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1180));
-		shadow_buffer = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1180));
-		shadow_buffertwo = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1180));
-		main_view = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1180));
+		rear_view = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1061));
+		shadow_buffer = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1061));
+		shadow_buffertwo = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1061));
+		shadow_bufferthree = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1061));
+		main_view = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1061));
+		//blur = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1061));
 	}
+
+	bias = 1200/game_state->window_height;
 
 	//the code to load the font, may be do some refactor in the future.
 
@@ -170,45 +178,90 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	glm::mat4 perspectiveMatrix = glm::perspective(PI_F*.4f, (float)game_state->window_width / (float)game_state->window_height, .1f, 750.f); // last argument changed from 200 to 500 to increase view range
 	glm::mat4 depthperspectiveMatrix = glm::perspective(PI_F*.085f, (float)game_state->window_width / (float)game_state->window_height, 50.f, 300.f);
 	//setting up framebuffer stuff
+	//high quality
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
+	glEnable(GL_BLEND);
 	glBindFramebuffer(GL_FRAMEBUFFER, shadow_buffer.id);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glUseProgram(shadowshaderProgram);
 	GLint transformGL = glGetUniformLocation(shadowshaderProgram, "transform");
 	//glm::mat4 depthProjectionMatrix = glm::ortho<float>(-10, 10, -10, 10, -10, 20);
-	glm::mat4 depthViewMatrix = glm::lookAt(game_state->light, game_state->playerVehicle.position, glm::vec3(1, 0, 0));
+	glm::mat4 depthViewMatrix = glm::lookAt(game_state->light, game_state->playerVehicle.position, glm::vec3(0, 1, 0));
 	glm::mat4 depthModelMatrix = glm::mat4(1.0);
 	glm::mat4 depthMVP = depthperspectiveMatrix * depthViewMatrix;
 	GLuint depthMatrixID = glGetUniformLocation(shadowshaderProgram, "modelViewProjection");
 	glUniformMatrix4fv(depthMatrixID, 1, GL_FALSE, &depthMVP[0][0]);
 	for (int i = 0; i < (int)objects.size(); i++) {
-		if (i == game_state->skyboxIndex) {
+		if (i == game_state->skyboxIndex || objects[i].transparent < .99f) {
 			continue;
 		}
-		glUniformMatrix4fv(transformGL, 1, false, glm::value_ptr(objects[i].subObjects[0].transform));
-		glBindVertexArray(objects[i].subObjects[0].vao);
-		glDrawArrays(objects[i].subObjects[0].drawMode, 0, objects[i].subObjects[0].verts.size());
+		//int s = 0;//--------------------------------------------------
+		for (int s = 0; s < objects[i].subObjectsCount; s++) {
+			glUniformMatrix4fv(transformGL, 1, false, glm::value_ptr(objects[i].subObjects[s].transform));
+			glBindVertexArray(objects[i].subObjects[s].vao);
+			glDrawArrays(objects[i].subObjects[s].drawMode, 0, objects[i].subObjects[s].verts.size());
+		}
 	}
 
-	glm::mat4 depthperspectiveMatrixtwo = glm::perspective(PI_F*.8f, (float)game_state->window_width / (float)game_state->window_height, 50.f, 500.f);
+	/*glBindFramebuffer(GL_FRAMEBUFFER, blur.id);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glUseProgram(vblurProgram);
+	glUniform1i(glGetUniformLocation(vblurProgram, "materialTex"), 0);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, shadow_buffer.depthTextureID);
+	glBindVertexArray(square.vao);
+	glDrawArrays(square.drawMode, 0, square.verts.size());
+
+	glBindFramebuffer(GL_FRAMEBUFFER, shadow_buffer.id);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glUseProgram(hblurProgram);
+	glUniform1i(glGetUniformLocation(hblurProgram, "materialTex"), 0);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, blur.depthTextureID);
+	glBindVertexArray(square.vao);
+	glDrawArrays(square.drawMode, 0, square.verts.size());*/
+
+	//low quality
+	glm::mat4 depthperspectiveMatrixtwo = glm::perspective(PI_F*.8f, (float)game_state->window_width / (float)game_state->window_height, 50.f, 600.f);
 	glBindFramebuffer(GL_FRAMEBUFFER, shadow_buffertwo.id);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glUseProgram(shadowshaderProgram);
-	//glm::mat4 depthProjectionMatrix = glm::ortho<float>(-10, 10, -10, 10, -10, 20);
-	glm::mat4 depthViewMatrixtwo = glm::lookAt(game_state->light, glm::vec3(0, 0, 0), glm::vec3(1, 0, 0));
+	glm::mat4 depthViewMatrixtwo = glm::lookAt(game_state->light, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
 	glm::mat4 depthMVPtwo = depthperspectiveMatrixtwo * depthViewMatrixtwo;
 	depthMatrixID = glGetUniformLocation(shadowshaderProgram, "modelViewProjection");
 	glUniformMatrix4fv(depthMatrixID, 1, GL_FALSE, &depthMVPtwo[0][0]);
 	for (int i = 0; i < (int)objects.size(); i++) {
-		if (i == game_state->skyboxIndex) {
+		if (i == game_state->skyboxIndex || objects[i].transparent < .99f) {
 			continue;
 		}
-		glUniformMatrix4fv(transformGL, 1, false, glm::value_ptr(objects[i].subObjects[0].transform));
-		glBindVertexArray(objects[i].subObjects[0].vao);
-		glDrawArrays(objects[i].subObjects[0].drawMode, 0, objects[i].subObjects[0].verts.size());
+		//int s = 0;//--------------------------------------------------
+		for (int s = 0; s < objects[i].subObjectsCount; s++) {
+			glUniformMatrix4fv(transformGL, 1, false, glm::value_ptr(objects[i].subObjects[s].transform));
+			glBindVertexArray(objects[i].subObjects[s].vao);
+			glDrawArrays(objects[i].subObjects[s].drawMode, 0, objects[i].subObjects[s].verts.size());
+		}
 	}
 
+	//mid quality
+	glm::mat4 depthperspectiveMatrixthree = glm::perspective(PI_F*.2f, (float)game_state->window_width / (float)game_state->window_height, 50.f, 400.f);
+	glBindFramebuffer(GL_FRAMEBUFFER, shadow_bufferthree.id);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glUseProgram(shadowshaderProgram);
+	glm::mat4 depthMVPthree = depthperspectiveMatrixthree * depthViewMatrix;
+	depthMatrixID = glGetUniformLocation(shadowshaderProgram, "modelViewProjection");
+	glUniformMatrix4fv(depthMatrixID, 1, GL_FALSE, &depthMVPthree[0][0]);
+	for (int i = 0; i < (int)objects.size(); i++) {
+		if (i == game_state->skyboxIndex || objects[i].transparent < .99f) {
+			continue;
+		}
+		//int s = 0;//--------------------------------------------------
+		for (int s = 0; s < objects[i].subObjectsCount; s++) {
+			glUniformMatrix4fv(transformGL, 1, false, glm::value_ptr(objects[i].subObjects[s].transform));
+			glBindVertexArray(objects[i].subObjects[s].vao);
+			glDrawArrays(objects[i].subObjects[s].drawMode, 0, objects[i].subObjects[s].verts.size());
+		}
+	}
 	
 	//Clears the screen to a dark grey background
 	//glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
@@ -229,6 +282,8 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	glUniformMatrix4fv(depthMatrixID, 1, GL_FALSE, &depthMVP[0][0]);
 	depthMatrixID = glGetUniformLocation(shaderProgram, "depthViewProjectiontwo");
 	glUniformMatrix4fv(depthMatrixID, 1, GL_FALSE, &depthMVPtwo[0][0]);
+	depthMatrixID = glGetUniformLocation(shaderProgram, "depthViewProjectionthree");
+	glUniformMatrix4fv(depthMatrixID, 1, GL_FALSE, &depthMVPthree[0][0]);
 
 	glUniform3fv(glGetUniformLocation(shaderProgram, "cameraPosition"), 1, glm::value_ptr(game_state->camera.pos));
 	glUniform3fv(glGetUniformLocation(shaderProgram, "lightPosition"), 1, glm::value_ptr(game_state->light));
@@ -241,6 +296,9 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	glUniform1i(glGetUniformLocation(shaderProgram, "materialTex"), 0);
 	glUniform1i(glGetUniformLocation(shaderProgram, "shadowTex"), 1);
 	glUniform1i(glGetUniformLocation(shaderProgram, "shadowTextwo"), 2);
+	glUniform1i(glGetUniformLocation(shaderProgram, "shadowTexthree"), 3);
+	glUniform1f(glGetUniformLocation(shaderProgram, "bias_scale"), bias);
+	GLuint transparent = glGetUniformLocation(shaderProgram, "transparent");
 
 	//draw actual frame
 	int objectNum = objects.size();
@@ -251,19 +309,26 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 		else {
 			glUniform1i(glGetUniformLocation(shaderProgram, "isSkybox"), 0);
 		}
-		glUniformMatrix4fv(transformGL, 1, false, glm::value_ptr(objects[i].subObjects[0].transform));
-		//bind the texture
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, objects[i].subObjects[0].texture.textureID);
+		//int s = 0;//--------------------------------------------------
+		for (int s = 0; s < objects[i].subObjectsCount; s++) {
+			glUniformMatrix4fv(transformGL, 1, false, glm::value_ptr(objects[i].subObjects[s].transform));
+			glUniform1f(transparent, objects[i].transparent);
+			//bind the texture
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, objects[i].subObjects[s].texture.textureID);
 
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, shadow_buffer.depthTextureID);
+			glActiveTexture(GL_TEXTURE1);
+			glBindTexture(GL_TEXTURE_2D, shadow_buffer.depthTextureID);
 
-		glActiveTexture(GL_TEXTURE2);
-		glBindTexture(GL_TEXTURE_2D, shadow_buffertwo.depthTextureID);
+			glActiveTexture(GL_TEXTURE2);
+			glBindTexture(GL_TEXTURE_2D, shadow_buffertwo.depthTextureID);
 
-		glBindVertexArray(objects[i].subObjects[0].vao);
-		glDrawArrays(objects[i].subObjects[0].drawMode, 0, objects[i].subObjects[0].verts.size());
+			glActiveTexture(GL_TEXTURE3);
+			glBindTexture(GL_TEXTURE_2D, shadow_bufferthree.depthTextureID);
+
+			glBindVertexArray(objects[i].subObjects[s].vao);
+			glDrawArrays(objects[i].subObjects[s].drawMode, 0, objects[i].subObjects[s].verts.size());
+		}
 	}
 
 	//draw rear view
@@ -278,19 +343,23 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 		else {
 			glUniform1i(glGetUniformLocation(shaderProgram, "isSkybox"), 0);
 		}
-		glUniformMatrix4fv(transformGL, 1, false, glm::value_ptr(objects[i].subObjects[0].transform));
-		//bind the texture
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, objects[i].subObjects[0].texture.textureID);
+		//int s = 0;//--------------------------------------------------
+		for (int s = 0; s < objects[i].subObjectsCount; s++) {
+			glUniformMatrix4fv(transformGL, 1, false, glm::value_ptr(objects[i].subObjects[s].transform));
+			glUniform1f(transparent, objects[i].transparent);
+			//bind the texture
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, objects[i].subObjects[s].texture.textureID);
 
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, shadow_buffer.depthTextureID);
+			glActiveTexture(GL_TEXTURE1);
+			glBindTexture(GL_TEXTURE_2D, shadow_buffer.depthTextureID);
 
-		glActiveTexture(GL_TEXTURE2);
-		glBindTexture(GL_TEXTURE_2D, shadow_buffertwo.depthTextureID);
+			glActiveTexture(GL_TEXTURE2);
+			glBindTexture(GL_TEXTURE_2D, shadow_buffertwo.depthTextureID);
 
-		glBindVertexArray(objects[i].subObjects[0].vao);
-		glDrawArrays(objects[i].subObjects[0].drawMode, 0, objects[i].subObjects[0].verts.size());
+			glBindVertexArray(objects[i].subObjects[s].vao);
+			glDrawArrays(objects[i].subObjects[s].drawMode, 0, objects[i].subObjects[s].verts.size());
+		}
 
 		// reset state to default (no shader or geometry bound)
 	}
@@ -328,7 +397,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	std::vector<glm::vec2> enemy_locations;
 	std::vector<glm::vec2> highlighted_locations;
 	for (int i = 0; i < (int)game_state->Enemies.size(); i++) {
-		if (game_state->Enemies[i].headhunter) {
+		if (game_state->Enemies[i].headhunter || game_state->Enemies[i].boss) {
 			highlighted_locations.push_back(glm::vec2(game_state->Enemies[i].position.x, game_state->Enemies[i].position.z));
 		} else {
 			enemy_locations.push_back(glm::vec2(game_state->Enemies[i].position.x, game_state->Enemies[i].position.z));
@@ -598,7 +667,19 @@ void RenderingEngine::loadFont(const char* ttfFile) {
 
 }
 
-void RenderingEngine::pushTextObj(std::vector<Geometry>& objects, std::string text, float x, float y, float scale, glm::vec3 color) {
+void RenderingEngine::pushTextObj(std::vector<Geometry>& objects, std::string text, float x, float y, float scale, glm::vec3 color, bool center) {
+
+	float centerOffset = 0;
+	if (center) {
+		std::string::const_iterator c;
+		for (c = text.begin(); c != text.end(); c++)
+		{
+			Character ch = Characters[*c];
+			centerOffset += ((ch.Advance >> 6) * scale)/2;
+		}
+	}
+	x -= centerOffset;
+
 	// Iterate through all characters
 	std::string::const_iterator c;
 	for (c = text.begin(); c != text.end(); c++)
@@ -658,11 +739,14 @@ void RenderingEngine::updateText() {
 	float scale = (float)game_state->window_height / 960.f;
 	if (game_state->UIMode == "Game") {
 		if (game_state->breakSeconds == 0) {
-			pushTextObj(texObjects, "Wave # " + std::to_string(game_state->wave) + " - " + game_state->gameMode, 0.01f*game_state->window_width, 0.95f*game_state->window_height, scale * 0.8, glm::vec3(0.7f, 0.2f, 0.2f));
-			pushTextObj(texObjects, "Enemies Left: " + std::to_string(game_state->enemiesLeft), 0.01f*game_state->window_width, 0.9f*game_state->window_height, scale * 0.8, glm::vec3(0.7f, 0.2f, 0.2f));
+			pushTextObj(texObjects, "Wave # " + std::to_string(game_state->wave) + " - " + game_state->gameMode, 0.01f*game_state->window_width, 0.95f*game_state->window_height, scale * 0.75f, glm::vec3(0.7f, 0.2f, 0.2f), false);
+			pushTextObj(texObjects, "Enemies Left: " + std::to_string(game_state->enemiesLeft), 0.01f*game_state->window_width, 0.9f*game_state->window_height, scale * 0.75f, glm::vec3(0.7f, 0.2f, 0.2f), false);
+			if (game_state->gameMode == "Checkpoint") {
+				pushTextObj(texObjects, "Checkpoints Left: " + std::to_string(game_state->checkpointsLeft), 0.01f*game_state->window_width, 0.85f*game_state->window_height, scale * 0.75f, glm::vec3(0.7f, 0.2f, 0.2f), false);
+			}
 		}
 		else {
-			pushTextObj(texObjects, "Next wave: " + std::to_string(game_state->breakSeconds) + " seconds", 0.01f*game_state->window_width, 0.95f*game_state->window_height, scale * 0.8, glm::vec3(0.7f, 0.2f, 0.2f));
+			pushTextObj(texObjects, "Next wave: " + std::to_string(game_state->breakSeconds) + " seconds", 0.01f*game_state->window_width, 0.95f*game_state->window_height, scale * 0.75f, glm::vec3(0.7f, 0.2f, 0.2f), false);
 		}
 		
 		if (game_state->weaponState == 0) {
@@ -677,49 +761,69 @@ void RenderingEngine::updateText() {
 			switch (game_state->powerUpType)
 			{
 			case 0:
-				pushTextObj(texObjects, "Checkpoint reached!", 0.35f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f));
+				pushTextObj(texObjects, "Checkpoint reached!", 0.5f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
 				break;
 			case 1:
-				pushTextObj(texObjects, "Full health!", 0.4f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f));
+				pushTextObj(texObjects, "Full health!", 0.5f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
 				break;
 			case 2:
-				pushTextObj(texObjects, "Maximum health increaced!", 0.3f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f));
+				pushTextObj(texObjects, "Maximum health increaced!", 0.5f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
 				break;
 			case 3:
-				pushTextObj(texObjects, "Health boost!", 0.4f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f));
+				pushTextObj(texObjects, "Health boost!", 0.5f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
 				break;
 			case 4:
-				pushTextObj(texObjects, "Armor boost!", 0.4f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f));
+				pushTextObj(texObjects, "Armor boost!", 0.5f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
 				break;
 			case 5:
-				pushTextObj(texObjects, "Damage boost!", 0.4f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f));
+				pushTextObj(texObjects, "Damage boost!", 0.5f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
+				break;
+			case 6:
+				pushTextObj(texObjects, "Payload collected!", 0.5f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
 				break;
 			default:
 				break;
 			}
 		}
+		if (game_state->modeText) {
+			if (game_state->gameMode == "Checkpoint") {
+				pushTextObj(texObjects, "Collect all checkpoints", 0.5f*game_state->window_width, 0.7f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
+			}
+			else if (game_state->gameMode == "Head Hunter") {
+				pushTextObj(texObjects, "Defeat escaping enemy ", 0.5f*game_state->window_width, 0.7f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
+			}
+			else if (game_state->gameMode == "Boss Battle") {
+				pushTextObj(texObjects, "Defeat boss", 0.5f*game_state->window_width, 0.7f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
+			}
+			else if (game_state->gameMode == "Payload") {
+				pushTextObj(texObjects, "Collect and deliver payload", 0.5f*game_state->window_width, 0.7f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
+			}
+			else if (game_state->gameMode == "Survival") {
+				pushTextObj(texObjects, "Defeat all enemies", 0.5f*game_state->window_width, 0.7f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
+			}
+		}
 	}
 
 	if (game_state->UIMode == "Win") {
-		pushTextObj(texObjects, "Your score was: " + std::to_string(game_state->score), 0.4f*game_state->window_width, 0.45f*game_state->window_height, scale, glm::vec3(.9f, 1.0f, .4f));
-		pushTextObj(texObjects, "You survived in: " + std::to_string(game_state->scoreTime) + " seconds", 0.4f*game_state->window_width, 0.38f*game_state->window_height, scale,glm::vec3(.9f, 1.0f, .4f));
+		pushTextObj(texObjects, "Your score was: " + std::to_string(game_state->score), 0.4f*game_state->window_width, 0.45f*game_state->window_height, scale, glm::vec3(.9f, 1.0f, .4f), false);
+		pushTextObj(texObjects, "You survived in: " + std::to_string(game_state->scoreTime) + " seconds", 0.4f*game_state->window_width, 0.38f*game_state->window_height, scale,glm::vec3(.9f, 1.0f, .4f), false);
 	}
 
 	if (game_state->UIMode == "Lose") {
-		pushTextObj(texObjects, "Your score was: " + std::to_string(game_state->score), 0.4f*game_state->window_width, 0.4f*game_state->window_height, scale, glm::vec3(.7f, .2f, .2f));
-		pushTextObj(texObjects, "You died after: " + std::to_string(game_state->scoreTime) + " seconds", 0.4f*game_state->window_width, 0.33f*game_state->window_height, scale, glm::vec3(.7f, .2f, .2f));
+		pushTextObj(texObjects, "Your score was: " + std::to_string(game_state->score), 0.4f*game_state->window_width, 0.4f*game_state->window_height, scale, glm::vec3(.7f, .2f, .2f), false);
+		pushTextObj(texObjects, "You died after: " + std::to_string(game_state->scoreTime) + " seconds", 0.4f*game_state->window_width, 0.33f*game_state->window_height, scale, glm::vec3(.7f, .2f, .2f), false);
 	}
 
 	if (game_state->UIMode == "Loading") {
-		pushTextObj(texObjects, std::to_string(game_state->loadingPercentage)+"%", 0.7f*game_state->window_width, 0.315f*game_state->window_height, scale, glm::vec3(1.0f, 1.0f, 1.0f));
+		pushTextObj(texObjects, std::to_string(game_state->loadingPercentage)+"%", 0.7f*game_state->window_width, 0.315f*game_state->window_height, scale, glm::vec3(1.0f, 1.0f, 1.0f), false);
 	}
 
 	if (game_state->UIMode == "Story") {
-		pushTextObj(texObjects, "Press Enter to continue...", 0.65f*game_state->window_width, 0.1f*game_state->window_height, scale, glm::vec3(1.0f, 1.0f, 1.0f));
+		pushTextObj(texObjects, "Press Enter to continue...", 0.65f*game_state->window_width, 0.1f*game_state->window_height, scale, glm::vec3(1.0f, 1.0f, 1.0f), false);
 	}
 
 	if (game_state->UIMode == "Control") {
-		pushTextObj(texObjects, "Press Enter to continue...", 0.65f*game_state->window_width, 0.1f*game_state->window_height, scale, glm::vec3(1.0f, 1.0f, 1.0f));
+		pushTextObj(texObjects, "Press Enter to continue...", 0.65f*game_state->window_width, 0.1f*game_state->window_height, scale, glm::vec3(1.0f, 1.0f, 1.0f), false);
 	}
 }
 
@@ -731,7 +835,7 @@ void RenderingEngine::LoadShaderProgram(std::string name, const char* vertexFile
 		shaderProgramList[name] = ShaderTools::InitializeShaders(vertexFile, fragmentFile);
 
 		if (shaderProgramList[name] == NULL) {
-			printf("Shader loading error: Program %s Error\n", name);
+			std::cout << "Shader loading error: Program " << name << " Error" << std::endl;
 		}
 
 	}
@@ -741,7 +845,7 @@ void RenderingEngine::LoadShaderProgram(std::string name, const char* vertexFile
 GLuint RenderingEngine::GetShaderProgram(std::string name) {
 	if (shaderProgramList[name] == NULL)
 	{
-		printf("Shader haven't loaded yet. Please load shader first. Error Shader name: %s Error\n", name);
+		std::cout << "Shader haven't loaded yet. Please load shader first. Error Shader name: " << name << " Error" << std::endl;
 	}
 	return shaderProgramList[name];
 }

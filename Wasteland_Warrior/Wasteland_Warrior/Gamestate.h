@@ -32,6 +32,7 @@ public:
 	PlayerUnit playerVehicle;
 	Entity map = Entity();
 	std::vector<EnemyUnit> Enemies;
+	std::vector<EnemyUnit>SurvivingEnemies;
 	std::vector<PowerUp> PowerUps;
 	std::vector<Object> StaticObjects;
 	std::vector<Object> DynamicObjects;
@@ -131,6 +132,7 @@ public:
 
 	//----------------------UI Buffer Start---------------------------------
 	bool powerText;
+	bool modeText;
 	int textTime;
 	GLFWwindow *window;
 	int loadingPercentage;
@@ -166,7 +168,7 @@ public:
 	glm::vec3 light = glm::vec3(20.0f, 100.0f, 0.0f);
 	glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
 	float lightAttenuation = 0.000000002f;
-	float lightAmbientCoefficient = 0.1f;
+	float lightAmbientCoefficient = 0.3f;
 
 	glm::vec3 materialSpecularColor = glm::vec3(1.0f, 1.0f, 1.0f);
 	float materialShininess = 90000;
@@ -181,80 +183,82 @@ public:
 
 	const int numOfStaticObjectInstances = 11;
 	int staticObjMeshTextureIndices[11];
-	const char* staticObjMeshList[11] = {
-		"Objects/SkyBox/skySphere.obj",
-		"Objects/Ruined_Brick_Building/ruined building_brick.obj", 
-		"Objects/Wooden_train_cars/wagon.obj", 
-		"Objects/Truck/truck.obj", 
-		"Objects/Building1/building_lowpoly.obj",  
-		"Objects/checkpointMarker.obj", 
-		"Objects/canyonWalls.obj", 
-		"Objects/Battle_Car_Package/OBJs/staticOilTanker.obj",
-		"Objects/Tunnel/tunnel.obj", 
-		"Objects/RuinedSmallHouse/Old_house.obj",
-		"Objects/Buildings/Gas Station.obj"
+	std::vector<const char*> staticObjMeshList[11] = { 
+		{"Objects/SkyBox/skySphere.obj"},
+		{"Objects/Ruined_Brick_Building/ruined building_brick.obj"},
+		{"Objects/Wooden_train_cars/wagon.obj"},
+		{"Objects/Truck/truck.obj"},
+		{"Objects/Building1/building_lowpoly.obj"},
+		{"Objects/checkpointMarker.obj"},
+		{"Objects/canyonWalls.obj"},
+		{"Objects/Battle_Car_Package/OBJs/staticOilTanker.obj"},
+		{"Objects/Tunnel/tunnel.obj"},
+		{"Objects/RuinedSmallHouse/Old_house.obj"},
+		{"Objects/Buildings/Gas Station.obj"}
 	};
 
-	const char* staticObjTextureList[11] = {
-		 "Objects/SkyBox/skySphere_texture.jpg",
-		 "Objects/Ruined_Brick_Building/ruined_building_brick.jpg",
-		 "Objects/Wooden_train_cars/wagon_tex3.png",
-		 "Objects/Truck/truck_tex1.png",
-		 "Objects/Building1/building_lowpoly_texture.jpg",
-		 "Textures/blueSmoke.jpg",
-		 "Textures/canyonWallTexture2.png",
-		 "Objects/Battle_Car_Package/tex/Oil Tank.jpg",
-		 "Objects/Tunnel/tunnelWall.jpg",
-		 "Objects/RuinedSmallHouse/Old_house.png",
-		 "Objects/Buildings/Gas Station.jpg"
+	std::vector<const char*> staticObjTextureList[11] = {
+		 {"Objects/SkyBox/skySphere_texture.jpg"},
+		 {"Objects/Ruined_Brick_Building/ruined_building_brick.jpg"},
+		 {"Objects/Wooden_train_cars/wagon_tex3.png"},
+		 {"Objects/Truck/truck_tex1.png"},
+		 {"Objects/Building1/building_lowpoly_texture.jpg"},
+		 {"Textures/blueSmoke.jpg"},
+		 {"Textures/canyonWallTexture2.png"},
+		 {"Objects/Battle_Car_Package/tex/Oil Tank.jpg"},
+		 {"Objects/Tunnel/tunnelWall.jpg"},
+		 {"Objects/RuinedSmallHouse/Old_house.png"},
+		 {"Objects/Buildings/Gas Station.jpg"}
 	 };
 
-	const int numOfDynamicObjectInstances = 6;
-	int dynamicObjMeshTextureIndices[6];
-	const char* dynamicObjMeshList[6] = {
-	"Objects/Realistic_Box_Model/box_realistic.obj",
-	"Objects/Realistic_Box_Model/box_realistic.obj",
-	"Objects/Realistic_Box_Model/box_realistic.obj",
-	"Objects/Realistic_Box_Model/box_realistic.obj",
-	"Objects/Realistic_Box_Model/box_realistic.obj",
-	"Objects/checkpointMarker.obj"};
+	const int numOfDynamicObjectInstances = 7;
+	int dynamicObjMeshTextureIndices[7];
+	std::vector<const char*> dynamicObjMeshList[7] = {
+	{"Objects/Realistic_Box_Model/box_realistic.obj"},
+	{"Objects/Realistic_Box_Model/box_realistic.obj"},
+	{"Objects/Realistic_Box_Model/box_realistic.obj"},
+	{"Objects/Realistic_Box_Model/box_realistic.obj"},
+	{"Objects/Realistic_Box_Model/box_realistic.obj"},
+	{"Objects/checkpointMarker.obj"},
+	{"Objects/Realistic_Box_Model/box_realistic.obj"} };
 
-	const char* dynamicObjTextureList[6] = {
+	std::vector<const char*> dynamicObjTextureList[7] = {
 	//"Objects/Realistic_Box_Model/box_texture_color_red.png", 
-	"Objects/Realistic_Box_Model/full_health.jpg",
-	"Objects/Realistic_Box_Model/large_health_boost.jpg",
-	"Objects/Realistic_Box_Model/small_health_boost.png",
-	"Objects/Realistic_Box_Model/armour.png",
-	"Objects/Realistic_Box_Model/damage.png",
-	"Textures/blueSmoke.jpg" };
+	{"Objects/Realistic_Box_Model/full_health.jpg"},
+	{"Objects/Realistic_Box_Model/large_health_boost.jpg"},
+	{"Objects/Realistic_Box_Model/small_health_boost.png"},
+	{"Objects/Realistic_Box_Model/armour.png"},
+	{"Objects/Realistic_Box_Model/damage.png"},
+	{"Textures/blueSmoke.jpg" },
+	{"Objects/Realistic_Box_Model/payload.png"} };
 
 	const int numOfVehicleObjectInstances = 7;
 	int vehicleMeshTextureIndices[7];
-	const char* vehicleMeshList[7] = { 
-	"Objects/Battle_Car_Package/OBJs/playerVehicle.obj",
-	"Objects/Battle_Car_Package/OBJs/enemy1_oilBarrelCar.obj",
-	"Objects/Battle_Car_Package/OBJs/enemy2_truck.obj", 
-	"Objects/Battle_Car_Package/OBJs/enemy3_bigBug.obj", 
-	"Objects/Battle_Car_Package/OBJs/enemy4_dragster.obj", 
-	"Objects/Battle_Car_Package/OBJs/enemy5_bigTruck.obj", 
-	"Objects/Battle_Car_Package/OBJs/bigBadBoss.obj"};
+	std::vector<const char*> vehicleMeshList[7] = {
+	{"Objects/Battle_Car_Package/OBJs/playerVehicle.obj"},
+	{"Objects/Battle_Car_Package/OBJs/enemy1_oilBarrelCar.obj"},
+	{"Objects/Battle_Car_Package/OBJs/enemy2_truck.obj"},
+	{"Objects/Battle_Car_Package/OBJs/enemy3_bigBug.obj"},
+	{"Objects/Battle_Car_Package/OBJs/enemy4_dragster.obj"},
+	{"Objects/Battle_Car_Package/OBJs/enemy5_bigTruck.obj"},
+	{"Objects/Battle_Car_Package/OBJs/bigBadBoss.obj"} };
 
-	const char* vehicleTextureList[7] = {
-	"Objects/Battle_Car_Package/tex/Bex Car 4.jpg",
-	"Objects/Battle_Car_Package/tex/AX materiel 1.jpg",
-	"Objects/Battle_Car_Package/tex/Battle Jip.jpg",
-	"Objects/Battle_Car_Package/tex/Battle Toscar.jpg",
-	"Objects/Battle_Car_Package/tex/4X Car.jpg",
-	"Objects/Battle_Car_Package/tex/Small Truck.jpg",
-	"Objects/Battle_Car_Package/tex/Truck Tex.jpg" };
+	std::vector<const char*> vehicleTextureList[7] = {
+	{"Objects/Battle_Car_Package/tex/Bex Car 4.jpg","Objects/Battle_Car_Package/tex/Apparatus.png", "Objects/Battle_Car_Package/tex/Armor.jpg", "Objects/Battle_Car_Package/tex/Attack buffer 1.jpg" },
+	{"Objects/Battle_Car_Package/tex/AX materiel 1.jpg","Objects/Battle_Car_Package/tex/Apparatus.png", "Objects/Battle_Car_Package/tex/Attack buffer 1.jpg", "Objects/Battle_Car_Package/tex/oll.png"},
+	{"Objects/Battle_Car_Package/tex/Battle Jip.jpg","Objects/Battle_Car_Package/tex/oll.png",  "Objects/Battle_Car_Package/tex/Appara.png", "Objects/Battle_Car_Package/tex/Appara.png",  "Objects/Battle_Car_Package/tex/Attack buffer 1.jpg"}, //Tires Not Mapping Properly
+	{"Objects/Battle_Car_Package/tex/Battle Toscar.jpg","Objects/Battle_Car_Package/tex/Apparatus.png"},
+	{"Objects/Battle_Car_Package/tex/4X Car.jpg","Objects/Battle_Car_Package/tex/Apparatus.png"},
+	{"Objects/Battle_Car_Package/tex/Small Truck.jpg","Objects/Battle_Car_Package/tex/Apparatus.png"},
+	{"Objects/Battle_Car_Package/tex/Truck Tex.jpg","Objects/Battle_Car_Package/tex/Apparatus.png" }};
 
 
 	int mapMeshTextureIndices[1];
-	const char* mapMeshList[1] = {
-	"Objects/WorldMapV3Test.obj"};
+	std::vector<const char*> mapMeshList[1] = {
+	{"Objects/WorldMapV3Test.obj"} };
 
-	const char* mapTextureList[1] = {
-	"Textures/sandTexture.jpg" };
+	std::vector<const char*> mapTextureList[1] = {
+	{"Textures/sandTexture.jpg" } };
 
 
 
@@ -264,9 +268,10 @@ public:
 	int wave;
 	bool restart;
 	int enemiesLeft;
-	int checkpoints;
+	int checkpointsLeft;
 	int breakSeconds;
 	int score;
+	int enemyscore;
 	int scoreTime;
 	std::string gameMode;
 
@@ -294,8 +299,6 @@ public:
 	void SpawnEnemy(int ObjectType, int AIType, float x, float y, float z, float xRot, float yRot, float zRot);
 	void DespawnEnemy(Vehicle* vehicle);
 	void DespawnPowerUp(PowerUp* powerUp);
-	void DespawnObject(Object* object);
-	void DespawnStaticObject(Object* object);
 
 	void Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse);
 	void Collision(Vehicle* vehicle, PowerUp* powerUp);

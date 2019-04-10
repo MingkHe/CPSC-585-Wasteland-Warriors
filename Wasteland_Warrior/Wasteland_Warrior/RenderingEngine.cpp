@@ -805,13 +805,13 @@ void RenderingEngine::updateText() {
 	}
 
 	if (game_state->UIMode == "Win") {
-		pushTextObj(texObjects, "Your score was: " + std::to_string(game_state->score), 0.4f*game_state->window_width, 0.45f*game_state->window_height, scale, glm::vec3(.9f, 1.0f, .4f), false);
-		pushTextObj(texObjects, "You survived in: " + std::to_string(game_state->scoreTime) + " seconds", 0.4f*game_state->window_width, 0.38f*game_state->window_height, scale,glm::vec3(.9f, 1.0f, .4f), false);
+		pushTextObj(texObjects, "Your score was: " + std::to_string(game_state->score), 0.38f*game_state->window_width, 0.52f*game_state->window_height, scale, glm::vec3(255, 140, 0)/glm::vec3(255,255,255), false);
+		pushTextObj(texObjects, "You survived in: " + std::to_string(game_state->scoreTime) + " seconds", 0.32f*game_state->window_width, 0.45f*game_state->window_height, scale, glm::vec3(255, 140, 0) / glm::vec3(255, 255, 255), false);
 	}
 
 	if (game_state->UIMode == "Lose") {
-		pushTextObj(texObjects, "Your score was: " + std::to_string(game_state->score), 0.4f*game_state->window_width, 0.4f*game_state->window_height, scale, glm::vec3(.7f, .2f, .2f), false);
-		pushTextObj(texObjects, "You died after: " + std::to_string(game_state->scoreTime) + " seconds", 0.4f*game_state->window_width, 0.33f*game_state->window_height, scale, glm::vec3(.7f, .2f, .2f), false);
+		pushTextObj(texObjects, "Your score was: " + std::to_string(game_state->score), 0.38f*game_state->window_width, 0.4f*game_state->window_height, scale, glm::vec3(.768f, .768f, .768f), false);
+		pushTextObj(texObjects, "You died after: " + std::to_string(game_state->scoreTime) + " seconds", 0.32f*game_state->window_width, 0.33f*game_state->window_height, scale, glm::vec3(.768f, .768f, .768f), false);
 	}
 
 	if (game_state->UIMode == "Loading") {
@@ -819,11 +819,11 @@ void RenderingEngine::updateText() {
 	}
 
 	if (game_state->UIMode == "Story") {
-		pushTextObj(texObjects, "Press Enter to continue...", 0.65f*game_state->window_width, 0.1f*game_state->window_height, scale, glm::vec3(1.0f, 1.0f, 1.0f), false);
+		pushTextObj(texObjects, "Press Enter to continue...", 0.6f*game_state->window_width, 0.1f*game_state->window_height, scale, glm::vec3(1.0f, 1.0f, 1.0f), false);
 	}
 
 	if (game_state->UIMode == "Control") {
-		pushTextObj(texObjects, "Press Enter to continue...", 0.65f*game_state->window_width, 0.1f*game_state->window_height, scale, glm::vec3(1.0f, 1.0f, 1.0f), false);
+		pushTextObj(texObjects, "Press Enter to continue...", 0.6f*game_state->window_width, 0.1f*game_state->window_height, scale, glm::vec3(1.0f, 1.0f, 1.0f), false);
 	}
 }
 

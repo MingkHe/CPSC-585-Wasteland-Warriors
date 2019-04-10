@@ -333,7 +333,7 @@ void Gamestate::resetOrientation(int physicsIndex) {
 
 void Gamestate::DespawnEnemy(Vehicle* vehicle) {
 	enemyscore += 200;
-
+	this->carExpo_sound = true;
 	int offset = vehicle->physicsIndex;
 	glm::mat4 transformMatrix = glm::mat4(
 		2.f, 0.f, 0.f, 0.f,

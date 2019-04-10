@@ -38,15 +38,15 @@ UI_Controller::UI_Controller(Gamestate* gameState, RenderingEngine* render)
 	textureArray.push_back(texture);
 
 	//7
-	InitializeTexture(&texture, "Image/bg_pause.jpg", GL_TEXTURE_RECTANGLE);
+	InitializeTexture(&texture, "Image/bg_pause2.jpg", GL_TEXTURE_RECTANGLE);
 	textureArray.push_back(texture);
 
 	//8
-	InitializeTexture(&texture, "Image/win.jpg", GL_TEXTURE_RECTANGLE);
+	InitializeTexture(&texture, "Image/win3.jpg", GL_TEXTURE_RECTANGLE);
 	textureArray.push_back(texture);
 
 	//9
-	InitializeTexture(&texture, "Image/lose.jpg", GL_TEXTURE_RECTANGLE);
+	InitializeTexture(&texture, "Image/lose2.jpg", GL_TEXTURE_RECTANGLE);
 	textureArray.push_back(texture);
 
 	//10

@@ -270,7 +270,7 @@ float ShadowCalculationtwo(vec4 fragPosLightSpace)
 			float d = mean - moments.x;
 			float shadowtmp = variance / (variance + (d*d));
 			float amount = 0.5f;
-	        shadowtmp = clamp((shadowtmp - amount) / (1.0f - amount), 0.0f, 1.0f);
+	        //shadowtmp = clamp((shadowtmp - amount) / (1.0f - amount), 0.0f, 1.0f);
 			shadow += shadowtmp;
 		}
 	}
@@ -298,7 +298,7 @@ float ShadowCalculationthree(vec4 fragPosLightSpace)
 			float d = mean - moments.x;
 			float shadowtmp = variance / (variance + (d*d));
 			float amount = 0.5f;
-	        shadowtmp = clamp((shadowtmp - amount) / (1.0f - amount), 0.0f, 1.0f);
+	        //shadowtmp = clamp((shadowtmp - amount) / (1.0f - amount), 0.0f, 1.0f);
 			shadow += shadowtmp;
 		}
 	}
@@ -327,7 +327,7 @@ float ShadowCalculation(vec4 fragPosLightSpace)
 			float d = mean - moments.x;
 			float shadowtmp = variance / (variance + (d*d));
 			float amount = 0.5f;
-	        shadowtmp = clamp((shadowtmp - amount) / (1.0f - amount), 0.0f, 1.0f);
+	        //shadowtmp = clamp((shadowtmp - amount) / (1.0f - amount), 0.0f, 1.0f);
 			shadow += shadowtmp;
 		}
 	}

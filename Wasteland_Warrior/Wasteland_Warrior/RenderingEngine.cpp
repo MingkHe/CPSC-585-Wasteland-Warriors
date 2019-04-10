@@ -90,14 +90,6 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	assignBuffers(aimBeam);
 	setBufferData(aimBeam);
 
-	/*mirror.verts.push_back(glm::vec3(-1.f, -1.f, 0.f));
-	mirror.verts.push_back(glm::vec3(-1.f, 1.f, 0.f));
-	mirror.verts.push_back(glm::vec3(1.f, -1.f, 0.f));
-	mirror.verts.push_back(glm::vec3(1.f, 1.f, 0.f));
-	mirror.uvs.push_back(glm::vec2(0.f, 0.f));
-	mirror.uvs.push_back(glm::vec2(0.f, 1.f));
-	mirror.uvs.push_back(glm::vec2(1.f, 0.f));
-	mirror.uvs.push_back(glm::vec2(1.f, 1.f));*/
 	square.verts.push_back(glm::vec3(-1.f, -1.f, 0.f));
 	square.verts.push_back(glm::vec3(-1.f, 1.f, 0.f));
 	square.verts.push_back(glm::vec3(1.f, -1.f, 0.f));
@@ -121,6 +113,19 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	mirror.drawMode = GL_TRIANGLE_STRIP;
 	assignBuffers(mirror);
 	setBufferData(mirror);
+
+	mirror_back.verts.push_back(glm::vec3(-.41f, .74f, 0.f));
+	mirror_back.verts.push_back(glm::vec3(-.41f, .96f, 0.f));
+	mirror_back.verts.push_back(glm::vec3(.41f, .74f, 0.f));
+	mirror_back.verts.push_back(glm::vec3(.41f, .96f, 0.f));
+	mirror_back.uvs.push_back(glm::vec2(1.f, 0.f));
+	mirror_back.uvs.push_back(glm::vec2(1.f, 1.f));
+	mirror_back.uvs.push_back(glm::vec2(0.f, 0.f));
+	mirror_back.uvs.push_back(glm::vec2(0.f, 1.f));
+	mirror_back.drawMode = GL_TRIANGLE_STRIP;
+	InitializeTexture(&mirror_back.texture, "Image/black_pixel.png");
+	assignBuffers(mirror_back);
+	setBufferData(mirror_back);
 
 	aim.verts.push_back(glm::vec3(-0.1f,-0.1f,.0f));
 	aim.verts.push_back(glm::vec3(0.1f, -0.1f, .0f));
@@ -373,6 +378,12 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	glUseProgram(basicshaderProgram);
 	glUniform1i(glGetUniformLocation(basicshaderProgram, "materialTex"), 0);
 	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, mirror_back.texture.textureID);
+	glBindVertexArray(mirror_back.vao);
+	glDrawArrays(mirror_back.drawMode, 0, mirror_back.verts.size());
+	glBindVertexArray(0);
+	glUniform1i(glGetUniformLocation(basicshaderProgram, "materialTex"), 0);
+	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, rear_view.colorTextureID);
 	glBindVertexArray(mirror.vao);
 	glDrawArrays(mirror.drawMode, 0, mirror.verts.size());
@@ -394,19 +405,29 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	GLint playerposGL = glGetUniformLocation(radarshaderProgram, "playerpos");
 	GLint playerdirGL = glGetUniformLocation(radarshaderProgram, "playerdir");
 	GLint radar_distGL = glGetUniformLocation(radarshaderProgram, "radar_dist");
+	GLint enemy_healthGL = glGetUniformLocation(radarshaderProgram, "enemy_health");
+	GLint highlight_healthGL = glGetUniformLocation(radarshaderProgram, "highlight_health");
 	std::vector<glm::vec2> enemy_locations;
+	std::vector<float> enemy_health;
 	std::vector<glm::vec2> highlighted_locations;
+	std::vector<float> highlight_health;
 	for (int i = 0; i < (int)game_state->Enemies.size(); i++) {
 		if (game_state->Enemies[i].headhunter || game_state->Enemies[i].boss) {
 			highlighted_locations.push_back(glm::vec2(game_state->Enemies[i].position.x, game_state->Enemies[i].position.z));
+			highlight_health.push_back(game_state->Enemies[i].health / game_state->Enemies[i].maxhealth);
 		} else {
 			enemy_locations.push_back(glm::vec2(game_state->Enemies[i].position.x, game_state->Enemies[i].position.z));
+			enemy_health.push_back(game_state->Enemies[i].health / game_state->Enemies[i].maxhealth);
 		}
 	}
-	if(enemy_locations.size()!=0)
+	if (enemy_locations.size() != 0) {
 		glUniform2fv(enemiesGL, enemy_locations.size(), &(enemy_locations[0].x));
-	if (highlighted_locations.size() != 0)
+		glUniform1fv(enemy_healthGL, enemy_health.size(), &(enemy_health[0]));
+	}
+	if (highlighted_locations.size() != 0) {
 		glUniform2fv(highlightsGL, highlighted_locations.size(), &(highlighted_locations[0].x));
+		glUniform1fv(highlight_healthGL, highlight_health.size(), &(highlight_health[0]));
+	}
 	glUniform2f(playerposGL, game_state->playerVehicle.position.x, game_state->playerVehicle.position.z);
 	glUniform2f(playerdirGL, game_state->playerVehicle.direction.x, game_state->playerVehicle.direction.z);
 	glUniform1i(numenemiesGL, enemy_locations.size());

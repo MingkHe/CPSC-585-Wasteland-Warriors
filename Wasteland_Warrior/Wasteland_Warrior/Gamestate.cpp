@@ -374,7 +374,7 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse,
 		}
 
 		if (hapticFeedback && updateHapticWheelState) {
-			LogiPlayFrontalCollisionForce(0, damage*3);
+			LogiPlayFrontalCollisionForce(0, damage*5);
 		}
 	}
 
@@ -386,7 +386,7 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse,
 			entity2->health -= damage * entity1->damageMultiplier;
 		}
 		if (hapticFeedback && updateHapticWheelState) {
-			LogiPlayFrontalCollisionForce(0, damage * 3);
+			LogiPlayFrontalCollisionForce(0, damage * 5);
 		}
 	}
 

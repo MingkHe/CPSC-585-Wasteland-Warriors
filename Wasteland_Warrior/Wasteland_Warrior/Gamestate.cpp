@@ -19,6 +19,16 @@ Gamestate::Gamestate()
 	carCrashStatic_sound = false;
 	carPowerUp_sound = false;
 
+	weaponMachineGun_sound = false;
+	weaponEmptyAmmo_sound = false;
+	weaponHit_sound = false;
+	weaponReload_sound = false;
+	weaponShellDrop_sound = false;
+	weaponSwap_sound = false;
+
+	ammo = 1000;
+	weaponState = 0;
+
 	ui_enter = false;
 	ui_switch = false;
 	ui_menu = false;
@@ -638,7 +648,8 @@ void Gamestate::shoot() {
 			printf("raycast detected..\n");
 			printf("test: %f\n", glm::distance(pos, Enemies[i].position));
 			if (glm::distance(pos, Enemies[i].position) <= 3.0f) {
-				Enemies[i].health = -1;
+				Enemies[i].health -= 1;
+				weaponHit_sound = true;
 				printf("attack!!!\n");
 			}
 		}

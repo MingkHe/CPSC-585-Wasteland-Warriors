@@ -9,5 +9,7 @@ public:
 	~Weapon_Controller();
 
 	void update(Gamestate* gameState);
+	void reload(Gamestate* gameState);
+	void swap(Gamestate* gameState);
 
 };

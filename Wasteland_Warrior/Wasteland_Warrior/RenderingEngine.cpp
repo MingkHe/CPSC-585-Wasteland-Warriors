@@ -362,7 +362,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	glDrawArrays(needle.drawMode, 0, needle.verts.size());
 	glBindVertexArray(0);
 
-
+	/*
 	glUseProgram(lineShaderProgram);
 	transformGL = glGetUniformLocation(lineShaderProgram, "transform");
 	glUniformMatrix4fv(transformGL, 1, false, glm::value_ptr(game_state->playerVehicle.transformationMatrix));
@@ -371,6 +371,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	glDrawArrays(aimBeam.drawMode, 0, aimBeam.verts.size());
 	glBindVertexArray(0);
 	glUseProgram(0);
+	*/
 
 	//render aim
 	//GLuint shader = GetShaderProgram("menuShader");
@@ -663,7 +664,15 @@ void RenderingEngine::updateText() {
 		else {
 			pushTextObj(texObjects, "Next wave: " + std::to_string(game_state->breakSeconds) + " seconds", 0.01f*game_state->window_width, 0.95f*game_state->window_height, scale * 0.8, glm::vec3(0.7f, 0.2f, 0.2f));
 		}
-    
+		
+		if (game_state->weaponState == 0) {
+			pushTextObj(texObjects, "Weapon: OFF", 0.01f*game_state->window_width, 0.85f*game_state->window_height, scale * 0.8, glm::vec3(0.7f, 0.2f, 0.2f));
+		}
+		else {
+			pushTextObj(texObjects, "Weapon: ON", 0.01f*game_state->window_width, 0.85f*game_state->window_height, scale * 0.8, glm::vec3(0.7f, 0.2f, 0.2f));
+			pushTextObj(texObjects, "Ammo: " + std::to_string(game_state->ammo), 0.01f*game_state->window_width, 0.8f*game_state->window_height, scale * 0.8, glm::vec3(0.7f, 0.2f, 0.2f));
+		}
+		
 		if (game_state->powerText) {
 			switch (game_state->powerUpType)
 			{

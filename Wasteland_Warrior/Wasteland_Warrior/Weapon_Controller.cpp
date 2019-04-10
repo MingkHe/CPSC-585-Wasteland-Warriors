@@ -10,8 +10,42 @@ Weapon_Controller::~Weapon_Controller()
 
 void Weapon_Controller::update(Gamestate* gameState)
 {
-	if (gameState->button == "A") {
-		gameState->shoot();
+	if (gameState->button == "F") {
+		swap(gameState);
 	}
-	
+
+	if (gameState->weaponState == 1) {
+		if (gameState->button == "A" || gameState->mouseRight) {
+
+			if (gameState->ammo > 0) {
+				gameState->shoot();
+				gameState->ammo -= 1;
+				gameState->weaponMachineGun_sound = true;
+			}
+			else {
+				gameState->weaponEmptyAmmo_sound = true;
+				gameState->weaponMachineGun_sound = false;
+			}
+			//gameState->weaponShellDrop_sound = true;
+		}
+		else {
+			gameState->weaponEmptyAmmo_sound = false;
+			gameState->weaponMachineGun_sound = false;
+			//gameState->weaponShellDrop_sound = false;
+		}
+
+		if (gameState->button == "N") {
+			reload(gameState);
+		}
+	}
+}
+
+void Weapon_Controller::reload(Gamestate* gameState) {
+	gameState->ammo += 1000;
+	gameState->weaponReload_sound = true;
+}
+
+void Weapon_Controller::swap(Gamestate* gameState) {
+	gameState->weaponState = (gameState->weaponState + 1) % 2;
+	gameState->weaponSwap_sound = true;
 }

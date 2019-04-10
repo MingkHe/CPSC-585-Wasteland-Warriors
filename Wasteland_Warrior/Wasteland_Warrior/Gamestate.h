@@ -90,6 +90,19 @@ public:
 	//car collects power up
 	bool carPowerUp_sound;
 
+	//sound for machine gun
+	bool weaponMachineGun_sound;
+	//sound for reload;
+	bool weaponReload_sound;
+	//sound for bullet shell drop
+	bool weaponShellDrop_sound;
+	//sound for empty ammo
+	bool weaponEmptyAmmo_sound;
+	//sound for bullet hit metal
+	bool weaponHit_sound;
+	//sound for weapon swap
+	bool weaponSwap_sound;
+
 	//the sound for select the start button
 	bool ui_enter;
 	//the sound for ui menu switching between button
@@ -109,6 +122,12 @@ public:
 	//variable to indicate the engine volumn
 	float engineAccel = 0.0f;
 	//----------------------Sound Buffer End--------------------------------
+
+	//----------------------Weapon System-----------------------------------
+	int ammo;
+	int weaponState; // 0 means no weapon 1 means machine gun
+
+	//----------------------------------------------------------------------
 
 	//----------------------UI Buffer Start---------------------------------
 	bool powerText;

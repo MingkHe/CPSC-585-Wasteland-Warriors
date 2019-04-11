@@ -10,12 +10,12 @@ Weapon_Controller::~Weapon_Controller()
 
 void Weapon_Controller::update(Gamestate* gameState)
 {
-	if (gameState->button == "F") {
+	if (gameState->button == "F" || gameState->button == "A") {
 		swap(gameState);
 	}
 
 	if (gameState->weaponState == 1) {
-		if (gameState->button == "A" || gameState->mouseRight) {
+		if (gameState->button == "Y" || gameState->mouseRight) {
 
 			if (gameState->ammo > 0) {
 				gameState->shoot();
@@ -34,7 +34,7 @@ void Weapon_Controller::update(Gamestate* gameState)
 			//gameState->weaponShellDrop_sound = false;
 		}
 
-		if (gameState->button == "N") {
+		if (gameState->button == "N" || gameState->button == "X") {
 			reload(gameState);
 		}
 	}

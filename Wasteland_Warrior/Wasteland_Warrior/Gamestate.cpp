@@ -194,14 +194,17 @@ void Gamestate::SpawnStaticObject(int ObjectType, float x, float y, float z, flo
 			}
 			currentFacesCount += faceVertsSize;
 		}
-		int physicsIndex = physics_Controller->createStaticObject(vertsPhysArray, totalVertSize, faceVertsPhys, totalFaceVertSize / 3, x, y, z);
+
+		glm::mat4 rotationMatrix = getRotationMatrix(xRot, yRot, zRot);
+
+		int physicsIndex = physics_Controller->createStaticObject(vertsPhysArray, totalVertSize, faceVertsPhys, totalFaceVertSize / 3, x, y, z, rotationMatrix);
 		glm::mat4 transformMatrix = glm::mat4(
 			1.f, 0.f, 0.f, 0.f,
 			0.f, 1.f, 0.f, 0.f,
 			0.f, 0.f, 1.f, 0.f,
 			x, y, z, 1.f
 		);
-		transformMatrix = transformMatrix * getRotationMatrix(xRot, yRot, zRot);
+		transformMatrix = transformMatrix * rotationMatrix;
 		//int t = 0; //---------------------------------------------------
 		for (int t = 0; t < scene->allWorldCompObjects[sceneObjectIndex].subObjectsCount; t++) {
 			scene->allWorldCompObjects[sceneObjectIndex].subObjects[t].transform = transformMatrix;
@@ -399,6 +402,12 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse)
 	float damage = totalForce / damageScaling;
 	std::cout << "causeing: " << damage << " base damage (if less than 5, no damage dealt)" << std::endl;
 
+	if (damage > 5.0f) {
+		//Display "Damage dealt: damage" to HUD
+	}
+	else {
+		//Display "To Slow!"
+	}
 
 	//Inflict damage
 	//If both vehicles align meaning a rear end

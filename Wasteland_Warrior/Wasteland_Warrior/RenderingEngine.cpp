@@ -148,14 +148,14 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 
 	//rear_view = createFramebuffer(game_state->window_width, game_state->window_height);
 	//shadow_buffer = createFramebuffer(game_state->window_width, game_state->window_height);
-	if (game_state->fullscreen) {
+	//if (game_state->fullscreen) {
 		rear_view = createFramebuffer(game_state->window_width, game_state->window_height);
 		shadow_buffer = createFramebuffer(game_state->window_width, game_state->window_height);
 		shadow_buffertwo = createFramebuffer(game_state->window_width, game_state->window_height);
 		shadow_bufferthree = createFramebuffer(game_state->window_width, game_state->window_height);
 		main_view = createFramebuffer(game_state->window_width, game_state->window_height);
 		//blur = createFramebuffer(game_state->window_width, game_state->window_height);
-	}
+	/*}
 	else {
 		rear_view = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1181));
 		shadow_buffer = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1181));
@@ -163,7 +163,7 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 		shadow_bufferthree = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1181));
 		main_view = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1181));
 		//blur = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1061));
-	}
+	}*/
 
 	bias = 1200/game_state->window_height;
 

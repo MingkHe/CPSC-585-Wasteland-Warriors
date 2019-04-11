@@ -17,11 +17,25 @@ GLuint createEmptyTexture(int width, int height, GLenum format, GLenum type) {
 	return texID;
 }
 
+GLuint createEmptyTexture(int width, int height, GLenum format, GLenum type, GLenum format2) {
+	GLuint texID;
+	glGenTextures(1, &texID);
+
+	glBindTexture(GL_TEXTURE_2D, texID);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, format2, width, height, 0, format, type, nullptr);
+
+	return texID;
+}
 
 Framebuffer createFramebuffer(int width, int height) {
 	Framebuffer fb;
 
-	fb.colorTextureID = createEmptyTexture(width, height, GL_RGB, GL_UNSIGNED_BYTE);
+	fb.colorTextureID = createEmptyTexture(width, height, GL_RGB, GL_FLOAT, GL_RGB32F);
 	fb.depthTextureID = createEmptyTexture(width, height, GL_DEPTH_COMPONENT, GL_FLOAT);
 
 	glGenFramebuffers(1, &fb.id);

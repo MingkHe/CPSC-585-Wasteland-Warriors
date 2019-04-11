@@ -212,7 +212,13 @@
     <Text Include="Wasteland_Warrior.vcxproj.filters.txt" />
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD
     <None Include="..\shaders\basicfragment.glsl" />
+=======
+    <None Include="..\shaders\basicFrag.glsl" />
+    <None Include="..\shaders\basicfragment.glsl" />
+    <None Include="..\shaders\basicVer.glsl" />
+>>>>>>> 672cd4edb86a0f7533989ad8edd02666b77ca118
     <None Include="..\shaders\needlefragment.glsl" />
     <None Include="..\shaders\basicvertex.glsl" />
     <None Include="..\shaders\fragment.glsl" />

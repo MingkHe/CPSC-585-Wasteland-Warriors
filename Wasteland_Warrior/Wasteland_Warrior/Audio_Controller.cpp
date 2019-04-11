@@ -20,6 +20,8 @@ Audio_Controller::Audio_Controller()
 	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
 		printf("Mixer initialization error: %s\n",Mix_GetError());
 
+	Mix_AllocateChannels(48);
+
 	myMusics = new MusicPool();
 	mySFX = new SFXPool();
 	currentMusic = "bgm.mp3";
@@ -34,6 +36,13 @@ Audio_Controller::Audio_Controller()
 	car_crash_static = Mix_LoadWAV("SoundEffect/car_crash_static.wav");
 	car_powerUp = Mix_LoadWAV("SoundEffect/car_powerUp.wav");
 
+	weapon_machine_gun = Mix_LoadWAV("SoundEffect/weapon_machine_gun2.wav");
+	weapon_swap = Mix_LoadWAV("SoundEffect/weapon_switch.wav");
+	weapon_empty = Mix_LoadWAV("SoundEffect/weapon_empty.wav");
+	weapon_bullet_drop = Mix_LoadWAV("SoundEffect/weapon_bullet_drop.mp3");
+	weapon_metal_hit = Mix_LoadWAV("SoundEffect/weapon_metal_hit.aiff");
+	weapon_reload = Mix_LoadWAV("SoundEffect/weapon_reload.wav");
+
 	ui_click = Mix_LoadWAV("SoundEffect/click.wav");
 	ui_enter = Mix_LoadWAV("SoundEffect/selected.mp3");
 
@@ -42,6 +51,7 @@ Audio_Controller::Audio_Controller()
 	bgm_win = Mix_LoadMUS("Music/win.mp3");
 	bgm_lose = Mix_LoadMUS("Music/lose.mp3");
 	bgm_gamePlay = Mix_LoadMUS("Music/gamePlay.mp3");
+
 }
 
 
@@ -142,6 +152,82 @@ int Audio_Controller::playSound(Gamestate* gameState)
 		gameState->carPowerUp_sound = false;
 	}
 
+	if (gameState->weaponMachineGun_sound && gameState->ui_gameplay)
+	{
+		if (!Mix_Playing(8)) {
+			Mix_Volume(8, MIX_MAX_VOLUME);
+			Mix_PlayChannel(8, weapon_machine_gun, -1);
+		}
+	}
+	else {
+		if (Mix_Playing(8)) {
+			Mix_HaltChannel(8);
+		}
+	}
+
+	if (gameState->weaponShellDrop_sound && gameState->ui_gameplay)
+	{
+		if (!Mix_Playing(9)) {
+			Mix_Volume(9, MIX_MAX_VOLUME);
+			Mix_PlayChannel(9, weapon_bullet_drop, -1);
+		}
+	}
+	else {
+		if (Mix_Playing(9)) {
+			Mix_HaltChannel(9);
+		}
+	}
+
+	if (gameState->weaponEmptyAmmo_sound && gameState->ui_gameplay)
+	{
+		if (!Mix_Playing(10)) {
+			Mix_Volume(10, MIX_MAX_VOLUME);
+			Mix_PlayChannel(10, weapon_empty, -1);
+		}
+	}
+	else {
+		if (Mix_Playing(10)) {
+			Mix_HaltChannel(10);
+		}
+	}
+
+	/*
+	if (gameState->weaponHit_sound && gameState->ui_gameplay)
+	{
+		Mix_Volume(11, MIX_MAX_VOLUME);
+		if (!Mix_Playing(11)) {
+			Mix_PlayChannel(11, weapon_metal_hit, 0);
+		}
+		gameState->weaponHit_sound = false;
+	}
+	*/
+
+	if (gameState->weaponHit_sound && gameState->weaponHit_sound)
+	{
+		//Mix_Volume(0, MIX_MAX_VOLUME)
+		Mix_PlayChannel(-1, weapon_metal_hit, 0);
+		gameState->weaponHit_sound = false;
+	}
+
+	if (gameState->weaponReload_sound && gameState->ui_gameplay)
+	{
+		Mix_Volume(12, MIX_MAX_VOLUME);
+		if (!Mix_Playing(12)) {
+			Mix_PlayChannel(12, weapon_reload, 0);
+		}
+		gameState->weaponReload_sound = false;
+	}
+
+	if (gameState->weaponSwap_sound && gameState->ui_gameplay)
+	{
+		Mix_Volume(13, MIX_MAX_VOLUME);
+		if (!Mix_Playing(13)) {
+			Mix_PlayChannel(13, weapon_swap, 0);
+		}
+		gameState->weaponSwap_sound = false;
+	}
+
+
 	if (gameState->ui_enter)
 	{
 		//Mix_Volume(0, MIX_MAX_VOLUME);
@@ -186,7 +272,7 @@ int Audio_Controller::playSound(Gamestate* gameState)
 	}
 	else if (gameState->ui_gameplay)
 	{
-		Mix_VolumeMusic(MIX_MAX_VOLUME/3);
+		Mix_VolumeMusic(MIX_MAX_VOLUME/2);
 		if (!Mix_PlayingMusic()) {
 			Mix_PlayMusic(bgm_gamePlay, -1);
 		}

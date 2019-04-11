@@ -17,9 +17,12 @@ public:
 
 	void Update();
 	void updateEntities();
-	void userDriveInput(bool WKey, bool AKey, bool SKey, bool DKey, bool SPACEKey, bool hello, float leftStickX, float leftTrigger, float rightTrigger, float rightStickX);
+
+	void userDriveInput(bool WKey, bool AKey, bool SKey, bool DKey, bool Handbrake, bool hello, float leftStickX, float leftTrigger, float rightTrigger, float rightStickX);
 
 	void setPosition(int actorIndex, glm::vec3 newLocation);
+	void setPositionStatic(int actorIndex, glm::vec3 newLocation);
+
 	int createMap(const PxVec3* verts, const PxU32 numVerts, const PxU32* indices, const PxU32 triCount);
 	int createStaticObject(const PxVec3* verts, const PxU32 numVerts, const PxU32* indices, const PxU32 triCount, float x, float y, float z);
 	int createDynamicObject(PxU32 objectType, PxVec3 dimensions, PxVec3 MOI, PxReal mass, PxReal density, float x, float y, float z);
@@ -27,6 +30,8 @@ public:
 	void resetOrientation(int actorIndex);
 	int createEnemyVehicle();
 	int createPlayerVehicle();
+
+	bool rayCast(glm::vec3 &pos);
 
 	ContactReportCallback gContactReportCallback;
 
@@ -37,4 +42,5 @@ public:
 
 	bool clutchStillDown = false;
 	bool powerupGrabbed = false;
+	bool checkpointGrabbed = false;
 };

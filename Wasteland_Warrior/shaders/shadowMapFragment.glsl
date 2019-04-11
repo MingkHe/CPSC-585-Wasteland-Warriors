@@ -6,9 +6,9 @@
 // ==========================================================================
 #version 410
 
-//out vec4 finalColor;
+out vec4 finalColor;
 
 void main() {
 	gl_FragDepth = gl_FragCoord.z;
-	//finalColor = vec4(gl_FragCoord.z, gl_FragCoord.z, gl_FragCoord.z, 1);
+	finalColor = vec4(gl_FragCoord.z, gl_FragCoord.z*gl_FragCoord.z, 0, 1);
 }

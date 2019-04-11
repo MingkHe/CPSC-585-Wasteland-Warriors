@@ -8,5 +8,6 @@ struct Framebuffer {
 };
 
 GLuint createEmptyTexture(int width, int height, GLenum format, GLenum type);
+GLuint createEmptyTexture(int width, int height, GLenum format, GLenum type, GLenum format2);
 
 Framebuffer createFramebuffer(int width, int height);

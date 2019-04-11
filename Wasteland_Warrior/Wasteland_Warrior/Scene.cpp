@@ -21,6 +21,9 @@
 #include "glad/glad.h"
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include <fstream>
+#include <vector>
+using namespace std;
 
 Scene::Scene(RenderingEngine* renderer, Gamestate* newGamestate) : renderer(renderer) {
 	gameState = newGamestate;
@@ -65,19 +68,23 @@ void Scene::setGamestate(Gamestate* newGamestate) {
 }
 
 
-int Scene::loadOBJObjectInstance(const char* filepath, const char* textureFilepath) {
-	CompositeWorldObject OBJobjectComp;
-	Geometry OBJobject;
-	std::vector< unsigned int > vertexIndices, uvIndices, normalIndices;
-	std::vector< glm::vec3 > temp_vertices;
-	std::vector< glm::vec2 > temp_uvs;
-	std::vector< glm::vec3 > temp_normals;
+int Scene::loadOBJObjectInstance(std::vector<const char*> filepath, std::vector<const char*> textureFilepath) {
+	CompositeWorldObject OBJobjectComposite;
+	std::vector< unsigned int > vertexIndices[10], uvIndices[10], normalIndices[10];
+	//std::vector < std::vector< std::vector< unsigned int > > > vertexIndices, uvIndices, normalIndices;
+	//std::vector < std::vector< std::vector< glm::vec3 > > > temp_vertices;
+	//std::vector < std::vector< std::vector< glm::vec2 > > > temp_uvs;
+	//std::vector < std::vector< std::vector< glm::vec3 > > > temp_normals;
+	std::vector< glm::vec3 > vertice_holder;
+	std::vector< glm::vec2 > uv_holder;
+	std::vector< glm::vec3 > normal_holder;
+	std::vector<string> materialNames;
+	int materialIndex;
 	bool openSuccessful = true;
-	int count = 0;
 	int subobjectIndex = 0;
 	previousHeader = 'v';
-	//printf("1\n");
-	FILE * file = fopen(filepath, "r");
+	printf("NewObject\n");
+	FILE * file = fopen(filepath[0], "r");
 	if (file == NULL) {
 		printf("Impossible to open the file !\n");
 		openSuccessful = false;
@@ -97,12 +104,13 @@ int Scene::loadOBJObjectInstance(const char* filepath, const char* textureFilepa
 		if (strcmp(lineHeader, "v") == 0) {
 			//printf("6\n");
 			if (previousHeader == 'f') {
-				//createObjectInstance(textureFilepath, OBJobjectComp, OBJobject, vertexIndices, uvIndices, normalIndices, temp_vertices, temp_uvs, temp_normals);
+
 			}
 			previousHeader = 'v';
 			glm::vec3 vertex;
 			fscanf(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z);
-			temp_vertices.push_back(vertex);
+			vertice_holder.push_back(vertex);
+			//temp_vertices[0].push_back(vertex);
 		}
 		else if (strcmp(lineHeader, "vt") == 0) {
 			//previousHeader = 't';
@@ -111,7 +119,8 @@ int Scene::loadOBJObjectInstance(const char* filepath, const char* textureFilepa
 			fscanf(file, "%f %f\n", &uv.x, &uv.y);
 			uv.x = uv.x - floor(uv.x);
 			uv.y = uv.y - floor(uv.y);
-			temp_uvs.push_back(uv);
+			uv_holder.push_back(uv);
+			//temp_uvs[0].push_back(uv);
 
 		}
 		else if (strcmp(lineHeader, "vn") == 0) {
@@ -119,7 +128,28 @@ int Scene::loadOBJObjectInstance(const char* filepath, const char* textureFilepa
 			//previousHeader = 'n';
 			glm::vec3 normal;
 			fscanf(file, "%f %f %f\n", &normal.x, &normal.y, &normal.z);
-			temp_normals.push_back(normal);
+			normal_holder.push_back(normal);
+			//temp_normals[0].push_back(normal);
+		}
+		else if (strcmp(lineHeader, "usemtl") == 0) {
+			char matName[128];
+			string materialName;
+			materialIndex = -1;
+			fscanf(file, "%s\n", matName);
+			materialName = matName;
+			std::cout << materialName << std::endl;
+			int numberOfMaterials = materialNames.size();
+			for (int s = 0; s < numberOfMaterials; s++) {
+				if (materialName == materialNames[s]) {
+					materialIndex = s;
+				}
+			}
+			if (materialIndex == -1) {
+				materialNames.push_back(materialName);
+				materialIndex = materialNames.size()-1;
+			}
+
+			//std::cout << materialName << " " << materialIndex << std::endl;
 		}
 		else if (strcmp(lineHeader, "f") == 0) {
 			//printf("9\n");
@@ -131,49 +161,70 @@ int Scene::loadOBJObjectInstance(const char* filepath, const char* textureFilepa
 				printf("File can't be read properly: (Faces larger than 3 triangles\n");
 				//return false;
 			}
-			vertexIndices.push_back(vertexIndex[0]);
-			vertexIndices.push_back(vertexIndex[1]);
-			vertexIndices.push_back(vertexIndex[2]);
-			uvIndices.push_back(uvIndex[0]);
-			uvIndices.push_back(uvIndex[1]);
-			uvIndices.push_back(uvIndex[2]);
-			normalIndices.push_back(normalIndex[0]);
-			normalIndices.push_back(normalIndex[1]);
-			normalIndices.push_back(normalIndex[2]);
+			//int objMatIndex = subObject_by_Material_count[materialIndex];
+			//std::cout << materialIndex << std::endl;
+			vertexIndices[materialIndex].push_back(vertexIndex[0]);
+			vertexIndices[materialIndex].push_back(vertexIndex[1]);
+			vertexIndices[materialIndex].push_back(vertexIndex[2]);
+			uvIndices[materialIndex].push_back(uvIndex[0]);
+			uvIndices[materialIndex].push_back(uvIndex[1]);
+			uvIndices[materialIndex].push_back(uvIndex[2]);
+			normalIndices[materialIndex].push_back(normalIndex[0]);
+			normalIndices[materialIndex].push_back(normalIndex[1]);
+			normalIndices[materialIndex].push_back(normalIndex[2]);
 		}
 	}
 
-	createObjectInstance(textureFilepath, OBJobjectComp, OBJobject, vertexIndices, uvIndices, normalIndices, temp_vertices, temp_uvs, temp_normals);
-	printf("%da\n", allWorldCompObjects.size());
+	//temp_vertices[materialIndex].push_back(vertice_holder);
+	//temp_uvs[materialIndex].push_back(uv_holder);
+	//temp_normals[materialIndex].push_back(normal_holder);
+	//subObject_by_Material_count[materialIndex]++;
+	std::cout << materialNames.size() << std::endl;
+	for (int objIndex = 0; objIndex < materialNames.size(); objIndex++) {
+		int textureIndex = objIndex;
+		if (textureIndex >= textureFilepath.size()) {
+			textureIndex = 0;
+		}
+		OBJobjectComposite.subObjects.push_back(createObjectInstance(textureFilepath[textureIndex], vertexIndices[objIndex], uvIndices[objIndex], normalIndices[objIndex], vertice_holder, uv_holder, normal_holder, objIndex));
+		sceneObjectIndex++;
+		OBJobjectComposite.subobjectIndices.push_back(sceneObjectIndex);
+		OBJobjectComposite.textureObjectIndexMap.push_back(objIndex);
+	}
 
-	printf("%db\n", allWorldCompObjects.size());
+	//printf("%da\n", compObjectInstances.size());
 
+	//printf("%db\n", compObjectInstances.size());
+	//vertexIndices.clear();
+	//uvIndices.clear();
+	//normalIndices.clear();
+	vertice_holder.clear();
+	uv_holder.clear();
+	normal_holder.clear();
 
-	OBJobjectComp.transform = glm::mat4(
+	OBJobjectComposite.transform = glm::mat4(
 		1.f, 0.f, 0.f, 0.f,
 		0.f, 1.f, 0.f, 0.f,
 		0.f, 0.f, 1.f, 0.f,
 		0.f, 0.f, 0.f, 1.f
 	);
-
+	OBJobjectComposite.subObjectsCount = materialNames.size();
+	compObjectInstances.push_back(OBJobjectComposite);
 	objectInstanceIndex++;
-	printf("%dc\n", objectInstanceIndex);
+	//printf("%dc\n", objectInstanceIndex);
 	return(objectInstanceIndex);
 }
 
-void Scene::createObjectInstance(const char* textureFilepath, CompositeWorldObject OBJobjectComp, Geometry OBJobject,
-	std::vector< unsigned int > vertexIndices, std::vector< unsigned int > uvIndices, std::vector< unsigned int > normalIndices,
-	std::vector< glm::vec3 > temp_vertices, std::vector< glm::vec2 > temp_uvs, std::vector< glm::vec3 > temp_normals) {
+Geometry Scene::createObjectInstance(const char* textureFilepath,
+	std::vector< unsigned int > vertexIndices,  std::vector< unsigned int > uvIndices,  std::vector< unsigned int > normalIndices,
+	std::vector< glm::vec3 > temp_vertices, std::vector< glm::vec2 > temp_uvs, std::vector< glm::vec3 > temp_normals, int materialIndex) {
 
+	Geometry OBJobject;
 	OBJobject.transform = glm::mat4(
 		1.f, 0.f, 0.f, 0.f,
 		0.f, 1.f, 0.f, 0.f,
 		0.f, 0.f, 1.f, 0.f,
 		0.f, 0.f, 0.f, 1.f
 	);
-
-	//glEnable(GL_BLEND);
-	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	OBJobject.textureFilePath = textureFilepath;
 	InitializeTexture(&OBJobject.texture, OBJobject.textureFilePath);
@@ -194,25 +245,29 @@ void Scene::createObjectInstance(const char* textureFilepath, CompositeWorldObje
 	OBJobject.drawMode = GL_TRIANGLES;
 	RenderingEngine::assignBuffers(OBJobject);
 	RenderingEngine::setBufferData(OBJobject);
-	OBJobjectComp.subObjects.push_back(OBJobject);
+	//OBJobjectComp.subObjects.push_back(OBJobject);
+	//std::cout << OBJobjectComp.subObjects.size() << std::endl;
 
-	vertexIndices.clear();
+	/*vertexIndices.clear();
 	uvIndices.clear();
 	normalIndices.clear();
 	temp_vertices.clear();
 	temp_uvs.clear();
-	temp_normals.clear();
-
-	sceneObjectIndex++;
-	OBJobjectComp.subobjectIndices.push_back(sceneObjectIndex);
-	compObjectInstances.push_back(OBJobjectComp);
+	temp_normals.clear();*/
+	//std::cout << sceneObjectIndex << std::endl;
+	//sceneObjectIndex++;
+	//OBJobjectComp.subobjectIndices.push_back(sceneObjectIndex);
+	//OBJobjectComp.textureObjectIndexMap.push_back(textureIndex);
+	return OBJobject;
+	//compObjectInstances.push_back(OBJobjectComp);
 }
 
 
 int Scene::loadCompObjectInstance(int compObjIndex) {
-	std::cout << compObjectInstances.size() << std::endl;
-	if (compObjIndex < compObjectInstances.size()) {
+	//std::cout << compObjectInstances.size() << std::endl;
+	if (compObjIndex < (int)compObjectInstances.size()) {
 		allWorldCompObjects.push_back(compObjectInstances[compObjIndex]);
+		
 		sceneCompObjectIndex++;
 		//printf("%dc\n", sceneCompObjectIndex);
 		return(sceneCompObjectIndex);
@@ -334,20 +389,32 @@ void Scene::displayScene() {
 	glUseProgram(renderer->shaderProgram);
 	//Update Player Position
 	int vehicleIndex = gameState->playerVehicle.sceneObjectIndex;
-	allWorldCompObjects[vehicleIndex].subObjects[0].transform = gameState->getEntityTransformation(vehicleIndex);
+	glm::mat4 newTransform = gameState->getEntityTransformation(vehicleIndex);
+	//int s = 0;//-----------------------------------------
+	for (int s = 0; s < allWorldCompObjects[vehicleIndex].subObjectsCount; s++) {
+		allWorldCompObjects[vehicleIndex].subObjects[s].transform = newTransform;
+	}
 
 	int numOfEnemies = gameState->Enemies.size();
 	int index = 0;
 	for (int i = 0; i < numOfEnemies; i++) {
 		index = gameState->Enemies[i].sceneObjectIndex;
-		allWorldCompObjects[index].subObjects[0].transform = gameState->getEntityTransformation(index);
+		glm::mat4 newTransform = gameState->getEntityTransformation(index);
+		//int s = 0;//-------------------------------
+		for (int s = 0; s < allWorldCompObjects[index].subObjectsCount; s++) {
+			allWorldCompObjects[index].subObjects[s].transform = newTransform;
+		}
 	}
 
 	int numOfPowerUps = gameState->PowerUps.size();
 	index = 0;
 	for (int i = 0; i < numOfPowerUps; i++) {
 		index = gameState->PowerUps[i].sceneObjectIndex;
-		allWorldCompObjects[index].subObjects[0].transform = gameState->getEntityTransformation(index);
+		glm::mat4 newTransform = gameState->getEntityTransformation(index);
+		//int s = 0;//---------------------------------------------------------------
+		for (int j = 0; j < allWorldCompObjects[index].subObjectsCount; j++) {
+			allWorldCompObjects[index].subObjects[j].transform = newTransform;
+		}
 	}
 
 	renderer->RenderScene(allWorldCompObjects);

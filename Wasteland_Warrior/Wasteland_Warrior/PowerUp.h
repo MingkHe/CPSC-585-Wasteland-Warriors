@@ -10,6 +10,7 @@ public:
 	~PowerUp();
 
 	int type;//Health Boost/ Accelereration Boost/ Max Speed Boost
+	bool active = true;
 
 	PowerUp(int type, int newPhysicsIndex, int newSceneObjectIndex, float x, float y, float z);
 };

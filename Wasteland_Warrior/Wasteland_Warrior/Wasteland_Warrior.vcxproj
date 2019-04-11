@@ -114,14 +114,14 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\middleware\SDL2-2.0.9\include;$(ProjectDir)..\middleware\glfw\include;$(ProjectDir)..\middleware\SDL2_mixer-2.0.4\include;$(ProjectDir)..\middleware\glad\include;$(ProjectDir)..\middleware\glm-0.9.8.2;$(ProjectDir)..\middleware;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\middleware\freetype\include;$(ProjectDir)..\middleware\SDL2_mixer-2.0.4\include;$(ProjectDir)..\middleware\SDL2-2.0.9\include;$(ProjectDir)..\middleware\glfw\include;$(ProjectDir)..\middleware\glad\include;$(ProjectDir)..\middleware\glm-0.9.8.2;$(ProjectDir)..\middleware;$(ProjectDir)..\include;$(ProjectDir)..\include\common;$(ProjectDir)..\include\geometry;$(ProjectDir)..\include\geomutils;$(ProjectDir)..\middleware\glut-3.7.6-bin;$(ProjectDir)..\include\snippetFiles;$(ProjectDir)..\include\snippetFiles\snippetvehiclecommon;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <ShowProgress>LinkVerbose</ShowProgress>
-      <AdditionalLibraryDirectories>$(ProjectDir)..\middleware\SDL2-2.0.9\lib\x86;$(ProjectDir)..\middleware\SDL2_mixer-2.0.4\lib\x86;$(ProjectDir)..\middleware\glfw\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;glfw3.lib;SDL2_mixer.lib;SDL2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\middleware\freetype\win32;$(ProjectDir)..\middleware\SDL2_mixer-2.0.4\lib\x86;$(ProjectDir)..\middleware\SDL2-2.0.9\lib\x86;$(ProjectDir)..\middleware\glfw\lib;$(ProjectDir)..\libRelease;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>freetype.lib;opengl32.lib;glfw3.lib;SDL2_mixer.lib;SDL2.lib;SDL2main.lib;$(ProjectDir)..\middleware\glut-3.7.6-bin\glut32.lib;$(ProjectDir)..\libRelease\FastXml_static_32.lib;$(ProjectDir)..\libRelease\LowLevel_static_32.lib;$(ProjectDir)..\libRelease\LowLevelAABB_static_32.lib;$(ProjectDir)..\libRelease\LowLevelDynamics_static_32.lib;$(ProjectDir)..\libRelease\PhysX_32.lib;$(ProjectDir)..\libRelease\PhysXCharacterKinematic_static_32.lib;$(ProjectDir)..\libRelease\PhysXCommon_32.lib;$(ProjectDir)..\libRelease\PhysXCooking_32.lib;$(ProjectDir)..\libRelease\PhysXExtensions_static_32.lib;$(ProjectDir)..\libRelease\PhysXFoundation_32.lib;$(ProjectDir)..\libRelease\PhysXPvdSDK_static_32.lib;$(ProjectDir)..\libRelease\PhysXTask_static_32.lib;$(ProjectDir)..\libRelease\PhysXVehicle_static_32.lib;$(ProjectDir)..\libRelease\SampleBase_static_32.lib;$(ProjectDir)..\libRelease\SampleFramework_static_32.lib;$(ProjectDir)..\libRelease\SamplesToolkit_static_32.lib;$(ProjectDir)..\libRelease\SceneQuery_static_32.lib;$(ProjectDir)..\libRelease\SimulationController_static_32.lib;$(ProjectDir)..\libRelease\SnippetRender_static_32.lib;$(ProjectDir)..\libRelease\SnippetUtils_static_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -176,6 +176,7 @@
     <ClCompile Include="UI_Controller.cpp" />
     <ClCompile Include="UserInput.cpp" />
     <ClCompile Include="Vehicle.cpp" />
+    <ClCompile Include="Weapon_Controller.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\snippetFiles\snippetvehiclecommon\SnippetVehicleCreate.h" />
@@ -207,6 +208,7 @@
     <ClInclude Include="UI_Controller.h" />
     <ClInclude Include="UserInput.h" />
     <ClInclude Include="Vehicle.h" />
+    <ClInclude Include="Weapon_Controller.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Wasteland_Warrior.vcxproj.filters.txt" />

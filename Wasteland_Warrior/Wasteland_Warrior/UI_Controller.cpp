@@ -38,15 +38,15 @@ UI_Controller::UI_Controller(Gamestate* gameState, RenderingEngine* render)
 	textureArray.push_back(texture);
 
 	//7
-	InitializeTexture(&texture, "Image/bg_pause.jpg", GL_TEXTURE_RECTANGLE);
+	InitializeTexture(&texture, "Image/bg_pause2.jpg", GL_TEXTURE_RECTANGLE);
 	textureArray.push_back(texture);
 
 	//8
-	InitializeTexture(&texture, "Image/win.jpg", GL_TEXTURE_RECTANGLE);
+	InitializeTexture(&texture, "Image/win3.jpg", GL_TEXTURE_RECTANGLE);
 	textureArray.push_back(texture);
 
 	//9
-	InitializeTexture(&texture, "Image/lose.jpg", GL_TEXTURE_RECTANGLE);
+	InitializeTexture(&texture, "Image/lose2.jpg", GL_TEXTURE_RECTANGLE);
 	textureArray.push_back(texture);
 
 	//10
@@ -123,13 +123,13 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 		}
 		*/
 
-		if (GameState->textTime>0 ) {
-			GameState->powerText = true;
+		if (GameState->textTime > 0 ) {
 			GameState->textTime--;
 			//printf("time left %d\n", GameState->textTime);
 		}
 		else {
 			GameState->powerText = false;
+			GameState->modeText = false;
 			GameState->textTime = 0;
 		}
 
@@ -140,7 +140,7 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 			GameState->carIdle_sound = false;
 		}
 
-		if (GameState->SPACEKey && GameState->playerVehicle.speed > 0)
+		if (GameState->Handbrake && GameState->playerVehicle.speed > 0)
 		{
 			GameState->carBrake_sound = true;
 		}

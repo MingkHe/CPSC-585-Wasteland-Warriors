@@ -1,7 +1,7 @@
 #version 410
 
 #define OFFSET 5.f*3.1415926536/4.f
-#define SPEED_SCALE .05f
+#define SPEED_SCALE .1f
 
 // location indices for these attributes correspond to those specified in the
 // InitializeGeometry() function of the main program

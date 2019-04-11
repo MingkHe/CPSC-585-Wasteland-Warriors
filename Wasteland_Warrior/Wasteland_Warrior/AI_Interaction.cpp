@@ -34,7 +34,7 @@ int AI_Interaction::Update()
 		//std::cout << "Location: (" << enemyPosition.x << "," << enemyPosition.y << ")" << std::endl;
 		//std::cout << "distFromDest = " << distFromDest << std::endl;
 
-		float triggerRadious = 12.0f;
+		float triggerRadious = 10.0f;
 
 		//Destination information
 		if (enemy->AIType == 0)
@@ -56,6 +56,7 @@ int AI_Interaction::Update()
 			if (distFromDest < triggerRadious)
 			{
 				enemy->AIType = enemy->AITypeRevert;
+				enemy->recoveryMode = false;
 			}
 		}
 

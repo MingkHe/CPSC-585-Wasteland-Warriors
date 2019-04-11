@@ -12,6 +12,11 @@ private:
 	bool up;
 	bool down;
 	bool view;
+	bool select;
+
+	int axesCount;
+	int axesCountTest;
+	int buttonCount;
 
 	bool reverseCameraOn;
 	bool vehicleReset;
@@ -32,18 +37,21 @@ public:
 	static bool MouseRight;
 
 
-	//WASD
+	//Car controls
 	static bool WKey;
 	static bool AKey;
 	static bool SKey;
 	static bool DKey;
-	static bool SPACEKey;
 
+	//Handbrake
+	static bool Handbrake;
+
+	//Reverse Cam
 	static bool Reverse;
 
 	void Update(Gamestate* gameState);
 	static void key(GLFWwindow * window, int key, int scancode, int action, int mods);
 	static void cursor(GLFWwindow* window, double xpos, double ypos);
 	static void mouseButton(GLFWwindow* window, int button, int action, int mods);
-	void gamepad(int joystick, int joystick2, Gamestate* gameState);
+	void gamepad(int joystick, Gamestate* gameState);
 };

@@ -1,6 +1,6 @@
 #include "EnemyUnit.h"
 #include <iostream>
-
+#include <glm/glm.hpp>
 
 
 EnemyUnit::EnemyUnit()
@@ -56,8 +56,15 @@ bool EnemyUnit::CheckForStuck(){
 			recoveryMode = false;
 
 			destination = glm::vec2(position.x + (rand() % 60) - 30, position.z + (rand() % 60) - 30);		//Move to a new location before chasing player
-			AITypeRevert = AIType;
-			AIType = 2;
+			
+			if(glm::dot(normalize(destination), normalize(glm::vec2(direction.x, direction.z))) >= 0.8){
+				destination = glm::vec2(position.x + (rand() % 60) - 30, position.z + (rand() % 60) - 30);		//Select another location
+			}
+
+			if(AITypeRevert == -1)
+				AITypeRevert = AIType;
+
+ 			AIType = 2;
 			//std::cout << "Recovery mode turned OFF" << std::endl;
 			lastMotionTime = (int)(currentTime.time);
 			//std::cout << "lastMotionTime updated to: " << lastMotionTime << std::endl;

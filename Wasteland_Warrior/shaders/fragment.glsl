@@ -348,7 +348,7 @@ void main() {
     vec3 surfaceToCamera = normalize(cameraPosition - surfacePos);
 	vec3 linearColor = surfaceColor.rgb;
 	float shadow = 0.0;
-	if (isSkybox != 1){
+	if (isSkybox != 1 && transparent > .99){
 		//ambient
 		vec3 ambient = lightAmbientCoeff * surfaceColor.rgb * lightColour;
 

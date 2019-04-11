@@ -67,6 +67,9 @@ void Gamestate::InstantiateAllMeshes_Textures() {
 	//Initialize Static Object Meshes & Textures
 	for (int i = 0; i < numOfStaticObjectInstances; i++) {
 		staticObjMeshTextureIndices[i] = scene->loadOBJObjectInstance(staticObjMeshList[i], staticObjTextureList[i]);
+		if (i == 11) {
+			explosionMeshIndex = staticObjMeshTextureIndices[i];
+		}
 	}
 	//Initialize Dynamic Object Meshes & Textures
 	for (int i = 0; i < numOfDynamicObjectInstances; i++) {
@@ -89,6 +92,9 @@ void Gamestate::InstantiateAllMeshes_Textures_Static() {
 	//Initialize Static Object Meshes & Textures
 	for (int i = 0; i < numOfStaticObjectInstances; i++) {
 		staticObjMeshTextureIndices[i] = scene->loadOBJObjectInstance(staticObjMeshList[i], staticObjTextureList[i]);
+		if (i == 11) {
+			explosionMeshIndex = staticObjMeshTextureIndices[i];
+		}
 	}
 }
 
@@ -197,7 +203,14 @@ void Gamestate::SpawnStaticObject(int ObjectType, float x, float y, float z, flo
 			}
 			currentFacesCount += faceVertsSize;
 		}
-		int physicsIndex = physics_Controller->createStaticObject(vertsPhysArray, totalVertSize, faceVertsPhys, totalFaceVertSize / 3, x, y, z);
+		int physicsIndex = 0;
+		if (ObjectType != 11) {
+			physicsIndex = physics_Controller->createStaticObject(vertsPhysArray, totalVertSize, faceVertsPhys, totalFaceVertSize / 3, x, y, z);
+		}
+		else {
+			physicsIndex = -1;
+		}
+		
 		glm::mat4 transformMatrix = glm::mat4(
 			1.f, 0.f, 0.f, 0.f,
 			0.f, 1.f, 0.f, 0.f,
@@ -271,7 +284,9 @@ void Gamestate::SpawnDynamicObject(int ObjectType, float x, float y, float z, fl
 	for (int s = 0; s < scene->allWorldCompObjects[sceneObjectIndex].subObjectsCount; s++) {
 		scene->allWorldCompObjects[sceneObjectIndex].subObjects[s].transform = transformMatrix;
 	}
-
+	if (ObjectType == 0) {
+		scene->allWorldCompObjects[sceneObjectIndex].transparent = .5f;
+	}
 
 			PowerUp newPowerUp = PowerUp(1, physicsIndex, sceneObjectIndex, x, y, z);
 			newPowerUp.gameStateIndex = PowerUps.size();
@@ -452,11 +467,15 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse,
 	entity2->health += entity2->armor;
 
 	//Resolve effects of damage
-	if (entity1->health <= 0)
+	if (entity1->health <= 0) {
+		this->explosions.push_back(Explosion(entity1->position));
 		DespawnEnemy(entity1);
+	}
 
-	if(entity2->health <= 0)
+	if (entity2->health <= 0) {
+		this->explosions.push_back(Explosion(entity2->position));
 		DespawnEnemy(entity2);
+	}
 
 	//Explosion sound
 	if (entity1->health <= 0 || entity2->health <= 0)

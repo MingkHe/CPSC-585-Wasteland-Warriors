@@ -154,6 +154,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="EnemyUnit.cpp" />
     <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="Explosion.cpp" />
     <ClCompile Include="Framebuffer.cpp" />
     <ClCompile Include="Gamestate.cpp" />
     <ClCompile Include="Geometry.cpp" />
@@ -185,6 +186,7 @@
     <ClInclude Include="CompositeWorldObject.h" />
     <ClInclude Include="EnemyUnit.h" />
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="Explosion.h" />
     <ClInclude Include="Framebuffer.h" />
     <ClInclude Include="Gamestate.h" />
     <ClInclude Include="Geometry.h" />

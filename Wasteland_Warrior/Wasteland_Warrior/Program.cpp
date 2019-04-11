@@ -197,7 +197,15 @@ void Program::start() {
 	}
 	*/
 
-	
+	int width, height;
+	glfwGetFramebufferSize(window, &width, &height);
+	if (height != win_height || width != win_width) {
+		gameState->scene->renderer->rear_view = createFramebuffer(width, height);
+		gameState->scene->renderer->shadow_buffer = createFramebuffer(width, height);
+		gameState->scene->renderer->shadow_buffertwo = createFramebuffer(width, height);
+		gameState->scene->renderer->shadow_bufferthree = createFramebuffer(width, height);
+		gameState->scene->renderer->main_view = createFramebuffer(width, height);
+	}
 
 	//Main render loop
 	while (!glfwWindowShouldClose(window)) {
@@ -288,7 +296,6 @@ void Program::setupWindow() {
 
 	window = glfwCreateWindow(width, height, "Wasteland Warrior", NULL, NULL);
 	this->fullscreen = false;
-	//std::cout << glfwGetPrimaryMonitor() << std::endl;
 	//window = glfwCreateWindow(width, height, "Wasteland Warrior", glfwGetPrimaryMonitor(), NULL);
 	//this->fullscreen = true;
 

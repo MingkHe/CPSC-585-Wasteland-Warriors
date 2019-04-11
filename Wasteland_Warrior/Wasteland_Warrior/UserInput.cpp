@@ -1,5 +1,8 @@
+#pragma comment(lib, "LogitechSteeringWheelLib.lib") 
+
 #include "UserInput.h"
 #include "Program.h"
+#include "LogitechSteeringWheelLib.h"
 
 #include <iostream>
 #include <string>
@@ -44,7 +47,6 @@ void UserInput::Update(Gamestate* gameState)
 	gameState->leftTrigger = 0.0;
 	gameState->rightTrigger = 0.0; 
 
-	//Gamepad input
 	gamepad(glfwJoystickPresent(GLFW_JOYSTICK_1), gameState);
 
 	//Get input from buffer
@@ -279,10 +281,12 @@ void UserInput::mouseButton(GLFWwindow* window, int button, int action, int mods
 }
 
 void UserInput::gamepad(int controller, Gamestate* gameState) {
-
 	//Controller is connected
-	if (controller == 1) {
+	const float *axesTest = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &axesCountTest); //This is for checking if its a wireless controller or haptics steering wheel
+	if ((controller == 1) && (axesCountTest != 4)) {
 		gameState->controller = true;
+
+		gameState->updateHapticWheelState = false;
 		std::string name = glfwGetJoystickName(GLFW_JOYSTICK_1);
 		const float *axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &axesCount);
 		const unsigned char *buttons = glfwGetJoystickButtons(GLFW_JOYSTICK_1, &buttonCount);
@@ -447,7 +451,103 @@ void UserInput::gamepad(int controller, Gamestate* gameState) {
 			};
 		}
 	}
+	//If haptic steering wheel is connected
+	else if ((controller == 1) && (axesCountTest == 4)) {
+
+		gameState->hapticWheel = true;
+
+		//Haptic Wheel & Pedals
+		int axesCount; //4
+		const float *axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &axesCount);
+	
+		//all go -1 to 1 (-1 for left and down, 1 for right and up)
+		gameState->leftStickX = axes[0]; //Wheel Steering
+		gameState->rightTrigger = -axes[1]; //Acceleration
+		gameState->leftTrigger = -axes[2]; // Braking
+		gameState->rightStickX = -axes[3];  //Clutch
+
+		//Haptic Wheel buttons
+		int buttonCount; //22
+		const unsigned char *buttons = glfwGetJoystickButtons(GLFW_JOYSTICK_1, &buttonCount);
+		//std::cout << buttonCount << std::endl;
+		if (GLFW_PRESS == buttons[0]) {
+			UserInput::inputBuffer.push("A");
+		};
+		if (GLFW_PRESS == buttons[4]) {
+			UserInput::inputBuffer.push("B");
+		};
+		if (GLFW_PRESS == buttons[8]) {
+			if (vehicleReset == true) {
+				UserInput::inputBuffer.push("Y");
+			}
+			vehicleReset = false;
+		};
+		if (GLFW_RELEASE == buttons[8]) {
+			vehicleReset = true;
+		};
+		if (GLFW_PRESS == buttons[3]) {
+			UserInput::inputBuffer.push("X");
+		};
+		if (GLFW_PRESS == buttons[5]) {
+			UserInput::inputBuffer.push("REVERSE");
+		};
+		if (GLFW_PRESS == buttons[9]) {
+			if (view == true) {
+				UserInput::inputBuffer.push("VIEW");
+			}
+			view = false;
+		};
+		if (GLFW_RELEASE == buttons[9]) {
+			view = true;
+		};
+		if (GLFW_PRESS == buttons[6]) {
+			UserInput::inputBuffer.push("OPTION");
+		};
+		if (GLFW_PRESS == buttons[10]) {
+			UserInput::inputBuffer.push("MENU");
+		};
+		if (GLFW_PRESS == buttons[1]) {
+			UserInput::inputBuffer.push("LS");
+		};
+		if (GLFW_PRESS == buttons[9]) {
+			UserInput::inputBuffer.push("RS");
+		};
+
+		//Haptic Wheel's Dpad
+		if (GLFW_PRESS == buttons[18]) {
+			if (up == true) {
+				UserInput::inputBuffer.push("UP");
+			}
+			up = false;
+		};
+		if (GLFW_RELEASE == buttons[18]) {
+			up = true;
+		};
+		if (GLFW_PRESS == buttons[19]) {
+			UserInput::inputBuffer.push("RIGHT");
+		};
+		if (GLFW_PRESS == buttons[20]) {
+			if (down == true) {
+				UserInput::inputBuffer.push("DOWN");
+			}
+			down = false;
+		};
+		if (GLFW_RELEASE == buttons[20]) {
+			down = true;
+		};
+		if (GLFW_PRESS == buttons[21]) {
+			UserInput::inputBuffer.push("LEFT");
+		};
+
+		//
+		if (LogiUpdate()) {
+			gameState->updateHapticWheelState = true;
+		}
+
+	}
 	else {
+		gameState->updateHapticWheelState = false;
 		gameState->controller = false;
+		gameState->hapticWheel = false;
 	}
 }

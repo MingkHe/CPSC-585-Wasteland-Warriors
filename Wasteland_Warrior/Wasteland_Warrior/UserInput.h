@@ -15,7 +15,11 @@ private:
 	bool select;
 
 	int axesCount;
+	int axesCountTest;
 	int buttonCount;
+
+	bool reverseCameraOn;
+	bool vehicleReset;
 
 public:
 	UserInput();
@@ -31,6 +35,7 @@ public:
 	float oldMouseYpos;
 	static bool MouseLeft;
 	static bool MouseRight;
+
 
 	//Car controls
 	static bool WKey;

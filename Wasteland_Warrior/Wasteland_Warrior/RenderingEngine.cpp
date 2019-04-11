@@ -127,6 +127,8 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	assignBuffers(mirror_back);
 	setBufferData(mirror_back);
 
+
+
 	aim.verts.push_back(glm::vec3(-0.1f,-0.1f,.0f));
 	aim.verts.push_back(glm::vec3(0.1f, -0.1f, .0f));
 	aim.verts.push_back(glm::vec3(0.1f, 0.1f, .0f));
@@ -144,24 +146,24 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	assignBuffers(aim);
 	setBufferData(aim);
 
-	rear_view = createFramebuffer(game_state->window_width, game_state->window_height);
-	shadow_buffer = createFramebuffer(game_state->window_width, game_state->window_height);
-	if (game_state->fullscreen) {
+	//rear_view = createFramebuffer(game_state->window_width, game_state->window_height);
+	//shadow_buffer = createFramebuffer(game_state->window_width, game_state->window_height);
+	//if (game_state->fullscreen) {
 		rear_view = createFramebuffer(game_state->window_width, game_state->window_height);
 		shadow_buffer = createFramebuffer(game_state->window_width, game_state->window_height);
 		shadow_buffertwo = createFramebuffer(game_state->window_width, game_state->window_height);
 		shadow_bufferthree = createFramebuffer(game_state->window_width, game_state->window_height);
 		main_view = createFramebuffer(game_state->window_width, game_state->window_height);
 		//blur = createFramebuffer(game_state->window_width, game_state->window_height);
-	}
+	/*}
 	else {
-		rear_view = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1061));
-		shadow_buffer = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1061));
-		shadow_buffertwo = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1061));
-		shadow_bufferthree = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1061));
-		main_view = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1061));
+		rear_view = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1181));
+		shadow_buffer = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1181));
+		shadow_buffertwo = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1181));
+		shadow_bufferthree = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1181));
+		main_view = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1181));
 		//blur = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1061));
-	}
+	}*/
 
 	bias = 1200/game_state->window_height;
 
@@ -335,6 +337,40 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 			glDrawArrays(objects[i].subObjects[s].drawMode, 0, objects[i].subObjects[s].verts.size());
 		}
 	}
+	const Geometry explosion = (game_state->scene->compObjectInstances[game_state->explosionMeshIndex].subObjects[0]);
+	int explosion_life = 150;
+	for (int i = 0; i < (int)game_state->explosions.size(); i++) {
+		if (++game_state->explosions[i].life > explosion_life) {
+			game_state->explosions.erase(game_state->explosions.begin() + i);
+			i--;
+			continue;
+		}
+		float scale = .0625f;
+		glm::mat4 transform = glm::mat4(
+			scale*game_state->explosions[i].life, 0.f, 0.f, 0.f,
+			0.f, scale*game_state->explosions[i].life, 0.f, 0.f,
+			0.f, 0.f, scale*game_state->explosions[i].life, 0.f,
+			game_state->explosions[i].position.x, game_state->explosions[i].position.y, game_state->explosions[i].position.z, 1.f
+		);
+		glUniformMatrix4fv(transformGL, 1, false, &(transform[0][0]));
+		glUniform1f(transparent, 1.f-((float)game_state->explosions[i].life/(float)explosion_life));
+		//bind the texture
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, explosion.texture.textureID);
+
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, shadow_buffer.colorTextureID);
+
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, shadow_buffertwo.colorTextureID);
+
+		glActiveTexture(GL_TEXTURE3);
+		glBindTexture(GL_TEXTURE_2D, shadow_bufferthree.colorTextureID);
+
+		glBindVertexArray(explosion.vao);
+		glDrawArrays(explosion.drawMode, 0, explosion.verts.size());
+	}
+
 
 	//draw rear view
 	glBindFramebuffer(GL_FRAMEBUFFER, rear_view.id);

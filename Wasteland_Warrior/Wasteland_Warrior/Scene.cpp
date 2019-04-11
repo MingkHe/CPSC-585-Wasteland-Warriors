@@ -104,14 +104,7 @@ int Scene::loadOBJObjectInstance(std::vector<const char*> filepath, std::vector<
 		if (strcmp(lineHeader, "v") == 0) {
 			//printf("6\n");
 			if (previousHeader == 'f') {
-				//temp_vertices[materialIndex].push_back(vertice_holder);
-				//temp_uvs[materialIndex].push_back(uv_holder);
-				//temp_normals[materialIndex].push_back(normal_holder);
-				//subObject_by_Material_count[materialIndex]++;
-				//createObjectInstance(textureFilepath, OBJobjectComposite, vertexIndices[0], uvIndices[0], normalIndices[0], temp_vertices[0], temp_uvs[0], temp_normals[0], materialIndex);
-				//vertexIndices.clear();
-				//uvIndices.clear();
-				//normalIndices.clear();
+
 			}
 			previousHeader = 'v';
 			glm::vec3 vertex;

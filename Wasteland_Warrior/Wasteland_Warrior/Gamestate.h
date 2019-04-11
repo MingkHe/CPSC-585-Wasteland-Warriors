@@ -13,6 +13,7 @@
 #include "PowerUp.h"
 #include "Object.h"
 #include "Physics_Controller.h"
+#include "Explosion.h"
 
 #pragma once
 
@@ -36,6 +37,7 @@ public:
 	std::vector<PowerUp> PowerUps;
 	std::vector<Object> StaticObjects;
 	std::vector<Object> DynamicObjects;
+	std::vector<Explosion> explosions;
 
 	std::vector<glm::vec2> pathfindingInputs;
 
@@ -139,7 +141,7 @@ public:
 	//----------------------UI Buffer End-----------------------------------
 
 	bool controller;
-
+	
 	//Joysticks
 	float leftStickX;
 	float leftStickY;
@@ -150,6 +152,11 @@ public:
 	float leftTrigger;
 	float rightTrigger;
 
+	//Haptic Wheel 
+	bool hapticWheel;
+	bool updateHapticWheelState;
+	
+
 	//Camera
 	Camera camera = Camera(this);
 	float cameraAngle;
@@ -157,6 +164,7 @@ public:
 	int skyboxIndex;
 	int groundIndex;
 	int mapGroundPhysicsIndex;
+	int explosionMeshIndex;
 
 	//Time
 	int time;
@@ -181,9 +189,9 @@ public:
 
 	std::string UIMode;
 
-	const int numOfStaticObjectInstances = 11;
-	int staticObjMeshTextureIndices[11];
-	std::vector<const char*> staticObjMeshList[11] = { 
+	const int numOfStaticObjectInstances = 12;
+	int staticObjMeshTextureIndices[12];
+	std::vector<const char*> staticObjMeshList[12] = { 
 		{"Objects/SkyBox/skySphere.obj"},
 		{"Objects/Ruined_Brick_Building/ruined building_brick.obj"},
 		{"Objects/Wooden_train_cars/wagon.obj"},
@@ -194,10 +202,11 @@ public:
 		{"Objects/Battle_Car_Package/OBJs/staticOilTanker.obj"},
 		{"Objects/Tunnel/tunnel.obj"},
 		{"Objects/RuinedSmallHouse/Old_house.obj"},
-		{"Objects/Buildings/Gas Station.obj"}
+		{"Objects/Buildings/Gas Station.obj"},
+		{"Objects/explosionSphere.obj"}  //Explosion Sphere
 	};
 
-	std::vector<const char*> staticObjTextureList[11] = {
+	std::vector<const char*> staticObjTextureList[12] = {
 		 {"Objects/SkyBox/skySphere_texture.jpg"},
 		 {"Objects/Ruined_Brick_Building/ruined_building_brick.jpg"},
 		 {"Objects/Wooden_train_cars/wagon_tex3.png"},
@@ -208,7 +217,8 @@ public:
 		 {"Objects/Battle_Car_Package/tex/Oil Tank.jpg"},
 		 {"Objects/Tunnel/tunnelWall.jpg"},
 		 {"Objects/RuinedSmallHouse/Old_house.png"},
-		 {"Objects/Buildings/Gas Station.jpg"}
+		 {"Objects/Buildings/Gas Station.jpg"},
+		 {"Textures/explosion_texture.png"} //Explosion Texture
 	 };
 
 	const int numOfDynamicObjectInstances = 7;
@@ -300,9 +310,9 @@ public:
 	void DespawnEnemy(Vehicle* vehicle);
 	void DespawnPowerUp(PowerUp* powerUp);
 
-	void Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse);
+	void Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse, bool hapticFeedback);
 	void Collision(Vehicle* vehicle, PowerUp* powerUp);
-	void Collision(Vehicle* vehicle, Object* staticObject);
+	void Collision(Vehicle* vehicle, Object* staticObject, glm::vec3 impulse, bool hapticFeedback);
 
 	glm::mat4 getRotationMatrix(float xRot, float yRot, float zRot);
 	void resetOrientation();

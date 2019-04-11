@@ -1,9 +1,10 @@
 /*
 * Program.cpp
 *
-*  Created on: Sep 10, 2018
-*      Author: John Hall
 */
+#pragma comment(lib, "LogitechSteeringWheelLib.lib") 
+
+
 
 #include <iostream>
 #include <string>
@@ -33,10 +34,12 @@
 #include "PlayerUnit.h"
 #include "EnemyUnit.h"
 #include "texture.h"
+#include "LogitechSteeringWheelLib.h"
 #include "Weapon_Controller.h"
 
 #include <SDL_mixer.h>
 #include <SDL.h>
+
 
 
 Program::Program() {
@@ -70,6 +73,8 @@ void Program::start() {
 	AI_Interaction aiInteraction = AI_Interaction(gameState);
 	Physics_Controller physicsCL = Physics_Controller(gameState);
 	Audio_Controller audioCL = *Audio_Controller::instance();
+
+	LogiSteeringInitialize(TRUE);
 
 	renderingEngine = new RenderingEngine(gameState);
 
@@ -192,7 +197,15 @@ void Program::start() {
 	}
 	*/
 
-	
+	int width, height;
+	glfwGetFramebufferSize(window, &width, &height);
+	if (height != win_height || width != win_width) {
+		gameState->scene->renderer->rear_view = createFramebuffer(width, height);
+		gameState->scene->renderer->shadow_buffer = createFramebuffer(width, height);
+		gameState->scene->renderer->shadow_buffertwo = createFramebuffer(width, height);
+		gameState->scene->renderer->shadow_bufferthree = createFramebuffer(width, height);
+		gameState->scene->renderer->main_view = createFramebuffer(width, height);
+	}
 
 	//Main render loop
 	while (!glfwWindowShouldClose(window)) {
@@ -252,6 +265,7 @@ void Program::start() {
 		elapsed_seconds = 0;
 		gameState->time = currentTime.millitm;
 	}
+	LogiSteeringShutdown();
 	SDL_CloseAudio();
 	SDL_Quit();
 }
@@ -282,8 +296,8 @@ void Program::setupWindow() {
 
 	window = glfwCreateWindow(width, height, "Wasteland Warrior", NULL, NULL);
 	this->fullscreen = false;
-	window = glfwCreateWindow(width, height, "Wasteland Warrior", glfwGetPrimaryMonitor(), NULL);
-	this->fullscreen = true;
+	//window = glfwCreateWindow(width, height, "Wasteland Warrior", glfwGetPrimaryMonitor(), NULL);
+	//this->fullscreen = true;
 
 	if (!window) {
 		std::cout << "Program failed to create GLFW window, TERMINATING" << std::endl;

@@ -93,6 +93,8 @@ public:
 	Geometry aimBeam;
 	Geometry square;
 
+	//Geometry explosion;
+
 	Framebuffer shadow_buffer;
 	Framebuffer shadow_buffertwo;
 	Framebuffer shadow_bufferthree;

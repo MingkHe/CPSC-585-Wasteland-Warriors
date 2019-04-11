@@ -34,10 +34,12 @@ void main(void) {
 		point = (point*rot).yx;
 		point.y *= -1;
 		if(radius_squared(radar_dist*point, position) < 0.005) {
-			if(enemy_health[i] > .6667) {
+			if(enemy_health[i] > .75) {
+				FragmentColour = vec4(0, .9, 0, 1);
+			} else if(enemy_health[i] > .5) {
 				FragmentColour = vec4(.9, .9, 0, 1);
-			} else if(enemy_health[i] > .3333) {
-				FragmentColour = vec4(.9, .9, 0, 1);
+			} else if(enemy_health[i] > .25) {
+				FragmentColour = vec4(.9, 0, .9, 1);
 			} else {
 				FragmentColour = vec4(.9, 0, 0, 1);
 			}
@@ -48,15 +50,22 @@ void main(void) {
 		point = (point*rot).yx;
 		point.y *= -1;
 		if(radius_squared(radar_dist*point, position) < 0.005) {
-			if(enemy_health[i] > .5) {
-				FragmentColour = vec4(.5, 0, .5, 1);
+			if(highlight_health[i] > .75) {
+				FragmentColour = vec4(0, .9, 0, 1);
+			} else if(highlight_health[i] > .5) {
+				FragmentColour = vec4(.9, .9, 0, 1);
+			} else if(highlight_health[i] > .25) {
+				FragmentColour = vec4(.9, 0, .9, 1);
 			} else {
-				FragmentColour = vec4(.5, 0, .5, 1);
+				FragmentColour = vec4(.9, 0, 0, 1);
 			}
+		}
+		if(radius_squared(radar_dist*point, position) < 0.002) {
+			FragmentColour = vec4(.5, 0, .5, 1);
 		}
 	}
 	if(radius_squared(vec2(0), position) < 0.005) {
-		FragmentColour = vec4(0, .9, 0, 1);
+		FragmentColour = vec4(0, .9, .9, 1);
 	}
 	if(position.x > 1-xmargin || position.x < xmargin-1 || position.y > 1-ymargin || position.y < ymargin-1) {
 		FragmentColour = vec4(0, 0, 0, 1);

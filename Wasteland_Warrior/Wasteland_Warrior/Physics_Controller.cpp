@@ -497,14 +497,22 @@ int Physics_Controller::createMap(const PxVec3* verts, const PxU32 numVerts, con
 
 }
 
-int Physics_Controller::createStaticObject(const PxVec3* verts, const PxU32 numVerts, const PxU32* indices, const PxU32 triCount, float x, float y, float z) {
+int Physics_Controller::createStaticObject(const PxVec3* verts, const PxU32 numVerts, const PxU32* indices, const PxU32 triCount, float x, float y, float z, glm::mat4 rotationMatrix) {
 	gStaticObject= createRigidTriangleMeshStatic(verts, numVerts, indices, triCount, gMaterial, *gPhysics, *gCooking);
-	gStaticObject->setGlobalPose({ x, y, z });
+
+	float qw = sqrt(1 + rotationMatrix[0][0] + rotationMatrix[1][1] + rotationMatrix[2][2])/2;
+	float qx = (rotationMatrix[2][1] - rotationMatrix[1][2])/(4*qw);
+	float qy = -(rotationMatrix[0][2] - rotationMatrix[2][0])/(4 * qw);
+	float qz = (rotationMatrix[1][0] - rotationMatrix[0][1])/(4 * qw);
+
+	PxQuat quat = PxQuat(qx, qy, qz, qw);
+	PxTransform transform = PxTransform({ x, y, z }, quat);
+
+	gStaticObject->setGlobalPose(transform);
 	gScene->addActor(*gStaticObject);
 
 	rigidStaticActorIndex++;
 	return rigidStaticActorIndex;
-
 }
 
 int Physics_Controller::createDynamicObject(PxU32 objectType, PxVec3 dimensions, PxVec3 MOI, PxReal mass, PxReal density, float x, float y, float z) {

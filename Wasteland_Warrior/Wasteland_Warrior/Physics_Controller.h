@@ -24,7 +24,7 @@ public:
 	void setPositionStatic(int actorIndex, glm::vec3 newLocation);
 
 	int createMap(const PxVec3* verts, const PxU32 numVerts, const PxU32* indices, const PxU32 triCount);
-	int createStaticObject(const PxVec3* verts, const PxU32 numVerts, const PxU32* indices, const PxU32 triCount, float x, float y, float z);
+	int createStaticObject(const PxVec3* verts, const PxU32 numVerts, const PxU32* indices, const PxU32 triCount, float x, float y, float z, glm::mat4 rotationMatrix);
 	int createDynamicObject(PxU32 objectType, PxVec3 dimensions, PxVec3 MOI, PxReal mass, PxReal density, float x, float y, float z);
 
 	void resetOrientation(int actorIndex);

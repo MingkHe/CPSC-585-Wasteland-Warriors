@@ -801,60 +801,60 @@ void RenderingEngine::pushTextObj(std::vector<Geometry>& objects, std::string te
 }
 
 void RenderingEngine::updateText() {
-	float scale = (float)game_state->monitor_width / 1200.f;
+	float scale = (float)game_state->monitor_width / 1400.f;
 	if (game_state->UIMode == "Game") {
 		if (game_state->startup) {
-			pushTextObj(texObjects, "Wasteland Warrior", 0.01f*game_state->window_width, 0.95f*game_state->window_height, scale * 0.75f, glm::vec3(0.7f, 0.2f, 0.2f), false);
+			pushTextObj(texObjects, "Wasteland Warrior", 0.01f*game_state->monitor_width, 0.95f*game_state->monitor_height, scale * 0.75f, glm::vec3(0.7f, 0.2f, 0.2f), false);
 		}
 		else {
 			if (game_state->breakSeconds == 0) {
 				if (game_state->gameMode == "End Game") {
-					pushTextObj(texObjects, "Escape to survive!", 0.01f*game_state->window_width, 0.95f*game_state->window_height, scale * 0.75f, glm::vec3(0.7f, 0.2f, 0.2f), false);
+					pushTextObj(texObjects, "Escape to survive!", 0.01f*game_state->monitor_width, 0.95f*game_state->monitor_height, scale * 0.75f, glm::vec3(0.7f, 0.2f, 0.2f), false);
 				}
 				else {
-					pushTextObj(texObjects, "Wave # " + std::to_string(game_state->wave) + " - " + game_state->gameMode, 0.01f*game_state->window_width, 0.95f*game_state->window_height, scale * 0.75f, glm::vec3(0.7f, 0.2f, 0.2f), false);
-					pushTextObj(texObjects, "Enemies Left: " + std::to_string(game_state->enemiesLeft), 0.01f*game_state->window_width, 0.9f*game_state->window_height, scale * 0.75f, glm::vec3(0.7f, 0.2f, 0.2f), false);
+					pushTextObj(texObjects, "Wave # " + std::to_string(game_state->wave) + " - " + game_state->gameMode, 0.01f*game_state->monitor_width, 0.95f*game_state->monitor_height, scale * 0.75f, glm::vec3(0.7f, 0.2f, 0.2f), false);
+					pushTextObj(texObjects, "Enemies Left: " + std::to_string(game_state->enemiesLeft), 0.01f*game_state->monitor_width, 0.9f*game_state->monitor_height, scale * 0.75f, glm::vec3(0.7f, 0.2f, 0.2f), false);
 					if (game_state->gameMode == "Checkpoint") {
-						pushTextObj(texObjects, "Checkpoints Left: " + std::to_string(game_state->checkpointsLeft), 0.01f*game_state->window_width, 0.85f*game_state->window_height, scale * 0.75f, glm::vec3(0.7f, 0.2f, 0.2f), false);
+						pushTextObj(texObjects, "Checkpoints Left: " + std::to_string(game_state->checkpointsLeft), 0.01f*game_state->monitor_width, 0.85f*game_state->monitor_height, scale * 0.75f, glm::vec3(0.7f, 0.2f, 0.2f), false);
 					}
 				}
 			}
 			else {
-				pushTextObj(texObjects, "Next wave: " + std::to_string(game_state->breakSeconds) + " seconds", 0.01f*game_state->window_width, 0.95f*game_state->window_height, scale * 0.75f, glm::vec3(0.7f, 0.2f, 0.2f), false);
+				pushTextObj(texObjects, "Next wave: " + std::to_string(game_state->breakSeconds) + " seconds", 0.01f*game_state->monitor_width, 0.95f*game_state->monitor_height, scale * 0.75f, glm::vec3(0.7f, 0.2f, 0.2f), false);
 			}
 
 			if (game_state->weaponState == 0) {
-				//pushTextObj(texObjects, "Weapon: OFF", 0.01f*game_state->window_width, 0.8f*game_state->window_height, scale * 0.8, glm::vec3(0.7f, 0.2f, 0.2f),false);
+				//pushTextObj(texObjects, "Weapon: OFF", 0.01f*game_state->monitor_width, 0.8f*game_state->monitor_height, scale * 0.8, glm::vec3(0.7f, 0.2f, 0.2f),false);
 			}
 			else {
-				pushTextObj(texObjects, "Machine Gun Activated", 0.01f*game_state->window_width, 0.8f*game_state->window_height, scale * 0.8, glm::vec3(0.7f, 0.2f, 0.2f), false);
-				//pushTextObj(texObjects, "Weapon: ON", 0.01f*game_state->window_width, 0.8f*game_state->window_height, scale * 0.8, glm::vec3(0.7f, 0.2f, 0.2f),false);
-				//pushTextObj(texObjects, "Ammo: " + std::to_string(game_state->ammo), 0.01f*game_state->window_width, 0.75f*game_state->window_height, scale * 0.8, glm::vec3(0.7f, 0.2f, 0.2f),false);
+				pushTextObj(texObjects, "Machine Gun Activated", 0.01f*game_state->monitor_width, 0.8f*game_state->monitor_height, scale * 0.8, glm::vec3(0.7f, 0.2f, 0.2f), false);
+				//pushTextObj(texObjects, "Weapon: ON", 0.01f*game_state->monitor_width, 0.8f*game_state->monitor_height, scale * 0.8, glm::vec3(0.7f, 0.2f, 0.2f),false);
+				//pushTextObj(texObjects, "Ammo: " + std::to_string(game_state->ammo), 0.01f*game_state->monitor_width, 0.75f*game_state->monitor_height, scale * 0.8, glm::vec3(0.7f, 0.2f, 0.2f),false);
 			}
 
 			if (game_state->powerText) {
 				switch (game_state->powerUpType)
 				{
 				case 0:
-					pushTextObj(texObjects, "Checkpoint reached!", 0.5f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
+					pushTextObj(texObjects, "Checkpoint reached!", 0.5f*game_state->monitor_width, 0.8f*game_state->monitor_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
 					break;
 				case 1:
-					pushTextObj(texObjects, "Full health!", 0.5f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
+					pushTextObj(texObjects, "Full health!", 0.5f*game_state->monitor_width, 0.8f*game_state->monitor_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
 					break;
 				case 2:
-					pushTextObj(texObjects, "Maximum health increaced!", 0.5f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
+					pushTextObj(texObjects, "Maximum health increaced!", 0.5f*game_state->monitor_width, 0.8f*game_state->monitor_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
 					break;
 				case 3:
-					pushTextObj(texObjects, "Health boost!", 0.5f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
+					pushTextObj(texObjects, "Health boost!", 0.5f*game_state->monitor_width, 0.8f*game_state->monitor_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
 					break;
 				case 4:
-					pushTextObj(texObjects, "Armor boost!", 0.5f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
+					pushTextObj(texObjects, "Armor boost!", 0.5f*game_state->monitor_width, 0.8f*game_state->monitor_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
 					break;
 				case 5:
-					pushTextObj(texObjects, "Damage boost!", 0.5f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
+					pushTextObj(texObjects, "Damage boost!", 0.5f*game_state->monitor_width, 0.8f*game_state->monitor_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
 					break;
 				case 6:
-					pushTextObj(texObjects, "Payload collected!", 0.5f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
+					pushTextObj(texObjects, "Payload collected!", 0.5f*game_state->monitor_width, 0.8f*game_state->monitor_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
 					break;
 				default:
 					break;
@@ -862,47 +862,47 @@ void RenderingEngine::updateText() {
 			}
 			if (game_state->modeText) {
 				if (game_state->gameMode == "Checkpoint") {
-					pushTextObj(texObjects, "Collect all checkpoints", 0.5f*game_state->window_width, 0.7f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
+					pushTextObj(texObjects, "Collect all checkpoints", 0.5f*game_state->monitor_width, 0.7f*game_state->monitor_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
 				}
 				else if (game_state->gameMode == "Head Hunter") {
-					pushTextObj(texObjects, "Defeat escaping enemy ", 0.5f*game_state->window_width, 0.7f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
+					pushTextObj(texObjects, "Defeat escaping enemy ", 0.5f*game_state->monitor_width, 0.7f*game_state->monitor_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
 				}
 				else if (game_state->gameMode == "Boss Battle") {
-					pushTextObj(texObjects, "Defeat boss", 0.5f*game_state->window_width, 0.7f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
+					pushTextObj(texObjects, "Defeat boss", 0.5f*game_state->monitor_width, 0.7f*game_state->monitor_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
 				}
 				else if (game_state->gameMode == "Payload") {
-					pushTextObj(texObjects, "Collect and deliver payload", 0.5f*game_state->window_width, 0.7f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
+					pushTextObj(texObjects, "Collect and deliver payload", 0.5f*game_state->monitor_width, 0.7f*game_state->monitor_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
 				}
 				else if (game_state->gameMode == "Survival") {
-					pushTextObj(texObjects, "Defeat all enemies", 0.5f*game_state->window_width, 0.7f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
+					pushTextObj(texObjects, "Defeat all enemies", 0.5f*game_state->monitor_width, 0.7f*game_state->monitor_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
 				}
 				else if (game_state->gameMode == "End Game") {
-					pushTextObj(texObjects, "Collect dynamite and blow up truck to escape", 0.5f*game_state->window_width, 0.7f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
+					pushTextObj(texObjects, "Collect dynamite and blow up truck to escape", 0.5f*game_state->monitor_width, 0.7f*game_state->monitor_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
 				}
 			}
 		}
 	}
 
 	if (game_state->UIMode == "Win") {
-		pushTextObj(texObjects, "Your score was: " + std::to_string(game_state->score), 0.38f*game_state->window_width, 0.52f*game_state->monitor_height, scale, glm::vec3(255, 140, 0)/glm::vec3(255,255,255), false);
-		pushTextObj(texObjects, "You survived in: " + std::to_string(game_state->scoreTime) + " seconds", 0.32f*game_state->window_width, 0.45f*game_state->monitor_height, scale, glm::vec3(255, 140, 0) / glm::vec3(255, 255, 255), false);
+		pushTextObj(texObjects, "Your score was: " + std::to_string(game_state->score), 0.38f*game_state->monitor_width, 0.52f*game_state->monitor_height, scale, glm::vec3(255, 140, 0)/glm::vec3(255,255,255), false);
+		pushTextObj(texObjects, "You survived in: " + std::to_string(game_state->scoreTime) + " seconds", 0.32f*game_state->monitor_width, 0.45f*game_state->monitor_height, scale, glm::vec3(255, 140, 0) / glm::vec3(255, 255, 255), false);
 	}
 
 	if (game_state->UIMode == "Lose") {
-		pushTextObj(texObjects, "Your score was: " + std::to_string(game_state->score), 0.38f*game_state->window_width, 0.4f*game_state->monitor_height, scale, glm::vec3(.768f, .768f, .768f), false);
-		pushTextObj(texObjects, "You died after: " + std::to_string(game_state->scoreTime) + " seconds", 0.32f*game_state->window_width, 0.33f*game_state->monitor_height, scale, glm::vec3(.768f, .768f, .768f), false);
+		pushTextObj(texObjects, "Your score was: " + std::to_string(game_state->score), 0.38f*game_state->monitor_width, 0.4f*game_state->monitor_height, scale, glm::vec3(.768f, .768f, .768f), false);
+		pushTextObj(texObjects, "You died after: " + std::to_string(game_state->scoreTime) + " seconds", 0.32f*game_state->monitor_width, 0.33f*game_state->monitor_height, scale, glm::vec3(.768f, .768f, .768f), false);
 	}
 
 	if (game_state->UIMode == "Loading") {
-		pushTextObj(texObjects, std::to_string(game_state->loadingPercentage)+"%", 0.7f*game_state->window_width, 0.315f*game_state->monitor_height, scale, glm::vec3(1.0f, 1.0f, 1.0f), false);
+		pushTextObj(texObjects, std::to_string(game_state->loadingPercentage)+"%", 0.7f*game_state->monitor_width, 0.315f*game_state->monitor_height, scale, glm::vec3(1.0f, 1.0f, 1.0f), false);
 	}
 
 	if (game_state->UIMode == "Story") {
-		pushTextObj(texObjects, "Press Enter to continue...", 0.6f*game_state->window_width, 0.1f*game_state->monitor_height, scale, glm::vec3(1.0f, 1.0f, 1.0f), false);
+		pushTextObj(texObjects, "Press Enter to continue...", 0.6f*game_state->monitor_width, 0.1f*game_state->monitor_height, scale, glm::vec3(1.0f, 1.0f, 1.0f), false);
 	}
 
 	if (game_state->UIMode == "Control") {
-		pushTextObj(texObjects, "Press Enter to continue...", 0.6f*game_state->window_width, 0.1f*game_state->monitor_height, scale, glm::vec3(1.0f, 1.0f, 1.0f), false);
+		pushTextObj(texObjects, "Press Enter to continue...", 0.6f*game_state->monitor_width, 0.1f*game_state->monitor_height, scale, glm::vec3(1.0f, 1.0f, 1.0f), false);
 	}
 }
 

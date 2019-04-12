@@ -369,7 +369,6 @@ void main() {
 
 		//shadow
 		shadow = ShadowCalculation(shadowCoord);
-		//shadow = 1;
 
 		//linear color (color before gamma correction)
 		linearColor = ambient + shadow*attenuation*(diffuse + specular);

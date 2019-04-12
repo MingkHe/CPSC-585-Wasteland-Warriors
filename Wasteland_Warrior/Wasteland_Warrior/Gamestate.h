@@ -167,6 +167,9 @@ public:
 	int explosionMeshIndex;
 	int mainRoadIndex;
 
+	CompositeWorldObject mainRoad;
+	Geometry explosion;
+
 	//Time
 	int time;
 	int timeStep;

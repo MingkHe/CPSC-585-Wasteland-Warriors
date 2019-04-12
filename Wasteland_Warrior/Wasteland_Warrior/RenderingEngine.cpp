@@ -333,7 +333,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 			glDrawArrays(objects[i].subObjects[s].drawMode, 0, objects[i].subObjects[s].verts.size());
 		}
 	}
-	const Geometry explosion = (game_state->scene->compObjectInstances[game_state->explosionMeshIndex].subObjects[0]);
+	
 	int explosion_life = 150;
 	for (int i = 0; i < (int)game_state->explosions.size(); i++) {
 		if (++game_state->explosions[i].life > explosion_life) {
@@ -348,18 +348,13 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 			0.f, 0.f, scale*game_state->explosions[i].life, 0.f,
 			game_state->explosions[i].position.x, game_state->explosions[i].position.y, game_state->explosions[i].position.z, 1.f
 		);
-		RenderNonPhysicsObject(explosion, transform,transformGL, transparent, 1.f - ((float)game_state->explosions[i].life / (float)explosion_life));
+		RenderNonPhysicsObject(game_state->explosion, transform,transformGL, transparent, 1.f - ((float)game_state->explosions[i].life / (float)explosion_life));
 	}
-	const CompositeWorldObject mainRoad = (game_state->scene->compObjectInstances[game_state->mainRoadIndex]);
-	glm::mat4 roadTransform = glm::mat4(
-		1.f, 0.f, 0.f, 0.f,
-		0.f, 1.f, 0.f, 0.f,
-		0.f, 0.f, 1.f, 0.f,
-		0.f, 0.f, 0.f, 1.f
-	);
-	for (int l = 0; l < mainRoad.subObjects.size(); l++) {
-		RenderNonPhysicsObject(mainRoad.subObjects[l], roadTransform, transformGL, transparent, 1.0f);
-		
+	//Renders road
+	std::cout << game_state->mainRoad.subObjects.size() << std::endl;
+	for (int l = 0; l < game_state->mainRoad.subObjects.size(); l++) {
+		std::cout << "Hello" << std::endl;
+		RenderNonPhysicsObject(game_state->mainRoad.subObjects[l], identityTransform, transformGL, transparent, 1.0f);	
 	}
 
 	//draw rear view

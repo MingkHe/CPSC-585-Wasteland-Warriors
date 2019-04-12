@@ -827,7 +827,8 @@ void RenderingEngine::pushTextObj(std::vector<Geometry>& objects, std::string te
 }
 
 void RenderingEngine::updateText() {
-	float scale = (float)game_state->monitor_width / 1400.f;
+	//float scale = ((float)game_state->monitor_width / 1600.f);
+	float scale = ((float)game_state->monitor_width / (float)game_state->monitor_height) * 0.75f;
 	if (game_state->UIMode == "Game") {
 		if (game_state->startup) {
 			pushTextObj(texObjects, "Wasteland Warrior", 0.01f*game_state->monitor_width, 0.95f*game_state->monitor_height, scale * 0.75f, glm::vec3(0.7f, 0.2f, 0.2f), false);

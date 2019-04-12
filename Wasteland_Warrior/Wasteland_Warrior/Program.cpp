@@ -192,15 +192,6 @@ void Program::start() {
 	gameState->UIMode = "Start";
 	Sleep(1000);
 
-	/*
-	while (true) {
-		usrInput.Update(gameState);
-		if (gameState->button == "Enter") {
-			break;
-		}
-	}
-	*/
-
 	int width, height;
 	glfwGetFramebufferSize(window, &width, &height);
 	gameState->scene->renderer->createFramebuffers(width, height);
@@ -215,28 +206,26 @@ void Program::start() {
 
 			const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
-			/*gameState->window_width = mode->width;
-			gameState->window_height = mode->height;
-			gameState->monitor_width = mode->width;
-			gameState->monitor_height = mode->height;
-
-			int w, h;
-			glfwGetFramebufferSize(window, &w, &h);
-			self->scene->renderer->createFramebuffers(w, h);
-			self->window_height = mode->height;
-			self->window_width = mode->width;*/
+			int width;
+			int height;
 
 			if (this->fullscreen == true) {
-				glfwSetWindowMonitor(window, NULL, NULL, NULL, mode->width, mode->height, NULL);
+				width = 1920;
+				height = 1080;
+				glfwSetWindowMonitor(window, NULL, 10, 30, width, height, NULL);
 				this->fullscreen = false;
 			}
 			else {
-				glfwSetWindowMonitor(window, glfwGetPrimaryMonitor(), NULL, NULL, mode->width, mode->height, NULL);
+				width = mode->width;
+				height = mode->height;
+				glfwSetWindowMonitor(window, glfwGetPrimaryMonitor(), NULL, NULL, width, height, NULL);
 				this->fullscreen = true;
 			}
 
-			glViewport(0, 0, mode->width, mode->height);
+			glViewport(0, 0, width, height);
 		}
+		gameState->monitor_width = width;
+		gameState->monitor_height = height;
 
 		//Game Rules
 		if (gameState->UIMode == "Game") {
@@ -303,6 +292,7 @@ void window_size_callback(GLFWwindow* window, int width, int height)
 	self->scene->renderer->createFramebuffers(w, h);
 	self->window_height = height;
 	self->window_width = width;
+
 	glViewport(0, 0, width, height);
 	/*float new_h = (float)height/(float)self->monitor_height;
 	float new_w = (float)width/(float)self->monitor_width;

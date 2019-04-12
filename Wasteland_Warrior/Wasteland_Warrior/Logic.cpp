@@ -60,11 +60,61 @@ void Logic::Update(Gamestate *gameState)
 					gameState->gameMode = "";
 					gameState->weaponState = false;
 
+					//Truck
+					for (int i = 0; i < (int)gameState->StaticObjects.size(); i++) {
+						Object* truck = &gameState->StaticObjects[i];
+						if (truck->type == 7) {
+							int offset = truck->physicsIndex;
+							glm::mat4 transformMatrix = glm::mat4(
+								2.f, 0.f, 0.f, 0.f,
+								0.f, 2.f, 0.f, 0.f,
+								0.f, 0.f, 2.f, 0.f,
+								0.f, 0.f, 173.f, 1.f
+							);
+							for (int s = 0; s < gameState->scene->allWorldCompObjects[truck->sceneObjectIndex].subObjectsCount; s++) {
+								gameState->scene->allWorldCompObjects[truck->sceneObjectIndex].subObjects[s].transform = transformMatrix;
+							}
+						}
+					}
+
+					//Boulder
+					/*for (int i = 0; i < (int)gameState->StaticObjects.size(); i++) {
+						Object* boulder = &gameState->StaticObjects[i];
+						if (boulder->type == 7) {
+							int offset = boulder->physicsIndex;
+							glm::mat4 transformMatrix = glm::mat4(
+								2.f, 0.f, 0.f, 0.f,
+								0.f, 2.f, 0.f, 0.f,
+								0.f, 0.f, 2.f, 0.f,
+								0.f, 0.f, 173.f, 1.f
+							);
+							for (int s = 0; s < gameState->scene->allWorldCompObjects[boulder->sceneObjectIndex].subObjectsCount; s++) {
+								gameState->scene->allWorldCompObjects[boulder->sceneObjectIndex].subObjects[s].transform = transformMatrix;
+							}
+						}
+					}*/
 				}
 
 				if ((gameState->playerVehicle.position.z > -165 && gameState->playerVehicle.position.z < -164 && gameState->playerVehicle.position.x > 90 && gameState->playerVehicle.position.x < 110)) {
 					gameState->startup = false;
-				}
+
+					//Boulder
+					/*for (int i = 0; i < (int)gameState->StaticObjects.size(); i++) {
+						Object* boulder = &gameState->StaticObjects[i];
+						if (boulder->type == 7) {
+							int offset = boulder->physicsIndex;
+							glm::mat4 transformMatrix = glm::mat4(
+								2.f, 0.f, 0.f, 0.f,
+								0.f, 2.f, 0.f, 0.f,
+								0.f, 0.f, 2.f, 0.f,
+								0.f, 0.f, 173.f, 1.f
+							);
+							for (int s = 0; s < gameState->scene->allWorldCompObjects[boulder->sceneObjectIndex].subObjectsCount; s++) {
+								gameState->scene->allWorldCompObjects[boulder->sceneObjectIndex].subObjects[s].transform = transformMatrix;
+							}
+						}
+					}
+				}*/
 			}
 			else {
 
@@ -79,6 +129,7 @@ void Logic::Update(Gamestate *gameState)
 				gameState->modeText = true;
 				gameState->textTime = 10 * 60;
 				gameState->weaponState = false;
+
 			}
 		}
 
@@ -98,7 +149,7 @@ void Logic::Update(Gamestate *gameState)
 		else {
 
 			//Player has beaten all 5 waves
-			if (gameState->wave == 7 || waveBreak == 7) {
+			if (gameState->wave == 3 || waveBreak == 3) {
 				gameState->UIMode = "Win";
 				gameState->ui_gameplay = false;
 				gameState->restart = true;
@@ -139,7 +190,7 @@ void Logic::Update(Gamestate *gameState)
 								boss(gameState);
 								gameState->gameMode = "Boss Battle";
 							}
-							else if (gameState->wave == 6) {
+							else if (gameState->wave == 2) {
 								payload(gameState);
 								gameState->gameMode = "End Game";
 							}
@@ -323,8 +374,29 @@ bool Logic::payloadCollected(Gamestate *gameState) {
 bool Logic::endgame(Gamestate *gameState) {
 
 	if (gameState->payloadCollected) {
-		if ((gameState->playerVehicle.position.z > 155 && gameState->playerVehicle.position.z < 156 && gameState->playerVehicle.position.x > -10 && gameState->playerVehicle.position.x < 10)) {
-			return true;
+		if ((gameState->playerVehicle.position.z > 155 && gameState->playerVehicle.position.z < 156 && gameState->playerVehicle.position.x > -20 && gameState->playerVehicle.position.x < 20)) {
+			gameState->explosions.push_back(Explosion(glm::vec3(0,0,173)));
+			if ((gameState->playerVehicle.position.z > 170 && gameState->playerVehicle.position.z < 171 && gameState->playerVehicle.position.x > -20 && gameState->playerVehicle.position.x < 20)) {
+				return true;
+			}
+			else {
+				for (int i = 0; i < (int)gameState->StaticObjects.size(); i++) {
+					Object* truck = &gameState->StaticObjects[i];
+					if (truck->type == 7) {
+						int offset = truck->physicsIndex;
+						glm::mat4 transformMatrix = glm::mat4(
+							2.f, 0.f, 0.f, 0.f,
+							0.f, 2.f, 0.f, 0.f,
+							0.f, 0.f, 2.f, 0.f,
+							(-100 * offset), -500.f, -500.f, 1.f
+						);
+						for (int s = 0; s < gameState->scene->allWorldCompObjects[truck->sceneObjectIndex].subObjectsCount; s++) {
+							gameState->scene->allWorldCompObjects[truck->sceneObjectIndex].subObjects[s].transform = transformMatrix;
+						}
+					}
+				}
+			}
+
 		}
 	}
 

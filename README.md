@@ -2,7 +2,17 @@
 
 ## Version 1.0
 
-For the final submission we updated the map, increased the paceing for the game, added the remaining game modes, added a gun as reward for completing the objective, implemented release mode, added our narative of being trapped and escaping, cleaned up a lot of warnings, and fixed most game play bugs.
+For the final submission we:
+    - Updated the map
+    - Improved shadows
+    - Increased the paceing for the game
+    - Provide player with feedback on damage dealt and enemy health
+    - Added the remaining game modes
+    - Added a gun as reward for completing the objective
+    - Implemented release mode
+    - Added our narative of being trapped and escaping
+    - Cleaned up a lot of warnings
+    - Fixed most game play bugs.
 
 ### To Build and Run:
 To build, download or clone the Wasteland Warrior files from https://github.com/MingkHe/CPSC-585-Wasteland-Warriors/tree/Wasteland_Warrior

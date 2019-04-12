@@ -151,6 +151,9 @@ void Program::start() {
 	gameState->SpawnStaticObject(3, 148, -6.2f, -55, 0, 0, 0);
 	gameState->SpawnStaticObject(2, 143, -6.7f, -125, 0, 0, 0);
 	gameState->SpawnStaticObject(3, 73, 0, -125, 0, 0, 0);
+	//gameState->SpawnStaticObject(14, 0, 0, 0, 0, 0, 0);
+	//Spanws buildings
+	gameState->SpawnStaticObject(15, 0, 0, 0, 0, 0, 0);
 
 	//Truck
 	gameState->SpawnStaticObject(7, 0, -500, 173, 0, 0, 0);

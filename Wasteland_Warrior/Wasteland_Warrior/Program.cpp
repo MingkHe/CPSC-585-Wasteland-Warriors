@@ -151,12 +151,12 @@ void Program::start() {
 	gameState->SpawnStaticObject(3, 148, -6.2f, -55, 0, 0, 0);
 	gameState->SpawnStaticObject(2, 143, -6.7f, -125, 0, 0, 0);
 	gameState->SpawnStaticObject(3, 73, 0, -125, 0, 0, 0);
-	gameState->SpawnStaticObject(14, 0, 0, 0, 0, 0, 0);
 
 	//Truck
 	gameState->SpawnStaticObject(7, 0, -500, 173, 0, 0, 0);
 
 	//Boulder
+	gameState->SpawnStaticObject(14, 0, -500.f, 0, 0, 0, 0);
 
 	//Tunnels
 	gameState->SpawnStaticObject(8, 0, 0, 190, 0, 0, 0);
@@ -329,17 +329,17 @@ void Program::setupWindow() {
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
 	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-	//int width = mode->width;//1280; //640
-	//int height = mode->height;//960; //480
-	int width = 640;
-	int height = 480;
+	int width = mode->width;//1280; //640
+	int height = mode->height;//960; //480
+	//int width = 640;
+	//int height = 480;
 	this->win_height = height;
 	this->win_width = width;
 
-	window = glfwCreateWindow(width, height, "Wasteland Warrior", NULL, NULL);
-	this->fullscreen = false;
-	//window = glfwCreateWindow(width, height, "Wasteland Warrior", glfwGetPrimaryMonitor(), NULL);
-	//this->fullscreen = true;
+	//window = glfwCreateWindow(width, height, "Wasteland Warrior", NULL, NULL);
+	//this->fullscreen = false;
+	window = glfwCreateWindow(width, height, "Wasteland Warrior", glfwGetPrimaryMonitor(), NULL);
+	this->fullscreen = true;
 
 	if (!window) {
 		std::cout << "Program failed to create GLFW window, TERMINATING" << std::endl;

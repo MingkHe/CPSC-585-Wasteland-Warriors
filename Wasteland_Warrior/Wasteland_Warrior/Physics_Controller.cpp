@@ -573,7 +573,7 @@ int Physics_Controller::createPlayerVehicle() {
 
 void Physics_Controller::setPosition(int actorIndex, glm::vec3 newLocation){
 	PxU32 numOfRidg = gScene->getNbActors(PxActorTypeFlag::eRIGID_DYNAMIC);
-	PxActor *userBuffer[50];
+	PxActor *userBuffer[10000];
 
 	PxU32 numOfRidgActors = gScene->getActors(PxActorTypeFlag::eRIGID_DYNAMIC, userBuffer, numOfRidg, 0);
 	PxActor *actor = userBuffer[actorIndex];
@@ -588,7 +588,7 @@ void Physics_Controller::setPosition(int actorIndex, glm::vec3 newLocation){
 
 void Physics_Controller::setPositionStatic(int actorIndex, glm::vec3 newLocation) {
 	PxU32 numOfRidg = gScene->getNbActors(PxActorTypeFlag::eRIGID_STATIC);
-	PxActor *userBuffer[50];
+	PxActor *userBuffer[10000];
 
 	PxU32 numOfRidgActors = gScene->getActors(PxActorTypeFlag::eRIGID_STATIC, userBuffer, numOfRidg, 0);
 	PxActor *actor = userBuffer[actorIndex];
@@ -598,7 +598,7 @@ void Physics_Controller::setPositionStatic(int actorIndex, glm::vec3 newLocation
 
 void Physics_Controller::resetOrientation(int actorIndex) {
 	PxU32 numOfRidg = gScene->getNbActors(PxActorTypeFlag::eRIGID_DYNAMIC);
-	PxActor *userBuffer[50];
+	PxActor *userBuffer[10000];
 
 	PxU32 numOfRidgActors = gScene->getActors(PxActorTypeFlag::eRIGID_DYNAMIC, userBuffer, numOfRidg, 0);
 	PxActor *actor = userBuffer[actorIndex];
@@ -829,12 +829,12 @@ void Physics_Controller::stepPhysics(bool interactive)
 {
 	//Get set of rigid dynamic actors
 	PxU32 numOfRidg = gScene->getNbActors(PxActorTypeFlag::eRIGID_DYNAMIC);
-	PxActor *userBufferRD[50];
+	PxActor *userBufferRD[10000];
 	PxU32 numOfRidgDynamicActors = gScene->getActors(PxActorTypeFlag::eRIGID_DYNAMIC, userBufferRD, numOfRidg, 0);
 
 	//Get set of rigid static actors
 	PxU32 numOfStat = gScene->getNbActors(PxActorTypeFlag::eRIGID_STATIC);
-	PxActor *userBufferRS[50];
+	PxActor *userBufferRS[10000];
 	PxU32 numOfRidgStaticActors = gScene->getActors(PxActorTypeFlag::eRIGID_STATIC, userBufferRS, numOfStat, 0);
 
 
@@ -1109,7 +1109,7 @@ void Physics_Controller::stepPhysics(bool interactive)
 void Physics_Controller::updateEntities() {
 	PxU32 numOfRidg = gScene->getNbActors(PxActorTypeFlag::eRIGID_DYNAMIC);
 	
-	PxActor *userBuffer[50];
+	PxActor *userBuffer[10000];
 	//std::cout << "Number of Ridged objects: " << numOfRidg << std::endl; //Test statement, delete it if you want
 
 	PxU32 numOfRidgActors = gScene->getActors(PxActorTypeFlag::eRIGID_DYNAMIC, userBuffer, numOfRidg, 0);

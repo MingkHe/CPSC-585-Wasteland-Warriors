@@ -273,8 +273,8 @@ void window_size_callback(GLFWwindow* window, int width, int height)
 	int w, h;
 	glfwGetFramebufferSize(window, &w, &h);
 	self->scene->renderer->createFramebuffers(w, h);
-	self->window_height = height;
-	self->window_width = width;
+	//self->window_height = height;
+	//self->window_width = width;
 	glViewport(0, 0, width, height);
 	/*float new_h = (float)height/(float)self->monitor_height;
 	float new_w = (float)width/(float)self->monitor_width;

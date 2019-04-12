@@ -47,6 +47,8 @@ public:
 	int sceneCompObjectIndex = -1;
 	int objectInstanceIndex = -1;
 	char previousHeader = 'v';
+	int playerWheelRender;
+	int playerWheelIndices[4];
 
 	int loadCompObjectInstance(int compObjIndex);
 private:

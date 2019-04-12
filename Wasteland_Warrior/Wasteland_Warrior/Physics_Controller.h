@@ -43,4 +43,6 @@ public:
 	bool clutchStillDown = false;
 	bool powerupGrabbed = false;
 	bool checkpointGrabbed = false;
+
+	glm::vec3 cameraWallCollision(glm::vec3 cameraPosition);
 };

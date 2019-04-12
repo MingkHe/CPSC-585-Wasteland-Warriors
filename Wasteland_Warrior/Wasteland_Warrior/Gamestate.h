@@ -106,6 +106,9 @@ public:
 	//sound for weapon swap
 	bool weaponSwap_sound;
 
+	//sound for wave start
+	bool war_horn;
+
 	//the sound for select the start button
 	bool ui_enter;
 	//the sound for ui menu switching between button

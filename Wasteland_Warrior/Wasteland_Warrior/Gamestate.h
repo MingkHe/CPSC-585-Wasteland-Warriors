@@ -254,18 +254,19 @@ public:
 		"Textures/BuildingTextures/crate.jpg", "Textures/BuildingTextures/crate.jpg", "Textures/BuildingTextures/concrete.jpg", "Textures/BuildingTextures/rottenWood.jpg"}
 	 };
 
-	const int numOfDynamicObjectInstances = 7;
-	int dynamicObjMeshTextureIndices[7];
-	std::vector<const char*> dynamicObjMeshList[7] = {
+	const int numOfDynamicObjectInstances = 8;
+	int dynamicObjMeshTextureIndices[8];
+	std::vector<const char*> dynamicObjMeshList[8] = {
 	{"Objects/Realistic_Box_Model/box_realistic.obj"},
 	{"Objects/Realistic_Box_Model/box_realistic.obj"},
 	{"Objects/Realistic_Box_Model/box_realistic.obj"},
 	{"Objects/Realistic_Box_Model/box_realistic.obj"},
 	{"Objects/Realistic_Box_Model/box_realistic.obj"},
 	{"Objects/checkpointMarker.obj"},
+	{"Objects/Realistic_Box_Model/box_realistic.obj"},
 	{"Objects/Realistic_Box_Model/box_realistic.obj"} };
 
-	std::vector<const char*> dynamicObjTextureList[7] = {
+	std::vector<const char*> dynamicObjTextureList[8] = {
 	//"Objects/Realistic_Box_Model/box_texture_color_red.png", 
 	{"Objects/Realistic_Box_Model/full_health.jpg"},
 	{"Objects/Realistic_Box_Model/large_health_boost.jpg"},
@@ -273,7 +274,8 @@ public:
 	{"Objects/Realistic_Box_Model/armour.png"},
 	{"Objects/Realistic_Box_Model/damage.png"},
 	{"Textures/blueSmoke.jpg" },
-	{"Objects/Realistic_Box_Model/payload.png"} };
+	{"Objects/Realistic_Box_Model/payload.png"},
+	{"Objects/Realistic_Box_Model/dynamite.png" } };
 
 	const int numOfVehicleObjectInstances = 7;
 	int vehicleMeshTextureIndices[7];

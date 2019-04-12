@@ -1188,7 +1188,7 @@ bool Physics_Controller::rayCast(glm::vec3 &pos) {
 	//PxVec3 origin = PxVec3(gameState->camera.pos.x, gameState->camera.pos.y, gameState->camera.pos.z);                 // [in] Ray origin
 	//PxVec3 unitDir = PxVec3(gameState->camera.dir.x, gameState->camera.dir.y, gameState->camera.dir.z);                // [in] Normalized ray direction
 
-	PxReal maxDistance = 20;            // [in] Raycast max distance
+	PxReal maxDistance = 50;            // [in] Raycast max distance
 	PxRaycastBuffer hit;                 // [out] Raycast results
 	bool status = gScene->raycast(origin, unitDir, maxDistance, hit);
 	//if (status)

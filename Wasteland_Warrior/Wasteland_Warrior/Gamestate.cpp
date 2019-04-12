@@ -563,9 +563,14 @@ void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 
 	float playerOffSet = 1.78f;
 	float enemyOffSet = playerOffSet;
 	
+	
 	glm::vec4 vertical = glm::vec4(0.0f, 1.0f, 0.0f, 0.0f); // vertical, newDirection
-	glm::vec4 normal = glm::vec4{ 0.0f, 1-abs(glm::normalize(newDirection).y), 0.0f, 0.0f };
-
+	/*glm::vec4 normal = vertical* newTransformationMatrix;
+	normal = { 0.0f, 1-abs(normal.y), 0.0f, 0.0f };
+	*/
+	glm::mat4 pureRotation = newTransformationMatrix;
+	pureRotation[3] = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+	glm::vec4 normal = vertical *pureRotation;
 
 
 	bool found = false;
@@ -575,7 +580,7 @@ void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 
 		entityToUpdate = &playerVehicle;
 		playerVehicle.direction = glm::vec3{ -newDirection.x , newDirection.y, newDirection.z };
 
-		std::cout << "Heading: (" << newDirection.x << "," << newDirection.y << "," <<  newDirection.z << ")" << std::endl;
+		//std::cout << "Heading: (" << newDirection.x << "," << newDirection.y << "," <<  newDirection.z << ")" << std::endl;
 
 		newTransformationMatrix[3] = newTransformationMatrix[3] - (playerOffSet* normal);
 	}

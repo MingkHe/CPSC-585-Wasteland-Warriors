@@ -239,7 +239,14 @@ public:
 		{"Textures/atlas.png"}, //Road Texture
 		{"Objects/Railroad/concreteRails.jpg", "Objects/Railroad/chapa oxidada.jpg", "Objects/Railroad/concreteRails.jpg", "Objects/Railroad/chapa oxidada.jpg"},
 		{"Textures/bigRock.jpg"},
-		{"Textures/bigRock.jpg"}
+		{"Textures/BuildingTextures/cottage_diffuse.png", "Textures/BuildingTextures/waterTower.png", "Textures/BuildingTextures/waterTower.png", 
+		"Textures/BuildingTextures/waterTower.png", "Textures/BuildingTextures/waterTower.png", "Textures/BuildingTextures/waterTower.png", 
+		"Textures/BuildingTextures/waterTower.png", "Textures/BuildingTextures/waterTower.png","Objects/Ruined_Brick_Building/ruined_building_brick.jpg", 
+		"Textures/BuildingTextures/woodTower.png", "Textures/BuildingTextures/Shack2.png", "Objects/RuinedSmallHouse/Old_house.png", 
+		"Objects/RuinedSmallHouse/WoodFrame.jpg", "Objects/RuinedSmallHouse/WoodFrame.jpg", "Objects/RuinedSmallHouse/Bluetarp.jpg", 
+		"Objects/RuinedSmallHouse/Metal4.jpg", "Objects/RuinedSmallHouse/Metal3.jpg", "Objects/RuinedSmallHouse/Metal2.jpg", 
+		"Objects/RuinedSmallHouse/Metal1.jpg","Objects/Buildings/Gas Station.jpg","Objects/Buildings/flamable.jpg", 
+		"Objects/Buildings/crate.jpg", "Objects/Buildings/crate.jpg", "Objects/Buildings/concrete.jpg", "Objects/Buildings/rottenWood.jpg"}
 	 };
 
 	const int numOfDynamicObjectInstances = 7;

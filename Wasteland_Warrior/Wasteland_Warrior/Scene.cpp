@@ -70,7 +70,7 @@ void Scene::setGamestate(Gamestate* newGamestate) {
 
 int Scene::loadOBJObjectInstance(std::vector<const char*> filepath, std::vector<const char*> textureFilepath) {
 	CompositeWorldObject OBJobjectComposite;
-	std::vector< unsigned int > vertexIndices[10], uvIndices[10], normalIndices[10];
+	std::vector< unsigned int > vertexIndices[30], uvIndices[30], normalIndices[30];
 	//std::vector < std::vector< std::vector< unsigned int > > > vertexIndices, uvIndices, normalIndices;
 	//std::vector < std::vector< std::vector< glm::vec3 > > > temp_vertices;
 	//std::vector < std::vector< std::vector< glm::vec2 > > > temp_uvs;
@@ -100,8 +100,12 @@ int Scene::loadOBJObjectInstance(std::vector<const char*> filepath, std::vector<
 			openSuccessful = false;
 			break; // EOF = End Of File. Quit the loop.
 		}
+		if (strcmp(lineHeader, "o") == 0) {
+			char maybeWheel[128];
+			fscanf(file, "%s\n", maybeWheel);
+		}
 		// else : parse lineHeader
-		if (strcmp(lineHeader, "v") == 0) {
+		else if (strcmp(lineHeader, "v") == 0) {
 			//printf("6\n");
 			if (previousHeader == 'f') {
 
@@ -162,6 +166,7 @@ int Scene::loadOBJObjectInstance(std::vector<const char*> filepath, std::vector<
 				//return false;
 			}
 			//int objMatIndex = subObject_by_Material_count[materialIndex];
+			//std::cout << materialIndex << std::endl;
 			//std::cout << materialIndex << std::endl;
 			vertexIndices[materialIndex].push_back(vertexIndex[0]);
 			vertexIndices[materialIndex].push_back(vertexIndex[1]);

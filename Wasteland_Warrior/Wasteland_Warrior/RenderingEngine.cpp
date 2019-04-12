@@ -357,9 +357,9 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	}
 	//Renders Railroad
 	//std::cout << game_state->mainRailroad.subObjects.size() << std::endl;
-	/*for (int k = 0; k < game_state->mainRailroad.subObjects.size(); k++) {
+	for (int k = 0; k < game_state->mainRailroad.subObjects.size(); k++) {
 		RenderNonPhysicsObject(game_state->mainRailroad.subObjects[k], identityTransform, transformGL, transparent, 1.0f);
-	}*/
+	}
 
 	//draw rear view
 	glBindFramebuffer(GL_FRAMEBUFFER, rear_view.id);
@@ -413,7 +413,10 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	//std::cout << game_state->mainRoad.subObjects.size() << std::endl;
 	for (int l = 0; l < (int)game_state->mainRoad.subObjects.size(); l++) {
 		//std::cout << "Hello" << std::endl;
-		RenderNonPhysicsObject(game_state->mainRoad.subObjects[l], identityTransform, transformGL, transparent, 0.98f);
+		RenderNonPhysicsObject(game_state->mainRoad.subObjects[l], identityTransform, transformGL, transparent, 1.0f);
+	}
+	for (int k = 0; k < game_state->mainRailroad.subObjects.size(); k++) {
+		RenderNonPhysicsObject(game_state->mainRailroad.subObjects[k], identityTransform, transformGL, transparent, 1.0f);
 	}
 
 	glBindVertexArray(0);

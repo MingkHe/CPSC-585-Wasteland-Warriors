@@ -229,7 +229,8 @@ public:
 	};
 
 	std::vector<const char*> staticObjTextureList[16] = {
-		 {"Objects/SkyBox/skySphere_texture.jpg"},
+		 //{"Objects/SkyBox/skySphere_texture.jpg"},
+		{"Textures/sky.jpg"},
 		 {"Objects/Ruined_Brick_Building/ruined_building_brick.jpg"},
 		 {"Objects/Wooden_train_cars/wagon_tex3.png"},
 		 {"Objects/Truck/truck_tex1.png"},

@@ -411,14 +411,14 @@ void Scene::displayScene() {
 	//int s = 0;//-----------------------------------------
 	for (int s = 0; s < allWorldCompObjects[vehicleIndex].subObjectsCount; s++) {
 		
-			/*if (s == playerWheelIndices[0] || s == playerWheelIndices[1]) {
+		/*if (s == playerWheelIndices[0] || s == playerWheelIndices[1]) {
 
-				allWorldCompObjects[vehicleIndex].subObjects[s].transform = newTransform * gameState->getRotationMatrix((float)gameState->playerVehicle.wheelRotation, 0, 0);
-			}
-			else if (s == playerWheelIndices[2] || s == playerWheelIndices[3]) {
-				allWorldCompObjects[vehicleIndex].subObjects[s].transform = newTransform * gameState->getRotationMatrix((float)gameState->playerVehicle.wheelRotation, 0,0);
-			}*/
-			//else{
+				allWorldCompObjects[vehicleIndex].subObjects[s].transform = newTransform * gameState->getRotationMatrix(0,(float)gameState->playerVehicle.wheelAngle, 0);
+		}
+		else if (s == playerWheelIndices[2] || s == playerWheelIndices[3]) {
+				allWorldCompObjects[vehicleIndex].subObjects[s].transform = newTransform * gameState->getRotationMatrix(0,(float)gameState->playerVehicle.wheelAngle, 0);
+		}
+		else{*/
 		allWorldCompObjects[vehicleIndex].subObjects[s].transform = newTransform;
 		//}
 

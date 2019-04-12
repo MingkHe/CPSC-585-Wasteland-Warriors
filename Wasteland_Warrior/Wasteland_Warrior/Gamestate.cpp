@@ -76,7 +76,11 @@ void Gamestate::InstantiateAllMeshes_Textures_Static() {
 		}
 		else if (i == 12) {
 			mainRoadIndex = staticObjMeshTextureIndices[i];
-			mainRoad = (scene->compObjectInstances[mainRoadIndex]);
+			mainRoad = scene->compObjectInstances[mainRoadIndex];
+		}
+		else if (i == 13) {
+			mainRailroadIndex = staticObjMeshTextureIndices[i];
+			mainRailroad = (scene->compObjectInstances[mainRailroadIndex]);
 		}
 	}
 }

@@ -207,6 +207,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 		}
 	}
 
+
 	/*glBindFramebuffer(GL_FRAMEBUFFER, blur.id);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glUseProgram(vblurProgram);
@@ -333,7 +334,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 			glDrawArrays(objects[i].subObjects[s].drawMode, 0, objects[i].subObjects[s].verts.size());
 		}
 	}
-	
+	//Renders explosions
 	int explosion_life = 150;
 	for (int i = 0; i < (int)game_state->explosions.size(); i++) {
 		if (++game_state->explosions[i].life > explosion_life) {
@@ -351,11 +352,14 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 		RenderNonPhysicsObject(game_state->explosion, transform,transformGL, transparent, 1.f - ((float)game_state->explosions[i].life / (float)explosion_life));
 	}
 	//Renders road
-	std::cout << game_state->mainRoad.subObjects.size() << std::endl;
 	for (int l = 0; l < game_state->mainRoad.subObjects.size(); l++) {
-		std::cout << "Hello" << std::endl;
-		RenderNonPhysicsObject(game_state->mainRoad.subObjects[l], identityTransform, transformGL, transparent, 1.0f);	
+		RenderNonPhysicsObject(game_state->mainRoad.subObjects[l], identityTransform, transformGL, transparent, 1.0f);
 	}
+	//Renders Railroad
+	//std::cout << game_state->mainRailroad.subObjects.size() << std::endl;
+	/*for (int k = 0; k < mainRailroad.subObjects.size(); k++) {
+		RenderNonPhysicsObjectExplosion(mainRailroad.subObjects[k], identityTransform, transformGL, transparent, 1.0f);
+	}*/
 
 	//draw rear view
 	glBindFramebuffer(GL_FRAMEBUFFER, rear_view.id);

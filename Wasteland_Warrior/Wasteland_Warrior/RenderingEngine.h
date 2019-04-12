@@ -58,7 +58,7 @@ public:
 	void LoadShaderProgram(std::string name, const char* vertexFile, const char* fragmentFile);
 	//Get the shader use its name seted by the LoadShaderProgram method
 	GLuint GetShaderProgram(std::string name);
-	void RenderScene(const std::vector<Geometry>& objects);
+	//void RenderScene(const std::vector<Geometry>& objects);
 	void RenderScene(const std::vector<CompositeWorldObject>& objects);
 	void RenderMenuScene(const std::vector<Geometry>& objects);
 	void RenderMenuSceneClear(const std::vector<Geometry>& objects);

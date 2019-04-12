@@ -166,8 +166,10 @@ public:
 	int mapGroundPhysicsIndex;
 	int explosionMeshIndex;
 	int mainRoadIndex;
+	int mainRailroadIndex;
 
 	CompositeWorldObject mainRoad;
+	CompositeWorldObject mainRailroad;
 	Geometry explosion;
 
 	//Time
@@ -193,9 +195,9 @@ public:
 
 	std::string UIMode;
 
-	const int numOfStaticObjectInstances = 13;
-	int staticObjMeshTextureIndices[13];
-	std::vector<const char*> staticObjMeshList[13] = { 
+	const int numOfStaticObjectInstances = 14;
+	int staticObjMeshTextureIndices[14];
+	std::vector<const char*> staticObjMeshList[14] = { 
 		{"Objects/SkyBox/skySphere.obj"},
 		{"Objects/Ruined_Brick_Building/ruined building_brick.obj"},
 		{"Objects/Wooden_train_cars/wagon.obj"},
@@ -208,10 +210,11 @@ public:
 		{"Objects/RuinedSmallHouse/Old_house.obj"},
 		{"Objects/Buildings/Gas Station.obj"},
 		{"Objects/explosionSphere.obj"},  //Explosion Sphere
-		{"Objects/mainRoad.obj"}
+		{"Objects/mainRoad.obj"},
+		{"Objects/mainRailroad.obj"}
 	};
 
-	std::vector<const char*> staticObjTextureList[13] = {
+	std::vector<const char*> staticObjTextureList[14] = {
 		 {"Objects/SkyBox/skySphere_texture.jpg"},
 		 {"Objects/Ruined_Brick_Building/ruined_building_brick.jpg"},
 		 {"Objects/Wooden_train_cars/wagon_tex3.png"},
@@ -224,7 +227,8 @@ public:
 		 {"Objects/RuinedSmallHouse/Old_house.png"},
 		 {"Objects/Buildings/Gas Station.jpg"},
 		 {"Textures/explosion_texture.png"}, //Explosion Texture
-			{"Textures/atlas.png"} //Road Texture
+		{"Textures/atlas.png"}, //Road Texture
+		{"Objects/Railroad/concreteRails.jpg", "Objects/Railroad/chapa oxidada.jpg", "Objects/Railroad/concreteRails.jpg", "Objects/Railroad/chapa oxidada.jpg"}
 	 };
 
 	const int numOfDynamicObjectInstances = 7;
@@ -274,7 +278,7 @@ public:
 	{"Objects/WorldMapV4.obj"} };
 
 	std::vector<const char*> mapTextureList[1] = {
-	{"Textures/atlas.png", "Objects/Tunnel/tunnelWall.jpg","Objects/Tunnel/tunnelWall.jpg","Textures/sandTexture.jpg" } };
+	{"Textures/black_wall.jpg", "Objects/Tunnel/tunnelWall.jpg","Objects/Tunnel/tunnelWall.jpg","Textures/atlas.png", "Objects/Tunnel/tunnelWall.jpg",  "Objects/Tunnel/tunnelWall.jpg", "Textures/sandTexture.jpg"  } };
 
 
 

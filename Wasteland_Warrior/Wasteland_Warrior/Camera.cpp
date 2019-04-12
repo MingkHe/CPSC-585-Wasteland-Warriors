@@ -74,6 +74,13 @@ glm::mat4 Camera::viewMatrix() const {
 	cam.z = -distanceBehindCar *yVal + car.z;
 	cam.y = cam.y + distanceAboveCar;
 
+	glm::vec3 camera = glm::vec3(cam.x, cam.y, cam.z);
+	glm::vec3 wallCollide = gameState->physics_Controller->cameraWallCollision(camera);
+
+	cam.x = wallCollide.x;
+	cam.y = wallCollide.y;
+	cam.z = wallCollide.z;
+
 	//Hood Cam
 	if (gameState->view == 1) {
 		car.x = -distanceBehindCar * xVal + cam.x;

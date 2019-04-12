@@ -180,6 +180,8 @@ public:
 	CompositeWorldObject mainRoad;
 	CompositeWorldObject mainRailroad;
 	Geometry explosion;
+	CompositeWorldObject playerWheels;
+
 
 	//Time
 	int time;
@@ -245,11 +247,11 @@ public:
 		{"Textures/BuildingTextures/cottage_diffuse.png", "Textures/BuildingTextures/waterTower.png", "Textures/BuildingTextures/waterTower.png", 
 		"Textures/BuildingTextures/waterTower.png", "Textures/BuildingTextures/waterTower.png", "Textures/BuildingTextures/waterTower.png", 
 		"Textures/BuildingTextures/waterTower.png", "Textures/BuildingTextures/waterTower.png","Objects/Ruined_Brick_Building/ruined_building_brick.jpg", 
-		"Textures/BuildingTextures/woodTower.png", "Textures/BuildingTextures/Shack2.png", "Objects/RuinedSmallHouse/Old_house.png", 
-		"Objects/RuinedSmallHouse/WoodFrame.jpg", "Objects/RuinedSmallHouse/WoodFrame.jpg", "Objects/RuinedSmallHouse/Bluetarp.jpg", 
-		"Objects/RuinedSmallHouse/Metal4.jpg", "Objects/RuinedSmallHouse/Metal3.jpg", "Objects/RuinedSmallHouse/Metal2.jpg", 
-		"Objects/RuinedSmallHouse/Metal1.jpg","Objects/Buildings/Gas Station.jpg","Objects/Buildings/flamable.jpg", 
-		"Objects/Buildings/crate.jpg", "Objects/Buildings/crate.jpg", "Objects/Buildings/concrete.jpg", "Objects/Buildings/rottenWood.jpg"}
+		"Textures/BuildingTextures/woodTower.jpg", "Textures/BuildingTextures/Shack2.png", "Objects/RuinedSmallHouse/Old_house.png", 
+		"Textures/BuildingTextures/WoodFrame.jpg", "Textures/BuildingTextures/WoodFrame.jpg", "Textures/BuildingTextures/Bluetarp.jpg", 
+		"Textures/BuildingTextures/Metal4.jpg", "Textures/BuildingTextures/Metal3.jpg", "Textures/BuildingTextures/Metal2.jpg", 
+		"Textures/BuildingTextures/Metal1.jpg","Objects/Buildings/Gas Station.jpg","Textures/BuildingTextures/flamable.jpg", 
+		"Textures/BuildingTextures/crate.jpg", "Textures/BuildingTextures/crate.jpg", "Textures/BuildingTextures/concrete.jpg", "Textures/BuildingTextures/rottenWood.jpg"}
 	 };
 
 	const int numOfDynamicObjectInstances = 7;

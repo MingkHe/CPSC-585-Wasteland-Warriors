@@ -101,8 +101,15 @@ int Scene::loadOBJObjectInstance(std::vector<const char*> filepath, std::vector<
 			break; // EOF = End Of File. Quit the loop.
 		}
 		if (strcmp(lineHeader, "o") == 0) {
-			char maybeWheel[128];
-			fscanf(file, "%s\n", maybeWheel);
+			char maybeWheelChar[128];
+			string maybeWheel;
+			fscanf(file, "%s\n", maybeWheelChar);
+			maybeWheel = maybeWheelChar;
+			playerWheelRender = 0;
+			if (maybeWheel == "wheel1") { playerWheelRender = 1; }
+			else if (maybeWheel == "wheel2") { playerWheelRender = 2; }
+			else if (maybeWheel == "wheel3") { playerWheelRender = 3; }
+			else if (maybeWheel == "wheel4") { playerWheelRender = 4; }
 		}
 		// else : parse lineHeader
 		else if (strcmp(lineHeader, "v") == 0) {
@@ -144,13 +151,19 @@ int Scene::loadOBJObjectInstance(std::vector<const char*> filepath, std::vector<
 			std::cout << materialName << std::endl;
 			int numberOfMaterials = materialNames.size();
 			for (int s = 0; s < numberOfMaterials; s++) {
-				if (materialName == materialNames[s]) {
+				if ((materialName == materialNames[s]) && (playerWheelRender == 0)) {
 					materialIndex = s;
 				}
 			}
 			if (materialIndex == -1) {
 				materialNames.push_back(materialName);
 				materialIndex = materialNames.size()-1;
+			}
+			if (playerWheelRender > 0) {
+				materialNames.push_back(materialName + "_wheel"+std::to_string(playerWheelRender));
+				materialIndex = materialNames.size() - 1;
+				std::cout << "-------------------------------------------------------------------------------------------------------" << std::endl;
+				playerWheelIndices[playerWheelRender - 1] = materialIndex;
 			}
 
 			//std::cout << materialName << " " << materialIndex << std::endl;
@@ -397,7 +410,18 @@ void Scene::displayScene() {
 	glm::mat4 newTransform = gameState->getEntityTransformation(vehicleIndex);
 	//int s = 0;//-----------------------------------------
 	for (int s = 0; s < allWorldCompObjects[vehicleIndex].subObjectsCount; s++) {
+		
+			/*if (s == playerWheelIndices[0] || s == playerWheelIndices[1]) {
+
+				allWorldCompObjects[vehicleIndex].subObjects[s].transform = newTransform * gameState->getRotationMatrix((float)gameState->playerVehicle.wheelRotation, 0, 0);
+			}
+			else if (s == playerWheelIndices[2] || s == playerWheelIndices[3]) {
+				allWorldCompObjects[vehicleIndex].subObjects[s].transform = newTransform * gameState->getRotationMatrix((float)gameState->playerVehicle.wheelRotation, 0,0);
+			}*/
+			//else{
 		allWorldCompObjects[vehicleIndex].subObjects[s].transform = newTransform;
+		//}
+
 	}
 
 	int numOfEnemies = gameState->Enemies.size();

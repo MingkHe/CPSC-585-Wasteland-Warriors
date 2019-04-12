@@ -911,10 +911,10 @@ void RenderingEngine::updateText() {
 
 			if (game_state->damageText) {
 				if (game_state->damage > 5) {
-					pushTextObj(texObjects, "Damage dealt: "+std::to_string(game_state->damage), 0.5f*game_state->monitor_width, 0.7f*game_state->monitor_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
+					pushTextObj(texObjects, "Damage dealt: "+std::to_string(game_state->damage), 0.5f*game_state->monitor_width, 0.6f*game_state->monitor_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
 				}
 				else {
-					pushTextObj(texObjects, "To Slow!", 0.5f*game_state->monitor_width, 0.7f*game_state->monitor_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
+					pushTextObj(texObjects, "To Slow!", 0.5f*game_state->monitor_width, 0.6f*game_state->monitor_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
 				}
 				
 			}

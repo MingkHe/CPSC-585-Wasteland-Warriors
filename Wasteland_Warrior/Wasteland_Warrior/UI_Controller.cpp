@@ -130,8 +130,15 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 		else {
 			GameState->powerText = false;
 			GameState->modeText = false;
-			GameState->damageText = false;
 			GameState->textTime = 0;
+		}
+
+		if (GameState->damageTextTime > 0) {
+			GameState->damageTextTime--;
+		}
+		else {
+			GameState->damageText = false;
+			GameState->damageTextTime = 0;
 		}
 
 		if (GameState->playerVehicle.speed == 0) {

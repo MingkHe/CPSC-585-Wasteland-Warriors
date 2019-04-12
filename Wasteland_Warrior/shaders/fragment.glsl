@@ -6,7 +6,7 @@
 // ==========================================================================
 #version 410
 
-#define SAMPLE_NUM 20
+#define SAMPLE_NUM 50
 #define SAMPLE_RAD 4.0
 #define MID_SAMPLE_RAD 3.5
 #define FAR_SAMPLE_RAD 3.0
@@ -369,14 +369,13 @@ void main() {
 
 		//shadow
 		shadow = ShadowCalculation(shadowCoord);
-		
 
 		//linear color (color before gamma correction)
 		linearColor = ambient + shadow*attenuation*(diffuse + specular);
 	}
     
 
-    finalColor = vec4(linearColor, surfaceColor.a*transparent);
+    finalColor = vec4(linearColor, 1*transparent);
     //final color (after gamma correction)
     //vec3 gamma = vec3(1.0/2.2);
     //finalColor = vec4(pow(linearColor, gamma), surfaceColor.a);

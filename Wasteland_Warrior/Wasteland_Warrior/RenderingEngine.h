@@ -62,6 +62,7 @@ public:
 	void RenderScene(const std::vector<CompositeWorldObject>& objects);
 	void RenderMenuScene(const std::vector<Geometry>& objects);
 	void RenderMenuSceneClear(const std::vector<Geometry>& objects);
+	void RenderNonPhysicsObject(Geometry object, glm::mat4 transform, GLint transformGL, GLuint transparent, float transparentVal);
 
 	//Create vao and vbos for objects
 	static void assignBuffers(Geometry& geometry);
@@ -72,6 +73,12 @@ public:
 	bool CheckGLErrors();
 
 	void createFramebuffers(int width, int height);
+	glm::mat4 identityTransform = glm::mat4(
+		1.f, 0.f, 0.f, 0.f,
+		0.f, 1.f, 0.f, 0.f,
+		0.f, 0.f, 1.f, 0.f,
+		0.f, 0.f, 0.f, 1.f
+	);
 
 //private:
 	//Pointer to the current shader program being used to render

@@ -211,6 +211,33 @@ void Program::start() {
 		//User Input
 		usrInput.Update(gameState);
 
+		if (gameState->button == "OPTION") {
+
+			const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+
+			/*gameState->window_width = mode->width;
+			gameState->window_height = mode->height;
+			gameState->monitor_width = mode->width;
+			gameState->monitor_height = mode->height;
+
+			int w, h;
+			glfwGetFramebufferSize(window, &w, &h);
+			self->scene->renderer->createFramebuffers(w, h);
+			self->window_height = mode->height;
+			self->window_width = mode->width;*/
+
+			if (this->fullscreen == true) {
+				glfwSetWindowMonitor(window, NULL, NULL, NULL, mode->width, mode->height, NULL);
+				this->fullscreen = false;
+			}
+			else {
+				glfwSetWindowMonitor(window, glfwGetPrimaryMonitor(), NULL, NULL, mode->width, mode->height, NULL);
+				this->fullscreen = true;
+			}
+
+			glViewport(0, 0, mode->width, mode->height);
+		}
+
 		//Game Rules
 		if (gameState->UIMode == "Game") {
 			logic.Update(gameState);
@@ -246,7 +273,7 @@ void Program::start() {
 		}
 
 		glfwSwapBuffers(window);
-		if (gameState->UIMode != "Game") {
+		if (gameState->UIMode != "Game" && !gameState->controller) {
 			glfwWaitEvents();
 		}
 		glfwPollEvents();

@@ -135,6 +135,7 @@ void UserInput::Update(Gamestate* gameState)
 	else {
 		gameState->mouseRight = false;
 	}
+
 }
 
 // Callback for key presses
@@ -190,6 +191,11 @@ void UserInput::key(GLFWwindow* window, int key, int scancode, int action, int m
 			UserInput::Reverse = true;
 			break;
 
+			//Fullscreen
+		case GLFW_KEY_F:
+			UserInput::inputBuffer.push("OPTION");
+			break;
+
 			//Arrows
 		case GLFW_KEY_RIGHT:
 			UserInput::inputBuffer.push("RIGHT");
@@ -204,12 +210,11 @@ void UserInput::key(GLFWwindow* window, int key, int scancode, int action, int m
 			UserInput::inputBuffer.push("UP");
 			break;
 
+
+
 			//Testing Input
 		case GLFW_KEY_T:
 			UserInput::inputBuffer.push("T");
-			break;
-		case GLFW_KEY_F:
-			UserInput::inputBuffer.push("F");
 			break;
 		case GLFW_KEY_G:
 			UserInput::inputBuffer.push("G");

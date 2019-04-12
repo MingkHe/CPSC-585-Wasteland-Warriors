@@ -910,7 +910,7 @@ void Physics_Controller::stepPhysics(bool interactive)
 
 			hapticVehicleForwardVelocity = vehiclesVector[i]->computeForwardSpeed();
 			
-			std::cout << 1+abs(100 - hapticVehicleForwardVelocity * 4) << std::endl;
+			//std::cout << 1+abs(100 - hapticVehicleForwardVelocity * 4) << std::endl;
 			LogiPlaySpringForce(0,0, fmax(100, 100 - hapticVehicleForwardVelocity * 4), fmax(5, 100 - hapticVehicleForwardVelocity * 4));
 			//LogiPlayConstantForce(0, hapticNetForceOnWheel);
 			//LogiPlayConstantForce(0, );
@@ -958,6 +958,23 @@ void Physics_Controller::stepPhysics(bool interactive)
 		PxWheelQueryResult wheelQueryResults[PX_MAX_NB_WHEELS];
 		PxVehicleWheelQueryResult vehicleQueryResults[1] = { {wheelQueryResults, gVehicle4W->mWheelsSimData.getNbWheels()} };
 		PxVehicleUpdates(timestep, grav, *gFrictionPairs, 1, vehicles, vehicleQueryResults);
+
+		int wheelRotation = (int)((gVehicle4W->mWheelsDynData.getWheelRotationAngle(0) / M_PI) * 180) % 360;
+		//PxReal rotationAngle2 = gVehicle4W->mWheelsDynData.getWheelRotationAngle(1);		//This gets the other wheels
+		//PxReal rotationAngle3 = gVehicle4W->mWheelsDynData.getWheelRotationAngle(2);
+		//PxReal rotationAngle4 = gVehicle4W->mWheelsDynData.getWheelRotationAngle(3);
+
+		float wheelAngle = -gVehicle4W->mDriveDynData.getAnalogInput(4) * 60;
+
+
+		if (gameStateIndex == -1) {
+			gameState->playerVehicle.wheelRotation = wheelRotation;
+			gameState->playerVehicle.wheelAngle = wheelAngle;
+		}
+		else {
+			gameState->Enemies[gameStateIndex].wheelRotation = wheelRotation;
+			gameState->Enemies[gameStateIndex].wheelAngle = wheelAngle;
+		}
 
 		//Work out if the vehicle is in the air.
 		gIsVehicleInAir = gVehicle4W->getRigidDynamicActor()->isSleeping() ? false : PxVehicleIsInAir(vehicleQueryResults[0]);

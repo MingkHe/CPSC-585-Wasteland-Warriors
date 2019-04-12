@@ -106,6 +106,9 @@ public:
 	//sound for weapon swap
 	bool weaponSwap_sound;
 
+	//sound for wave start
+	bool war_horn;
+
 	//the sound for select the start button
 	bool ui_enter;
 	//the sound for ui menu switching between button
@@ -201,9 +204,9 @@ public:
 
 	std::string UIMode;
 
-	const int numOfStaticObjectInstances = 15;
-	int staticObjMeshTextureIndices[15];
-	std::vector<const char*> staticObjMeshList[15] = { 
+	const int numOfStaticObjectInstances = 16;
+	int staticObjMeshTextureIndices[16];
+	std::vector<const char*> staticObjMeshList[16] = { 
 		{"Objects/SkyBox/skySphere.obj"},
 		{"Objects/Ruined_Brick_Building/ruined building_brick.obj"},
 		{"Objects/Wooden_train_cars/wagon.obj"},
@@ -218,10 +221,12 @@ public:
 		{"Objects/explosionSphere.obj"},  //Explosion Sphere
 		{"Objects/mainRoad.obj"},
 		{"Objects/mainRailroadOptimized.obj"},
-		{"Objects/bigRock.obj"}
+		{"Objects/bigRock.obj"},
+		{"Objects/buildingGroup.obj"}
+
 	};
 
-	std::vector<const char*> staticObjTextureList[15] = {
+	std::vector<const char*> staticObjTextureList[16] = {
 		 {"Objects/SkyBox/skySphere_texture.jpg"},
 		 {"Objects/Ruined_Brick_Building/ruined_building_brick.jpg"},
 		 {"Objects/Wooden_train_cars/wagon_tex3.png"},
@@ -236,7 +241,15 @@ public:
 		 {"Textures/explosion_texture.png"}, //Explosion Texture
 		{"Textures/atlas.png"}, //Road Texture
 		{"Objects/Railroad/concreteRails.jpg", "Objects/Railroad/chapa oxidada.jpg", "Objects/Railroad/concreteRails.jpg", "Objects/Railroad/chapa oxidada.jpg"},
-		{"Textures/bigRock.jpg"}
+		{"Textures/bigRock.jpg"},
+		{"Textures/BuildingTextures/cottage_diffuse.png", "Textures/BuildingTextures/waterTower.png", "Textures/BuildingTextures/waterTower.png", 
+		"Textures/BuildingTextures/waterTower.png", "Textures/BuildingTextures/waterTower.png", "Textures/BuildingTextures/waterTower.png", 
+		"Textures/BuildingTextures/waterTower.png", "Textures/BuildingTextures/waterTower.png","Objects/Ruined_Brick_Building/ruined_building_brick.jpg", 
+		"Textures/BuildingTextures/woodTower.png", "Textures/BuildingTextures/Shack2.png", "Objects/RuinedSmallHouse/Old_house.png", 
+		"Objects/RuinedSmallHouse/WoodFrame.jpg", "Objects/RuinedSmallHouse/WoodFrame.jpg", "Objects/RuinedSmallHouse/Bluetarp.jpg", 
+		"Objects/RuinedSmallHouse/Metal4.jpg", "Objects/RuinedSmallHouse/Metal3.jpg", "Objects/RuinedSmallHouse/Metal2.jpg", 
+		"Objects/RuinedSmallHouse/Metal1.jpg","Objects/Buildings/Gas Station.jpg","Objects/Buildings/flamable.jpg", 
+		"Objects/Buildings/crate.jpg", "Objects/Buildings/crate.jpg", "Objects/Buildings/concrete.jpg", "Objects/Buildings/rottenWood.jpg"}
 	 };
 
 	const int numOfDynamicObjectInstances = 7;

@@ -1,0 +1,257 @@
+# Blender MTL File: 'WorldMapV4.blend'
+# Material Count: 24
+
+newmtl 10072_Gas_Station_V4
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl Cube
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl DefaultMaterial
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl Mat_1
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl Mat_2
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl Mat_3
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl Material.005
+Ns 94.117647
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 0.000000
+illum 2
+map_Kd Objects\Buildings\kgpkdj4wt79c-Old_house\Old_house\Old_house_d.png
+map_Bump -bm 0.350042 Objects\\Buildings\\kgpkdj4wt79c-Old_house\\Old_house\\Old_house_d.png
+map_d Objects\\Buildings\\kgpkdj4wt79c-Old_house\\Old_house\\Old_house_d.png
+
+newmtl Material__25
+Ns 9.803922
+Ka 0.588000 0.588000 0.588000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd C:\Users\Bryson\Documents\School\Video Game Design\Objects\member3073718379_2019-04-12_at_6.55.50_AM\War Ruin\War ruintextures\004-concrete-texture.jpg
+map_Ka C:\\Users\\Bryson\\Documents\\School\\Video Game Design\\Objects\\member3073718379_2019-04-12_at_6.55.50_AM\\War Ruin\\War ruintextures\\004-concrete-texture.jpg
+
+newmtl Material__26
+Ns 9.803922
+Ka 0.588000 0.588000 0.588000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd C:\Users\Bryson\Documents\School\Video Game Design\Objects\member3073718379_2019-04-12_at_6.55.50_AM\War Ruin\War ruintextures\wood_rotten_0003_01_preview.jpg
+map_Ka C:\\Users\\Bryson\\Documents\\School\\Video Game Design\\Objects\\member3073718379_2019-04-12_at_6.55.50_AM\\War Ruin\\War ruintextures\\wood_rotten_0003_01_preview.jpg
+
+newmtl Material__29
+Ns 9.803922
+Ka 0.588000 0.588000 0.588000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd C:\Users\Bryson\Documents\School\Video Game Design\Objects\member3073718379_2019-04-12_at_6.55.50_AM\War Ruin\War ruintextures\flamable.jpg
+map_Ka C:\\Users\\Bryson\\Documents\\School\\Video Game Design\\Objects\\member3073718379_2019-04-12_at_6.55.50_AM\\War Ruin\\War ruintextures\\flamable.jpg
+
+newmtl Material__30
+Ns 9.803922
+Ka 0.588000 0.588000 0.588000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd C:\Users\Bryson\Documents\School\Video Game Design\Objects\member3073718379_2019-04-12_at_6.55.50_AM\War Ruin\War ruintextures\crate.jpg
+map_Ka C:\\Users\\Bryson\\Documents\\School\\Video Game Design\\Objects\\member3073718379_2019-04-12_at_6.55.50_AM\\War Ruin\\War ruintextures\\crate.jpg
+
+newmtl Material__31
+Ns 9.803922
+Ka 0.588000 0.588000 0.588000
+Kd 0.588000 0.588000 0.588000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd C:\Users\Bryson\Documents\School\Video Game Design\Objects\member3073718379_2019-04-12_at_6.55.50_AM\War Ruin\War ruintextures\crate.jpg
+map_Ka C:\\Users\\Bryson\\Documents\\School\\Video Game Design\\Objects\\member3073718379_2019-04-12_at_6.55.50_AM\\War Ruin\\War ruintextures\\crate.jpg
+
+newmtl Metal1
+Ns 94.117647
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl Metal2
+Ns 94.117647
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl Metal3
+Ns 94.117647
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl Metal4
+Ns 94.117647
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl WoodFrame
+Ns 94.117647
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl Wood_1
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl Wood_2
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl Wood_3
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl cottage_texture
+Ns 94.117647
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl tarp
+Ns 94.117647
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl tex
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl watchtower
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.397386 0.397386 0.397386
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd textures\t_C_3.png
+map_Bump C:\\Users\\Bryson\\Documents\\School\\Video Game Design\\Objects\\Downloaded Objects\\woodenTower\\Wood_Tower_Nor.jpg

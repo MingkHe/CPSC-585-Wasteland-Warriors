@@ -38,6 +38,7 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	health.uvs.push_back(glm::vec2(0.f, 1.f));
 	health.uvs.push_back(glm::vec2(1.f, 0.f));
 	health.uvs.push_back(glm::vec2(1.f, 1.f));
+	health.transform = glm::mat4(1.f);
 	health.drawMode = GL_TRIANGLE_STRIP;
 	assignBuffers(health);
 	setBufferData(health);
@@ -50,6 +51,7 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	radar.uvs.push_back(glm::vec2(-1.f, 1.f));
 	radar.uvs.push_back(glm::vec2(1.f, -1.f));
 	radar.uvs.push_back(glm::vec2(1.f, 1.f));
+	radar.transform = glm::mat4(1.f);
 	radar.drawMode = GL_TRIANGLE_STRIP;
 	assignBuffers(radar);
 	setBufferData(radar);
@@ -67,6 +69,7 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 		speedo.uvs.push_back(.5f*glm::vec2(std::cos(i + increment), std::sin(i + increment)) + glm::vec2(.5f, .5f));
 		speedo.uvs.push_back(glm::vec2(.5f, .5f));
 	}
+	speedo.transform = glm::mat4(1.f);
 	speedo.drawMode = GL_TRIANGLES;
 	InitializeTexture(&speedo.texture, "Image/speedo.png");
 	assignBuffers(speedo);
@@ -98,6 +101,7 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	square.uvs.push_back(glm::vec2(0.f, 1.f));
 	square.uvs.push_back(glm::vec2(1.f, 0.f));
 	square.uvs.push_back(glm::vec2(1.f, 1.f));
+	square.transform = glm::mat4(1.f);
 	square.drawMode = GL_TRIANGLE_STRIP;
 	assignBuffers(square);
 	setBufferData(square);
@@ -110,6 +114,7 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	mirror.uvs.push_back(glm::vec2(1.f, .85f));
 	mirror.uvs.push_back(glm::vec2(0.f, .4f));
 	mirror.uvs.push_back(glm::vec2(0.f, .85f));
+	mirror.transform = glm::mat4(1.f);
 	mirror.drawMode = GL_TRIANGLE_STRIP;
 	assignBuffers(mirror);
 	setBufferData(mirror);
@@ -122,6 +127,7 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	mirror_back.uvs.push_back(glm::vec2(1.f, 1.f));
 	mirror_back.uvs.push_back(glm::vec2(0.f, 0.f));
 	mirror_back.uvs.push_back(glm::vec2(0.f, 1.f));
+	mirror_back.transform = glm::mat4(1.f);
 	mirror_back.drawMode = GL_TRIANGLE_STRIP;
 	InitializeTexture(&mirror_back.texture, "Image/black_pixel.png");
 	assignBuffers(mirror_back);
@@ -146,24 +152,6 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	assignBuffers(aim);
 	setBufferData(aim);
 
-	//rear_view = createFramebuffer(game_state->window_width, game_state->window_height);
-	//shadow_buffer = createFramebuffer(game_state->window_width, game_state->window_height);
-	//if (game_state->fullscreen) {
-		rear_view = createFramebuffer(game_state->window_width, game_state->window_height);
-		shadow_buffer = createFramebuffer(game_state->window_width, game_state->window_height);
-		shadow_buffertwo = createFramebuffer(game_state->window_width, game_state->window_height);
-		shadow_bufferthree = createFramebuffer(game_state->window_width, game_state->window_height);
-		main_view = createFramebuffer(game_state->window_width, game_state->window_height);
-		//blur = createFramebuffer(game_state->window_width, game_state->window_height);
-	/*}
-	else {
-		rear_view = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1181));
-		shadow_buffer = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1181));
-		shadow_buffertwo = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1181));
-		shadow_bufferthree = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1181));
-		main_view = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1181));
-		//blur = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1061));
-	}*/
 
 	bias = 1200/game_state->window_height;
 
@@ -175,6 +163,14 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	glUseProgram(textShaderProgram);
 	glUniformMatrix4fv(glGetUniformLocation(textShaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 	glUseProgram(0);
+}
+
+void RenderingEngine::createFramebuffers(int width, int height) {
+	rear_view = createFramebuffer(width, height);
+	shadow_buffer = createFramebuffer(width, height);
+	shadow_buffertwo = createFramebuffer(width, height);
+	shadow_bufferthree = createFramebuffer(width, height);
+	main_view = createFramebuffer(width, height);
 }
 
 RenderingEngine::~RenderingEngine() {
@@ -412,6 +408,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 
 	//render mirror
 	glUseProgram(basicshaderProgram);
+	glUniformMatrix4fv(glGetUniformLocation(basicshaderProgram, "transform"), 1, false, &(mirror_back.transform[0][0]));
 	glUniform1i(glGetUniformLocation(basicshaderProgram, "materialTex"), 0);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, mirror_back.texture.textureID);
@@ -474,6 +471,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 
 	//render speedometer
 	glUseProgram(basicshaderProgram);
+	glUniformMatrix4fv(glGetUniformLocation(basicshaderProgram, "transform"), 1, false, &(speedo.transform[0][0]));
 	glUniform1i(glGetUniformLocation(basicshaderProgram, "materialTex"), 0);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, speedo.texture.textureID);
@@ -559,6 +557,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glUseProgram(basicshaderProgram);
+	glUniformMatrix4fv(glGetUniformLocation(basicshaderProgram, "transform"), 1, false, &(square.transform[0][0]));
 	glUniform1i(glGetUniformLocation(basicshaderProgram, "materialTex"), 0);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, main_view.colorTextureID);

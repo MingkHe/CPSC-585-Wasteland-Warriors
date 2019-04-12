@@ -287,6 +287,8 @@ public:
 
 	int window_width;
 	int window_height;
+	int monitor_width;
+	int monitor_height;
 
 	int powerUpType;
 

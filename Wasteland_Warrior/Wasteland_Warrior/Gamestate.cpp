@@ -268,7 +268,7 @@ void Gamestate::SpawnDynamicObject(int ObjectType, float x, float y, float z, fl
 	((dimensions.y*dimensions.y + dimensions.z*dimensions.z)*mass / 12.0f,
 		(dimensions.x*dimensions.x + dimensions.z*dimensions.z)*mass / 12.0f,
 		(dimensions.x*dimensions.x + dimensions.y*dimensions.y)*mass / 12.0f);
-	int physicsIndex = physics_Controller->createDynamicObject(ObjectType, dimensions, objectMOI, mass, density, x, y, z);
+	int physicsIndex = physics_Controller->createDynamicObject(ObjectType, dimensions, objectMOI, (PxReal)mass, density, x, y, z);
 	glm::mat4 transformMatrix = glm::mat4(
 		1.f, 0.f, 0.f, 0.f,
 		0.f, 1.f, 0.f, 0.f,
@@ -434,7 +434,7 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse,
 		}
 
 		if (hapticFeedback && updateHapticWheelState) {
-			LogiPlayFrontalCollisionForce(0, damage*8);
+			LogiPlayFrontalCollisionForce(0, (int)(damage*8));
 		}
 	}
 
@@ -447,7 +447,7 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse,
 
 		}
 		if (hapticFeedback && updateHapticWheelState) {
-			LogiPlayFrontalCollisionForce(0, damage * 8);
+			LogiPlayFrontalCollisionForce(0, (int)(damage * 8));
 		}
 	}
 
@@ -466,7 +466,7 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse,
 		}
 
 		if (hapticFeedback && updateHapticWheelState) {
-			LogiPlaySideCollisionForce(0, damage * 8);
+			LogiPlaySideCollisionForce(0, (int)(damage * 8));
 		}
 	}
 	entity1->health += entity1->armor;
@@ -572,7 +572,7 @@ void Gamestate::Collision(Vehicle* vehicle, Object* staticObject, glm::vec3 impu
 		float damageScaling = 700;		//Smaller number means more damage
 		
 		float damage = totalForce / damageScaling;
-		LogiPlayFrontalCollisionForce(0, damage * 8);
+		LogiPlayFrontalCollisionForce(0, (int)(damage * 8));
 	}
 }
 
@@ -617,9 +617,9 @@ void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 
 	for (int i = 0; i < (int)PowerUps.size(); i++) {
 		if (physicsIndex == PowerUps[i].physicsIndex) {
 			entityToUpdate = &PowerUps[i];
-			newTransformationMatrix[0][0] = newTransformationMatrix[0][0] * 1.5;
-			newTransformationMatrix[1][1] = newTransformationMatrix[1][1] * 1.5;
-			newTransformationMatrix[2][2] = newTransformationMatrix[2][2] * 1.5;
+			newTransformationMatrix[0][0] = newTransformationMatrix[0][0] * 1.5f;
+			newTransformationMatrix[1][1] = newTransformationMatrix[1][1] * 1.5f;
+			newTransformationMatrix[2][2] = newTransformationMatrix[2][2] * 1.5f;
 			newTransformationMatrix[3] = newTransformationMatrix[3] + (vertical * glm::vec4(0.8f, 0.8f, 0.8f, 0.8f));
 			found = true;
 		}
@@ -741,7 +741,7 @@ void Gamestate::shoot() {
 	//std::cout << physicsCL.rayCast(pos) << std::endl;
 	//std::cout << "pos: x:" << pos.x << " y:" << pos.y << " z:" << pos.z << std::endl;
 	if (physics_Controller->rayCast(pos)) {
-		for (int i = 0; i < Enemies.size(); i++) {
+		for (int i = 0; i < (int)Enemies.size(); i++) {
 			printf("raycast detected..\n");
 			printf("test: %f\n", glm::distance(pos, Enemies[i].position));
 			if (glm::distance(pos, Enemies[i].position) <= 3.0f) {

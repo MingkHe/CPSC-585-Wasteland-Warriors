@@ -185,9 +185,9 @@ int Scene::loadOBJObjectInstance(std::vector<const char*> filepath, std::vector<
 	//temp_normals[materialIndex].push_back(normal_holder);
 	//subObject_by_Material_count[materialIndex]++;
 	std::cout << materialNames.size() << std::endl;
-	for (int objIndex = 0; objIndex < materialNames.size(); objIndex++) {
+	for (int objIndex = 0; objIndex < (int)materialNames.size(); objIndex++) {
 		int textureIndex = objIndex;
-		if (textureIndex >= textureFilepath.size()) {
+		if (textureIndex >= (int)textureFilepath.size()) {
 			textureIndex = 0;
 		}
 		OBJobjectComposite.subObjects.push_back(createObjectInstance(textureFilepath[textureIndex], vertexIndices[objIndex], uvIndices[objIndex], normalIndices[objIndex], vertice_holder, uv_holder, normal_holder, objIndex));

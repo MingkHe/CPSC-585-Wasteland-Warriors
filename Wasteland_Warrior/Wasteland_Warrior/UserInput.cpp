@@ -193,7 +193,7 @@ void UserInput::key(GLFWwindow* window, int key, int scancode, int action, int m
 
 			//Fullscreen
 		case GLFW_KEY_F:
-			UserInput::inputBuffer.push("OPTION");
+			UserInput::inputBuffer.push("F");
 			break;
 
 			//Arrows

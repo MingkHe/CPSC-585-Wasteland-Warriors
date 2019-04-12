@@ -22,7 +22,7 @@ Logic::~Logic()
 void Logic::Update(Gamestate *gameState)
 {
 
-	std::cout << "x " << gameState->playerVehicle.position.x << "y " << gameState->playerVehicle.position.y << "z " << gameState->playerVehicle.position.z << std::endl;
+	//std::cout << "x " << gameState->playerVehicle.position.x << "y " << gameState->playerVehicle.position.y << "z " << gameState->playerVehicle.position.z << std::endl;
 
 		//Randomization
 		srand((unsigned int)time(NULL));

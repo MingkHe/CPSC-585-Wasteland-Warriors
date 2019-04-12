@@ -840,10 +840,10 @@ glm::vec3 Physics_Controller::cameraWallCollision(glm::vec3 cameraPosition) {
 	float playerLength = glm::length(cameraPosition - playerPosition);
 	float wallLength = glm::length(pos - playerPosition);
 
-	//std::cout << "Wall distance: " << wallLength << "     camera distance: " << playerLength << std::endl;
+	std::cout << "Wall distance: " << wallLength << "     camera distance: " << playerLength << std::endl;
 
 	//If wall collision comes before camera location
-	if (glm::length(pos - playerPosition) < glm::length(cameraPosition - playerPosition)) {
+	if (glm::length(pos - playerPosition) < glm::length(cameraPosition - playerPosition) && (pos.x + pos.y + pos.z) > 0.1) {
 		return (pos-dir);     // the -dir moves the camera in a bit so it dosn't clip through the ground
 	}
 

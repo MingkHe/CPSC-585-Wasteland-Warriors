@@ -357,9 +357,9 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	}
 	//Renders Railroad
 	//std::cout << game_state->mainRailroad.subObjects.size() << std::endl;
-	/*for (int k = 0; k < mainRailroad.subObjects.size(); k++) {
-		RenderNonPhysicsObjectExplosion(mainRailroad.subObjects[k], identityTransform, transformGL, transparent, 1.0f);
-	}*/
+	for (int k = 0; k < game_state->mainRailroad.subObjects.size(); k++) {
+		RenderNonPhysicsObject(game_state->mainRailroad.subObjects[k], identityTransform, transformGL, transparent, 1.0f);
+	}
 
 	//draw rear view
 	glBindFramebuffer(GL_FRAMEBUFFER, rear_view.id);
@@ -413,7 +413,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	//std::cout << game_state->mainRoad.subObjects.size() << std::endl;
 	for (int l = 0; l < game_state->mainRoad.subObjects.size(); l++) {
 		//std::cout << "Hello" << std::endl;
-		RenderNonPhysicsObject(game_state->mainRoad.subObjects[l], identityTransform, transformGL, transparent, 1.0f);
+		RenderNonPhysicsObject(game_state->mainRoad.subObjects[l], identityTransform, transformGL, transparent, 0.98f);
 	}
 
 	glBindVertexArray(0);
@@ -590,6 +590,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 }
 
 void RenderingEngine::RenderNonPhysicsObject(Geometry object, glm::mat4 transform, GLint transformGL, GLuint transparent, float transparentVal) {
+	glUniform1i(glGetUniformLocation(shaderProgram, "isSkybox"), 0);
 	glUniformMatrix4fv(transformGL, 1, false, &(transform[0][0]));
 	glUniform1f(transparent, transparentVal);
 	//bind the texture

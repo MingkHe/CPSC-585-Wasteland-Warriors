@@ -43,6 +43,8 @@ Audio_Controller::Audio_Controller()
 	weapon_metal_hit = Mix_LoadWAV("SoundEffect/weapon_metal_hit.aiff");
 	weapon_reload = Mix_LoadWAV("SoundEffect/weapon_reload.wav");
 
+	war_horn = Mix_LoadWAV("SoundEffect/war_horn.wav");
+
 	ui_click = Mix_LoadWAV("SoundEffect/click.wav");
 	ui_enter = Mix_LoadWAV("SoundEffect/selected.mp3");
 
@@ -191,6 +193,15 @@ int Audio_Controller::playSound(Gamestate* gameState)
 		}
 	}
 
+	if (gameState->war_horn && gameState->ui_gameplay)
+	{
+		Mix_Volume(13, MIX_MAX_VOLUME);
+		if (!Mix_Playing(13)) {
+			Mix_PlayChannel(13, war_horn, 0);
+		}
+		gameState->war_horn = false;
+	}
+
 	/*
 	if (gameState->weaponHit_sound && gameState->ui_gameplay)
 	{
@@ -202,7 +213,7 @@ int Audio_Controller::playSound(Gamestate* gameState)
 	}
 	*/
 
-	if (gameState->weaponHit_sound && gameState->weaponHit_sound)
+	if (gameState->weaponHit_sound && gameState->ui_gameplay)
 	{
 		//Mix_Volume(0, MIX_MAX_VOLUME)
 		Mix_PlayChannel(-1, weapon_metal_hit, 0);
@@ -282,12 +293,12 @@ int Audio_Controller::playSound(Gamestate* gameState)
 		haltMusic();
 	}
 
-	/* testing code
 	if (input == "N")
 	{ 
-		gameState->carExpo_sound = true;
+		gameState->war_horn = true;
 	}
 
+	/*
 	else if (input == "M")
 	{
 		gameState->carExpo_sound = false;

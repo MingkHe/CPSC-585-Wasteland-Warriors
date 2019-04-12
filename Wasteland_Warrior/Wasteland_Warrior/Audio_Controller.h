@@ -31,6 +31,7 @@ private:
 	Mix_Chunk* weapon_bullet_drop;
 	Mix_Chunk* weapon_swap;
 	Mix_Chunk* weapon_reload;
+	Mix_Chunk* war_horn;
 	std::string currentMusic;
 	
 public:

@@ -825,6 +825,33 @@ void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DK
 	
 }
 
+
+glm::vec3 Physics_Controller::cameraWallCollision(glm::vec3 cameraPosition) {
+	glm::vec3 playerPosition = gameState->playerVehicle.position;
+	glm::vec3 dir = glm::normalize(cameraPosition - playerPosition);
+	PxVec3 origin = PxVec3(playerPosition.x + (dir.x*2.7), playerPosition.y + (dir.y*2.7), playerPosition.z + (dir.z*2.7));                 // [in] Ray origin
+	PxVec3 unitDir = PxVec3(dir.x, dir.y, dir.z);
+
+	PxReal maxDistance = 30;            // [in] Raycast max distance
+	PxRaycastBuffer hit;                 // [out] Raycast results
+	bool status = gScene->raycast(origin, unitDir, maxDistance, hit);
+	glm::vec3 pos = glm::vec3(hit.block.position.x, hit.block.position.y, hit.block.position.z);
+
+	float playerLength = glm::length(cameraPosition - playerPosition);
+	float wallLength = glm::length(pos - playerPosition);
+
+	//std::cout << "Wall distance: " << wallLength << "     camera distance: " << playerLength << std::endl;
+
+	//If wall collision comes before camera location
+	if (glm::length(pos - playerPosition) < glm::length(cameraPosition - playerPosition)) {
+		return (pos-dir);     // the -dir moves the camera in a bit so it dosn't clip through the ground
+	}
+
+	return cameraPosition;
+}
+
+
+
 void Physics_Controller::stepPhysics(bool interactive)
 {
 	//Get set of rigid dynamic actors

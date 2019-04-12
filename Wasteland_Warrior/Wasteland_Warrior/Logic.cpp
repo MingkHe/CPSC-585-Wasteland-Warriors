@@ -81,13 +81,13 @@ void Logic::Update(Gamestate *gameState)
 					//Boulder
 					for (int i = 0; i < (int)gameState->StaticObjects.size(); i++) {
 						Object* boulder = &gameState->StaticObjects[i];
-						if (boulder->type == 0) {
+						if (boulder->type == 14) {
 							int offset = boulder->physicsIndex;
 							glm::mat4 transformMatrix = glm::mat4(
 								2.f, 0.f, 0.f, 0.f,
 								0.f, 2.f, 0.f, 0.f,
 								0.f, 0.f, 2.f, 0.f,
-								0.f, 0.f, 173.f, 1.f
+								0.f, -500.f, 0.f, 1.f
 							);
 							for (int s = 0; s < gameState->scene->allWorldCompObjects[boulder->sceneObjectIndex].subObjectsCount; s++) {
 								gameState->scene->allWorldCompObjects[boulder->sceneObjectIndex].subObjects[s].transform = transformMatrix;
@@ -102,13 +102,13 @@ void Logic::Update(Gamestate *gameState)
 					//Boulder
 					for (int i = 0; i < (int)gameState->StaticObjects.size(); i++) {
 						Object* boulder = &gameState->StaticObjects[i];
-						if (boulder->type == 0) {
+						if (boulder->type == 14) {
 							int offset = boulder->physicsIndex;
 							glm::mat4 transformMatrix = glm::mat4(
 								2.f, 0.f, 0.f, 0.f,
 								0.f, 2.f, 0.f, 0.f,
 								0.f, 0.f, 2.f, 0.f,
-								0.f, 0.f, 173.f, 1.f
+								0.f, 1.f, 0.f, 1.f
 							);
 							for (int s = 0; s < gameState->scene->allWorldCompObjects[boulder->sceneObjectIndex].subObjectsCount; s++) {
 								gameState->scene->allWorldCompObjects[boulder->sceneObjectIndex].subObjects[s].transform = transformMatrix;
@@ -150,7 +150,7 @@ void Logic::Update(Gamestate *gameState)
 		else {
 
 			//Player has beaten all 5 waves
-			if (gameState->wave == 3 || waveBreak == 3) {
+			if (gameState->wave == 7 || waveBreak == 7) {
 				gameState->UIMode = "Win";
 				gameState->ui_gameplay = false;
 				gameState->restart = true;
@@ -191,7 +191,7 @@ void Logic::Update(Gamestate *gameState)
 								boss(gameState);
 								gameState->gameMode = "Boss Battle";
 							}
-							else if (gameState->wave == 2) {
+							else if (gameState->wave == 6) {
 								payload(gameState);
 								gameState->gameMode = "End Game";
 							}
@@ -404,8 +404,8 @@ bool Logic::endgame(Gamestate *gameState) {
 //PowerUps
 void Logic::powerUps(Gamestate *gameState) {
 	gameState->SpawnDynamicObject(1, 1.f, 1.f, 1.f, 0, 0, 0);
-	gameState->SpawnDynamicObject(rand() % 5 + 1, -100.f, -5.25f, -100.f, 0, 0, 0);
-	gameState->SpawnDynamicObject(rand() % 5 + 1, 100.f, -5.25f, 100.f, 0, 0, 0);
+	gameState->SpawnDynamicObject(rand() % 5 + 1, -100.f, 1.f, -100.f, 0, 0, 0);
+	gameState->SpawnDynamicObject(rand() % 5 + 1, 100.f, 1.f, 100.f, 0, 0, 0);
 	gameState->SpawnDynamicObject(rand() % 5 + 1, -100.f, 1.f, 100.f, 0, 0, 0);
 	gameState->SpawnDynamicObject(rand() % 5 + 1, 53.f, 1.f, -35.f, 0, 0, 0);
 }
@@ -441,35 +441,30 @@ void Logic::modeSelection(Gamestate *gameState) {
 
 //Enemies
 void Logic::enemies(Gamestate *gameState) {
-	for (int i = 0; i < gameState->wave+1; i++) {
+	for (int i = 0; i < gameState->wave; i++) {
 		switch (i % 6) {
 		case 0:
-			gameState->SpawnEnemy(rand() % 4 + 1, 0, 162.f, 2.f, 72.f, 0, 0, 0);
+			gameState->SpawnEnemy(rand() % 4 + 1, 0, 162.f, 2.f, 72.f, 0, -90.f, 0);
 			gameState->Enemies.back().health = 25.f;
 			gameState->Enemies.back().maxhealth = 25.f;
 			break;
 		case 1:
-			gameState->SpawnEnemy(rand() % 4 + 1, 0, 178.f, 20.f, 178.f, 0, 0, 0);
+			gameState->SpawnEnemy(rand() % 4 + 1, 0, 178.f, 20.f, 178.f, 0, -125.f, 0);
 			gameState->Enemies.back().health = 25.f;
 			gameState->Enemies.back().maxhealth = 25.f;
 			break;
 		case 2:
-			gameState->SpawnEnemy(rand() % 4 + 1, 0, -179.f, 2.f, 3.f, 0, 0, 0);
+			gameState->SpawnEnemy(rand() % 4 + 1, 0, -179.f, 2.f, 3.f, 0, 125.f, 0);
 			gameState->Enemies.back().health = 25.f;
 			gameState->Enemies.back().maxhealth = 25.f;
 			break;
 		case 3:
-			gameState->SpawnEnemy(rand() % 4 + 1, 0, -176.f, 20.f, 176.f, 0, 0, 0);
+			gameState->SpawnEnemy(rand() % 4 + 1, 0, -176.f, 20.f, 176.f, 0, 90.f, 0);
 			gameState->Enemies.back().health = 25.f;
 			gameState->Enemies.back().maxhealth = 25.f;
 			break;
 		case 4:
-			gameState->SpawnEnemy(rand() % 4 + 1, 0, -137.f + (i * 5.f), 9.f, -30.f + (i * 5.f), 0, 0, 0);
-			gameState->Enemies.back().health = 25.f;
-			gameState->Enemies.back().maxhealth = 25.f;
-			break;
-		case 5:
-			gameState->SpawnEnemy(rand() % 4 + 1, 0, -100.f + (i * 5.f), -2.f, -132.f + (i * 5.f), 0, 0, 0);
+			gameState->SpawnEnemy(rand() % 4 + 1, 0, -78.f, 8.f, -174.f, 0, 45.f, 0);
 			gameState->Enemies.back().health = 25.f;
 			gameState->Enemies.back().maxhealth = 25.f;
 			break;
@@ -481,16 +476,16 @@ void Logic::enemies(Gamestate *gameState) {
 void Logic::checkpoint(Gamestate *gameState) {
 		switch (rand() % 4) {
 		case 0:
-			gameState->SpawnDynamicObject(0, 45.f, 0.f, 45.f, 0, 0, 0);
+			gameState->SpawnDynamicObject(0, 45.f, 0.5f, 45.f, 0, 0, 0);
 			break;
 		case 1:
-			gameState->SpawnDynamicObject(0, -25.f, 0.f, 25.f, 0, 0, 0);
+			gameState->SpawnDynamicObject(0, -25.f, 0.5f, 25.f, 0, 0, 0);
 			break;
 		case 2:
-			gameState->SpawnDynamicObject(0, 45.f, 0.f, -45.f, 0, 0, 0);
+			gameState->SpawnDynamicObject(0, 45.f, 0.5f, -45.f, 0, 0, 0);
 			break;
 		case 3:
-			gameState->SpawnDynamicObject(0, -30.f, 0.f, -30.f, 0, 0, 0);
+			gameState->SpawnDynamicObject(0, -30.f, 0.5f, -30.f, 0, 0, 0);
 			break;
 	}
 }

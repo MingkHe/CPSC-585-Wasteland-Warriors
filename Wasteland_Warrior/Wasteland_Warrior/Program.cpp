@@ -151,12 +151,12 @@ void Program::start() {
 	gameState->SpawnStaticObject(3, 148, -6.2f, -55, 0, 0, 0);
 	gameState->SpawnStaticObject(2, 143, -6.7f, -125, 0, 0, 0);
 	gameState->SpawnStaticObject(3, 73, 0, -125, 0, 0, 0);
-	gameState->SpawnStaticObject(14, 0, 0, 0, 0, 0, 0);
 
 	//Truck
 	gameState->SpawnStaticObject(7, 0, -500, 173, 0, 0, 0);
 
 	//Boulder
+	gameState->SpawnStaticObject(14, 0, -500.f, 0, 0, 0, 0);
 
 	//Tunnels
 	gameState->SpawnStaticObject(8, 0, 0, 190, 0, 0, 0);

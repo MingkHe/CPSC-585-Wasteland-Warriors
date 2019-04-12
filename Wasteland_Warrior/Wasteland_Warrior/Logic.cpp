@@ -100,6 +100,7 @@ void Logic::Update(Gamestate *gameState)
 
 				if ((gameState->playerVehicle.position.z > -165 && gameState->playerVehicle.position.z < -164 && gameState->playerVehicle.position.x > 90 && gameState->playerVehicle.position.x < 110)) {
 					gameState->startup = false;
+					gameState->war_horn = true;
 
 					//Boulder
 					for (int i = 0; i < (int)gameState->StaticObjects.size(); i++) {

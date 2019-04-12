@@ -16,25 +16,25 @@ Then build and run the program.
 
     As the Wasteland Warrior your goal is to survive the apocolypse and escape to freedom. You will face 5
     waves of enemies who are trying to destroy your vehicle. Once you complete all the waves, the game will end.
-    There are two ways to attack your enemies: You can either ram them until their vehicles are destroyed, or
-    if you have amunition, you can shoot them. During each wave you will have different objectives. The wave will
-    not end until all the objetives are completed.
+    There are two ways to attack your enemies: You can either ram them until their vehicles are destroyed, or you 
+    can shoot them. During each wave you will have different objectives. The wave will not end until all the 
+    objetives are completed.
     
     Game Modes:
         Survival:
             Defeat all the enemies.
             
         Headhunter:
-            An enemy is trying to escape, If this enemy (Purple on the radar) is defeated, the wave will end.
+            An enemy is trying to escape, If this enemy (Purple on the radar) is defeated, the gun will activate.
             
         Checkpoint:
-            Reach all the checkpoints to end the wave.
+            Reach all the checkpoints to activate the gun.
             
         Payload:
-            Collect the payload and deliver it to the checkpoints to end the wave.
+            Collect the payload and deliver it to the checkpoints to to activate the gun.
             
         Boss Battle
-            Defeat the boss to continue.
+            Defeat the boss to finish last wave.
     
 ### Input Controls:
 
@@ -49,7 +49,7 @@ Then build and run the program.
         R or Y on gamepad to reset your vehicle after being flipped or stuck
         
     Weapon:
-         *** add gun controls ***
+         left mouse or X button to shoot gun when activated
 
     Camera:
         Move Mouse while holding the Left Mouse Button or move the Right Stick to move the camera
@@ -61,6 +61,7 @@ Then build and run the program.
         DOWN Arrow or DOWN on Dpad to move down
         ENTER or A on gamepad to select option
         M or Menu button on gamepad to enter pause menu
+        F to toggle fullscreen/windowed
     
     Start Menu options:
         - start: start the game

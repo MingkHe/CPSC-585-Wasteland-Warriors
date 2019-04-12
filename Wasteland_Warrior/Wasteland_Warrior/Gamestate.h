@@ -246,12 +246,12 @@ public:
 		{"Textures/bigRock.jpg"},
 		{"Textures/BuildingTextures/cottage_diffuse.png", "Textures/BuildingTextures/waterTower.png", "Textures/BuildingTextures/waterTower.png", 
 		"Textures/BuildingTextures/waterTower.png", "Textures/BuildingTextures/waterTower.png", "Textures/BuildingTextures/waterTower.png", 
-		"Textures/BuildingTextures/waterTower.png", "Textures/BuildingTextures/waterTower.png","Objects/Ruined_Brick_Building/ruined_building_brick.jpg", 
+		"Textures/BuildingTextures/waterTower.png", "Textures/BuildingTextures/waterTower.png","Objects/Ruined_Brick_Building/ruined_building_brick.jpg",
 		"Textures/BuildingTextures/woodTower.jpg", "Textures/BuildingTextures/Shack2.png", "Objects/RuinedSmallHouse/Old_house.png", 
-		"Textures/BuildingTextures/WoodFrame.jpg", "Textures/BuildingTextures/WoodFrame.jpg", "Textures/BuildingTextures/Bluetarp.jpg", 
+		"Textures/BuildingTextures/WoodFrame.jpg", "Textures/BuildingTextures/Bluetarp.jpg", 
 		"Textures/BuildingTextures/Metal4.jpg", "Textures/BuildingTextures/Metal3.jpg", "Textures/BuildingTextures/Metal2.jpg", 
 		"Textures/BuildingTextures/Metal1.jpg","Objects/Buildings/Gas Station.jpg","Textures/BuildingTextures/flamable.jpg", 
-		"Textures/BuildingTextures/crate.jpg", "Textures/BuildingTextures/crate.jpg", "Textures/BuildingTextures/concrete.jpg", "Textures/BuildingTextures/rottenWood.jpg"}
+		"Textures/BuildingTextures/crate.jpg", "Textures/BuildingTextures/crate.jpg", "Textures/BuildingTextures/concrete.jpg", "Textures/BuildingTextures/rottenWood.jpg", "Textures/BuildingTextures/waterTower.png"}
 	 };
 
 	const int numOfDynamicObjectInstances = 8;

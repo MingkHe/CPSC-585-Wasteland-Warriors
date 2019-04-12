@@ -257,6 +257,9 @@ void Gamestate::SpawnDynamicObject(int ObjectType, float x, float y, float z, fl
 	case 6://Payload
 		sceneObjectIndex = scene->loadCompObjectInstance(dynamicObjMeshTextureIndices[6]);
 		break;
+	case 7://Dynamite
+		sceneObjectIndex = scene->loadCompObjectInstance(dynamicObjMeshTextureIndices[7]);
+		break;
 	default:
 		objectExists = false;
 		break;
@@ -507,6 +510,10 @@ void Gamestate::Collision(Vehicle* vehicle, PowerUp* powerUp) {
 		vehicle->damageMultiplier += 0.1f;
 		break;
 	case 6://Payload
+		powerUp->active = false;
+		this->payloadCollected = true;
+		break;
+	case 7://Dynamite
 		powerUp->active = false;
 		this->payloadCollected = true;
 		break;

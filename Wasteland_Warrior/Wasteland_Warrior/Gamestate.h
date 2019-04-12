@@ -283,6 +283,8 @@ public:
 	//Logic
 	int wave;
 	bool restart;
+	bool startup;
+	bool resetCar;
 	int enemiesLeft;
 	int checkpointsLeft;
 	int breakSeconds;

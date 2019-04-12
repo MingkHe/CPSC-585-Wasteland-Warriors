@@ -276,8 +276,8 @@ PxVehicleDrive4W* createPlayerVehicle4W(const VehicleDesc& vehicle4WDesc, PxPhys
 
 		//Engine
 		PxVehicleEngineData engine;
-		engine.mPeakTorque=500.0f;
-		engine.mMaxOmega=600.0f;//approx 6000 rpm
+		engine.mPeakTorque=700.0f;
+		engine.mMaxOmega=700.0f;//approx 6000 rpm
 		driveSimData.setEngineData(engine);
 
 		//Gears
@@ -396,8 +396,8 @@ PxVehicleDrive4W* createEnemyVehicle4W(const VehicleDesc& vehicle4WDesc, PxPhysi
 
 		//Engine
 		PxVehicleEngineData engine;
-		engine.mPeakTorque = 500.0f;
-		engine.mMaxOmega = 600.0f;//approx 6000 rpm
+		engine.mPeakTorque = 700.0f;
+		engine.mMaxOmega = 700.0f;//approx 6000 rpm
 		driveSimData.setEngineData(engine);
 
 		//Gears

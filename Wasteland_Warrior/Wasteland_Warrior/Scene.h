@@ -39,6 +39,8 @@ public:
 	//list of objects in the scene
 	std::vector<CompositeWorldObject> allWorldCompObjects;
 	std::vector<CompositeWorldObject> compObjectInstances;
+
+	std::vector<CompositeWorldObject> worldGhostObjects;
 	int generateRectPrism(float length, float width, float height);
 
 	int sceneObjectIndex = -1;

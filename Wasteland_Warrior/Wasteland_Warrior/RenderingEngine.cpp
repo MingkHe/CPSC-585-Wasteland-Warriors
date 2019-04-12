@@ -27,9 +27,9 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	lineShaderProgram = ShaderTools::InitializeShaders("../shaders/basicVer.glsl", "../shaders/basicFrag.glsl");
 	//vblurProgram = ShaderTools::InitializeShaders("../shaders/vblurvertex.glsl", "../shaders/vblurfragment.glsl");
 	//hblurProgram = ShaderTools::InitializeShaders("../shaders/hblurvertex.glsl", "../shaders/hblurfragment.glsl");
-	
+
 	textShaderProgram = ShaderTools::InitializeShaders("../shaders/texVertex.glsl", "../shaders/texFragment.glsl");
-	float aspect_ratio = (float)game_state->window_height / (float)game_state->window_width;
+	//float aspect_ratio = (float)game_state->window_height / (float)game_state->window_width;
 	health.verts.push_back(glm::vec3(.5f, .8f, 0.f));
 	health.verts.push_back(glm::vec3(.5f, .9f, 0.f));
 	health.verts.push_back(glm::vec3(.9f, .8f, 0.f));
@@ -38,6 +38,7 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	health.uvs.push_back(glm::vec2(0.f, 1.f));
 	health.uvs.push_back(glm::vec2(1.f, 0.f));
 	health.uvs.push_back(glm::vec2(1.f, 1.f));
+	health.transform = glm::mat4(1.f);
 	health.drawMode = GL_TRIANGLE_STRIP;
 	assignBuffers(health);
 	setBufferData(health);
@@ -50,6 +51,7 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	radar.uvs.push_back(glm::vec2(-1.f, 1.f));
 	radar.uvs.push_back(glm::vec2(1.f, -1.f));
 	radar.uvs.push_back(glm::vec2(1.f, 1.f));
+	radar.transform = glm::mat4(1.f);
 	radar.drawMode = GL_TRIANGLE_STRIP;
 	assignBuffers(radar);
 	setBufferData(radar);
@@ -67,6 +69,7 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 		speedo.uvs.push_back(.5f*glm::vec2(std::cos(i + increment), std::sin(i + increment)) + glm::vec2(.5f, .5f));
 		speedo.uvs.push_back(glm::vec2(.5f, .5f));
 	}
+	speedo.transform = glm::mat4(1.f);
 	speedo.drawMode = GL_TRIANGLES;
 	InitializeTexture(&speedo.texture, "Image/speedo.png");
 	assignBuffers(speedo);
@@ -98,6 +101,7 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	square.uvs.push_back(glm::vec2(0.f, 1.f));
 	square.uvs.push_back(glm::vec2(1.f, 0.f));
 	square.uvs.push_back(glm::vec2(1.f, 1.f));
+	square.transform = glm::mat4(1.f);
 	square.drawMode = GL_TRIANGLE_STRIP;
 	assignBuffers(square);
 	setBufferData(square);
@@ -110,6 +114,7 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	mirror.uvs.push_back(glm::vec2(1.f, .85f));
 	mirror.uvs.push_back(glm::vec2(0.f, .4f));
 	mirror.uvs.push_back(glm::vec2(0.f, .85f));
+	mirror.transform = glm::mat4(1.f);
 	mirror.drawMode = GL_TRIANGLE_STRIP;
 	assignBuffers(mirror);
 	setBufferData(mirror);
@@ -122,6 +127,7 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	mirror_back.uvs.push_back(glm::vec2(1.f, 1.f));
 	mirror_back.uvs.push_back(glm::vec2(0.f, 0.f));
 	mirror_back.uvs.push_back(glm::vec2(0.f, 1.f));
+	mirror_back.transform = glm::mat4(1.f);
 	mirror_back.drawMode = GL_TRIANGLE_STRIP;
 	InitializeTexture(&mirror_back.texture, "Image/black_pixel.png");
 	assignBuffers(mirror_back);
@@ -146,24 +152,6 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	assignBuffers(aim);
 	setBufferData(aim);
 
-	//rear_view = createFramebuffer(game_state->window_width, game_state->window_height);
-	//shadow_buffer = createFramebuffer(game_state->window_width, game_state->window_height);
-	//if (game_state->fullscreen) {
-		rear_view = createFramebuffer(game_state->window_width, game_state->window_height);
-		shadow_buffer = createFramebuffer(game_state->window_width, game_state->window_height);
-		shadow_buffertwo = createFramebuffer(game_state->window_width, game_state->window_height);
-		shadow_bufferthree = createFramebuffer(game_state->window_width, game_state->window_height);
-		main_view = createFramebuffer(game_state->window_width, game_state->window_height);
-		//blur = createFramebuffer(game_state->window_width, game_state->window_height);
-	/*}
-	else {
-		rear_view = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1181));
-		shadow_buffer = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1181));
-		shadow_buffertwo = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1181));
-		shadow_bufferthree = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1181));
-		main_view = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1181));
-		//blur = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1061));
-	}*/
 
 	bias = 1200/game_state->window_height;
 
@@ -175,6 +163,14 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	glUseProgram(textShaderProgram);
 	glUniformMatrix4fv(glGetUniformLocation(textShaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 	glUseProgram(0);
+}
+
+void RenderingEngine::createFramebuffers(int width, int height) {
+	rear_view = createFramebuffer(width, height);
+	shadow_buffer = createFramebuffer(width, height);
+	shadow_buffertwo = createFramebuffer(width, height);
+	shadow_bufferthree = createFramebuffer(width, height);
+	main_view = createFramebuffer(width, height);
 }
 
 RenderingEngine::~RenderingEngine() {
@@ -210,6 +206,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 			glDrawArrays(objects[i].subObjects[s].drawMode, 0, objects[i].subObjects[s].verts.size());
 		}
 	}
+
 
 	/*glBindFramebuffer(GL_FRAMEBUFFER, blur.id);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -269,7 +266,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 			glDrawArrays(objects[i].subObjects[s].drawMode, 0, objects[i].subObjects[s].verts.size());
 		}
 	}
-	
+
 	//Clears the screen to a dark grey background
 	//glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -337,7 +334,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 			glDrawArrays(objects[i].subObjects[s].drawMode, 0, objects[i].subObjects[s].verts.size());
 		}
 	}
-	const Geometry explosion = (game_state->scene->compObjectInstances[game_state->explosionMeshIndex].subObjects[0]);
+	//Renders explosions
 	int explosion_life = 150;
 	for (int i = 0; i < (int)game_state->explosions.size(); i++) {
 		if (++game_state->explosions[i].life > explosion_life) {
@@ -352,25 +349,17 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 			0.f, 0.f, scale*game_state->explosions[i].life, 0.f,
 			game_state->explosions[i].position.x, game_state->explosions[i].position.y, game_state->explosions[i].position.z, 1.f
 		);
-		glUniformMatrix4fv(transformGL, 1, false, &(transform[0][0]));
-		glUniform1f(transparent, 1.f-((float)game_state->explosions[i].life/(float)explosion_life));
-		//bind the texture
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, explosion.texture.textureID);
-
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, shadow_buffer.colorTextureID);
-
-		glActiveTexture(GL_TEXTURE2);
-		glBindTexture(GL_TEXTURE_2D, shadow_buffertwo.colorTextureID);
-
-		glActiveTexture(GL_TEXTURE3);
-		glBindTexture(GL_TEXTURE_2D, shadow_bufferthree.colorTextureID);
-
-		glBindVertexArray(explosion.vao);
-		glDrawArrays(explosion.drawMode, 0, explosion.verts.size());
+		RenderNonPhysicsObject(game_state->explosion, transform,transformGL, transparent, 1.f - ((float)game_state->explosions[i].life / (float)explosion_life));
 	}
-
+	//Renders road
+	for (int l = 0; l < game_state->mainRoad.subObjects.size(); l++) {
+		RenderNonPhysicsObject(game_state->mainRoad.subObjects[l], identityTransform, transformGL, transparent, 1.0f);
+	}
+	//Renders Railroad
+	//std::cout << game_state->mainRailroad.subObjects.size() << std::endl;
+	/*for (int k = 0; k < mainRailroad.subObjects.size(); k++) {
+		RenderNonPhysicsObjectExplosion(mainRailroad.subObjects[k], identityTransform, transformGL, transparent, 1.0f);
+	}*/
 
 	//draw rear view
 	glBindFramebuffer(GL_FRAMEBUFFER, rear_view.id);
@@ -405,6 +394,28 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 		// reset state to default (no shader or geometry bound)
 	}
 
+	for (int i = 0; i < (int)game_state->explosions.size(); i++) {
+		if (++game_state->explosions[i].life > explosion_life) {
+			game_state->explosions.erase(game_state->explosions.begin() + i);
+			i--;
+			continue;
+		}
+		float scale = .0625f;
+		glm::mat4 transform = glm::mat4(
+			scale*game_state->explosions[i].life, 0.f, 0.f, 0.f,
+			0.f, scale*game_state->explosions[i].life, 0.f, 0.f,
+			0.f, 0.f, scale*game_state->explosions[i].life, 0.f,
+			game_state->explosions[i].position.x, game_state->explosions[i].position.y, game_state->explosions[i].position.z, 1.f
+		);
+		RenderNonPhysicsObject(game_state->explosion, transform, transformGL, transparent, 1.f - ((float)game_state->explosions[i].life / (float)explosion_life));
+	}
+	//Renders road
+	//std::cout << game_state->mainRoad.subObjects.size() << std::endl;
+	for (int l = 0; l < game_state->mainRoad.subObjects.size(); l++) {
+		//std::cout << "Hello" << std::endl;
+		RenderNonPhysicsObject(game_state->mainRoad.subObjects[l], identityTransform, transformGL, transparent, 1.0f);
+	}
+
 	glBindVertexArray(0);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, main_view.id);
@@ -412,6 +423,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 
 	//render mirror
 	glUseProgram(basicshaderProgram);
+	glUniformMatrix4fv(glGetUniformLocation(basicshaderProgram, "transform"), 1, false, &(mirror_back.transform[0][0]));
 	glUniform1i(glGetUniformLocation(basicshaderProgram, "materialTex"), 0);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, mirror_back.texture.textureID);
@@ -474,6 +486,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 
 	//render speedometer
 	glUseProgram(basicshaderProgram);
+	glUniformMatrix4fv(glGetUniformLocation(basicshaderProgram, "transform"), 1, false, &(speedo.transform[0][0]));
 	glUniform1i(glGetUniformLocation(basicshaderProgram, "materialTex"), 0);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, speedo.texture.textureID);
@@ -537,7 +550,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	//glActiveTexture(GL_TEXTURE0);
 
 	for (Geometry& g : texObjects) {
-		
+
 		//bind the texture
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, g.textureID);
@@ -550,7 +563,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 		deleteBufferData(g);
 		glBindVertexArray(0);
 	}
-	
+
 	texObjects.clear();
 
 	glUseProgram(textShaderProgram);
@@ -559,6 +572,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glUseProgram(basicshaderProgram);
+	glUniformMatrix4fv(glGetUniformLocation(basicshaderProgram, "transform"), 1, false, &(square.transform[0][0]));
 	glUniform1i(glGetUniformLocation(basicshaderProgram, "materialTex"), 0);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, main_view.colorTextureID);
@@ -571,8 +585,28 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 
 	// check for an report any OpenGL errors
 	CheckGLErrors();
-	
 
+
+}
+
+void RenderingEngine::RenderNonPhysicsObject(Geometry object, glm::mat4 transform, GLint transformGL, GLuint transparent, float transparentVal) {
+	glUniformMatrix4fv(transformGL, 1, false, &(transform[0][0]));
+	glUniform1f(transparent, transparentVal);
+	//bind the texture
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, object.texture.textureID);
+
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, shadow_buffer.colorTextureID);
+
+	glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_2D, shadow_buffertwo.colorTextureID);
+
+	glActiveTexture(GL_TEXTURE3);
+	glBindTexture(GL_TEXTURE_2D, shadow_bufferthree.colorTextureID);
+
+	glBindVertexArray(object.vao);
+	glDrawArrays(object.drawMode, 0, object.verts.size());
 }
 
 void RenderingEngine::RenderMenuScene(const std::vector<Geometry>& objects) {
@@ -593,7 +627,7 @@ void RenderingEngine::RenderMenuScene(const std::vector<Geometry>& objects) {
 	}
 
 	glUseProgram(0);
-  
+
   updateText();
 
 	glEnable(GL_CULL_FACE);
@@ -629,7 +663,7 @@ void RenderingEngine::RenderMenuScene(const std::vector<Geometry>& objects) {
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glUseProgram(0);
-  
+
 	// check for an report any OpenGL errors
 	CheckGLErrors();
 }
@@ -682,7 +716,7 @@ void RenderingEngine::loadFont(const char* ttfFile) {
 	// Load first 128 characters of ASCII set
 	for (GLubyte c = 0; c < 128; c++)
 	{
-		// Load character glyph 
+		// Load character glyph
 		if (FT_Load_Char(face, c, FT_LOAD_RENDER))
 		{
 			std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
@@ -793,95 +827,108 @@ void RenderingEngine::pushTextObj(std::vector<Geometry>& objects, std::string te
 }
 
 void RenderingEngine::updateText() {
-	float scale = (float)game_state->window_height / 960.f;
+	float scale = (float)game_state->monitor_width / 1400.f;
 	if (game_state->UIMode == "Game") {
-		if (game_state->breakSeconds == 0) {
-			pushTextObj(texObjects, "Wave # " + std::to_string(game_state->wave) + " - " + game_state->gameMode, 0.01f*game_state->window_width, 0.95f*game_state->window_height, scale * 0.75f, glm::vec3(0.7f, 0.2f, 0.2f), false);
-			pushTextObj(texObjects, "Enemies Left: " + std::to_string(game_state->enemiesLeft), 0.01f*game_state->window_width, 0.9f*game_state->window_height, scale * 0.75f, glm::vec3(0.7f, 0.2f, 0.2f), false);
-			if (game_state->gameMode == "Checkpoint") {
-				pushTextObj(texObjects, "Checkpoints Left: " + std::to_string(game_state->checkpointsLeft), 0.01f*game_state->window_width, 0.85f*game_state->window_height, scale * 0.75f, glm::vec3(0.7f, 0.2f, 0.2f), false);
-			}
+		if (game_state->startup) {
+			pushTextObj(texObjects, "Wasteland Warrior", 0.01f*game_state->monitor_width, 0.95f*game_state->monitor_height, scale * 0.75f, glm::vec3(0.7f, 0.2f, 0.2f), false);
 		}
 		else {
-			pushTextObj(texObjects, "Next wave: " + std::to_string(game_state->breakSeconds) + " seconds", 0.01f*game_state->window_width, 0.95f*game_state->window_height, scale * 0.75f, glm::vec3(0.7f, 0.2f, 0.2f), false);
-		}
-		
-		if (game_state->weaponState == 0) {
-			//pushTextObj(texObjects, "Weapon: OFF", 0.01f*game_state->window_width, 0.8f*game_state->window_height, scale * 0.8, glm::vec3(0.7f, 0.2f, 0.2f),false);
-		}
-		else {
-			pushTextObj(texObjects, "Machine Gun Activated", 0.01f*game_state->window_width, 0.8f*game_state->window_height, scale * 0.8, glm::vec3(0.7f, 0.2f, 0.2f), false);
-			//pushTextObj(texObjects, "Weapon: ON", 0.01f*game_state->window_width, 0.8f*game_state->window_height, scale * 0.8, glm::vec3(0.7f, 0.2f, 0.2f),false);
-			//pushTextObj(texObjects, "Ammo: " + std::to_string(game_state->ammo), 0.01f*game_state->window_width, 0.75f*game_state->window_height, scale * 0.8, glm::vec3(0.7f, 0.2f, 0.2f),false);
-		}
-		
-		if (game_state->powerText) {
-			switch (game_state->powerUpType)
-			{
-			case 0:
-				pushTextObj(texObjects, "Checkpoint reached!", 0.5f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
-				break;
-			case 1:
-				pushTextObj(texObjects, "Full health!", 0.5f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
-				break;
-			case 2:
-				pushTextObj(texObjects, "Maximum health increaced!", 0.5f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
-				break;
-			case 3:
-				pushTextObj(texObjects, "Health boost!", 0.5f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
-				break;
-			case 4:
-				pushTextObj(texObjects, "Armor boost!", 0.5f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
-				break;
-			case 5:
-				pushTextObj(texObjects, "Damage boost!", 0.5f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
-				break;
-			case 6:
-				pushTextObj(texObjects, "Payload collected!", 0.5f*game_state->window_width, 0.8f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
-				break;
-			default:
-				break;
+			if (game_state->breakSeconds == 0) {
+				if (game_state->gameMode == "End Game") {
+					pushTextObj(texObjects, "Escape to survive!", 0.01f*game_state->monitor_width, 0.95f*game_state->monitor_height, scale * 0.75f, glm::vec3(0.7f, 0.2f, 0.2f), false);
+				}
+				else {
+					pushTextObj(texObjects, "Wave # " + std::to_string(game_state->wave) + " - " + game_state->gameMode, 0.01f*game_state->monitor_width, 0.95f*game_state->monitor_height, scale * 0.75f, glm::vec3(0.7f, 0.2f, 0.2f), false);
+					pushTextObj(texObjects, "Enemies Left: " + std::to_string(game_state->enemiesLeft), 0.01f*game_state->monitor_width, 0.9f*game_state->monitor_height, scale * 0.75f, glm::vec3(0.7f, 0.2f, 0.2f), false);
+					if (game_state->gameMode == "Checkpoint") {
+						pushTextObj(texObjects, "Checkpoints Left: " + std::to_string(game_state->checkpointsLeft), 0.01f*game_state->monitor_width, 0.85f*game_state->monitor_height, scale * 0.75f, glm::vec3(0.7f, 0.2f, 0.2f), false);
+					}
+				}
 			}
-		}
-		if (game_state->modeText) {
-			if (game_state->gameMode == "Checkpoint") {
-				pushTextObj(texObjects, "Collect all checkpoints", 0.5f*game_state->window_width, 0.7f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
+			else {
+				pushTextObj(texObjects, "Next wave: " + std::to_string(game_state->breakSeconds) + " seconds", 0.01f*game_state->monitor_width, 0.95f*game_state->monitor_height, scale * 0.75f, glm::vec3(0.7f, 0.2f, 0.2f), false);
 			}
-			else if (game_state->gameMode == "Head Hunter") {
-				pushTextObj(texObjects, "Defeat escaping enemy ", 0.5f*game_state->window_width, 0.7f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
+
+			if (game_state->weaponState == 0) {
+				//pushTextObj(texObjects, "Weapon: OFF", 0.01f*game_state->monitor_width, 0.8f*game_state->monitor_height, scale * 0.8, glm::vec3(0.7f, 0.2f, 0.2f),false);
 			}
-			else if (game_state->gameMode == "Boss Battle") {
-				pushTextObj(texObjects, "Defeat boss", 0.5f*game_state->window_width, 0.7f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
+			else {
+				pushTextObj(texObjects, "Machine Gun Activated", 0.01f*game_state->monitor_width, 0.8f*game_state->monitor_height, scale * 0.8, glm::vec3(0.7f, 0.2f, 0.2f), false);
+				//pushTextObj(texObjects, "Weapon: ON", 0.01f*game_state->monitor_width, 0.8f*game_state->monitor_height, scale * 0.8, glm::vec3(0.7f, 0.2f, 0.2f),false);
+				//pushTextObj(texObjects, "Ammo: " + std::to_string(game_state->ammo), 0.01f*game_state->monitor_width, 0.75f*game_state->monitor_height, scale * 0.8, glm::vec3(0.7f, 0.2f, 0.2f),false);
 			}
-			else if (game_state->gameMode == "Payload") {
-				pushTextObj(texObjects, "Collect and deliver payload", 0.5f*game_state->window_width, 0.7f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
+
+			if (game_state->powerText) {
+				switch (game_state->powerUpType)
+				{
+				case 0:
+					pushTextObj(texObjects, "Checkpoint reached!", 0.5f*game_state->monitor_width, 0.8f*game_state->monitor_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
+					break;
+				case 1:
+					pushTextObj(texObjects, "Full health!", 0.5f*game_state->monitor_width, 0.8f*game_state->monitor_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
+					break;
+				case 2:
+					pushTextObj(texObjects, "Maximum health increaced!", 0.5f*game_state->monitor_width, 0.8f*game_state->monitor_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
+					break;
+				case 3:
+					pushTextObj(texObjects, "Health boost!", 0.5f*game_state->monitor_width, 0.8f*game_state->monitor_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
+					break;
+				case 4:
+					pushTextObj(texObjects, "Armor boost!", 0.5f*game_state->monitor_width, 0.8f*game_state->monitor_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
+					break;
+				case 5:
+					pushTextObj(texObjects, "Damage boost!", 0.5f*game_state->monitor_width, 0.8f*game_state->monitor_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
+					break;
+				case 6:
+					pushTextObj(texObjects, "Payload collected!", 0.5f*game_state->monitor_width, 0.8f*game_state->monitor_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
+					break;
+				default:
+					break;
+				}
 			}
-			else if (game_state->gameMode == "Survival") {
-				pushTextObj(texObjects, "Defeat all enemies", 0.5f*game_state->window_width, 0.7f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
+			if (game_state->modeText) {
+				if (game_state->gameMode == "Checkpoint") {
+					pushTextObj(texObjects, "Collect all checkpoints", 0.5f*game_state->monitor_width, 0.7f*game_state->monitor_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
+				}
+				else if (game_state->gameMode == "Head Hunter") {
+					pushTextObj(texObjects, "Defeat escaping enemy ", 0.5f*game_state->monitor_width, 0.7f*game_state->monitor_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
+				}
+				else if (game_state->gameMode == "Boss Battle") {
+					pushTextObj(texObjects, "Defeat boss", 0.5f*game_state->monitor_width, 0.7f*game_state->monitor_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
+				}
+				else if (game_state->gameMode == "Payload") {
+					pushTextObj(texObjects, "Collect and deliver payload", 0.5f*game_state->monitor_width, 0.7f*game_state->monitor_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
+				}
+				else if (game_state->gameMode == "Survival") {
+					pushTextObj(texObjects, "Defeat all enemies", 0.5f*game_state->monitor_width, 0.7f*game_state->monitor_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
+				}
+				else if (game_state->gameMode == "End Game") {
+					pushTextObj(texObjects, "Collect dynamite and blow up truck to escape", 0.5f*game_state->monitor_width, 0.7f*game_state->monitor_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
+				}
 			}
 		}
 	}
 
 	if (game_state->UIMode == "Win") {
-		pushTextObj(texObjects, "Your score was: " + std::to_string(game_state->score), 0.38f*game_state->window_width, 0.52f*game_state->window_height, scale, glm::vec3(255, 140, 0)/glm::vec3(255,255,255), false);
-		pushTextObj(texObjects, "You survived in: " + std::to_string(game_state->scoreTime) + " seconds", 0.32f*game_state->window_width, 0.45f*game_state->window_height, scale, glm::vec3(255, 140, 0) / glm::vec3(255, 255, 255), false);
+		pushTextObj(texObjects, "Your score was: " + std::to_string(game_state->score), 0.38f*game_state->monitor_width, 0.52f*game_state->monitor_height, scale, glm::vec3(255, 140, 0)/glm::vec3(255,255,255), false);
+		pushTextObj(texObjects, "You survived in: " + std::to_string(game_state->scoreTime) + " seconds", 0.32f*game_state->monitor_width, 0.45f*game_state->monitor_height, scale, glm::vec3(255, 140, 0) / glm::vec3(255, 255, 255), false);
 	}
 
 	if (game_state->UIMode == "Lose") {
-		pushTextObj(texObjects, "Your score was: " + std::to_string(game_state->score), 0.38f*game_state->window_width, 0.4f*game_state->window_height, scale, glm::vec3(.768f, .768f, .768f), false);
-		pushTextObj(texObjects, "You died after: " + std::to_string(game_state->scoreTime) + " seconds", 0.32f*game_state->window_width, 0.33f*game_state->window_height, scale, glm::vec3(.768f, .768f, .768f), false);
+		pushTextObj(texObjects, "Your score was: " + std::to_string(game_state->score), 0.38f*game_state->monitor_width, 0.4f*game_state->monitor_height, scale, glm::vec3(.768f, .768f, .768f), false);
+		pushTextObj(texObjects, "You died after: " + std::to_string(game_state->scoreTime) + " seconds", 0.32f*game_state->monitor_width, 0.33f*game_state->monitor_height, scale, glm::vec3(.768f, .768f, .768f), false);
 	}
 
 	if (game_state->UIMode == "Loading") {
-		pushTextObj(texObjects, std::to_string(game_state->loadingPercentage)+"%", 0.7f*game_state->window_width, 0.315f*game_state->window_height, scale, glm::vec3(1.0f, 1.0f, 1.0f), false);
+		pushTextObj(texObjects, std::to_string(game_state->loadingPercentage)+"%", 0.7f*game_state->monitor_width, 0.315f*game_state->monitor_height, scale, glm::vec3(1.0f, 1.0f, 1.0f), false);
 	}
 
 	if (game_state->UIMode == "Story") {
-		pushTextObj(texObjects, "Press Enter to continue...", 0.6f*game_state->window_width, 0.1f*game_state->window_height, scale, glm::vec3(1.0f, 1.0f, 1.0f), false);
+		pushTextObj(texObjects, "Press Enter to continue...", 0.6f*game_state->monitor_width, 0.1f*game_state->monitor_height, scale, glm::vec3(1.0f, 1.0f, 1.0f), false);
 	}
 
 	if (game_state->UIMode == "Control") {
-		pushTextObj(texObjects, "Press Enter to continue...", 0.6f*game_state->window_width, 0.1f*game_state->window_height, scale, glm::vec3(1.0f, 1.0f, 1.0f), false);
+		pushTextObj(texObjects, "Press Enter to continue...", 0.6f*game_state->monitor_width, 0.1f*game_state->monitor_height, scale, glm::vec3(1.0f, 1.0f, 1.0f), false);
 	}
 }
 

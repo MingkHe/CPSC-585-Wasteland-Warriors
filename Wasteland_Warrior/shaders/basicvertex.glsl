@@ -5,13 +5,15 @@
 layout(location = 0) in vec3 VertexPosition;
 layout(location = 3) in vec2 VertexUV;
 
+uniform mat4 transform;
+
 out vec2 fragTexCoord;
 out vec3 fragVert;
 
 void main()
 {
     // assign vertex position without modification
-    gl_Position = vec4(VertexPosition, 1.0);
+    gl_Position = transform*vec4(VertexPosition, 1.0);
 
     // assign output colour to be interpolated
 	fragTexCoord = VertexUV;

@@ -59,28 +59,6 @@ Gamestate::~Gamestate()
 {
 }
 
-void Gamestate::InstantiateAllMeshes_Textures() {
-
-	//Initialize Map Meshes & Textures
-	for (int i = 0; i < 1; i++) {
-		mapMeshTextureIndices[i] = scene->loadOBJObjectInstance(mapMeshList[i], mapTextureList[i]);
-	}
-	//Initialize Static Object Meshes & Textures
-	for (int i = 0; i < numOfStaticObjectInstances; i++) {
-		staticObjMeshTextureIndices[i] = scene->loadOBJObjectInstance(staticObjMeshList[i], staticObjTextureList[i]);
-		if (i == 11) {
-			explosionMeshIndex = staticObjMeshTextureIndices[i];
-		}
-	}
-	//Initialize Dynamic Object Meshes & Textures
-	for (int i = 0; i < numOfDynamicObjectInstances; i++) {
-		dynamicObjMeshTextureIndices[i] = scene->loadOBJObjectInstance(dynamicObjMeshList[i], dynamicObjTextureList[i]);
-	}
-	//Initialize Vehicle Meshes & Textures
-	for (int i = 0; i < numOfVehicleObjectInstances; i++) {
-		vehicleMeshTextureIndices[i] = scene->loadOBJObjectInstance(vehicleMeshList[i], vehicleTextureList[i]);
-	}
-}
 
 void Gamestate::InstantiateAllMeshes_Textures_Map() {
 	//Initialize Map Meshes & Textures
@@ -95,6 +73,15 @@ void Gamestate::InstantiateAllMeshes_Textures_Static() {
 		staticObjMeshTextureIndices[i] = scene->loadOBJObjectInstance(staticObjMeshList[i], staticObjTextureList[i]);
 		if (i == 11) {
 			explosionMeshIndex = staticObjMeshTextureIndices[i];
+			explosion = (scene->compObjectInstances[explosionMeshIndex].subObjects[0]);
+		}
+		else if (i == 12) {
+			mainRoadIndex = staticObjMeshTextureIndices[i];
+			mainRoad = scene->compObjectInstances[mainRoadIndex];
+		}
+		else if (i == 13) {
+			mainRailroadIndex = staticObjMeshTextureIndices[i];
+			mainRailroad = (scene->compObjectInstances[mainRailroadIndex]);
 		}
 	}
 }

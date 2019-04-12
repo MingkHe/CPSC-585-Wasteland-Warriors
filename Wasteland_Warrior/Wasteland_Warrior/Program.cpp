@@ -40,7 +40,7 @@
 #include <SDL_mixer.h>
 #include <SDL.h>
 
-
+Gamestate *self;
 
 Program::Program() {
 	//Sleep(7000);
@@ -56,8 +56,12 @@ Program::~Program() {
 void Program::start() {
 	//Initialization
 	Gamestate* gameState = new Gamestate();
+	self = gameState;
+	gameState->window = this->window;
 	gameState->window_width = this->win_width;//glfwGetVideoMode(glfwGetPrimaryMonitor())->width;
 	gameState->window_height = this->win_height;//glfwGetVideoMode(glfwGetPrimaryMonitor())->height;
+	gameState->monitor_width = this->win_width;
+	gameState->monitor_height = this->win_height;
 	gameState->fullscreen = this->fullscreen;
 	gameState->UIMode = "Loading";
 
@@ -199,19 +203,40 @@ void Program::start() {
 
 	int width, height;
 	glfwGetFramebufferSize(window, &width, &height);
-	if (height != win_height || width != win_width) {
-		gameState->scene->renderer->rear_view = createFramebuffer(width, height);
-		gameState->scene->renderer->shadow_buffer = createFramebuffer(width, height);
-		gameState->scene->renderer->shadow_buffertwo = createFramebuffer(width, height);
-		gameState->scene->renderer->shadow_bufferthree = createFramebuffer(width, height);
-		gameState->scene->renderer->main_view = createFramebuffer(width, height);
-	}
+	gameState->scene->renderer->createFramebuffers(width, height);
 
 	//Main render loop
 	while (!glfwWindowShouldClose(window)) {
 		//std::cout << "New execution loop started on: " << currentTime.time << "." << currentTime.millitm << std::endl;
 		//User Input
 		usrInput.Update(gameState);
+
+		if (gameState->button == "F") {
+
+			const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+
+			/*gameState->window_width = mode->width;
+			gameState->window_height = mode->height;
+			gameState->monitor_width = mode->width;
+			gameState->monitor_height = mode->height;
+
+			int w, h;
+			glfwGetFramebufferSize(window, &w, &h);
+			self->scene->renderer->createFramebuffers(w, h);
+			self->window_height = mode->height;
+			self->window_width = mode->width;*/
+
+			if (this->fullscreen == true) {
+				glfwSetWindowMonitor(window, NULL, NULL, NULL, mode->width, mode->height, NULL);
+				this->fullscreen = false;
+			}
+			else {
+				glfwSetWindowMonitor(window, glfwGetPrimaryMonitor(), NULL, NULL, mode->width, mode->height, NULL);
+				this->fullscreen = true;
+			}
+
+			glViewport(0, 0, mode->width, mode->height);
+		}
 
 		//Game Rules
 		if (gameState->UIMode == "Game") {
@@ -248,8 +273,9 @@ void Program::start() {
 		}
 
 		glfwSwapBuffers(window);
-
-		//glfwWaitEvents();
+		if (gameState->UIMode != "Game" && !gameState->controller) {
+			glfwWaitEvents();
+		}
 		glfwPollEvents();
 
 		//Fixed Timestep
@@ -270,6 +296,26 @@ void Program::start() {
 	SDL_Quit();
 }
 
+void window_size_callback(GLFWwindow* window, int width, int height)
+{
+	int w, h;
+	glfwGetFramebufferSize(window, &w, &h);
+	self->scene->renderer->createFramebuffers(w, h);
+	self->window_height = height;
+	self->window_width = width;
+	glViewport(0, 0, width, height);
+	/*float new_h = (float)height/(float)self->monitor_height;
+	float new_w = (float)width/(float)self->monitor_width;
+	float hdiff = 0.f;
+	float wdiff = 0.f;
+	self->scene->renderer->square.transform = glm::mat4(
+		new_w, 0.f, 0.f, 0.f,
+		0.f, new_h, 0.f, 0.f,
+		0.f, 0.f, 1.f, 0.f,
+		-wdiff, -hdiff, 0.f, 1.f
+	);*/
+}
+
 void Program::setupWindow() {
 	//Initialize the GLFW windowing system
 	if (!glfwInit()) {
@@ -286,18 +332,19 @@ void Program::setupWindow() {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
 	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-	//int width = mode->width;//1280; //640
-	//int height = mode->height;//960; //480
-	int width = 640;
-	int height = 480;
+	int width = mode->width;//1280; //640
+	int height = mode->height;//960; //480
+	//int width = 640;
+	//int height = 480;
 	this->win_height = height;
 	this->win_width = width;
 
-	window = glfwCreateWindow(width, height, "Wasteland Warrior", NULL, NULL);
-	this->fullscreen = false;
-	//window = glfwCreateWindow(width, height, "Wasteland Warrior", glfwGetPrimaryMonitor(), NULL);
-	//this->fullscreen = true;
+	//window = glfwCreateWindow(width, height, "Wasteland Warrior", NULL, NULL);
+	//this->fullscreen = false;
+	window = glfwCreateWindow(width, height, "Wasteland Warrior", glfwGetPrimaryMonitor(), NULL);
+	this->fullscreen = true;
 
 	if (!window) {
 		std::cout << "Program failed to create GLFW window, TERMINATING" << std::endl;
@@ -309,6 +356,7 @@ void Program::setupWindow() {
 	glfwSetKeyCallback(window, UserInput::key);
 	glfwSetCursorPosCallback(window, UserInput::cursor);
 	glfwSetMouseButtonCallback(window, UserInput::mouseButton);
+	glfwSetWindowSizeCallback(window, window_size_callback);
 
 	//Bring the new window to the foreground (not strictly necessary but convenient)
 	glfwMakeContextCurrent(window);

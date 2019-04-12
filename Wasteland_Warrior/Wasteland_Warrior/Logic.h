@@ -24,6 +24,7 @@ public:
 	bool huntedEnemiesRemaining(Gamestate *gameState);
 	bool bossRemaining(Gamestate *gameState);
 	bool payloadCollected(Gamestate *gameState);
+	bool endgame(Gamestate *gameState);
 	
 	//Game Modes
 	void modeSelection(Gamestate *gameState);

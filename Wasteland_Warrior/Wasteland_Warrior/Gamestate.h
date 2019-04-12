@@ -165,6 +165,12 @@ public:
 	int groundIndex;
 	int mapGroundPhysicsIndex;
 	int explosionMeshIndex;
+	int mainRoadIndex;
+	int mainRailroadIndex;
+
+	CompositeWorldObject mainRoad;
+	CompositeWorldObject mainRailroad;
+	Geometry explosion;
 
 	//Time
 	int time;
@@ -189,9 +195,9 @@ public:
 
 	std::string UIMode;
 
-	const int numOfStaticObjectInstances = 12;
-	int staticObjMeshTextureIndices[12];
-	std::vector<const char*> staticObjMeshList[12] = { 
+	const int numOfStaticObjectInstances = 14;
+	int staticObjMeshTextureIndices[14];
+	std::vector<const char*> staticObjMeshList[14] = { 
 		{"Objects/SkyBox/skySphere.obj"},
 		{"Objects/Ruined_Brick_Building/ruined building_brick.obj"},
 		{"Objects/Wooden_train_cars/wagon.obj"},
@@ -203,10 +209,12 @@ public:
 		{"Objects/Tunnel/tunnel.obj"},
 		{"Objects/RuinedSmallHouse/Old_house.obj"},
 		{"Objects/Buildings/Gas Station.obj"},
-		{"Objects/explosionSphere.obj"}  //Explosion Sphere
+		{"Objects/explosionSphere.obj"},  //Explosion Sphere
+		{"Objects/mainRoad.obj"},
+		{"Objects/mainRailroad.obj"}
 	};
 
-	std::vector<const char*> staticObjTextureList[12] = {
+	std::vector<const char*> staticObjTextureList[14] = {
 		 {"Objects/SkyBox/skySphere_texture.jpg"},
 		 {"Objects/Ruined_Brick_Building/ruined_building_brick.jpg"},
 		 {"Objects/Wooden_train_cars/wagon_tex3.png"},
@@ -218,7 +226,9 @@ public:
 		 {"Objects/Tunnel/tunnelWall.jpg"},
 		 {"Objects/RuinedSmallHouse/Old_house.png"},
 		 {"Objects/Buildings/Gas Station.jpg"},
-		 {"Textures/explosion_texture.png"} //Explosion Texture
+		 {"Textures/explosion_texture.png"}, //Explosion Texture
+		{"Textures/atlas.png"}, //Road Texture
+		{"Objects/Railroad/concreteRails.jpg", "Objects/Railroad/chapa oxidada.jpg", "Objects/Railroad/concreteRails.jpg", "Objects/Railroad/chapa oxidada.jpg"}
 	 };
 
 	const int numOfDynamicObjectInstances = 7;
@@ -265,10 +275,10 @@ public:
 
 	int mapMeshTextureIndices[1];
 	std::vector<const char*> mapMeshList[1] = {
-	{"Objects/WorldMapV3Test.obj"} };
+	{"Objects/WorldMapV4.obj"} };
 
 	std::vector<const char*> mapTextureList[1] = {
-	{"Textures/sandTexture.jpg" } };
+	{"Textures/black_wall.jpg", "Objects/Tunnel/tunnelWall.jpg","Objects/Tunnel/tunnelWall.jpg","Textures/atlas.png", "Objects/Tunnel/tunnelWall.jpg",  "Objects/Tunnel/tunnelWall.jpg", "Textures/sandTexture.jpg"  } };
 
 
 
@@ -277,6 +287,8 @@ public:
 	//Logic
 	int wave;
 	bool restart;
+	bool startup;
+	bool resetCar;
 	int enemiesLeft;
 	int checkpointsLeft;
 	int breakSeconds;
@@ -289,6 +301,8 @@ public:
 
 	int window_width;
 	int window_height;
+	int monitor_width;
+	int monitor_height;
 
 	int powerUpType;
 

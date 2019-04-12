@@ -23,5 +23,7 @@ public:
 
 	int active = 1;
 	float damageMultiplier = 1;
+
+
 };
 

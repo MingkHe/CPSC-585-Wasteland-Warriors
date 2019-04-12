@@ -949,6 +949,11 @@ void Physics_Controller::stepPhysics(bool interactive)
 
 		//Raycasts.
 		PxVehicleWheels* vehicles[1] = { vehiclesVector[i] };
+
+
+		//PxWheelQueryResult::localPose;
+
+
 		PxRaycastQueryResult* raycastResults = gVehicleSceneQueryData->getRaycastQueryResultBuffer(0);
 		const PxU32 raycastResultsSize = gVehicleSceneQueryData->getQueryResultBufferSize();
 		PxVehicleSuspensionRaycasts(gBatchQuery, 1, vehicles, raycastResultsSize, raycastResults);
@@ -958,6 +963,16 @@ void Physics_Controller::stepPhysics(bool interactive)
 		PxWheelQueryResult wheelQueryResults[PX_MAX_NB_WHEELS];
 		PxVehicleWheelQueryResult vehicleQueryResults[1] = { {wheelQueryResults, gVehicle4W->mWheelsSimData.getNbWheels()} };
 		PxVehicleUpdates(timestep, grav, *gFrictionPairs, 1, vehicles, vehicleQueryResults);
+
+		if (gameStateIndex == -1) {
+			//gVehicle4W->getRigidDynamicActor()->getShapes(gVehicle4W->mWheelsDynData, 4);
+			float rotationAngle1 = gVehicle4W->mWheelsDynData.getWheelRotationAngle(0);
+			float rotationAngle2 = gVehicle4W->mWheelsDynData.getWheelRotationAngle(1);
+			float rotationAngle3 = gVehicle4W->mWheelsDynData.getWheelRotationAngle(2);
+			float rotationAngle4 = gVehicle4W->mWheelsDynData.getWheelRotationAngle(3);
+
+			//std::cout << "rotation angle for vehicle: " << i << " is (" << rotationAngle1 << "," << rotationAngle2 << "," << rotationAngle3 << "," << rotationAngle4 << ")" << std::endl;
+		}
 
 		//Work out if the vehicle is in the air.
 		gIsVehicleInAir = gVehicle4W->getRigidDynamicActor()->isSleeping() ? false : PxVehicleIsInAir(vehicleQueryResults[0]);

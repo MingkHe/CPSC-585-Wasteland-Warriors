@@ -70,9 +70,9 @@ void Logic::Update(Gamestate *gameState)
 						if (truck->type == 7) {
 							int offset = truck->physicsIndex;
 							glm::mat4 transformMatrix = glm::mat4(
-								1.f, 0.f, 0.f, 0.f,
-								0.f, 1.f, 0.f, 0.f,
-								0.f, 0.f, 1.f, 0.f,
+								1.5f, 0.f, 0.f, 0.f,
+								0.f, 1.5f, 0.f, 0.f,
+								0.f, 0.f, 1.5f, 0.f,
 								-15.f, 0.f, 173.f, 1.f
 							);
 							for (int s = 0; s < gameState->scene->allWorldCompObjects[truck->sceneObjectIndex].subObjectsCount; s++) {
@@ -154,7 +154,7 @@ void Logic::Update(Gamestate *gameState)
 		else {
 
 			//Player has beaten all 5 waves
-			if (gameState->wave == 3 || waveBreak == 3) {
+			if (gameState->wave == 7 || waveBreak == 7) {
 				gameState->UIMode = "Win";
 				gameState->ui_gameplay = false;
 				gameState->restart = true;
@@ -194,7 +194,7 @@ void Logic::Update(Gamestate *gameState)
 								boss(gameState);
 								gameState->gameMode = "Boss Battle";
 							}
-							else if (gameState->wave == 2) {
+							else if (gameState->wave == 6) {
 								gameState->SpawnDynamicObject(7, -10.f, 2.f, 10.f, 0, 0, 0);
 								gameState->gameMode = "End Game";
 							}

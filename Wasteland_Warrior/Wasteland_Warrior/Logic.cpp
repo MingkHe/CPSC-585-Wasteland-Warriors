@@ -113,8 +113,8 @@ void Logic::Update(Gamestate *gameState)
 								gameState->scene->allWorldCompObjects[boulder->sceneObjectIndex].subObjects[s].transform = transformMatrix;
 							}
 						}
-					}
-				}*/
+					}*/
+				}
 			}
 			else {
 

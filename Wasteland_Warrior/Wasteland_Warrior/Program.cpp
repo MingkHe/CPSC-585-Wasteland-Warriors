@@ -246,8 +246,9 @@ void Program::start() {
 		}
 
 		glfwSwapBuffers(window);
-
-		//glfwWaitEvents();
+		if (gameState->UIMode != "Game") {
+			glfwWaitEvents();
+		}
 		glfwPollEvents();
 
 		//Fixed Timestep

@@ -27,9 +27,9 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	lineShaderProgram = ShaderTools::InitializeShaders("../shaders/basicVer.glsl", "../shaders/basicFrag.glsl");
 	//vblurProgram = ShaderTools::InitializeShaders("../shaders/vblurvertex.glsl", "../shaders/vblurfragment.glsl");
 	//hblurProgram = ShaderTools::InitializeShaders("../shaders/hblurvertex.glsl", "../shaders/hblurfragment.glsl");
-	
+
 	textShaderProgram = ShaderTools::InitializeShaders("../shaders/texVertex.glsl", "../shaders/texFragment.glsl");
-	float aspect_ratio = (float)game_state->window_height / (float)game_state->window_width;
+	//float aspect_ratio = (float)game_state->window_height / (float)game_state->window_width;
 	health.verts.push_back(glm::vec3(.5f, .8f, 0.f));
 	health.verts.push_back(glm::vec3(.5f, .9f, 0.f));
 	health.verts.push_back(glm::vec3(.9f, .8f, 0.f));
@@ -38,6 +38,7 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	health.uvs.push_back(glm::vec2(0.f, 1.f));
 	health.uvs.push_back(glm::vec2(1.f, 0.f));
 	health.uvs.push_back(glm::vec2(1.f, 1.f));
+	health.transform = glm::mat4(1.f);
 	health.drawMode = GL_TRIANGLE_STRIP;
 	assignBuffers(health);
 	setBufferData(health);
@@ -50,6 +51,7 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	radar.uvs.push_back(glm::vec2(-1.f, 1.f));
 	radar.uvs.push_back(glm::vec2(1.f, -1.f));
 	radar.uvs.push_back(glm::vec2(1.f, 1.f));
+	radar.transform = glm::mat4(1.f);
 	radar.drawMode = GL_TRIANGLE_STRIP;
 	assignBuffers(radar);
 	setBufferData(radar);
@@ -67,6 +69,7 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 		speedo.uvs.push_back(.5f*glm::vec2(std::cos(i + increment), std::sin(i + increment)) + glm::vec2(.5f, .5f));
 		speedo.uvs.push_back(glm::vec2(.5f, .5f));
 	}
+	speedo.transform = glm::mat4(1.f);
 	speedo.drawMode = GL_TRIANGLES;
 	InitializeTexture(&speedo.texture, "Image/speedo.png");
 	assignBuffers(speedo);
@@ -98,6 +101,7 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	square.uvs.push_back(glm::vec2(0.f, 1.f));
 	square.uvs.push_back(glm::vec2(1.f, 0.f));
 	square.uvs.push_back(glm::vec2(1.f, 1.f));
+	square.transform = glm::mat4(1.f);
 	square.drawMode = GL_TRIANGLE_STRIP;
 	assignBuffers(square);
 	setBufferData(square);
@@ -110,6 +114,7 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	mirror.uvs.push_back(glm::vec2(1.f, .85f));
 	mirror.uvs.push_back(glm::vec2(0.f, .4f));
 	mirror.uvs.push_back(glm::vec2(0.f, .85f));
+	mirror.transform = glm::mat4(1.f);
 	mirror.drawMode = GL_TRIANGLE_STRIP;
 	assignBuffers(mirror);
 	setBufferData(mirror);
@@ -122,6 +127,7 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	mirror_back.uvs.push_back(glm::vec2(1.f, 1.f));
 	mirror_back.uvs.push_back(glm::vec2(0.f, 0.f));
 	mirror_back.uvs.push_back(glm::vec2(0.f, 1.f));
+	mirror_back.transform = glm::mat4(1.f);
 	mirror_back.drawMode = GL_TRIANGLE_STRIP;
 	InitializeTexture(&mirror_back.texture, "Image/black_pixel.png");
 	assignBuffers(mirror_back);
@@ -146,24 +152,6 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	assignBuffers(aim);
 	setBufferData(aim);
 
-	//rear_view = createFramebuffer(game_state->window_width, game_state->window_height);
-	//shadow_buffer = createFramebuffer(game_state->window_width, game_state->window_height);
-	//if (game_state->fullscreen) {
-		rear_view = createFramebuffer(game_state->window_width, game_state->window_height);
-		shadow_buffer = createFramebuffer(game_state->window_width, game_state->window_height);
-		shadow_buffertwo = createFramebuffer(game_state->window_width, game_state->window_height);
-		shadow_bufferthree = createFramebuffer(game_state->window_width, game_state->window_height);
-		main_view = createFramebuffer(game_state->window_width, game_state->window_height);
-		//blur = createFramebuffer(game_state->window_width, game_state->window_height);
-	/*}
-	else {
-		rear_view = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1181));
-		shadow_buffer = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1181));
-		shadow_buffertwo = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1181));
-		shadow_bufferthree = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1181));
-		main_view = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1181));
-		//blur = createFramebuffer(game_state->window_width, std::min(game_state->window_height, 1061));
-	}*/
 
 	bias = 1200/game_state->window_height;
 
@@ -175,6 +163,14 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	glUseProgram(textShaderProgram);
 	glUniformMatrix4fv(glGetUniformLocation(textShaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 	glUseProgram(0);
+}
+
+void RenderingEngine::createFramebuffers(int width, int height) {
+	rear_view = createFramebuffer(width, height);
+	shadow_buffer = createFramebuffer(width, height);
+	shadow_buffertwo = createFramebuffer(width, height);
+	shadow_bufferthree = createFramebuffer(width, height);
+	main_view = createFramebuffer(width, height);
 }
 
 RenderingEngine::~RenderingEngine() {
@@ -269,7 +265,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 			glDrawArrays(objects[i].subObjects[s].drawMode, 0, objects[i].subObjects[s].verts.size());
 		}
 	}
-	
+
 	//Clears the screen to a dark grey background
 	//glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -412,6 +408,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 
 	//render mirror
 	glUseProgram(basicshaderProgram);
+	glUniformMatrix4fv(glGetUniformLocation(basicshaderProgram, "transform"), 1, false, &(mirror_back.transform[0][0]));
 	glUniform1i(glGetUniformLocation(basicshaderProgram, "materialTex"), 0);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, mirror_back.texture.textureID);
@@ -474,6 +471,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 
 	//render speedometer
 	glUseProgram(basicshaderProgram);
+	glUniformMatrix4fv(glGetUniformLocation(basicshaderProgram, "transform"), 1, false, &(speedo.transform[0][0]));
 	glUniform1i(glGetUniformLocation(basicshaderProgram, "materialTex"), 0);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, speedo.texture.textureID);
@@ -537,7 +535,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	//glActiveTexture(GL_TEXTURE0);
 
 	for (Geometry& g : texObjects) {
-		
+
 		//bind the texture
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, g.textureID);
@@ -550,7 +548,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 		deleteBufferData(g);
 		glBindVertexArray(0);
 	}
-	
+
 	texObjects.clear();
 
 	glUseProgram(textShaderProgram);
@@ -559,6 +557,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glUseProgram(basicshaderProgram);
+	glUniformMatrix4fv(glGetUniformLocation(basicshaderProgram, "transform"), 1, false, &(square.transform[0][0]));
 	glUniform1i(glGetUniformLocation(basicshaderProgram, "materialTex"), 0);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, main_view.colorTextureID);
@@ -571,7 +570,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 
 	// check for an report any OpenGL errors
 	CheckGLErrors();
-	
+
 
 }
 
@@ -593,7 +592,7 @@ void RenderingEngine::RenderMenuScene(const std::vector<Geometry>& objects) {
 	}
 
 	glUseProgram(0);
-  
+
   updateText();
 
 	glEnable(GL_CULL_FACE);
@@ -629,7 +628,7 @@ void RenderingEngine::RenderMenuScene(const std::vector<Geometry>& objects) {
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glUseProgram(0);
-  
+
 	// check for an report any OpenGL errors
 	CheckGLErrors();
 }
@@ -682,7 +681,7 @@ void RenderingEngine::loadFont(const char* ttfFile) {
 	// Load first 128 characters of ASCII set
 	for (GLubyte c = 0; c < 128; c++)
 	{
-		// Load character glyph 
+		// Load character glyph
 		if (FT_Load_Char(face, c, FT_LOAD_RENDER))
 		{
 			std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
@@ -793,7 +792,7 @@ void RenderingEngine::pushTextObj(std::vector<Geometry>& objects, std::string te
 }
 
 void RenderingEngine::updateText() {
-	float scale = (float)game_state->window_height / 960.f;
+	float scale = (float)game_state->monitor_width / 1200.f;
 	if (game_state->UIMode == "Game") {
 		if (game_state->startup) {
 			pushTextObj(texObjects, "Wasteland Warrior", 0.01f*game_state->window_width, 0.95f*game_state->window_height, scale * 0.75f, glm::vec3(0.7f, 0.2f, 0.2f), false);
@@ -876,25 +875,25 @@ void RenderingEngine::updateText() {
 	}
 
 	if (game_state->UIMode == "Win") {
-		pushTextObj(texObjects, "Your score was: " + std::to_string(game_state->score), 0.38f*game_state->window_width, 0.52f*game_state->window_height, scale, glm::vec3(255, 140, 0)/glm::vec3(255,255,255), false);
-		pushTextObj(texObjects, "You survived in: " + std::to_string(game_state->scoreTime) + " seconds", 0.32f*game_state->window_width, 0.45f*game_state->window_height, scale, glm::vec3(255, 140, 0) / glm::vec3(255, 255, 255), false);
+		pushTextObj(texObjects, "Your score was: " + std::to_string(game_state->score), 0.38f*game_state->window_width, 0.52f*game_state->monitor_height, scale, glm::vec3(255, 140, 0)/glm::vec3(255,255,255), false);
+		pushTextObj(texObjects, "You survived in: " + std::to_string(game_state->scoreTime) + " seconds", 0.32f*game_state->window_width, 0.45f*game_state->monitor_height, scale, glm::vec3(255, 140, 0) / glm::vec3(255, 255, 255), false);
 	}
 
 	if (game_state->UIMode == "Lose") {
-		pushTextObj(texObjects, "Your score was: " + std::to_string(game_state->score), 0.38f*game_state->window_width, 0.4f*game_state->window_height, scale, glm::vec3(.768f, .768f, .768f), false);
-		pushTextObj(texObjects, "You died after: " + std::to_string(game_state->scoreTime) + " seconds", 0.32f*game_state->window_width, 0.33f*game_state->window_height, scale, glm::vec3(.768f, .768f, .768f), false);
+		pushTextObj(texObjects, "Your score was: " + std::to_string(game_state->score), 0.38f*game_state->window_width, 0.4f*game_state->monitor_height, scale, glm::vec3(.768f, .768f, .768f), false);
+		pushTextObj(texObjects, "You died after: " + std::to_string(game_state->scoreTime) + " seconds", 0.32f*game_state->window_width, 0.33f*game_state->monitor_height, scale, glm::vec3(.768f, .768f, .768f), false);
 	}
 
 	if (game_state->UIMode == "Loading") {
-		pushTextObj(texObjects, std::to_string(game_state->loadingPercentage)+"%", 0.7f*game_state->window_width, 0.315f*game_state->window_height, scale, glm::vec3(1.0f, 1.0f, 1.0f), false);
+		pushTextObj(texObjects, std::to_string(game_state->loadingPercentage)+"%", 0.7f*game_state->window_width, 0.315f*game_state->monitor_height, scale, glm::vec3(1.0f, 1.0f, 1.0f), false);
 	}
 
 	if (game_state->UIMode == "Story") {
-		pushTextObj(texObjects, "Press Enter to continue...", 0.6f*game_state->window_width, 0.1f*game_state->window_height, scale, glm::vec3(1.0f, 1.0f, 1.0f), false);
+		pushTextObj(texObjects, "Press Enter to continue...", 0.6f*game_state->window_width, 0.1f*game_state->monitor_height, scale, glm::vec3(1.0f, 1.0f, 1.0f), false);
 	}
 
 	if (game_state->UIMode == "Control") {
-		pushTextObj(texObjects, "Press Enter to continue...", 0.6f*game_state->window_width, 0.1f*game_state->window_height, scale, glm::vec3(1.0f, 1.0f, 1.0f), false);
+		pushTextObj(texObjects, "Press Enter to continue...", 0.6f*game_state->window_width, 0.1f*game_state->monitor_height, scale, glm::vec3(1.0f, 1.0f, 1.0f), false);
 	}
 }
 

@@ -262,7 +262,7 @@ float ShadowCalculationtwo(vec4 fragPosLightSpace)
 	for(int i = 0; i < SAMPLE_NUM; i++) {
 		vec2 moments = texture(shadowTextwo, projCoords.xy + SAMPLES*(poissonDisk[i]-vec2(.5,.5)) * texelSize).xy;
 		float mean = projCoords.z;
-		float minVar = 0.00001f;
+		float minVar = 0.0001f;
 		if(mean <= moments.x) {
 			shadow += 1.f;
 		} else {

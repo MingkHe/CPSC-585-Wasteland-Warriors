@@ -6,7 +6,7 @@
 // ==========================================================================
 #version 410
 
-#define SAMPLE_NUM 20
+#define SAMPLE_NUM 50
 #define SAMPLE_RAD 4.0
 #define MID_SAMPLE_RAD 3.5
 #define FAR_SAMPLE_RAD 3.0

@@ -165,6 +165,7 @@ public:
 	int groundIndex;
 	int mapGroundPhysicsIndex;
 	int explosionMeshIndex;
+	int mainRoadIndex;
 
 	//Time
 	int time;
@@ -189,9 +190,9 @@ public:
 
 	std::string UIMode;
 
-	const int numOfStaticObjectInstances = 12;
-	int staticObjMeshTextureIndices[12];
-	std::vector<const char*> staticObjMeshList[12] = { 
+	const int numOfStaticObjectInstances = 13;
+	int staticObjMeshTextureIndices[13];
+	std::vector<const char*> staticObjMeshList[13] = { 
 		{"Objects/SkyBox/skySphere.obj"},
 		{"Objects/Ruined_Brick_Building/ruined building_brick.obj"},
 		{"Objects/Wooden_train_cars/wagon.obj"},
@@ -203,10 +204,11 @@ public:
 		{"Objects/Tunnel/tunnel.obj"},
 		{"Objects/RuinedSmallHouse/Old_house.obj"},
 		{"Objects/Buildings/Gas Station.obj"},
-		{"Objects/explosionSphere.obj"}  //Explosion Sphere
+		{"Objects/explosionSphere.obj"},  //Explosion Sphere
+		{"Objects/mainRoad.obj"}
 	};
 
-	std::vector<const char*> staticObjTextureList[12] = {
+	std::vector<const char*> staticObjTextureList[13] = {
 		 {"Objects/SkyBox/skySphere_texture.jpg"},
 		 {"Objects/Ruined_Brick_Building/ruined_building_brick.jpg"},
 		 {"Objects/Wooden_train_cars/wagon_tex3.png"},
@@ -218,7 +220,8 @@ public:
 		 {"Objects/Tunnel/tunnelWall.jpg"},
 		 {"Objects/RuinedSmallHouse/Old_house.png"},
 		 {"Objects/Buildings/Gas Station.jpg"},
-		 {"Textures/explosion_texture.png"} //Explosion Texture
+		 {"Textures/explosion_texture.png"}, //Explosion Texture
+			{"Textures/atlas.png"} //Road Texture
 	 };
 
 	const int numOfDynamicObjectInstances = 7;
@@ -265,10 +268,10 @@ public:
 
 	int mapMeshTextureIndices[1];
 	std::vector<const char*> mapMeshList[1] = {
-	{"Objects/WorldMapV3Test.obj"} };
+	{"Objects/WorldMapV4.obj"} };
 
 	std::vector<const char*> mapTextureList[1] = {
-	{"Textures/sandTexture.jpg" } };
+	{"Textures/atlas.png", "Objects/Tunnel/tunnelWall.jpg","Objects/Tunnel/tunnelWall.jpg","Textures/sandTexture.jpg" } };
 
 
 

@@ -352,25 +352,19 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 			0.f, 0.f, scale*game_state->explosions[i].life, 0.f,
 			game_state->explosions[i].position.x, game_state->explosions[i].position.y, game_state->explosions[i].position.z, 1.f
 		);
-		glUniformMatrix4fv(transformGL, 1, false, &(transform[0][0]));
-		glUniform1f(transparent, 1.f-((float)game_state->explosions[i].life/(float)explosion_life));
-		//bind the texture
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, explosion.texture.textureID);
-
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, shadow_buffer.colorTextureID);
-
-		glActiveTexture(GL_TEXTURE2);
-		glBindTexture(GL_TEXTURE_2D, shadow_buffertwo.colorTextureID);
-
-		glActiveTexture(GL_TEXTURE3);
-		glBindTexture(GL_TEXTURE_2D, shadow_bufferthree.colorTextureID);
-
-		glBindVertexArray(explosion.vao);
-		glDrawArrays(explosion.drawMode, 0, explosion.verts.size());
+		RenderNonPhysicsObject(explosion, transform,transformGL, transparent, 1.f - ((float)game_state->explosions[i].life / (float)explosion_life));
 	}
-
+	const CompositeWorldObject mainRoad = (game_state->scene->compObjectInstances[game_state->mainRoadIndex]);
+	glm::mat4 roadTransform = glm::mat4(
+		1.f, 0.f, 0.f, 0.f,
+		0.f, 1.f, 0.f, 0.f,
+		0.f, 0.f, 1.f, 0.f,
+		0.f, 0.f, 0.f, 1.f
+	);
+	for (int l = 0; l < mainRoad.subObjects.size(); l++) {
+		RenderNonPhysicsObject(mainRoad.subObjects[l], roadTransform, transformGL, transparent, 1.0f);
+		
+	}
 
 	//draw rear view
 	glBindFramebuffer(GL_FRAMEBUFFER, rear_view.id);
@@ -573,6 +567,26 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	CheckGLErrors();
 	
 
+}
+
+void RenderingEngine::RenderNonPhysicsObject(Geometry object, glm::mat4 transform, GLint transformGL, GLuint transparent, float transparentVal) {
+	glUniformMatrix4fv(transformGL, 1, false, &(transform[0][0]));
+	glUniform1f(transparent, transparentVal);
+	//bind the texture
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, object.texture.textureID);
+
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, shadow_buffer.colorTextureID);
+
+	glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_2D, shadow_buffertwo.colorTextureID);
+
+	glActiveTexture(GL_TEXTURE3);
+	glBindTexture(GL_TEXTURE_2D, shadow_bufferthree.colorTextureID);
+
+	glBindVertexArray(object.vao);
+	glDrawArrays(object.drawMode, 0, object.verts.size());
 }
 
 void RenderingEngine::RenderMenuScene(const std::vector<Geometry>& objects) {

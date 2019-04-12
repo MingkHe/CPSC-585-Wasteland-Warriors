@@ -369,14 +369,14 @@ void main() {
 
 		//shadow
 		shadow = ShadowCalculation(shadowCoord);
-		
+		//shadow = 1;
 
 		//linear color (color before gamma correction)
 		linearColor = ambient + shadow*attenuation*(diffuse + specular);
 	}
     
 
-    finalColor = vec4(linearColor, surfaceColor.a*transparent);
+    finalColor = vec4(linearColor, 1*transparent);
     //final color (after gamma correction)
     //vec3 gamma = vec3(1.0/2.2);
     //finalColor = vec4(pow(linearColor, gamma), surfaceColor.a);

@@ -1,0 +1,13 @@
+# Blender MTL File: 'WorldMapV4.blend'
+# Material Count: 1
+
+newmtl Atlas.007
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.647059 0.617528 0.218858
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\null

@@ -70,6 +70,9 @@ void Gamestate::InstantiateAllMeshes_Textures() {
 		if (i == 11) {
 			explosionMeshIndex = staticObjMeshTextureIndices[i];
 		}
+		else if (i == 12) {
+			mainRoadIndex = staticObjMeshTextureIndices[i];
+		}
 	}
 	//Initialize Dynamic Object Meshes & Textures
 	for (int i = 0; i < numOfDynamicObjectInstances; i++) {

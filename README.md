@@ -2,8 +2,17 @@
 
 ## Version 1.0
 
-For the final submission, we have implemented all the features of our game.
-*** This will need to be updated.***
+For the final submission we:
+    - Updated the map
+    - Improved shadows
+    - Increased the paceing for the game
+    - Provide player with feedback on damage dealt and enemy health
+    - Added the remaining game modes
+    - Added a gun as reward for completing the objective
+    - Implemented release mode
+    - Added our narative of being trapped and escaping
+    - Cleaned up a lot of warnings
+    - Fixed most game play bugs.
 
 ### To Build and Run:
 To build, download or clone the Wasteland Warrior files from https://github.com/MingkHe/CPSC-585-Wasteland-Warriors/tree/Wasteland_Warrior
@@ -37,8 +46,6 @@ Then build and run the program.
             Defeat the boss to finish last wave.
     
 ### Input Controls:
-
-    *** add wheel controls ***
 
     Driving:
         W or Right Trigger to Accelerate forward

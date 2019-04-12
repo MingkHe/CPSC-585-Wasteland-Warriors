@@ -390,6 +390,28 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 		// reset state to default (no shader or geometry bound)
 	}
 
+	for (int i = 0; i < (int)game_state->explosions.size(); i++) {
+		if (++game_state->explosions[i].life > explosion_life) {
+			game_state->explosions.erase(game_state->explosions.begin() + i);
+			i--;
+			continue;
+		}
+		float scale = .0625f;
+		glm::mat4 transform = glm::mat4(
+			scale*game_state->explosions[i].life, 0.f, 0.f, 0.f,
+			0.f, scale*game_state->explosions[i].life, 0.f, 0.f,
+			0.f, 0.f, scale*game_state->explosions[i].life, 0.f,
+			game_state->explosions[i].position.x, game_state->explosions[i].position.y, game_state->explosions[i].position.z, 1.f
+		);
+		RenderNonPhysicsObject(game_state->explosion, transform, transformGL, transparent, 1.f - ((float)game_state->explosions[i].life / (float)explosion_life));
+	}
+	//Renders road
+	//std::cout << game_state->mainRoad.subObjects.size() << std::endl;
+	for (int l = 0; l < game_state->mainRoad.subObjects.size(); l++) {
+		//std::cout << "Hello" << std::endl;
+		RenderNonPhysicsObject(game_state->mainRoad.subObjects[l], identityTransform, transformGL, transparent, 1.0f);
+	}
+
 	glBindVertexArray(0);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, main_view.id);

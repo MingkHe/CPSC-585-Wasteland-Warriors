@@ -35,8 +35,9 @@ void Logic::Update(Gamestate *gameState)
 		if (gameState->restart) {
 			if (gameState->startup) {
 				if (gameState->resetCar) {
+
 					//Reset Car
-					gameState->physics_Controller->setPosition(gameState->playerVehicle.physicsIndex, glm::vec3{ 100, 2, -170 });
+					gameState->physics_Controller->setPosition(gameState->playerVehicle.physicsIndex, glm::vec3{ 51, 2, -220 });
 					gameState->playerVehicle.health = 100;
 					gameState->playerVehicle.maxhealth = 100;
 					gameState->playerVehicle.damageMultiplier = 1;
@@ -69,10 +70,10 @@ void Logic::Update(Gamestate *gameState)
 						if (truck->type == 7) {
 							int offset = truck->physicsIndex;
 							glm::mat4 transformMatrix = glm::mat4(
-								2.f, 0.f, 0.f, 0.f,
-								0.f, 2.f, 0.f, 0.f,
-								0.f, 0.f, 2.f, 0.f,
-								0.f, 0.f, 173.f, 1.f
+								1.f, 0.f, 0.f, 0.f,
+								0.f, 1.f, 0.f, 0.f,
+								0.f, 0.f, 1.f, 0.f,
+								-15.f, 0.f, 173.f, 1.f
 							);
 							for (int s = 0; s < gameState->scene->allWorldCompObjects[truck->sceneObjectIndex].subObjectsCount; s++) {
 								gameState->scene->allWorldCompObjects[truck->sceneObjectIndex].subObjects[s].transform = transformMatrix;
@@ -86,9 +87,9 @@ void Logic::Update(Gamestate *gameState)
 						if (boulder->type == 14) {
 							int offset = boulder->physicsIndex;
 							glm::mat4 transformMatrix = glm::mat4(
-								2.f, 0.f, 0.f, 0.f,
-								0.f, 2.f, 0.f, 0.f,
-								0.f, 0.f, 2.f, 0.f,
+								1.f, 0.f, 0.f, 0.f,
+								0.f, 1.f, 0.f, 0.f,
+								0.f, 0.f, 1.f, 0.f,
 								0.f, -500.f, 0.f, 1.f
 							);
 							for (int s = 0; s < gameState->scene->allWorldCompObjects[boulder->sceneObjectIndex].subObjectsCount; s++) {
@@ -98,7 +99,7 @@ void Logic::Update(Gamestate *gameState)
 					}
 				}
 
-				if ((gameState->playerVehicle.position.z > -165 && gameState->playerVehicle.position.z < -164 && gameState->playerVehicle.position.x > 90 && gameState->playerVehicle.position.x < 110)) {
+				if ((gameState->playerVehicle.position.z > -171 && gameState->playerVehicle.position.z < -170 && gameState->playerVehicle.position.x > 40 && gameState->playerVehicle.position.x < 60)) {
 					gameState->startup = false;
 					gameState->war_horn = true;
 
@@ -108,10 +109,10 @@ void Logic::Update(Gamestate *gameState)
 						if (boulder->type == 14) {
 							int offset = boulder->physicsIndex;
 							glm::mat4 transformMatrix = glm::mat4(
-								2.f, 0.f, 0.f, 0.f,
-								0.f, 2.f, 0.f, 0.f,
-								0.f, 0.f, 2.f, 0.f,
-								100.f, 2.f, -170.f, 1.f
+								1.f, 0.f, 0.f, 0.f,
+								0.f, 1.f, 0.f, 0.f,
+								0.f, 0.f, 1.f, 0.f,
+								0.f, 0.f, 0.f, 1.f
 							);
 							for (int s = 0; s < gameState->scene->allWorldCompObjects[boulder->sceneObjectIndex].subObjectsCount; s++) {
 								gameState->scene->allWorldCompObjects[boulder->sceneObjectIndex].subObjects[s].transform = transformMatrix;
@@ -153,7 +154,7 @@ void Logic::Update(Gamestate *gameState)
 		else {
 
 			//Player has beaten all 5 waves
-			if (gameState->wave == 7 || waveBreak == 7) {
+			if (gameState->wave == 3 || waveBreak == 3) {
 				gameState->UIMode = "Win";
 				gameState->ui_gameplay = false;
 				gameState->restart = true;
@@ -193,8 +194,8 @@ void Logic::Update(Gamestate *gameState)
 								boss(gameState);
 								gameState->gameMode = "Boss Battle";
 							}
-							else if (gameState->wave == 6) {
-								payload(gameState);
+							else if (gameState->wave == 2) {
+								gameState->SpawnDynamicObject(7, -10.f, 2.f, 10.f, 0, 0, 0);
 								gameState->gameMode = "End Game";
 							}
 							else {
@@ -379,8 +380,8 @@ bool Logic::payloadCollected(Gamestate *gameState) {
 bool Logic::endgame(Gamestate *gameState) {
 
 	if (gameState->payloadCollected) {
-		if ((gameState->playerVehicle.position.z > 155 && gameState->playerVehicle.position.z < 156 && gameState->playerVehicle.position.x > -20 && gameState->playerVehicle.position.x < 20)) {
-			gameState->explosions.push_back(Explosion(glm::vec3(0,0,173)));
+		if ((gameState->playerVehicle.position.z > 150 && gameState->playerVehicle.position.z < 151 && gameState->playerVehicle.position.x > -25 && gameState->playerVehicle.position.x < -5)) {
+			gameState->explosions.push_back(Explosion(glm::vec3(-15,0,173)));
 			for (int i = 0; i < (int)gameState->StaticObjects.size(); i++) {
 				Object* truck = &gameState->StaticObjects[i];
 				if (truck->type == 7) {
@@ -396,9 +397,9 @@ bool Logic::endgame(Gamestate *gameState) {
 					}
 				}
 			}
-			if ((gameState->playerVehicle.position.z > 165 && gameState->playerVehicle.position.z < 166 && gameState->playerVehicle.position.x > -20 && gameState->playerVehicle.position.x < 20)) {
-				return true;
-			}
+		}
+		if ((gameState->playerVehicle.position.z > 200 && gameState->playerVehicle.position.z < 201 && gameState->playerVehicle.position.x > -25 && gameState->playerVehicle.position.x < -5)) {
+			return true;
 		}
 	}
 

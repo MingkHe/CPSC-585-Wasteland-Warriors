@@ -156,11 +156,7 @@ void Program::start() {
 	gameState->SpawnStaticObject(7, 0, -500, 173, 0, 0, 0);
 
 	//Boulder
-	gameState->SpawnStaticObject(14, 0, -500.f, 0, 0, 0, 0);
-
-	//Tunnels
-	gameState->SpawnStaticObject(8, 0, 0, 190, 0, 0, 0);
-	gameState->SpawnStaticObject(8, 100, 0, -180, 0, 0, 0);
+	gameState->SpawnStaticObject(14, 0, -500, 0, 0, 0, 0);
 
 	//Buildings & Ruined Buildings
 	gameState->SpawnStaticObject(1, 20, 0, 20, 0, 0, 0);

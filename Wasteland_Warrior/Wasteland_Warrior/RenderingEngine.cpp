@@ -792,7 +792,7 @@ void RenderingEngine::pushTextObj(std::vector<Geometry>& objects, std::string te
 }
 
 void RenderingEngine::updateText() {
-	float scale = (float)game_state->window_height / 960.f;
+	float scale = (float)game_state->monitor_width / 1200.f;
 	if (game_state->UIMode == "Game") {
 		if (game_state->breakSeconds == 0) {
 			pushTextObj(texObjects, "Wave # " + std::to_string(game_state->wave) + " - " + game_state->gameMode, 0.01f*game_state->monitor_width, 0.95f*game_state->monitor_height, scale * 0.75f, glm::vec3(0.7f, 0.2f, 0.2f), false);
@@ -862,21 +862,21 @@ void RenderingEngine::updateText() {
 	}
 
 	if (game_state->UIMode == "Win") {
-		pushTextObj(texObjects, "Your score was: " + std::to_string(game_state->score), 0.38f*game_state->monitor_width, 0.52f*game_state->monitor_height, scale, glm::vec3(255, 140, 0)/glm::vec3(255,255,255), false);
-		pushTextObj(texObjects, "You survived in: " + std::to_string(game_state->scoreTime) + " seconds", 0.32f*game_state->monitor_width, 0.45f*game_state->monitor_height, scale, glm::vec3(255, 140, 0) / glm::vec3(255, 255, 255), false);
+		pushTextObj(texObjects, "Your score was: " + std::to_string(game_state->score), 0.38f*game_state->window_width, 0.52f*game_state->monitor_height, scale, glm::vec3(255, 140, 0)/glm::vec3(255,255,255), false);
+		pushTextObj(texObjects, "You survived in: " + std::to_string(game_state->scoreTime) + " seconds", 0.32f*game_state->window_width, 0.45f*game_state->monitor_height, scale, glm::vec3(255, 140, 0) / glm::vec3(255, 255, 255), false);
 	}
 
 	if (game_state->UIMode == "Lose") {
-		pushTextObj(texObjects, "Your score was: " + std::to_string(game_state->score), 0.38f*game_state->monitor_width, 0.4f*game_state->monitor_height, scale, glm::vec3(.768f, .768f, .768f), false);
-		pushTextObj(texObjects, "You died after: " + std::to_string(game_state->scoreTime) + " seconds", 0.32f*game_state->monitor_width, 0.33f*game_state->monitor_height, scale, glm::vec3(.768f, .768f, .768f), false);
+		pushTextObj(texObjects, "Your score was: " + std::to_string(game_state->score), 0.38f*game_state->window_width, 0.4f*game_state->monitor_height, scale, glm::vec3(.768f, .768f, .768f), false);
+		pushTextObj(texObjects, "You died after: " + std::to_string(game_state->scoreTime) + " seconds", 0.32f*game_state->window_width, 0.33f*game_state->monitor_height, scale, glm::vec3(.768f, .768f, .768f), false);
 	}
 
 	if (game_state->UIMode == "Loading") {
-		pushTextObj(texObjects, std::to_string(game_state->loadingPercentage)+"%", 0.7f*game_state->monitor_width, 0.315f*game_state->monitor_height, scale, glm::vec3(1.0f, 1.0f, 1.0f), false);
+		pushTextObj(texObjects, std::to_string(game_state->loadingPercentage)+"%", 0.7f*game_state->window_width, 0.315f*game_state->monitor_height, scale, glm::vec3(1.0f, 1.0f, 1.0f), false);
 	}
 
 	if (game_state->UIMode == "Story") {
-		pushTextObj(texObjects, "Press Enter to continue...", 0.6f*game_state->monitor_width, 0.1f*game_state->monitor_height, scale, glm::vec3(1.0f, 1.0f, 1.0f), false);
+		pushTextObj(texObjects, "Press Enter to continue...", 0.6f*game_state->window_width, 0.1f*game_state->monitor_height, scale, glm::vec3(1.0f, 1.0f, 1.0f), false);
 	}
 
 	if (game_state->UIMode == "Control") {

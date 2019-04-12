@@ -21,6 +21,7 @@ Logic::~Logic()
 
 void Logic::Update(Gamestate *gameState)
 {
+
 		//Randomization
 		srand((unsigned int)time(NULL));
 
@@ -29,42 +30,60 @@ void Logic::Update(Gamestate *gameState)
 
 		//Restart
 		if (gameState->restart) {
+			if (gameState->startup) {
+				if (gameState->resetCar) {
+					//Reset Car
+					gameState->physics_Controller->setPosition(gameState->playerVehicle.physicsIndex, glm::vec3{ 100, 2, -170 });
+					gameState->playerVehicle.health = 100;
+					gameState->playerVehicle.maxhealth = 100;
+					gameState->playerVehicle.damageMultiplier = 1;
+					gameState->playerVehicle.armor = 0.0;
+					gameState->view = 0;
+					gameState->resetCar = false;
 
-			//Reset Car
-			gameState->physics_Controller->setPosition(gameState->playerVehicle.physicsIndex, glm::vec3{ 100, 2, -170 });
-			gameState->playerVehicle.health = 100;
-			gameState->playerVehicle.maxhealth = 100;
-			gameState->playerVehicle.damageMultiplier = 1;
-			gameState->playerVehicle.armor = 0.0;
-			gameState->view = 0;
+					//Reset Enemies
+					for (int i = 0; i < (int)gameState->Enemies.size(); i++) {
+						EnemyUnit* enemy = &gameState->Enemies[i];
+						gameState->DespawnEnemy(enemy);
+					}
+					gameState->Enemies.clear();
 
-			//Reset Enemies
-			for (int i = 0; i < (int)gameState->Enemies.size(); i++) {
-				EnemyUnit* enemy = &gameState->Enemies[i];
-				gameState->DespawnEnemy(enemy);
+					//Reset Powerups/Checkpoints
+					for (int i = 0; i < (int)gameState->PowerUps.size(); i++) {
+						PowerUp* powerUp = &gameState->PowerUps[i];
+						gameState->DespawnPowerUp(powerUp);
+					}
+					gameState->PowerUps.clear();
+					powerUps(gameState);
+					gameState->wave = -1;
+					waveBreak = -1;
+					gameState->gameMode = "";
+					gameState->weaponState = false;
+
+				}
+
+				if ((gameState->playerVehicle.position.z > -165 && gameState->playerVehicle.position.z < -164 && gameState->playerVehicle.position.x > 90 && gameState->playerVehicle.position.x < 110)) {
+					gameState->startup = false;
+				}
 			}
-			gameState->Enemies.clear();
+			else {
 
-			//Reset Powerups/Checkpoints
-			for (int i = 0; i < (int)gameState->PowerUps.size(); i++) {
-				PowerUp* powerUp = &gameState->PowerUps[i];
-				gameState->DespawnPowerUp(powerUp);
+				//Reset Game
+				gameState->restart = false;
+				gameState->wave = 1;
+				score = 0;
+				gameState->enemyscore = 0;
+				waveBreak = 1;
+				breakTime = 600;
+				modeSelection(gameState);
+				gameState->modeText = true;
+				gameState->textTime = 10 * 60;
+				gameState->weaponState = false;
 			}
-			gameState->PowerUps.clear();
-			powerUps(gameState);
-
-			//Reset Game
-			gameState->restart = false;
-			gameState->wave = 1;
-			score = 0;
-			gameState->enemyscore = 0;
-			waveBreak = 1;
-			breakTime = 600;
-			modeSelection(gameState);
-			gameState->modeText = true;
-			gameState->textTime = 10 * 60;
-			gameState->weaponState = false;
 		}
+
+
+		if (gameState->startup == false) {
 
 		//Player has lost all health
 		if ((gameState->playerVehicle.health <= 0)) {
@@ -73,57 +92,65 @@ void Logic::Update(Gamestate *gameState)
 			gameState->restart = true;
 			gameState->score = ((score / 25) * 10) + gameState->enemyscore;
 			gameState->scoreTime = score / 60;
+			gameState->startup = true;
+			gameState->resetCar = true;
 		}
 		else {
 
 			//Player has beaten all 5 waves
-			if (gameState->wave == 6 || waveBreak == 6) {
+			if (gameState->wave == 7 || waveBreak == 7) {
 				gameState->UIMode = "Win";
 				gameState->ui_gameplay = false;
 				gameState->restart = true;
 				gameState->score = (int)(2160010000 / (score + 1)) + gameState->enemyscore;
 				gameState->scoreTime = (int)(score / 60);
+				gameState->startup = true;
+				gameState->resetCar = true;
 			}
 			else {
+					//Wave
+					if (gameState->wave == waveBreak) {
+						if (waveFinished(gameState)) {
 
-				//Wave
-				if(gameState->wave == waveBreak) {
-					if (waveFinished(gameState)) {
-
-						//Reset Enemies
-						for (int i = 0; i < (int)gameState->Enemies.size(); i++) {
-							EnemyUnit* enemy = &gameState->Enemies[i];
-							gameState->DespawnEnemy(enemy);
+							//Reset Enemies
+							for (int i = 0; i < (int)gameState->Enemies.size(); i++) {
+								EnemyUnit* enemy = &gameState->Enemies[i];
+								gameState->DespawnEnemy(enemy);
+							}
+							gameState->Enemies.clear();
+							//Reset Powerups/Checkpoints
+							for (int i = 0; i < (int)gameState->PowerUps.size(); i++) {
+								PowerUp* powerUp = &gameState->PowerUps[i];
+								gameState->DespawnPowerUp(powerUp);
+							}
+							gameState->PowerUps.clear();
+							powerUps(gameState);
+							gameState->wave++;
 						}
-						gameState->Enemies.clear();
-						//Reset Powerups/Checkpoints
-						for (int i = 0; i < (int)gameState->PowerUps.size(); i++) {
-							PowerUp* powerUp = &gameState->PowerUps[i];
-							gameState->DespawnPowerUp(powerUp);
-						}
-						gameState->PowerUps.clear();
-						powerUps(gameState);
-						gameState->wave++; 
 					}
-				}
 
-				//Break
-				else {
-					gameState->breakSeconds = breakTime / 60;
-					if (breakTime <= 0) {
-						waveBreak++;
-						breakTime = 600;
-						if (gameState->wave == 5) {
-							boss(gameState);
-							gameState->gameMode = "Boss Battle";
+					//Break
+					else {
+						gameState->breakSeconds = breakTime / 60;
+						if (breakTime <= 0) {
+							waveBreak++;
+							breakTime = 600;
+							if (gameState->wave == 5) {
+								boss(gameState);
+								gameState->gameMode = "Boss Battle";
+							}
+							else if (gameState->wave == 6) {
+								payload(gameState);
+								gameState->gameMode = "End Game";
+							}
+							else {
+								modeSelection(gameState);
+							}
+							gameState->modeText = true;
+							gameState->textTime = 10 * 60;
 						}
-						else {
-							modeSelection(gameState);
-						}
-						gameState->modeText = true;
-						gameState->textTime = 10 * 60;
+						breakTime--;
 					}
-					breakTime--;
 				}
 			}
 		}
@@ -158,6 +185,9 @@ bool Logic::waveFinished(Gamestate *gameState) {
 	}
 	else if (gameState->gameMode == "Survival") {
 		objective = true;
+	}
+	else if (gameState->gameMode == "End Game") {
+		objective = endgame(gameState);
 	}
 
 	if (checkEnemyHealth(gameState) == 0 && objective) {
@@ -287,6 +317,18 @@ bool Logic::payloadCollected(Gamestate *gameState) {
 		}
 
 		return false;
+}
+
+//End Game
+bool Logic::endgame(Gamestate *gameState) {
+
+	if (gameState->payloadCollected) {
+		if ((gameState->playerVehicle.position.z > 155 && gameState->playerVehicle.position.z < 156 && gameState->playerVehicle.position.x > -10 && gameState->playerVehicle.position.x < 10)) {
+			return true;
+		}
+	}
+
+	return false;
 }
 
 //PowerUps

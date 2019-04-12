@@ -267,6 +267,8 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 		else if (pausePointerState == 1 && input == "ENTER" || pausePointerState == 1 && input == "A") {
 			GameState->UIMode = "Game";
 			GameState->restart = true;
+			GameState->startup = true;
+			GameState->resetCar = true;
 			GameState->ui_enter = true;
 			GameState->ui_pauseMenu = false;
 		}
@@ -283,6 +285,8 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 
 		GameState->ui_menu = true;
 		GameState->restart = true;
+		GameState->startup = true;
+		GameState->resetCar = true;
 		//render start screen image
 		//Should update based on selected menu item.
 

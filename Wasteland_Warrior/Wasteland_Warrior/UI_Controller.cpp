@@ -130,6 +130,7 @@ void UI_Controller::Update(Gamestate* GameState, GLFWwindow* window)
 		else {
 			GameState->powerText = false;
 			GameState->modeText = false;
+			GameState->damageText = false;
 			GameState->textTime = 0;
 		}
 

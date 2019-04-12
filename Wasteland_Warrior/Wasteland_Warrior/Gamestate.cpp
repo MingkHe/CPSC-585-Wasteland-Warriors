@@ -43,6 +43,7 @@ Gamestate::Gamestate()
 	ui_lose = false;
 
 	powerText = false;
+	damageText = false;
 	modeText = false;
 	textTime = 0;
 	loadingPercentage = 0;
@@ -411,12 +412,9 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse,
 	float damage = totalForce / damageScaling;
 	std::cout << "causeing: " << damage << " base damage (if less than 5, no damage dealt)" << std::endl;
 
-	if (damage > 5.0f) {
-		//Display "Damage dealt: damage" to HUD
-	}
-	else {
-		//Display "To Slow!"
-	}
+	this->damage = damage;
+	damageText = true;
+	textTime = 10 * 60;
 
 	//Inflict damage
 	//If both vehicles align meaning a rear end

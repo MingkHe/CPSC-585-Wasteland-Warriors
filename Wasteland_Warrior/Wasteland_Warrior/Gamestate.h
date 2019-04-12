@@ -132,9 +132,14 @@ public:
 
 	//----------------------------------------------------------------------
 
+	//---------------------Damage Indicator---------------------------------
+	int damage;
+	//----------------------------------------------------------------------
+
 	//----------------------UI Buffer Start---------------------------------
 	bool powerText;
 	bool modeText;
+	bool damageText;
 	int textTime;
 	GLFWwindow *window;
 	int loadingPercentage;

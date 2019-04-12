@@ -195,9 +195,9 @@ public:
 
 	std::string UIMode;
 
-	const int numOfStaticObjectInstances = 15;
-	int staticObjMeshTextureIndices[15];
-	std::vector<const char*> staticObjMeshList[15] = { 
+	const int numOfStaticObjectInstances = 16;
+	int staticObjMeshTextureIndices[16];
+	std::vector<const char*> staticObjMeshList[16] = { 
 		{"Objects/SkyBox/skySphere.obj"},
 		{"Objects/Ruined_Brick_Building/ruined building_brick.obj"},
 		{"Objects/Wooden_train_cars/wagon.obj"},
@@ -212,10 +212,12 @@ public:
 		{"Objects/explosionSphere.obj"},  //Explosion Sphere
 		{"Objects/mainRoad.obj"},
 		{"Objects/mainRailroadOptimized.obj"},
-		{"Objects/bigRock.obj"}
+		{"Objects/bigRock.obj"},
+		{"Objects/buildingGroup.obj"}
+
 	};
 
-	std::vector<const char*> staticObjTextureList[15] = {
+	std::vector<const char*> staticObjTextureList[16] = {
 		 {"Objects/SkyBox/skySphere_texture.jpg"},
 		 {"Objects/Ruined_Brick_Building/ruined_building_brick.jpg"},
 		 {"Objects/Wooden_train_cars/wagon_tex3.png"},
@@ -230,6 +232,7 @@ public:
 		 {"Textures/explosion_texture.png"}, //Explosion Texture
 		{"Textures/atlas.png"}, //Road Texture
 		{"Objects/Railroad/concreteRails.jpg", "Objects/Railroad/chapa oxidada.jpg", "Objects/Railroad/concreteRails.jpg", "Objects/Railroad/chapa oxidada.jpg"},
+		{"Textures/bigRock.jpg"},
 		{"Textures/bigRock.jpg"}
 	 };
 

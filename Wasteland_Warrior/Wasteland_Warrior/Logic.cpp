@@ -29,6 +29,7 @@ void Logic::Update(Gamestate *gameState)
 		score++;
 
 		//Restart
+
 		if (gameState->restart) {
 			if (gameState->startup) {
 				if (gameState->resetCar) {
@@ -78,42 +79,42 @@ void Logic::Update(Gamestate *gameState)
 					}
 
 					//Boulder
-					/*for (int i = 0; i < (int)gameState->StaticObjects.size(); i++) {
+					for (int i = 0; i < (int)gameState->StaticObjects.size(); i++) {
 						Object* boulder = &gameState->StaticObjects[i];
-						if (boulder->type == 7) {
+						if (boulder->type == 14) {
 							int offset = boulder->physicsIndex;
 							glm::mat4 transformMatrix = glm::mat4(
 								2.f, 0.f, 0.f, 0.f,
 								0.f, 2.f, 0.f, 0.f,
 								0.f, 0.f, 2.f, 0.f,
-								0.f, 0.f, 173.f, 1.f
+								0.f, -500.f, 0.f, 1.f
 							);
 							for (int s = 0; s < gameState->scene->allWorldCompObjects[boulder->sceneObjectIndex].subObjectsCount; s++) {
 								gameState->scene->allWorldCompObjects[boulder->sceneObjectIndex].subObjects[s].transform = transformMatrix;
 							}
 						}
-					}*/
+					}
 				}
 
 				if ((gameState->playerVehicle.position.z > -165 && gameState->playerVehicle.position.z < -164 && gameState->playerVehicle.position.x > 90 && gameState->playerVehicle.position.x < 110)) {
 					gameState->startup = false;
 
 					//Boulder
-					/*for (int i = 0; i < (int)gameState->StaticObjects.size(); i++) {
+					for (int i = 0; i < (int)gameState->StaticObjects.size(); i++) {
 						Object* boulder = &gameState->StaticObjects[i];
-						if (boulder->type == 7) {
+						if (boulder->type == 14) {
 							int offset = boulder->physicsIndex;
 							glm::mat4 transformMatrix = glm::mat4(
 								2.f, 0.f, 0.f, 0.f,
 								0.f, 2.f, 0.f, 0.f,
 								0.f, 0.f, 2.f, 0.f,
-								0.f, 0.f, 173.f, 1.f
+								0.f, 1.f, 0.f, 1.f
 							);
 							for (int s = 0; s < gameState->scene->allWorldCompObjects[boulder->sceneObjectIndex].subObjectsCount; s++) {
 								gameState->scene->allWorldCompObjects[boulder->sceneObjectIndex].subObjects[s].transform = transformMatrix;
 							}
 						}
-					}*/
+					}
 				}
 			}
 			else {
@@ -149,7 +150,7 @@ void Logic::Update(Gamestate *gameState)
 		else {
 
 			//Player has beaten all 5 waves
-			if (gameState->wave == 3 || waveBreak == 3) {
+			if (gameState->wave == 7 || waveBreak == 7) {
 				gameState->UIMode = "Win";
 				gameState->ui_gameplay = false;
 				gameState->restart = true;
@@ -190,7 +191,7 @@ void Logic::Update(Gamestate *gameState)
 								boss(gameState);
 								gameState->gameMode = "Boss Battle";
 							}
-							else if (gameState->wave == 2) {
+							else if (gameState->wave == 6) {
 								payload(gameState);
 								gameState->gameMode = "End Game";
 							}
@@ -376,27 +377,24 @@ bool Logic::endgame(Gamestate *gameState) {
 	if (gameState->payloadCollected) {
 		if ((gameState->playerVehicle.position.z > 155 && gameState->playerVehicle.position.z < 156 && gameState->playerVehicle.position.x > -20 && gameState->playerVehicle.position.x < 20)) {
 			gameState->explosions.push_back(Explosion(glm::vec3(0,0,173)));
-			if ((gameState->playerVehicle.position.z > 170 && gameState->playerVehicle.position.z < 171 && gameState->playerVehicle.position.x > -20 && gameState->playerVehicle.position.x < 20)) {
-				return true;
-			}
-			else {
-				for (int i = 0; i < (int)gameState->StaticObjects.size(); i++) {
-					Object* truck = &gameState->StaticObjects[i];
-					if (truck->type == 7) {
-						int offset = truck->physicsIndex;
-						glm::mat4 transformMatrix = glm::mat4(
-							2.f, 0.f, 0.f, 0.f,
-							0.f, 2.f, 0.f, 0.f,
-							0.f, 0.f, 2.f, 0.f,
-							(-100 * offset), -500.f, -500.f, 1.f
-						);
-						for (int s = 0; s < gameState->scene->allWorldCompObjects[truck->sceneObjectIndex].subObjectsCount; s++) {
-							gameState->scene->allWorldCompObjects[truck->sceneObjectIndex].subObjects[s].transform = transformMatrix;
-						}
+			for (int i = 0; i < (int)gameState->StaticObjects.size(); i++) {
+				Object* truck = &gameState->StaticObjects[i];
+				if (truck->type == 7) {
+					int offset = truck->physicsIndex;
+					glm::mat4 transformMatrix = glm::mat4(
+						2.f, 0.f, 0.f, 0.f,
+						0.f, 2.f, 0.f, 0.f,
+						0.f, 0.f, 2.f, 0.f,
+						(-100 * offset), -500.f, -500.f, 1.f
+					);
+					for (int s = 0; s < gameState->scene->allWorldCompObjects[truck->sceneObjectIndex].subObjectsCount; s++) {
+						gameState->scene->allWorldCompObjects[truck->sceneObjectIndex].subObjects[s].transform = transformMatrix;
 					}
 				}
 			}
-
+			if ((gameState->playerVehicle.position.z > 165 && gameState->playerVehicle.position.z < 166 && gameState->playerVehicle.position.x > -20 && gameState->playerVehicle.position.x < 20)) {
+				return true;
+			}
 		}
 	}
 
@@ -406,8 +404,8 @@ bool Logic::endgame(Gamestate *gameState) {
 //PowerUps
 void Logic::powerUps(Gamestate *gameState) {
 	gameState->SpawnDynamicObject(1, 1.f, 1.f, 1.f, 0, 0, 0);
-	gameState->SpawnDynamicObject(rand() % 5 + 1, -100.f, -5.25f, -100.f, 0, 0, 0);
-	gameState->SpawnDynamicObject(rand() % 5 + 1, 100.f, -5.25f, 100.f, 0, 0, 0);
+	gameState->SpawnDynamicObject(rand() % 5 + 1, -100.f, 1.f, -100.f, 0, 0, 0);
+	gameState->SpawnDynamicObject(rand() % 5 + 1, 100.f, 1.f, 100.f, 0, 0, 0);
 	gameState->SpawnDynamicObject(rand() % 5 + 1, -100.f, 1.f, 100.f, 0, 0, 0);
 	gameState->SpawnDynamicObject(rand() % 5 + 1, 53.f, 1.f, -35.f, 0, 0, 0);
 }
@@ -446,32 +444,27 @@ void Logic::enemies(Gamestate *gameState) {
 	for (int i = 0; i < gameState->wave; i++) {
 		switch (i % 6) {
 		case 0:
-			gameState->SpawnEnemy(rand() % 4 + 1, 0, 150.f + (i * -5.f), -2.f, -85.f + (i * 5.f), 0, 0, 0);
+			gameState->SpawnEnemy(rand() % 4 + 1, 0, 162.f, 2.f, 72.f, 0, -90.f, 0);
 			gameState->Enemies.back().health = 25.f;
 			gameState->Enemies.back().maxhealth = 25.f;
 			break;
 		case 1:
-			gameState->SpawnEnemy(rand() % 4 + 1, 0, 145.f + (i * -5.f), 21.f, 155.f + (i * -5.f), 0, 0, 0);
+			gameState->SpawnEnemy(rand() % 4 + 1, 0, 178.f, 20.f, 178.f, 0, -125.f, 0);
 			gameState->Enemies.back().health = 25.f;
 			gameState->Enemies.back().maxhealth = 25.f;
 			break;
 		case 2:
-			gameState->SpawnEnemy(rand() % 4 + 1, 0, -90.f + (i * 5.f), 21.f, 155.f + (i * -5.f), 0, 0, 0);
+			gameState->SpawnEnemy(rand() % 4 + 1, 0, -179.f, 2.f, 3.f, 0, 125.f, 0);
 			gameState->Enemies.back().health = 25.f;
 			gameState->Enemies.back().maxhealth = 25.f;
 			break;
 		case 3:
-			gameState->SpawnEnemy(rand() % 4 + 1, 0, -137.f + (i * 5.f), 9.f, 10.f + (i * -5.f), 0, 0, 0);
+			gameState->SpawnEnemy(rand() % 4 + 1, 0, -176.f, 20.f, 176.f, 0, 90.f, 0);
 			gameState->Enemies.back().health = 25.f;
 			gameState->Enemies.back().maxhealth = 25.f;
 			break;
 		case 4:
-			gameState->SpawnEnemy(rand() % 4 + 1, 0, -137.f + (i * 5.f), 9.f, -30.f + (i * 5.f), 0, 0, 0);
-			gameState->Enemies.back().health = 25.f;
-			gameState->Enemies.back().maxhealth = 25.f;
-			break;
-		case 5:
-			gameState->SpawnEnemy(rand() % 4 + 1, 0, -100.f + (i * 5.f), -2.f, -132.f + (i * 5.f), 0, 0, 0);
+			gameState->SpawnEnemy(rand() % 4 + 1, 0, -78.f, 8.f, -174.f, 0, 45.f, 0);
 			gameState->Enemies.back().health = 25.f;
 			gameState->Enemies.back().maxhealth = 25.f;
 			break;
@@ -483,16 +476,16 @@ void Logic::enemies(Gamestate *gameState) {
 void Logic::checkpoint(Gamestate *gameState) {
 		switch (rand() % 4) {
 		case 0:
-			gameState->SpawnDynamicObject(0, 45.f, 0.f, 45.f, 0, 0, 0);
+			gameState->SpawnDynamicObject(0, 45.f, 0.5f, 45.f, 0, 0, 0);
 			break;
 		case 1:
-			gameState->SpawnDynamicObject(0, -25.f, 0.f, 25.f, 0, 0, 0);
+			gameState->SpawnDynamicObject(0, -25.f, 0.5f, 25.f, 0, 0, 0);
 			break;
 		case 2:
-			gameState->SpawnDynamicObject(0, 45.f, 0.f, -45.f, 0, 0, 0);
+			gameState->SpawnDynamicObject(0, 45.f, 0.5f, -45.f, 0, 0, 0);
 			break;
 		case 3:
-			gameState->SpawnDynamicObject(0, -30.f, 0.f, -30.f, 0, 0, 0);
+			gameState->SpawnDynamicObject(0, -30.f, 0.5f, -30.f, 0, 0, 0);
 			break;
 	}
 }
@@ -504,7 +497,7 @@ void Logic::payload(Gamestate *gameState) {
 
 //Head hunter
 void Logic::headHunter(Gamestate *gameState) {
-	gameState->SpawnEnemy(rand() % 4 + 1, 1, 145.f, 21.f, 155.f, 0, 0, 0);
+	gameState->SpawnEnemy(rand() % 4 + 1, 1, 178.f, 20.f, 178.f, 0, 0, 0);
 	gameState->Enemies.back().health = 25.f;
 	gameState->Enemies.back().maxhealth = 25.f;
 	gameState->Enemies.back().headhunter = true;
@@ -512,7 +505,7 @@ void Logic::headHunter(Gamestate *gameState) {
 
 //Boss
 void Logic::boss(Gamestate *gameState) {
-	gameState->SpawnEnemy(5, 0, -137.f, 9.f, 10.f, 0, 0, 0);
+	gameState->SpawnEnemy(5, 0, -176.f, 20.f, 176.f, 0, 0, 0);
 	gameState->Enemies.back().health = 200.f;
 	gameState->Enemies.back().maxhealth = 200.f;
 	gameState->Enemies.back().boss = true;

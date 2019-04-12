@@ -127,7 +127,7 @@ public:
 	//----------------------Sound Buffer End--------------------------------
 
 	//----------------------Weapon System-----------------------------------
-	int ammo;
+	//int ammo;
 	int weaponState; // 0 means no weapon 1 means machine gun
 
 	//----------------------------------------------------------------------
@@ -287,9 +287,13 @@ public:
 	int enemyscore;
 	int scoreTime;
 	std::string gameMode;
+	bool checkpointCollected;
+	bool payloadCollected;
 
 	int window_width;
 	int window_height;
+	int monitor_width;
+	int monitor_height;
 
 	int powerUpType;
 

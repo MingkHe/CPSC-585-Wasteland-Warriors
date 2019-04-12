@@ -39,7 +39,7 @@ void main(void) {
 			} else if(enemy_health[i] > .5) {
 				FragmentColour = vec4(.9, .9, 0, 1);
 			} else if(enemy_health[i] > .25) {
-				FragmentColour = vec4(.9, 0, .9, 1);
+				FragmentColour = vec4(.9, .45, 0, 1);
 			} else {
 				FragmentColour = vec4(.9, 0, 0, 1);
 			}
@@ -55,7 +55,7 @@ void main(void) {
 			} else if(highlight_health[i] > .5) {
 				FragmentColour = vec4(.9, .9, 0, 1);
 			} else if(highlight_health[i] > .25) {
-				FragmentColour = vec4(.9, 0, .9, 1);
+				FragmentColour = vec4(.9, .45, 0, 1);
 			} else {
 				FragmentColour = vec4(.9, 0, 0, 1);
 			}

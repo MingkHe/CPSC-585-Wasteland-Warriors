@@ -6,7 +6,7 @@
 // ==========================================================================
 #version 410
 
-#define SAMPLE_NUM 100
+#define SAMPLE_NUM 20
 #define SAMPLE_RAD 4.0
 #define MID_SAMPLE_RAD 3.5
 #define FAR_SAMPLE_RAD 3.0
@@ -43,7 +43,7 @@ in vec4 shadowCoordthree;
 
 layout(location = 0) out vec4 finalColor;
 
-uniform vec2 poissonDisk[SAMPLE_NUM] = 
+uniform vec2 poissonDisk[100] = 
 { 
 vec2( 0.460925730073f, 0.701913292718f ), 
 vec2( 0.929008298005f, 0.20026975351f ), 
@@ -262,7 +262,7 @@ float ShadowCalculationtwo(vec4 fragPosLightSpace)
 	for(int i = 0; i < SAMPLE_NUM; i++) {
 		vec2 moments = texture(shadowTextwo, projCoords.xy + SAMPLES*(poissonDisk[i]-vec2(.5,.5)) * texelSize).xy;
 		float mean = projCoords.z;
-		float minVar = 0.00001f;
+		float minVar = 0.0001f;
 		if(mean <= moments.x) {
 			shadow += 1.f;
 		} else {

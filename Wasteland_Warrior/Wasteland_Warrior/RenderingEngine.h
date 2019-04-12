@@ -72,6 +72,8 @@ public:
 	//Ensures that vao and vbos are set up properly
 	bool CheckGLErrors();
 
+	void createFramebuffers(int width, int height);
+
 //private:
 	//Pointer to the current shader program being used to render
 	GLuint shaderProgram;

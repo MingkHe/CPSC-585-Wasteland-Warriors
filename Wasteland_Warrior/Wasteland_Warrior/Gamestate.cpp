@@ -29,7 +29,7 @@ Gamestate::Gamestate()
 	weaponShellDrop_sound = false;
 	weaponSwap_sound = false;
 
-	ammo = 1000;
+	//ammo = 1000;
 	weaponState = 0;
 
 	ui_enter = false;
@@ -356,6 +356,8 @@ void Gamestate::resetOrientation(int physicsIndex) {
 
 
 void Gamestate::DespawnEnemy(Vehicle* vehicle) {
+
+	this->explosions.push_back(Explosion(vehicle->position));
 	enemyscore += 200;
 	this->carExpo_sound = true;
 	int offset = vehicle->physicsIndex;
@@ -377,6 +379,7 @@ void Gamestate::DespawnEnemy(Vehicle* vehicle) {
 void Gamestate::DespawnPowerUp(PowerUp* powerUp) {
 
 	int offset = powerUp->physicsIndex;
+	powerUp->active = false;
 
 	glm::mat4 transformMatrix = glm::mat4(
 		2.f, 0.f, 0.f, 0.f,
@@ -480,12 +483,10 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse,
 
 	//Resolve effects of damage
 	if (entity1->health <= 0) {
-		this->explosions.push_back(Explosion(entity1->position));
 		DespawnEnemy(entity1);
 	}
 
 	if (entity2->health <= 0) {
-		this->explosions.push_back(Explosion(entity2->position));
 		DespawnEnemy(entity2);
 	}
 
@@ -503,6 +504,7 @@ void Gamestate::Collision(Vehicle* vehicle, PowerUp* powerUp) {
 		{
 	case 0://Checkpoint
 		powerUp->active = false;
+		this->checkpointCollected = true;
 		break;
 	case 1://Heal to full health
 		vehicle->health = vehicle->maxhealth;
@@ -520,6 +522,7 @@ void Gamestate::Collision(Vehicle* vehicle, PowerUp* powerUp) {
 		break;
 	case 6://Payload
 		powerUp->active = false;
+		this->payloadCollected = true;
 		break;
 	default:
 		break;

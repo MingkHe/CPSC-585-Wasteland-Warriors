@@ -271,7 +271,7 @@ void Gamestate::SpawnDynamicObject(int ObjectType, float x, float y, float z, fl
 	((dimensions.y*dimensions.y + dimensions.z*dimensions.z)*mass / 12.0f,
 		(dimensions.x*dimensions.x + dimensions.z*dimensions.z)*mass / 12.0f,
 		(dimensions.x*dimensions.x + dimensions.y*dimensions.y)*mass / 12.0f);
-	int physicsIndex = physics_Controller->createDynamicObject(ObjectType, dimensions, objectMOI, mass, density, x, y, z);
+	int physicsIndex = physics_Controller->createDynamicObject(ObjectType, dimensions, objectMOI, (PxReal)mass, density, x, y, z);
 	glm::mat4 transformMatrix = glm::mat4(
 		1.f, 0.f, 0.f, 0.f,
 		0.f, 1.f, 0.f, 0.f,
@@ -418,9 +418,8 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse,
 	float damage = totalForce / damageScaling;
 	std::cout << "causeing: " << damage << " base damage (if less than 5, no damage dealt)" << std::endl;
 
-	this->damage = int(damage);
-	damageText = true;
-	damageTextTime = 2 * 60;
+	float originalE1HP = entity1->health;
+	float originalE2HP = entity2->health;
 
 	//Inflict damage
 	//If both vehicles align meaning a rear end
@@ -430,6 +429,7 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse,
 			//Person going slower takes damage
 			if (entity1->speed > entity2->speed) {
 				entity2->health -= damage * entity1->damageMultiplier;
+
 			}
 			else {
 				entity1->health -= damage * entity2->damageMultiplier;
@@ -437,7 +437,7 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse,
 		}
 
 		if (hapticFeedback && updateHapticWheelState) {
-			LogiPlayFrontalCollisionForce(0, damage*8);
+			LogiPlayFrontalCollisionForce(0, (int)(damage*8));
 		}
 	}
 
@@ -447,28 +447,46 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse,
 		if (damage > 5.0f) {
 			entity1->health -= damage * entity2->damageMultiplier;
 			entity2->health -= damage * entity1->damageMultiplier;
+
 		}
 		if (hapticFeedback && updateHapticWheelState) {
-			LogiPlayFrontalCollisionForce(0, damage * 8);
+			LogiPlayFrontalCollisionForce(0, (int)(damage * 8));
 		}
 	}
 
 	else {
 		//std::cout << "Single collision" << std::endl;
 		//if (abs(entity1AttackLevel) >= attackLevelThreshold && damage > 5.0f)
-		if (abs(entity1AttackLevel) >= abs(entity2AttackLevel) && damage > 5.0f)
+		if (abs(entity1AttackLevel) >= abs(entity2AttackLevel) && damage > 5.0f) {
 			entity2->health -= damage * entity1->damageMultiplier;
 
+		}
+
 		//if (abs(entity2AttackLevel) >= attackLevelThreshold&& damage > 5.0f)
-		if (abs(entity2AttackLevel) >= abs(entity1AttackLevel) && damage > 5.0f)
+		if (abs(entity2AttackLevel) >= abs(entity1AttackLevel) && damage > 5.0f) {
 			entity1->health -= damage * entity2->damageMultiplier;
 
+		}
+
 		if (hapticFeedback && updateHapticWheelState) {
-			LogiPlaySideCollisionForce(0, damage * 8);
+			LogiPlaySideCollisionForce(0, (int)(damage * 8));
 		}
 	}
 	entity1->health += entity1->armor;
 	entity2->health += entity2->armor;
+
+	
+	if (originalE1HP != entity1->health && entity2->physicsIndex == playerVehicle.physicsIndex) {
+		this->damage = int(damage*entity1->damageMultiplier);
+		damageText = true;
+		damageTextTime = 2 * 60;
+	}
+
+	else if (originalE2HP != entity2->health && entity1->physicsIndex == playerVehicle.physicsIndex) {
+		this->damage = int(damage*entity2->damageMultiplier);
+		damageText = true;
+		damageTextTime = 2 * 60;
+	}
 
 	//Resolve effects of damage
 	if (entity1->health <= 0) {
@@ -561,7 +579,7 @@ void Gamestate::Collision(Vehicle* vehicle, Object* staticObject, glm::vec3 impu
 		float damageScaling = 700;		//Smaller number means more damage
 		
 		float damage = totalForce / damageScaling;
-		LogiPlayFrontalCollisionForce(0, damage * 8);
+		LogiPlayFrontalCollisionForce(0, (int)(damage * 8));
 	}
 }
 
@@ -606,9 +624,9 @@ void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 
 	for (int i = 0; i < (int)PowerUps.size(); i++) {
 		if (physicsIndex == PowerUps[i].physicsIndex) {
 			entityToUpdate = &PowerUps[i];
-			newTransformationMatrix[0][0] = newTransformationMatrix[0][0] * 1.5;
-			newTransformationMatrix[1][1] = newTransformationMatrix[1][1] * 1.5;
-			newTransformationMatrix[2][2] = newTransformationMatrix[2][2] * 1.5;
+			newTransformationMatrix[0][0] = newTransformationMatrix[0][0] * 1.5f;
+			newTransformationMatrix[1][1] = newTransformationMatrix[1][1] * 1.5f;
+			newTransformationMatrix[2][2] = newTransformationMatrix[2][2] * 1.5f;
 			newTransformationMatrix[3] = newTransformationMatrix[3] + (vertical * glm::vec4(0.8f, 0.8f, 0.8f, 0.8f));
 			found = true;
 		}
@@ -730,7 +748,7 @@ void Gamestate::shoot() {
 	//std::cout << physicsCL.rayCast(pos) << std::endl;
 	//std::cout << "pos: x:" << pos.x << " y:" << pos.y << " z:" << pos.z << std::endl;
 	if (physics_Controller->rayCast(pos)) {
-		for (int i = 0; i < Enemies.size(); i++) {
+		for (int i = 0; i < (int)Enemies.size(); i++) {
 			printf("raycast detected..\n");
 			printf("test: %f\n", glm::distance(pos, Enemies[i].position));
 			if (glm::distance(pos, Enemies[i].position) <= 3.0f) {

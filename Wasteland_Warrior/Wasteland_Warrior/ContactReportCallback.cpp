@@ -43,12 +43,13 @@ void ContactReportCallback::onContact(const PxContactPairHeader& pairHeader, con
 
 
 		PxU32 contactCount = pairs[i].contactCount;
-		//std::cout << "Contact Point Count: " << contactCount << std::endl;
 
 
 
 		if (contactCount > 0)
 		{
+			//std::cout << "Contact Point Count: " << contactCount << std::endl;
+
 			contactPoints.resize(contactCount);
 			pairs[i].extractContacts(&contactPoints[0], contactCount);
 
@@ -57,8 +58,8 @@ void ContactReportCallback::onContact(const PxContactPairHeader& pairHeader, con
 		}
 
 		else {
-			gContactPositions.push_back(PxVec3{0.0f,0.0f,0.0f});
-			gContactImpulses.push_back(PxVec3{ 100.0f,0.0f,0.0f });
+			gContactPositions.push_back(PxVec3{100.0f,0.0f,0.0f});
+			gContactImpulses.push_back(PxVec3{1000.0f,0.0f,0.0f });
 		}
 	}
 }

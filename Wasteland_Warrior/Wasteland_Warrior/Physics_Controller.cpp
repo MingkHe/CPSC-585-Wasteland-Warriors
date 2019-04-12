@@ -829,7 +829,7 @@ void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DK
 glm::vec3 Physics_Controller::cameraWallCollision(glm::vec3 cameraPosition) {
 	glm::vec3 playerPosition = gameState->playerVehicle.position;
 	glm::vec3 dir = glm::normalize(cameraPosition - playerPosition);
-	PxVec3 origin = PxVec3(playerPosition.x + (dir.x*2.7), playerPosition.y + (dir.y*2.7), playerPosition.z + (dir.z*2.7));                 // [in] Ray origin
+	PxVec3 origin = PxVec3(playerPosition.x + (dir.x*2.7f), playerPosition.y + (dir.y*2.7f), playerPosition.z + (dir.z*2.7f));                 // [in] Ray origin
 	PxVec3 unitDir = PxVec3(dir.x, dir.y, dir.z);
 
 	PxReal maxDistance = 30;            // [in] Raycast max distance
@@ -843,7 +843,7 @@ glm::vec3 Physics_Controller::cameraWallCollision(glm::vec3 cameraPosition) {
 	//std::cout << "Wall distance: " << wallLength << "     camera distance: " << playerLength << std::endl;
 
 	//If wall collision comes before camera location
-	if (glm::length(pos - playerPosition) < glm::length(cameraPosition - playerPosition)) {
+	if (glm::length(pos - playerPosition) < glm::length(cameraPosition - playerPosition) && (pos.x + pos.y + pos.z) > 0.1) {
 		return (pos-dir);     // the -dir moves the camera in a bit so it dosn't clip through the ground
 	}
 
@@ -909,7 +909,8 @@ void Physics_Controller::stepPhysics(bool interactive)
 						if ((rand() % 100) < 50)
 							shift = -shift;
 
-						setPosition(enemy.physicsIndex, glm::vec3(enemy.position.x, enemy.position.y, enemy.position.z) + glm::vec3(shift, 0.0f, 0.0f));
+						//setPosition(enemy.physicsIndex, glm::vec3(enemy.position.x, enemy.position.y, enemy.position.z) + glm::vec3(shift, 0.0f, 0.0f));
+						//gameState->Enemies[gameStateIndex].forceRelocate = false;
 					}
 				}
 
@@ -938,7 +939,7 @@ void Physics_Controller::stepPhysics(bool interactive)
 			hapticVehicleForwardVelocity = vehiclesVector[i]->computeForwardSpeed();
 			
 			//std::cout << 1+abs(100 - hapticVehicleForwardVelocity * 4) << std::endl;
-			LogiPlaySpringForce(0,0, fmax(100, 100 - hapticVehicleForwardVelocity * 4), fmax(5, 100 - hapticVehicleForwardVelocity * 4));
+			LogiPlaySpringForce(0,0, (int)fmax(100, (int)(100 - hapticVehicleForwardVelocity * 4)), (int)fmax(5, (int)(100 - hapticVehicleForwardVelocity * 4)));
 			//LogiPlayConstantForce(0, hapticNetForceOnWheel);
 			//LogiPlayConstantForce(0, );
 
@@ -995,12 +996,12 @@ void Physics_Controller::stepPhysics(bool interactive)
 
 
 		if (gameStateIndex == -1) {
-			gameState->playerVehicle.wheelRotation = wheelRotation;
-			gameState->playerVehicle.wheelAngle = wheelAngle;
+			gameState->playerVehicle.wheelRotation = (float)wheelRotation;
+			gameState->playerVehicle.wheelAngle = (float)wheelAngle;
 		}
 		else {
-			gameState->Enemies[gameStateIndex].wheelRotation = wheelRotation;
-			gameState->Enemies[gameStateIndex].wheelAngle = wheelAngle;
+			gameState->Enemies[gameStateIndex].wheelRotation = (float)wheelRotation;
+			gameState->Enemies[gameStateIndex].wheelAngle = (float)wheelAngle;
 		}
 
 		//Work out if the vehicle is in the air.

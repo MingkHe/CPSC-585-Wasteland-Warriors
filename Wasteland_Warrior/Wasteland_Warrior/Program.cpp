@@ -5,7 +5,6 @@
 #pragma comment(lib, "LogitechSteeringWheelLib.lib") 
 
 
-
 #include <iostream>
 #include <string>
 
@@ -148,9 +147,11 @@ void Program::start() {
 
 	gameState->SpawnStaticObject(3, 63, 0, -25, 0, 0, 0);
 	gameState->SpawnStaticObject(2, 123, -6.7f, -95, 0, 0, 0);
-	gameState->SpawnStaticObject(3, 148, -6.2f, -55, 0, 0, 0);
+	gameState->SpawnStaticObject(3, 148, -6.7f, -55, 0, 0, 0);
 	gameState->SpawnStaticObject(2, 143, -6.7f, -125, 0, 0, 0);
 	gameState->SpawnStaticObject(3, 73, 0, -125, 0, 0, 0);
+
+
 	//gameState->SpawnStaticObject(14, 0, 0, 0, 0, 0, 0);
 	//Spanws buildings
 	gameState->SpawnStaticObject(15, 0, 0, 0, 0, 0, 0);
@@ -163,7 +164,7 @@ void Program::start() {
 
 	//Buildings & Ruined Buildings
 	gameState->SpawnStaticObject(1, 20, 0, 20, 0, 0, 0);
-	gameState->SpawnStaticObject(1, -40, 0, -30, 0, 0, 0);
+	gameState->SpawnStaticObject(1, -40, 0, 30, 0, 0, 0);
 	gameState->SpawnStaticObject(1, 60, 0, -13, 0, 0, 0);
 	gameState->SpawnStaticObject(1, -80, 0, 53, 0, 0, 0);
 	gameState->SpawnStaticObject(1, 100, 0, 93, 0, 0, 0);
@@ -171,17 +172,14 @@ void Program::start() {
 	gameState->SpawnStaticObject(1, 140, 0, 73, 0, 0, 0);
 	gameState->SpawnStaticObject(1, -100, 0, -53, 0, 0, 0);
 
-
-	//gameState->SpawnStaticObject(1, -140, 4, -73, 0, 0, 0);
-	//gameState->SpawnStaticObject(1, -140, 6, -53, 0, 0, 0);
-
-	gameState->SpawnStaticObject(1, 20, 0, -123, 0, 0, 0);
+	gameState->SpawnStaticObject(1, 20, 0, -133, 0, 0, 0);
 	gameState->SpawnStaticObject(1, -30, 0, -145, 0, 0, 0);
 
-	gameState->SpawnStaticObject(9, -20, 0, -100, 0, 0, 0);
-	gameState->SpawnStaticObject(4, 0, 0, -100, 0, 0, 0);
-	gameState->SpawnStaticObject(9, 40, 0, -100, 0, 0, 0);
-	gameState->SpawnStaticObject(10, 20, 0, -100, 0, 0, 0);
+	//Old town
+	//gameState->SpawnStaticObject(9, -20, 10, -100, 0, 0, 0);
+	//gameState->SpawnStaticObject(4, 0, 20, -100, 0, 0, 0);
+	//gameState->SpawnStaticObject(9, 40, 30, -100, 0, 0, 0);
+	//gameState->SpawnStaticObject(10, 20, 40, -100, 0, 0, 0);
 
 	//Spawn Player
 	gameState->SpawnPlayer(0, 0, 0, 0, 0, 0);

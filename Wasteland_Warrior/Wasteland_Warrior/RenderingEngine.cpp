@@ -153,7 +153,7 @@ RenderingEngine::RenderingEngine(Gamestate *gameState) {
 	setBufferData(aim);
 
 
-	bias = 1200/game_state->window_height;
+	bias = (float)1200/game_state->window_height;
 
 	//the code to load the font, may be do some refactor in the future.
 
@@ -352,7 +352,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 		RenderNonPhysicsObject(game_state->explosion, transform,transformGL, transparent, 1.f - ((float)game_state->explosions[i].life / (float)explosion_life));
 	}
 	//Renders road
-	for (int l = 0; l < game_state->mainRoad.subObjects.size(); l++) {
+	for (int l = 0; l < (int)game_state->mainRoad.subObjects.size(); l++) {
 		RenderNonPhysicsObject(game_state->mainRoad.subObjects[l], identityTransform, transformGL, transparent, 1.0f);
 	}
 	//Renders Railroad
@@ -411,7 +411,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	}
 	//Renders road
 	//std::cout << game_state->mainRoad.subObjects.size() << std::endl;
-	for (int l = 0; l < game_state->mainRoad.subObjects.size(); l++) {
+	for (int l = 0; l < (int)game_state->mainRoad.subObjects.size(); l++) {
 		//std::cout << "Hello" << std::endl;
 		RenderNonPhysicsObject(game_state->mainRoad.subObjects[l], identityTransform, transformGL, transparent, 0.98f);
 	}
@@ -855,7 +855,7 @@ void RenderingEngine::updateText() {
 				//pushTextObj(texObjects, "Weapon: OFF", 0.01f*game_state->window_width, 0.8f*game_state->window_height, scale * 0.8, glm::vec3(0.7f, 0.2f, 0.2f),false);
 			}
 			else {
-				pushTextObj(texObjects, "Machine Gun Activated", 0.01f*game_state->window_width, 0.8f*game_state->window_height, scale * 0.8, glm::vec3(0.7f, 0.2f, 0.2f), false);
+				pushTextObj(texObjects, "Machine Gun Activated", 0.01f*game_state->window_width, 0.8f*game_state->window_height, scale * 0.8f, glm::vec3(0.7f, 0.2f, 0.2f), false);
 				//pushTextObj(texObjects, "Weapon: ON", 0.01f*game_state->window_width, 0.8f*game_state->window_height, scale * 0.8, glm::vec3(0.7f, 0.2f, 0.2f),false);
 				//pushTextObj(texObjects, "Ammo: " + std::to_string(game_state->ammo), 0.01f*game_state->window_width, 0.75f*game_state->window_height, scale * 0.8, glm::vec3(0.7f, 0.2f, 0.2f),false);
 			}

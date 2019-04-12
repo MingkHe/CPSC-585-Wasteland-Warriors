@@ -275,16 +275,17 @@ void window_size_callback(GLFWwindow* window, int width, int height)
 	self->scene->renderer->createFramebuffers(w, h);
 	self->window_height = height;
 	self->window_width = width;
-	float new_h = (float)height/(float)self->monitor_height;
+	glViewport(0, 0, width, height);
+	/*float new_h = (float)height/(float)self->monitor_height;
 	float new_w = (float)width/(float)self->monitor_width;
-	float hdiff = .5f;
-	float wdiff = .5f;
+	float hdiff = 0.f;
+	float wdiff = 0.f;
 	self->scene->renderer->square.transform = glm::mat4(
 		new_w, 0.f, 0.f, 0.f,
 		0.f, new_h, 0.f, 0.f,
 		0.f, 0.f, 1.f, 0.f,
 		-wdiff, -hdiff, 0.f, 1.f
-	);
+	);*/
 }
 
 void Program::setupWindow() {

@@ -270,7 +270,7 @@ void Gamestate::SpawnDynamicObject(int ObjectType, float x, float y, float z, fl
 		break;
 	}
 
-	PxVec3 dimensions = { 2,2,2 };
+	PxVec3 dimensions = {1,1,1};
 	PxU32 mass = 1;
 	PxVec3 objectMOI
 	((dimensions.y*dimensions.y + dimensions.z*dimensions.z)*mass / 12.0f,
@@ -572,13 +572,14 @@ void Gamestate::Collision(Vehicle* vehicle, Object* staticObject, glm::vec3 impu
 void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 newTransformationMatrix, float newSpeed) {
 	Entity* entityToUpdate = &Entity();
 	glm::vec4 newDirection = glm::vec4{ 0.0f, 0.0f, 1.0f, 0.0f } *newTransformationMatrix;
-	float playerOffSet = 1.73f;
-	float enemyOffSet = 1.73f;
-
+	float playerOffSet = 1.78f;
+	float enemyOffSet = playerOffSet;
 
 	glm::mat4 pureRotation = newTransformationMatrix;
 	pureRotation[3] = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
-	glm::vec4 vehicleNormal = glm::vec4{ 0.0f, 1.0f, 0.0f, 0.0f} *pureRotation;
+
+	
+	glm::vec4 vehicleNormal = glm::vec4(0.0f, 1.0f, 0.0f, 0.0f);
 
 	bool found = false;
 	if (physicsIndex == playerVehicle.physicsIndex) {
@@ -587,6 +588,8 @@ void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 
 		entityToUpdate = &playerVehicle;
 		playerVehicle.direction = glm::vec3{ -newDirection.x , newDirection.y, newDirection.z };
 
+
+		std::cout << "Current normal: (" << vehicleNormal[0] << "," << vehicleNormal[1] << "," << vehicleNormal[2] << ")" << std::endl;
 		newTransformationMatrix[3] = newTransformationMatrix[3] - (playerOffSet* vehicleNormal);
 	}
 

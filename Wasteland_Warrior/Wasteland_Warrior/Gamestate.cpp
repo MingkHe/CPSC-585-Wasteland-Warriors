@@ -30,6 +30,8 @@ Gamestate::Gamestate()
 	weaponShellDrop_sound = false;
 	weaponSwap_sound = false;
 
+	war_horn = false;
+
 	//ammo = 1000;
 	weaponState = 0;
 

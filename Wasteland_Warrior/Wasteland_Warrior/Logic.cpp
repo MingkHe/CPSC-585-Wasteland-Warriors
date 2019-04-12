@@ -163,7 +163,6 @@ void Logic::Update(Gamestate *gameState)
 					//Wave
 					if (gameState->wave == waveBreak) {
 						if (waveFinished(gameState)) {
-
 							//Reset Enemies
 							for (int i = 0; i < (int)gameState->Enemies.size(); i++) {
 								EnemyUnit* enemy = &gameState->Enemies[i];

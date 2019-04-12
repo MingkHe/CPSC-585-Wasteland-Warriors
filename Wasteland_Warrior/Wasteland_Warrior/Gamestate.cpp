@@ -4,6 +4,7 @@
 #include "Gamestate.h"
 #include "Scene.h"
 #include <iostream>
+#include<math.h>
 
 Gamestate::Gamestate()
 {
@@ -270,7 +271,7 @@ void Gamestate::SpawnDynamicObject(int ObjectType, float x, float y, float z, fl
 		break;
 	}
 
-	PxVec3 dimensions = {1,1,1};
+	PxVec3 dimensions = {1.5,1.5,1.5};
 	PxU32 mass = 1;
 	PxVec3 objectMOI
 	((dimensions.y*dimensions.y + dimensions.z*dimensions.z)*mass / 12.0f,
@@ -574,12 +575,11 @@ void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 
 	glm::vec4 newDirection = glm::vec4{ 0.0f, 0.0f, 1.0f, 0.0f } *newTransformationMatrix;
 	float playerOffSet = 1.78f;
 	float enemyOffSet = playerOffSet;
-
-	glm::mat4 pureRotation = newTransformationMatrix;
-	pureRotation[3] = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
-
 	
-	glm::vec4 vehicleNormal = glm::vec4(0.0f, 1.0f, 0.0f, 0.0f);
+	glm::vec4 vertical = glm::vec4(0.0f, 1.0f, 0.0f, 0.0f); // vertical, newDirection
+	glm::vec4 normal = glm::vec4{ 0.0f, 1-abs(glm::normalize(newDirection).y), 0.0f, 0.0f };
+
+
 
 	bool found = false;
 	if (physicsIndex == playerVehicle.physicsIndex) {
@@ -588,9 +588,9 @@ void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 
 		entityToUpdate = &playerVehicle;
 		playerVehicle.direction = glm::vec3{ -newDirection.x , newDirection.y, newDirection.z };
 
+		std::cout << "Heading: (" << newDirection.x << "," << newDirection.y << "," <<  newDirection.z << ")" << std::endl;
 
-		std::cout << "Current normal: (" << vehicleNormal[0] << "," << vehicleNormal[1] << "," << vehicleNormal[2] << ")" << std::endl;
-		newTransformationMatrix[3] = newTransformationMatrix[3] - (playerOffSet* vehicleNormal);
+		newTransformationMatrix[3] = newTransformationMatrix[3] - (playerOffSet* normal);
 	}
 
 	for (int i = 0; i < (int)Enemies.size(); i++) {
@@ -598,7 +598,7 @@ void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 
 			Enemies[i].direction = glm::vec3{ -newDirection.x , newDirection.y, newDirection.z };
 			entityToUpdate = &Enemies[i];
 
-			newTransformationMatrix[3] = newTransformationMatrix[3] - (enemyOffSet* vehicleNormal);
+			newTransformationMatrix[3] = newTransformationMatrix[3] - (enemyOffSet* normal);
 			found = true;
 		}
 	}
@@ -606,6 +606,10 @@ void Gamestate::updateEntity(int physicsIndex, glm::vec3 newPosition, glm::mat4 
 	for (int i = 0; i < (int)PowerUps.size(); i++) {
 		if (physicsIndex == PowerUps[i].physicsIndex) {
 			entityToUpdate = &PowerUps[i];
+			newTransformationMatrix[0][0] = newTransformationMatrix[0][0] * 1.5;
+			newTransformationMatrix[1][1] = newTransformationMatrix[1][1] * 1.5;
+			newTransformationMatrix[2][2] = newTransformationMatrix[2][2] * 1.5;
+			newTransformationMatrix[3] = newTransformationMatrix[3] + (vertical * glm::vec4(0.8f, 0.8f, 0.8f, 0.8f));
 			found = true;
 		}
 	}

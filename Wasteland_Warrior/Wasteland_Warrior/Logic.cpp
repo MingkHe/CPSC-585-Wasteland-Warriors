@@ -292,7 +292,7 @@ bool Logic::payloadCollected(Gamestate *gameState) {
 //PowerUps
 void Logic::powerUps(Gamestate *gameState) {
 	gameState->SpawnDynamicObject(1, 1.f, 1.f, 1.f, 0, 0, 0);
-	gameState->SpawnDynamicObject(rand() % 5 + 1, -100.f, 5.25f, -100.f, 0, 0, 0);
+	gameState->SpawnDynamicObject(rand() % 5 + 1, -100.f, -5.25f, -100.f, 0, 0, 0);
 	gameState->SpawnDynamicObject(rand() % 5 + 1, 100.f, -5.25f, 100.f, 0, 0, 0);
 	gameState->SpawnDynamicObject(rand() % 5 + 1, -100.f, 1.f, 100.f, 0, 0, 0);
 	gameState->SpawnDynamicObject(rand() % 5 + 1, 53.f, 1.f, -35.f, 0, 0, 0);

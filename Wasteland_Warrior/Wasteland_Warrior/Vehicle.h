@@ -23,5 +23,8 @@ public:
 
 	int active = 1;
 	float damageMultiplier = 1;
+
+	float wheelRotation = 0;
+	float wheelAngle = 0;
 };
 

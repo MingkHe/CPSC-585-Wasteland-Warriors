@@ -155,7 +155,7 @@ void Program::start() {
 	
 	gameState->SpawnStaticObject(7, 0, 0, 173, 0, 0, 0);
 	//Tunnels
-	gameState->SpawnStaticObject(8, 0, 0, 190, 0, 180, 0);
+	gameState->SpawnStaticObject(8, 0, 0, 190, 0, 0, 0);
 	gameState->SpawnStaticObject(8, 100, 0, -180, 0, 0, 0);
 
 	//Buildings & Ruined Buildings
@@ -306,10 +306,10 @@ void Program::setupWindow() {
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
 	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-	int width = mode->width;//1280; //640
-	int height = mode->height;//960; //480
-	//int width = 640;
-	//int height = 480;
+	//int width = mode->width;//1280; //640
+	//int height = mode->height;//960; //480
+	int width = 640;
+	int height = 480;
 	this->win_height = height;
 	this->win_width = width;
 

@@ -413,7 +413,7 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse,
 	float damage = totalForce / damageScaling;
 	std::cout << "causeing: " << damage << " base damage (if less than 5, no damage dealt)" << std::endl;
 
-	bool playerImpact = false;
+	int playerImpact = 0;
 
 	//Inflict damage
 	//If both vehicles align meaning a rear end
@@ -426,14 +426,14 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse,
 
 				//Check if player for HUD text
 				if (entity1->gameStateIndex == playerVehicle.gameStateIndex)
-					playerImpact = true;
+					playerImpact = 1;
 			}
 			else {
 				entity1->health -= damage * entity2->damageMultiplier;
 
 				//Check if player for HUD text
 				if (entity2->gameStateIndex == playerVehicle.gameStateIndex)
-					playerImpact = true;
+					playerImpact = 2;
 			}
 		}
 
@@ -451,11 +451,11 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse,
 
 			//Check if player for HUD text
 			if (entity1->gameStateIndex == playerVehicle.gameStateIndex)
-				playerImpact = true;
+				playerImpact = 1;
 
 			//Check if player for HUD text
 			else if (entity2->gameStateIndex == playerVehicle.gameStateIndex)
-				playerImpact = true;
+				playerImpact = 2;
 		}
 		if (hapticFeedback && updateHapticWheelState) {
 			LogiPlayFrontalCollisionForce(0, damage * 8);
@@ -469,7 +469,7 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse,
 			entity2->health -= damage * entity1->damageMultiplier;
 			//Check if player for HUD text
 			if (entity1->gameStateIndex == playerVehicle.gameStateIndex)
-				playerImpact = true;
+				playerImpact = 1;
 		}
 
 		//if (abs(entity2AttackLevel) >= attackLevelThreshold&& damage > 5.0f)
@@ -477,7 +477,7 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse,
 			entity1->health -= damage * entity2->damageMultiplier;
 			//Check if player for HUD text
 			if (entity2->gameStateIndex == playerVehicle.gameStateIndex)
-				playerImpact = true;
+				playerImpact = 2;
 		}
 
 		if (hapticFeedback && updateHapticWheelState) {
@@ -487,8 +487,14 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse,
 	entity1->health += entity1->armor;
 	entity2->health += entity2->armor;
 
-	if (playerImpact) {
-		this->damage = int(damage*playerVehicle.damageMultiplier);
+	if (playerImpact == 1) {
+		this->damage = int(damage*entity1->damageMultiplier);
+		damageText = true;
+		damageTextTime = 2 * 60;
+	}
+
+	else if (playerImpact == 2) {
+		this->damage = int(damage*entity2->damageMultiplier);
 		damageText = true;
 		damageTextTime = 2 * 60;
 	}

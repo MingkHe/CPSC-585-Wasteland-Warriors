@@ -840,7 +840,7 @@ glm::vec3 Physics_Controller::cameraWallCollision(glm::vec3 cameraPosition) {
 	float playerLength = glm::length(cameraPosition - playerPosition);
 	float wallLength = glm::length(pos - playerPosition);
 
-	std::cout << "Wall distance: " << wallLength << "     camera distance: " << playerLength << std::endl;
+	//std::cout << "Wall distance: " << wallLength << "     camera distance: " << playerLength << std::endl;
 
 	//If wall collision comes before camera location
 	if (glm::length(pos - playerPosition) < glm::length(cameraPosition - playerPosition) && (pos.x + pos.y + pos.z) > 0.1) {
@@ -909,7 +909,8 @@ void Physics_Controller::stepPhysics(bool interactive)
 						if ((rand() % 100) < 50)
 							shift = -shift;
 
-						setPosition(enemy.physicsIndex, glm::vec3(enemy.position.x, enemy.position.y, enemy.position.z) + glm::vec3(shift, 0.0f, 0.0f));
+						//setPosition(enemy.physicsIndex, glm::vec3(enemy.position.x, enemy.position.y, enemy.position.z) + glm::vec3(shift, 0.0f, 0.0f));
+						//gameState->Enemies[gameStateIndex].forceRelocate = false;
 					}
 				}
 

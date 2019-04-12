@@ -44,8 +44,8 @@ int AI_Interaction::Update()
 			if ((enemy->destination.x == 0 && enemy->destination.y == 0) ||
 				distFromDest < triggerRadious)
 			{
-				int levelLength = 300;
-				int levelWidth = 300;
+				int levelLength = 280;
+				int levelWidth = 280;
 				//Enemy has arived at destination, new destination created
 				enemy->destination = glm::vec2((rand()% levelLength)-(levelLength/2), (rand()% levelWidth)-(levelWidth/2));
 				//std::cout << "Destination reached, new destination: (" << enemy->destination.x << "," << enemy->destination.y << ")" << std::endl;

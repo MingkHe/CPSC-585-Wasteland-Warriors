@@ -211,7 +211,7 @@ public:
 		{"Objects/Buildings/Gas Station.obj"},
 		{"Objects/explosionSphere.obj"},  //Explosion Sphere
 		{"Objects/mainRoad.obj"},
-		{"Objects/mainRailroad.obj"}
+		{"Objects/mainRailroadOptimized.obj"}
 	};
 
 	std::vector<const char*> staticObjTextureList[14] = {
@@ -275,7 +275,7 @@ public:
 
 	int mapMeshTextureIndices[1];
 	std::vector<const char*> mapMeshList[1] = {
-	{"Objects/WorldMapV4.obj"} };
+	{"Objects/WorldMapV5Optimized.obj"} };
 
 	std::vector<const char*> mapTextureList[1] = {
 	{"Textures/black_wall.jpg", "Objects/Tunnel/tunnelWall.jpg","Objects/Tunnel/tunnelWall.jpg","Textures/atlas.png", "Objects/Tunnel/tunnelWall.jpg",  "Objects/Tunnel/tunnelWall.jpg", "Textures/sandTexture.jpg"  } };

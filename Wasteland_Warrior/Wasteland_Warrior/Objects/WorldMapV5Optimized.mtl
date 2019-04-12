@@ -1,0 +1,79 @@
+# Blender MTL File: 'WorldMapV4.blend'
+# Material Count: 7
+
+newmtl Atlas.002
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.647059 0.617528 0.218858
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd null
+
+newmtl Concrit.001
+Ns 11.764706
+Ka 0.500000 0.500000 0.500000
+Kd 0.800000 0.800000 0.800000
+Ks 0.250000 0.250000 0.250000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 3
+map_Kd Tunnel\tunnelWall.jpg
+
+newmtl Concrit.003
+Ns 11.764706
+Ka 0.500000 0.500000 0.500000
+Kd 0.800000 0.800000 0.800000
+Ks 0.250000 0.250000 0.250000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 3
+map_Kd Tunnel\tunnelWall.jpg
+
+newmtl Material.002
+Ns 94.117647
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Bryson\Documents\GitHub\CPSC-585-Wasteland-Warriors\Wasteland_Warrior\Wasteland_Warrior\Textures\sandTexture.jpg
+
+newmtl Material.004
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\\Users\\Bryson\\Documents\\GitHub\\CPSC-585-Wasteland-Warriors\\Wasteland_Warrior\\Wasteland_Warrior\\Textures\\black_wall.jpg
+
+newmtl concrete_wal_lold.001
+Ns 11.764706
+Ka 0.500000 0.500000 0.500000
+Kd 0.800000 0.800000 0.800000
+Ks 0.250000 0.250000 0.250000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Tunnel\tunnelWall.jpg
+
+newmtl concrete_wal_lold.003
+Ns 11.764706
+Ka 0.500000 0.500000 0.500000
+Kd 0.800000 0.800000 0.800000
+Ks 0.250000 0.250000 0.250000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Tunnel\tunnelWall.jpg

@@ -582,7 +582,7 @@ void Gamestate::Collision(Vehicle* vehicle, Object* staticObject, glm::vec3 impu
 		float damageScaling = 700;		//Smaller number means more damage
 		
 		float damage = totalForce / damageScaling;
-		LogiPlayFrontalCollisionForce(0, (int)(damage * 32 + damage*100* hapticsOffsetAdjustCoeff));
+		LogiPlayFrontalCollisionForce(0, (int)(damage * 32 + damage*200* hapticsOffsetAdjustCoeff));
 	}
 }
 

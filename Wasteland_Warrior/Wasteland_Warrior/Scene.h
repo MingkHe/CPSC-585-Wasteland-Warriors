@@ -51,6 +51,13 @@ public:
 	int playerWheelIndices[4];
 
 	int loadCompObjectInstance(int compObjIndex);
+
+	glm::mat4 identityMatrix = glm::mat4(
+		1.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		0.0f, 0.0f, 0.0f, 1.0f
+	);
 private:
 
 	/*CompositeWorldObject createObjectInstance(const char* textureFilepath, CompositeWorldObject OBJobjectComp,

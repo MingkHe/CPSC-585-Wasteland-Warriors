@@ -408,18 +408,24 @@ void Scene::displayScene() {
 	//Update Player Position
 	int vehicleIndex = gameState->playerVehicle.sceneObjectIndex;
 	glm::mat4 newTransform = gameState->getEntityTransformation(vehicleIndex);
+	glm::mat4 justRotation = newTransform;
+	justRotation[3] = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+	glm::mat4 justTransform = identityMatrix;
+	justTransform[3] = newTransform[3];
 	//int s = 0;//-----------------------------------------
 	for (int s = 0; s < allWorldCompObjects[vehicleIndex].subObjectsCount; s++) {
 		
 		/*if (s == playerWheelIndices[0] || s == playerWheelIndices[1]) {
-
-				allWorldCompObjects[vehicleIndex].subObjects[s].transform = newTransform * gameState->getRotationMatrix(0,(float)gameState->playerVehicle.wheelAngle, 0);
+			justTransform[3] = newTransform[3] - glm::vec4(allWorldCompObjects[vehicleIndex].subObjects[s].center,0);
+			allWorldCompObjects[vehicleIndex].subObjects[s].transform = justTransform * gameState->getRotationMatrix(0, (float)gameState->playerVehicle.wheelAngle, 0)* justRotation;
 		}
 		else if (s == playerWheelIndices[2] || s == playerWheelIndices[3]) {
-				allWorldCompObjects[vehicleIndex].subObjects[s].transform = newTransform * gameState->getRotationMatrix(0,(float)gameState->playerVehicle.wheelAngle, 0);
+				justTransform[3] = newTransform[3] - glm::vec4(allWorldCompObjects[vehicleIndex].subObjects[s].center, 0);
+				allWorldCompObjects[vehicleIndex].subObjects[s].transform = justTransform * gameState->getRotationMatrix(0, (float)gameState->playerVehicle.wheelAngle, 0) *justRotation;
 		}
 		else{*/
-		allWorldCompObjects[vehicleIndex].subObjects[s].transform = newTransform;
+		//std::cout << justTransform[3].x << " " << justTransform[3].y << " " << justTransform[3].z << std::endl;
+		allWorldCompObjects[vehicleIndex].subObjects[s].transform = newTransform;                         
 		//}
 
 	}

@@ -177,6 +177,11 @@ public:
 	int mainRoadIndex;
 	int mainRailroadIndex;
 
+	bool hapticStartShooting = false;
+	float hapticWheelOffset = 0;
+	float hapticsOffsetAdjustCoeff;
+	bool hapticInExplosion = false;
+
 	CompositeWorldObject mainRoad;
 	CompositeWorldObject mainRailroad;
 	Geometry explosion;
@@ -353,7 +358,7 @@ public:
 	void DespawnPowerUp(PowerUp* powerUp);
 
 	void Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse, bool hapticFeedback);
-	void Collision(Vehicle* vehicle, PowerUp* powerUp);
+	void Collision(Vehicle* vehicle, PowerUp* powerUp, bool hapticPowerUpCollision);
 	void Collision(Vehicle* vehicle, Object* staticObject, glm::vec3 impulse, bool hapticFeedback);
 
 	glm::mat4 getRotationMatrix(float xRot, float yRot, float zRot);

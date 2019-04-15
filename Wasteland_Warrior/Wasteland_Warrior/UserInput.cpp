@@ -419,9 +419,11 @@ void UserInput::gamepad(int controller, Gamestate* gameState) {
 				view = true;
 			};
 			if (GLFW_PRESS == buttons[6]) {
+				std::cout << "6" << std::endl;
 				UserInput::inputBuffer.push("OPTION");
 			};
 			if (GLFW_PRESS == buttons[7]) {
+				std::cout << "7" << std::endl;
 				UserInput::inputBuffer.push("MENU");
 			};
 			if (GLFW_PRESS == buttons[8]) {
@@ -471,12 +473,20 @@ void UserInput::gamepad(int controller, Gamestate* gameState) {
 		gameState->leftTrigger = -axes[2]; // Braking
 		gameState->rightStickX = -axes[3];  //Clutch
 
+		gameState->hapticWheelOffset = gameState->leftStickX;
 		//Haptic Wheel buttons
 		int buttonCount; //22
 		const unsigned char *buttons = glfwGetJoystickButtons(GLFW_JOYSTICK_1, &buttonCount);
 		//std::cout << buttonCount << std::endl;
 		if (GLFW_PRESS == buttons[0]) {
-			UserInput::inputBuffer.push("A");
+			std::cout << "Hello" << std::endl;
+			if (select == true) {
+				UserInput::inputBuffer.push("A");
+			}
+			select = false;
+		};
+		if (GLFW_RELEASE == buttons[0]) {
+			select = true;
 		};
 		if (GLFW_PRESS == buttons[4]) {
 			UserInput::inputBuffer.push("B");
@@ -490,31 +500,38 @@ void UserInput::gamepad(int controller, Gamestate* gameState) {
 		if (GLFW_RELEASE == buttons[8]) {
 			vehicleReset = true;
 		};
-		if (GLFW_PRESS == buttons[3]) {
+		if (GLFW_PRESS == buttons[5]) {
 			UserInput::inputBuffer.push("X");
 		};
-		if (GLFW_PRESS == buttons[5]) {
-			UserInput::inputBuffer.push("REVERSE");
-		};
 		if (GLFW_PRESS == buttons[9]) {
+			//if (reverseCameraOn == true) {
+			UserInput::inputBuffer.push("REVERSE");
+			//}
+			//reverseCameraOn = false;
+		//};
+		//if (GLFW_RELEASE == buttons[9]) {
+			//reverseCameraOn = true;
+		//};
+		};
+		if (GLFW_PRESS == buttons[7]) {
 			if (view == true) {
 				UserInput::inputBuffer.push("VIEW");
 			}
 			view = false;
 		};
-		if (GLFW_RELEASE == buttons[9]) {
+		if (GLFW_RELEASE == buttons[7]) {
 			view = true;
 		};
 		if (GLFW_PRESS == buttons[6]) {
-			UserInput::inputBuffer.push("OPTION");
+			UserInput::inputBuffer.push("MENU");
 		};
 		if (GLFW_PRESS == buttons[10]) {
-			UserInput::inputBuffer.push("MENU");
+			UserInput::inputBuffer.push("OPTION");
 		};
 		if (GLFW_PRESS == buttons[1]) {
 			UserInput::inputBuffer.push("LS");
 		};
-		if (GLFW_PRESS == buttons[9]) {
+		if (GLFW_PRESS == buttons[2]) {
 			UserInput::inputBuffer.push("RS");
 		};
 

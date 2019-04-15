@@ -6,6 +6,8 @@
 *      Author: John Hall
 */
 #define PI_F 3.14159265359f
+#pragma comment(lib, "LogitechSteeringWheelLib.lib")
+#include "LogitechSteeringWheelLib.h"
 #include "RenderingEngine.h"
 #include <iostream>
 #include <algorithm>
@@ -334,23 +336,6 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 			glDrawArrays(objects[i].subObjects[s].drawMode, 0, objects[i].subObjects[s].verts.size());
 		}
 	}
-	//Renders explosions
-	int explosion_life = 150;
-	for (int i = 0; i < (int)game_state->explosions.size(); i++) {
-		if (++game_state->explosions[i].life > explosion_life) {
-			game_state->explosions.erase(game_state->explosions.begin() + i);
-			i--;
-			continue;
-		}
-		float scale = .0625f;
-		glm::mat4 transform = glm::mat4(
-			scale*game_state->explosions[i].life, 0.f, 0.f, 0.f,
-			0.f, scale*game_state->explosions[i].life, 0.f, 0.f,
-			0.f, 0.f, scale*game_state->explosions[i].life, 0.f,
-			game_state->explosions[i].position.x, game_state->explosions[i].position.y, game_state->explosions[i].position.z, 1.f
-		);
-		RenderNonPhysicsObject(game_state->explosion, transform,transformGL, transparent, 1.f - ((float)game_state->explosions[i].life / (float)explosion_life));
-	}
 	//Renders road
 	for (int l = 0; l < (int)game_state->mainRoad.subObjects.size(); l++) {
 		RenderNonPhysicsObject(game_state->mainRoad.subObjects[l], identityTransform, transformGL, transparent, 1.0f);
@@ -360,6 +345,32 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 	for (int k = 0; k < game_state->mainRailroad.subObjects.size(); k++) {
 		RenderNonPhysicsObject(game_state->mainRailroad.subObjects[k], identityTransform, transformGL, transparent, 1.0f);
 	}
+	glm::vec3 playerPosition = game_state->playerVehicle.position;
+	glm::vec3 exploToPlayer;
+	//Renders explosions
+	int explosion_life = 150;
+	for (int i = 0; i < (int)game_state->explosions.size(); i++) {
+		if (++game_state->explosions[i].life > explosion_life) {
+			game_state->explosions.erase(game_state->explosions.begin() + i);
+			i--;
+			LogiStopBumpyRoadEffect(0);
+			continue;
+		}
+		float scale = .0625f;
+		glm::mat4 transform = glm::mat4(
+			scale*game_state->explosions[i].life, 0.f, 0.f, 0.f,
+			0.f, scale*game_state->explosions[i].life, 0.f, 0.f,
+			0.f, 0.f, scale*game_state->explosions[i].life, 0.f,
+			game_state->explosions[i].position.x, game_state->explosions[i].position.y, game_state->explosions[i].position.z, 1.f
+		);
+		exploToPlayer = playerPosition - game_state->explosions[i].position;
+		if ((length(exploToPlayer) <= (scale * game_state->explosions[i].life+3))) {
+			LogiPlayBumpyRoadEffect(0, (int)((100 * (explosion_life - game_state->explosions[i].life)) + (60 * game_state->hapticsOffsetAdjustCoeff)));
+			//LogiPlayFrontalCollisionForce(0, (int)((100*(explosion_life - game_state->explosions[i].life))+ (60 * game_state->hapticsOffsetAdjustCoeff)));
+		}
+		RenderNonPhysicsObject(game_state->explosion, transform,transformGL, transparent, 1.f - ((float)game_state->explosions[i].life / (float)explosion_life));
+	}
+
 
 	//draw rear view
 	glBindFramebuffer(GL_FRAMEBUFFER, rear_view.id);
@@ -394,6 +405,16 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 		// reset state to default (no shader or geometry bound)
 	}
 
+	//Renders road
+//std::cout << game_state->mainRoad.subObjects.size() << std::endl;
+	for (int l = 0; l < (int)game_state->mainRoad.subObjects.size(); l++) {
+		//std::cout << "Hello" << std::endl;
+		RenderNonPhysicsObject(game_state->mainRoad.subObjects[l], identityTransform, transformGL, transparent, 1.0f);
+	}
+	for (int k = 0; k < game_state->mainRailroad.subObjects.size(); k++) {
+		RenderNonPhysicsObject(game_state->mainRailroad.subObjects[k], identityTransform, transformGL, transparent, 1.0f);
+	}
+
 	for (int i = 0; i < (int)game_state->explosions.size(); i++) {
 		if (++game_state->explosions[i].life > explosion_life) {
 			game_state->explosions.erase(game_state->explosions.begin() + i);
@@ -409,15 +430,7 @@ void RenderingEngine::RenderScene(const std::vector<CompositeWorldObject>& objec
 		);
 		RenderNonPhysicsObject(game_state->explosion, transform, transformGL, transparent, 1.f - ((float)game_state->explosions[i].life / (float)explosion_life));
 	}
-	//Renders road
-	//std::cout << game_state->mainRoad.subObjects.size() << std::endl;
-	for (int l = 0; l < (int)game_state->mainRoad.subObjects.size(); l++) {
-		//std::cout << "Hello" << std::endl;
-		RenderNonPhysicsObject(game_state->mainRoad.subObjects[l], identityTransform, transformGL, transparent, 1.0f);
-	}
-	for (int k = 0; k < game_state->mainRailroad.subObjects.size(); k++) {
-		RenderNonPhysicsObject(game_state->mainRailroad.subObjects[k], identityTransform, transformGL, transparent, 1.0f);
-	}
+
 
 	glBindVertexArray(0);
 
@@ -839,7 +852,7 @@ void RenderingEngine::updateText() {
 		}
 		else {
 			if (game_state->breakSeconds == 0) {
-				if (game_state->gameMode == "End Game") {
+				if (game_state->gameMode == "End of Game") {
 					pushTextObj(texObjects, "Escape to survive!", 0.01f*game_state->window_width, 0.95f*game_state->window_height, scale * 0.75f, glm::vec3(0.7f, 0.2f, 0.2f), false);
 				}
 				else {
@@ -893,22 +906,22 @@ void RenderingEngine::updateText() {
 			}
 			if (game_state->modeText) {
 				if (game_state->gameMode == "Checkpoint") {
-					pushTextObj(texObjects, "Collect all checkpoints", 0.5f*game_state->window_width, 0.7f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
+					pushTextObj(texObjects, "Collect all the checkpoints", 0.5f*game_state->window_width, 0.7f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
 				}
 				else if (game_state->gameMode == "Head Hunter") {
-					pushTextObj(texObjects, "Defeat escaping enemy ", 0.5f*game_state->window_width, 0.7f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
+					pushTextObj(texObjects, "Defeat the escaping enemy ", 0.5f*game_state->window_width, 0.7f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
 				}
 				else if (game_state->gameMode == "Boss Battle") {
-					pushTextObj(texObjects, "Defeat boss", 0.5f*game_state->window_width, 0.7f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
+					pushTextObj(texObjects, "Defeat the boss", 0.5f*game_state->window_width, 0.7f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
 				}
 				else if (game_state->gameMode == "Payload") {
-					pushTextObj(texObjects, "Collect and deliver payload", 0.5f*game_state->window_width, 0.7f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
+					pushTextObj(texObjects, "Collect and deliver the payload", 0.5f*game_state->window_width, 0.7f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
 				}
 				else if (game_state->gameMode == "Survival") {
-					pushTextObj(texObjects, "Defeat all enemies", 0.5f*game_state->window_width, 0.7f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
+					pushTextObj(texObjects, "Defeat all the enemies", 0.5f*game_state->window_width, 0.7f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
 				}
 				else if (game_state->gameMode == "End Game") {
-					pushTextObj(texObjects, "Collect dynamite and blow up truck to escape", 0.5f*game_state->window_width, 0.7f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
+					pushTextObj(texObjects, "Collect the dynamite and blow up the truck to escape", 0.5f*game_state->window_width, 0.7f*game_state->window_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
 				}
 			}
 
@@ -917,7 +930,7 @@ void RenderingEngine::updateText() {
 					pushTextObj(texObjects, "Damage dealt: "+std::to_string(game_state->damage), 0.5f*game_state->monitor_width, 0.6f*game_state->monitor_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
 				}
 				else {
-					pushTextObj(texObjects, "To Slow!", 0.5f*game_state->monitor_width, 0.6f*game_state->monitor_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
+					pushTextObj(texObjects, "Too Slow!", 0.5f*game_state->monitor_width, 0.6f*game_state->monitor_height, scale, glm::vec3(0.7f, 0.2f, 0.2f), true);
 				}
 				
 			}
@@ -926,7 +939,7 @@ void RenderingEngine::updateText() {
 
 	if (game_state->UIMode == "Win") {
 		pushTextObj(texObjects, "Your score was: " + std::to_string(game_state->score), 0.38f*game_state->window_width, 0.52f*game_state->window_height, scale, glm::vec3(255, 140, 0)/glm::vec3(255,255,255), false);
-		pushTextObj(texObjects, "You survived in: " + std::to_string(game_state->scoreTime) + " seconds", 0.32f*game_state->window_width, 0.45f*game_state->window_height, scale, glm::vec3(255, 140, 0) / glm::vec3(255, 255, 255), false);
+		pushTextObj(texObjects, "You survived: " + std::to_string(game_state->scoreTime) + " seconds", 0.32f*game_state->window_width, 0.45f*game_state->window_height, scale, glm::vec3(255, 140, 0) / glm::vec3(255, 255, 255), false);
 	}
 
 	if (game_state->UIMode == "Lose") {

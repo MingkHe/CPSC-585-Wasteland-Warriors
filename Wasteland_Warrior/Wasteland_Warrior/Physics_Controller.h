@@ -32,6 +32,9 @@ public:
 	int createPlayerVehicle();
 
 	bool rayCast(glm::vec3 &pos);
+	bool hapticCheckOnGround();
+	bool hapticCheckRailroad(bool front);
+	float hapticConstantForce;
 
 	ContactReportCallback gContactReportCallback;
 
@@ -43,6 +46,8 @@ public:
 	bool clutchStillDown = false;
 	bool powerupGrabbed = false;
 	bool checkpointGrabbed = false;
+
+	bool hapticPowerUpCollision = false;
 
 	glm::vec3 cameraWallCollision(glm::vec3 cameraPosition);
 };

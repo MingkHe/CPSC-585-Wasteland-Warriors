@@ -67,10 +67,14 @@ bool					changeToForwardGear = false;
 
 bool	hapticYesInAir = false;
 bool	hapticInAirOn = false;
+bool    hapticOnRailroad = false;
 float	hapticVehicleForwardVelocity = 0;
 float	hapticVehicleSideVelocity = 0;
 float	hapticNetForceOnWheel = 0;
 bool	hapticCollisionWithPlayer = false;
+bool    hapticRailroadSurfaceOn = false;
+int     hapticRailroadSurfaceLoopCount = 0;
+bool	hapticIsShooting = false;
 
 
 
@@ -799,7 +803,7 @@ void Physics_Controller::userDriveInput(bool WKey, bool AKey, bool SKey, bool DK
 		}
 		gVehicleInputData.setAnalogAccel((rightTrigger + 1) / 2);
 		gVehicleInputData.setAnalogSteer(-leftStickX);
-		gVehicleInputData.setAnalogBrake((leftTrigger + 1) / 2);
+		//gVehicleInputData.setAnalogBrake((leftTrigger + 1) / 2);
 		if (leftTrigger < 0.99) {
 			gVehicleInputData.setAnalogBrake((leftTrigger + 1) / 2);
 		}
@@ -850,18 +854,124 @@ glm::vec3 Physics_Controller::cameraWallCollision(glm::vec3 cameraPosition) {
 	return cameraPosition;
 }
 
+bool Physics_Controller::hapticCheckOnGround() {
+	glm::vec3 playerPosition = gameState->playerVehicle.position;
+	//playerPosition = glm::normalize(playerPosition);
+	PxVec3 unitDir = PxVec3(gameState->playerVehicle.direction.x, gameState->playerVehicle.direction.y, gameState->playerVehicle.direction.z);
+	unitDir.normalize();
+	glm::mat4 vehicleTransform = gameState->getEntityTransformation(gameState->playerVehicle.sceneObjectIndex);
+	glm::vec4 whatsDown = { 0,-1,0,0 };
+	whatsDown = vehicleTransform * whatsDown;
+	PxVec3 downUnit = PxVec3(whatsDown.x, whatsDown.y, whatsDown.z);
+	downUnit.normalize();
+	PxVec3 origin = PxVec3(playerPosition.x + (unitDir.x*2.7f) - downUnit.x*2, playerPosition.y + (unitDir.y*2.7f) - downUnit.y * 2, playerPosition.z + (unitDir.z*2.7f) - downUnit.z * 2);                 // [in] Ray origin
+	glm::vec3 origin3 = glm::vec3(origin.x, origin.y, origin.z);
+	PxReal maxDistance = 50;            // [in] Raycast max distance
+	PxRaycastBuffer hit;                 // [out] Raycast results
+
+
+	bool status = gScene->raycast(origin, downUnit, maxDistance, hit);
+	glm::vec3 hitPosition = glm::vec3(hit.block.position.x, hit.block.position.y, hit.block.position.z);
+	glm::vec3 positionDiff = origin3 - hitPosition;
+
+	float distanceToGround = length(positionDiff);
+	if (distanceToGround >= 4.0f) {
+		return false;
+	}
+	PxVec3 worldUp = PxVec3(0, 1, 0);
+	if (abs(downUnit.dot(worldUp)) < 0.1f) {
+		std::cout << downUnit.dot(worldUp) << std::endl;
+		return false;
+	}
+	return true;
+}
+
+bool Physics_Controller::hapticCheckRailroad(bool front) {
+	glm::vec3 playerPosition = gameState->playerVehicle.position;
+	//playerPosition = glm::normalize(playerPosition);
+	PxVec3 unitDir = PxVec3(gameState->playerVehicle.direction.x, gameState->playerVehicle.direction.y, gameState->playerVehicle.direction.z);
+	unitDir.normalize();
+	glm::vec3 unitDirect = glm::vec3(unitDir.x, unitDir.y, unitDir.z);
+	glm::mat4 vehicleTransform = gameState->getEntityTransformation(gameState->playerVehicle.sceneObjectIndex);
+	glm::vec4 whatsDown = { 0,-1,0,0 };
+	whatsDown = vehicleTransform * whatsDown;
+	PxVec3 downUnit = PxVec3(whatsDown.x, whatsDown.y, whatsDown.z);
+	downUnit.normalize();
+	PxVec3 origin;
+	if (front) {
+		origin = PxVec3(playerPosition.x + (unitDir.x*2.7f) - downUnit.x * 2, playerPosition.y + (unitDir.y*2.7f) - downUnit.y * 2, playerPosition.z + (unitDir.z*2.7f) - downUnit.z * 2);
+	}
+	else {
+		origin = PxVec3(playerPosition.x - (unitDir.x*2.7f) - downUnit.x * 2, playerPosition.y - (unitDir.y*2.7f) - downUnit.y * 2, playerPosition.z - (unitDir.z*2.7f) - downUnit.z * 2);
+	}
+	                // [in] Ray origin
+	glm::vec3 origin3 = glm::vec3(origin.x, origin.y, origin.z);
+	PxReal maxDistance = 10;            // [in] Raycast max distance
+	PxRaycastBuffer hit;                 // [out] Raycast results
+	bool status = gScene->raycast(origin, downUnit, maxDistance, hit);
+	glm::vec3 hitPosition = glm::vec3(hit.block.position.x, hit.block.position.y, hit.block.position.z);
+	//std::cout << hitPosition.x << " " << hitPosition.z << std::endl;
+	glm::vec3 positionDiff = origin3 - hitPosition;
+
+	float distanceToGround = length(positionDiff);
+	if (distanceToGround < 4.0f && (abs(unitDir.x) < 0.90) && abs(hapticVehicleForwardVelocity) > 1.0f) {
+		if (front) {
+			glm::vec3 hitPosAdj = hitPosition - 1.2f * unitDirect;
+			if ((hitPosAdj.z > 72.55f && hitPosAdj.z < 72.75f) || (hitPosAdj.z > 74.25f && hitPosAdj.z < 74.45f)) {
+				return true;
+			}
+		}
+		else {
+			glm::vec3 hitPosAdj = hitPosition + 1.2f * unitDirect;
+			if ((hitPosAdj.z > 72.55f && hitPosAdj.z < 72.75f) || (hitPosAdj.z > 74.25f && hitPosAdj.z < 74.45f)) {
+				return true;
+			}
+		}
+
+	}
+	else if ((distanceToGround < 4.0f && abs(unitDir.x) >= 0.90) && (hitPosition.z > 71.45f && hitPosition.z < 75.55f) && abs(hapticVehicleForwardVelocity) > 1.0f) {
+		if (front) {
+			glm::vec3 hitPosAdj = hitPosition - 1.2f * unitDirect;
+			float tracks = hitPosAdj.x - floor(hitPosAdj.x);
+			if  (tracks > 0.4f && tracks < 0.6f) {
+				if (gameState->updateHapticWheelState) {
+					LogiPlayFrontalCollisionForce(0, 15 + 30 * gameState->hapticsOffsetAdjustCoeff);
+				}
+			}
+		}
+		else {
+			glm::vec3 hitPosAdj = hitPosition + 1.2f * unitDirect;
+			float tracks = hitPosAdj.x - floor(hitPosAdj.x);
+			if (tracks > 0.4f && tracks < 0.6f) {
+				if (gameState->updateHapticWheelState) {
+					LogiPlayFrontalCollisionForce(0, 15 + 30 * gameState->hapticsOffsetAdjustCoeff);
+				}
+			}
+		}
+
+
+	}
+	else {
+		hapticRailroadSurfaceOn = false;
+		hapticRailroadSurfaceLoopCount = 0;
+	}
+	return false;
+}
 
 
 void Physics_Controller::stepPhysics(bool interactive)
 {
+	hapticConstantForce = 0;
+	float wheelOffsetAdjustCoeff = gameState->hapticWheelOffset*gameState->hapticWheelOffset;
+	gameState->hapticsOffsetAdjustCoeff = wheelOffsetAdjustCoeff;
 	//Get set of rigid dynamic actors
 	PxU32 numOfRidg = gScene->getNbActors(PxActorTypeFlag::eRIGID_DYNAMIC);
-	PxActor *userBufferRD[10000];
+	PxActor *userBufferRD[100];
 	PxU32 numOfRidgDynamicActors = gScene->getActors(PxActorTypeFlag::eRIGID_DYNAMIC, userBufferRD, numOfRidg, 0);
 
 	//Get set of rigid static actors
 	PxU32 numOfStat = gScene->getNbActors(PxActorTypeFlag::eRIGID_STATIC);
-	PxActor *userBufferRS[10000];
+	PxActor *userBufferRS[200];
 	PxU32 numOfRidgStaticActors = gScene->getActors(PxActorTypeFlag::eRIGID_STATIC, userBufferRS, numOfStat, 0);
 
 
@@ -870,36 +980,79 @@ void Physics_Controller::stepPhysics(bool interactive)
 
 	//Update the control inputs for the vehicle.
 	userDriveInput(gameState->WKey, gameState->AKey, gameState->SKey, gameState->DKey, gameState->Handbrake, true, gameState->leftStickX, gameState->leftTrigger, gameState->rightTrigger, gameState->rightStickX);
-	//userDriveInput(gameState->WKey, gameState->AKey, gameState->SKey, gameState->DKey, gameState->Handbrake, true, gameState->leftStickX, gameState->leftTrigger, gameState->rightTrigger);
 	
+	//userDriveInput(gameState->WKey, gameState->AKey, gameState->SKey, gameState->DKey, gameState->Handbrake, true, gameState->leftStickX, gameState->leftTrigger, gameState->rightTrigger);
 
+	//Check to release driving haptics if car wheels off ground
+	hapticYesInAir = !hapticCheckOnGround();
+	if (hapticYesInAir && gameState->updateHapticWheelState && !hapticInAirOn) {
+		LogiPlayCarAirborne(0);
+		//LogiStopBumpyRoadEffect(0);
+		hapticInAirOn = true;
+	}
+	else if(!hapticYesInAir && gameState->updateHapticWheelState && hapticInAirOn){
+		LogiStopCarAirborne(0);
+		hapticInAirOn = false;
+	}
+
+	//Check if car on railroad
+	hapticOnRailroad = hapticCheckRailroad(true); //Check front wheels
+	if (!hapticOnRailroad) {
+		hapticOnRailroad = hapticCheckRailroad(false); //Check back wheels
+	}
+
+	if (hapticOnRailroad) {
+		LogiPlayFrontalCollisionForce(0,50+100* wheelOffsetAdjustCoeff);
+	}
+
+	/*if (gameState->hapticStartShooting && !hapticIsShooting) {
+		hapticIsShooting = true;
+	}*/
+	if (gameState->hapticStartShooting) {
+		hapticIsShooting = true;
+		LogiPlayBumpyRoadEffect(0, 25+(150* wheelOffsetAdjustCoeff));
+	}
+	if (!gameState->hapticStartShooting) {
+		LogiStopBumpyRoadEffect(0);
+		hapticIsShooting = false;
+	}
+	
+	//LogiPlayConstantForce(0, hapticConstantForce);
 	//Update each vehicles drive direction based on input values
 	for (int i = 0; i < (int)vehiclesVector.size(); i++) {
 		
 		PxActor *actor = vehiclesVector[i]->getRigidDynamicActor()->is<PxActor>();
 		
 		int gameStateIndex = -1;
-
-
+		bool isPlayer = false;
+		if (i == 0) {
+			isPlayer = true;
+		}
 		for (int index = 0; index <= rigidDynamicActorIndex; index++) {
 			if (actor == userBufferRD[index]) {
 				gameStateIndex = gameState->lookupGSIUsingPI(index);
 				break;
 			}
 		}
-		
-		if (gameStateIndex != -1) {		//If this is an AI, get its pathfinding computed input
-			glm::vec2 pathfindingInput = gameState->pathfindingInputs[gameStateIndex];
 
-			//std::cout << "Enemy active: " << gameState->Enemies[gameStateIndex].getActive() << std::endl;
+		
+
+		if (gameStateIndex != -1 && isPlayer == false) {		//If this is an AI, get its pathfinding computed input
+			glm::vec2 pathfindingInput = gameState->pathfindingInputs[gameStateIndex];
 
 			if (gameState->Enemies[gameStateIndex].getActive() == 1) {	//If the vehicle should move  
 
 				if (gameState->Enemies[gameStateIndex].CheckForStuck()) {		//If vehicle is stuck, go in reverse
 					vehiclesVector[i]->mDriveDynData.forceGearChange(PxVehicleGearsData::eREVERSE);
-
-					enemyInputData.setAnalogAccel(pathfindingInput[0]);			
-					enemyInputData.setAnalogSteer(-pathfindingInput[1]);
+					if ((pathfindingInput.x >= 0.0f) && (pathfindingInput.x <= 1.0f) && (pathfindingInput.y >= -1.0f) && (pathfindingInput.y <= 1.0f)) {
+						enemyInputData.setAnalogAccel(pathfindingInput.x);
+						enemyInputData.setAnalogSteer(-pathfindingInput.y);
+					}
+					else {
+						enemyInputData.setAnalogAccel(0.0f);
+						enemyInputData.setAnalogSteer(0.0f);
+					}
+					
 
 					if (gameState->Enemies[gameStateIndex].forceRelocate) {		//If vehicle has finished trying to get unstuck and is still not moving, relocate
 						EnemyUnit enemy = gameState->Enemies[gameStateIndex];
@@ -908,19 +1061,21 @@ void Physics_Controller::stepPhysics(bool interactive)
 						float shift = 0.2f;
 						if ((rand() % 100) < 50)
 							shift = -shift;
-
-						//setPosition(enemy.physicsIndex, glm::vec3(enemy.position.x, enemy.position.y, enemy.position.z) + glm::vec3(shift, 0.0f, 0.0f));
-						//gameState->Enemies[gameStateIndex].forceRelocate = false;
 					}
 				}
 
 				else {															//Else drive as normal
 					vehiclesVector[i]->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
 					vehiclesVector[i]->mDriveDynData.setUseAutoGears(true);
-					enemyInputData.setAnalogAccel(pathfindingInput[0]);			
-					enemyInputData.setAnalogSteer(pathfindingInput[1]);
+					if ((pathfindingInput.x >= 0.0f) && (pathfindingInput.x <= 1.0f) && (pathfindingInput.y >= -1.0f) && (pathfindingInput.y <= 1.0f)) {
+						enemyInputData.setAnalogAccel(pathfindingInput.x);
+						enemyInputData.setAnalogSteer(pathfindingInput.y);
+					}
+					else {
+						enemyInputData.setAnalogAccel(0.0f);
+						enemyInputData.setAnalogSteer(0.0f);
+					}
 				}
-
 				PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, enemySteerVsForwardSpeedTable, enemyInputData, timestep, gIsVehicleInAir, *vehiclesVector[i]);
 			}
 			else {
@@ -929,7 +1084,7 @@ void Physics_Controller::stepPhysics(bool interactive)
 				PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, enemySteerVsForwardSpeedTable, enemyInputData, timestep, gIsVehicleInAir, *vehiclesVector[i]);
 			}
 		}
-		else {							//If this is the player, record as normal
+		else if (isPlayer) {							//If this is the player, record as normal
 			PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, playerSteerVsForwardSpeedTable, gVehicleInputData, timestep, gIsVehicleInAir, *vehiclesVector[i]);
 
 			//PxWheelQueryResult wheelQueryResults[PX_MAX_NB_WHEELS];
@@ -939,8 +1094,18 @@ void Physics_Controller::stepPhysics(bool interactive)
 			hapticVehicleForwardVelocity = vehiclesVector[i]->computeForwardSpeed();
 			
 			//std::cout << 1+abs(100 - hapticVehicleForwardVelocity * 4) << std::endl;
-			LogiPlaySpringForce(0,0, (int)fmax(100, (int)(100 - hapticVehicleForwardVelocity * 4)), (int)fmax(5, (int)(100 - hapticVehicleForwardVelocity * 4)));
-			//LogiPlayConstantForce(0, hapticNetForceOnWheel);
+			LogiPlaySpringForce(0,0, (int)fmax(100, (int)(100 - hapticVehicleForwardVelocity * 3)), (int)fmax(5, (int)(100 - hapticVehicleForwardVelocity * 3)));
+			
+			/*int newForce = 0;
+			float wheelOffset = gameState->hapticWheelOffset;
+			if (wheelOffset >= 0) {
+				newForce = (int)(80* (wheelOffset*wheelOffset) + 20*((100 - hapticVehicleForwardVelocity * 4)/100));
+			}
+			else if(wheelOffset < 0) {
+				newForce = (int)(-80 * (wheelOffset*wheelOffset) - 20 * ((100 - hapticVehicleForwardVelocity * 4) / 100));
+			}
+			std::cout << newForce << std::endl;
+			LogiPlayConstantForce(0, newForce);*/
 			//LogiPlayConstantForce(0, );
 
 
@@ -956,25 +1121,16 @@ void Physics_Controller::stepPhysics(bool interactive)
 				LogiStopSurfaceEffect(0);
 			}*/
 			//LogiPlayDamperForce(0,30);
-			//Logitech Wheel Haptics
-			/*if (hapticYesInAir && gameState->updateHapticWheelState) {
-				if (!hapticInAirOn) {
-					std::cout << "a" << std::endl;
-					LogiPlayCarAirborne(0);
-					hapticInAirOn = true;
-				}
-			}
-			else if (!hapticYesInAir && gameState->updateHapticWheelState) {
-				if (hapticInAirOn) {
-					std::cout << "b" << std::endl;
-					LogiStopCarAirborne(0);
-					hapticInAirOn = false;
-				}
-				
-			}*/
+		}
+		else {
+			enemyInputData.setAnalogAccel(0.0f);
+			enemyInputData.setAnalogSteer(0.0f);
+			enemyInputData.setAnalogBrake(0.0f);
+			enemyInputData.setAnalogHandbrake(0.0f);
+			//PxVehicleDrive4WSmoothAnalogRawInputsAndSetAnalogInputs(gPadSmoothingData, enemySteerVsForwardSpeedTable, enemyInputData, timestep, gIsVehicleInAir, *vehiclesVector[i]);
 		}
 		
-
+		
 		//Raycasts.
 		PxVehicleWheels* vehicles[1] = { vehiclesVector[i] };
 		PxRaycastQueryResult* raycastResults = gVehicleSceneQueryData->getRaycastQueryResultBuffer(0);
@@ -1010,7 +1166,6 @@ void Physics_Controller::stepPhysics(bool interactive)
 	}
 
 
-
 	//Scene update.
 	gContactReportCallback.gContactPositions.clear();
 	gScene->simulate(timestep);
@@ -1031,12 +1186,14 @@ void Physics_Controller::stepPhysics(bool interactive)
 			if (gContactReportCallback.gContactActor1s[i] == actor) {
 				vehicle1 = gameState->lookupVUsingPI(index);
 				if (index == gameState->playerVehicle.physicsIndex) {
+					//std::cout << "Collision1" << std::endl;
 					hapticCollisionWithPlayer = true;
 				}
 			}
 			if (gContactReportCallback.gContactActor2s[i] == actor) {
 				vehicle2 = gameState->lookupVUsingPI(index);
 				if (index == gameState->playerVehicle.physicsIndex) {
+					//std::cout << "Collision2" << std::endl;
 					hapticCollisionWithPlayer = true;
 				}
 			}
@@ -1045,6 +1202,7 @@ void Physics_Controller::stepPhysics(bool interactive)
 		if (vehicle1 != NULL && vehicle2 != NULL && (gContactReportCallback.gContactImpulses[i] != PxVec3{ 0.0f,0.0f,0.0f })) {
 			//std::cout << "Found 2 vehicles, Contact Impule Vector length is : " << gContactReportCallback.gContactImpulses.size() << std::endl;
 			glm::vec3 impulse = (glm::vec3{ gContactReportCallback.gContactImpulses[i].x, gContactReportCallback.gContactImpulses[i].y, gContactReportCallback.gContactImpulses[i].z });
+			std::cout << "Collision " << impulse.x << " " << impulse.y << " " << impulse.z << " " << std::endl;
 			gameState->Collision(vehicle1, vehicle2, impulse, hapticCollisionWithPlayer);
 		}
 		else if (vehicle1 != NULL && vehicle2 != NULL) {
@@ -1053,6 +1211,7 @@ void Physics_Controller::stepPhysics(bool interactive)
 	}
 	
 	//Powerup Collisions
+	hapticPowerUpCollision = false;
 	if (powerupGrabbed == false) {
 		for (int i = 0; i < (int)gContactReportCallback.gContactActor1s.size(); i++) {
 			Vehicle* vehicle1 = NULL;
@@ -1064,6 +1223,7 @@ void Physics_Controller::stepPhysics(bool interactive)
 				if (index == gameState->playerVehicle.physicsIndex) {
 					if ((gContactReportCallback.gContactActor1s[i] == actor || gContactReportCallback.gContactActor2s[i] == actor) && vehicle1 == NULL) {
 						vehicle1 = gameState->lookupVUsingPI(index);
+						hapticPowerUpCollision = true;
 					}
 				}
 
@@ -1074,7 +1234,8 @@ void Physics_Controller::stepPhysics(bool interactive)
 
 			if (vehicle1 != NULL && powerUp != NULL) {
 				std::cout << "Powerup" << std::endl;
-				gameState->Collision(vehicle1, powerUp);
+				gameState->Collision(vehicle1, powerUp, hapticPowerUpCollision);
+				hapticPowerUpCollision = false;
 				powerupGrabbed = true;
 				break;
 			}
@@ -1097,7 +1258,7 @@ void Physics_Controller::stepPhysics(bool interactive)
 			if (index == gameState->playerVehicle.physicsIndex) {				
 				if ((gContactReportCallback.gContactActor1s[i] == actor || gContactReportCallback.gContactActor2s[i] == actor) && vehicle1 == NULL) {
 					vehicle1 = gameState->lookupVUsingPI(index);
-					if (index == gameState->playerVehicle.physicsIndex) {
+					if ((index == gameState->playerVehicle.physicsIndex)) {
 						hapticCollisionWithPlayer = true;
 					}
 				}
@@ -1115,7 +1276,9 @@ void Physics_Controller::stepPhysics(bool interactive)
 		}
 
 		if (vehicle1 != NULL && object != NULL && object->type != 0) {
+			
 			glm::vec3 impulse = (glm::vec3{ gContactReportCallback.gContactImpulses[i].x, gContactReportCallback.gContactImpulses[i].y, gContactReportCallback.gContactImpulses[i].z });
+			std::cout << "Collision " << impulse.x << " " << impulse.y << " " << impulse.z << " " << std::endl;
 			//std::cout << hapticCollisionWithPlayer << std::endl;
 			gameState->Collision(vehicle1, object, impulse, hapticCollisionWithPlayer);
 		}

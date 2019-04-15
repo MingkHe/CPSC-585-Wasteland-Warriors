@@ -27,8 +27,11 @@ void Weapon_Controller::update(Gamestate* gameState)
 				//gameState->weaponMachineGun_sound = false;
 			//}
 			//gameState->weaponShellDrop_sound = true;
+				
+			gameState->hapticStartShooting = true;
 		}
 		else {
+			gameState->hapticStartShooting = false;
 			//gameState->weaponEmptyAmmo_sound = false;
 			gameState->weaponMachineGun_sound = false;
 			//gameState->weaponShellDrop_sound = false;
@@ -39,6 +42,8 @@ void Weapon_Controller::update(Gamestate* gameState)
 		//}
 	}
 	else {
+		gameState->hapticStartShooting = false;
+
 		gameState->weaponMachineGun_sound = false;
 	}
 }

@@ -416,7 +416,7 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse,
 
 	float damageScaling = 700;		//Smaller number means more damage
 	float damage = totalForce / damageScaling;
-	std::cout << "causeing: " << damage << " base damage (if less than 5, no damage dealt)" << std::endl;
+	std::cout << "causing: " << damage << " base damage (if less than 5, no damage dealt)" << std::endl;
 
 	float originalE1HP = entity1->health;
 	float originalE2HP = entity2->health;
@@ -437,7 +437,7 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse,
 		}
 
 		if (hapticFeedback && updateHapticWheelState) {
-			LogiPlayFrontalCollisionForce(0, (int)(damage*8));
+			LogiPlayFrontalCollisionForce(0, (int)(damage*8 + damage * 16 * hapticsOffsetAdjustCoeff));
 		}
 	}
 
@@ -450,7 +450,7 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse,
 
 		}
 		if (hapticFeedback && updateHapticWheelState) {
-			LogiPlayFrontalCollisionForce(0, (int)(damage * 8));
+			LogiPlayFrontalCollisionForce(0, (int)(damage * 8 + damage * 16* hapticsOffsetAdjustCoeff));
 		}
 	}
 
@@ -469,7 +469,7 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse,
 		}
 
 		if (hapticFeedback && updateHapticWheelState) {
-			LogiPlaySideCollisionForce(0, (int)(damage * 8));
+			LogiPlaySideCollisionForce(0, (int)(damage * 8 + damage * 16 * hapticsOffsetAdjustCoeff));
 		}
 	}
 	entity1->health += entity1->armor;
@@ -505,7 +505,7 @@ void Gamestate::Collision(Vehicle* entity1, Vehicle* entity2, glm::vec3 impulse,
 	std::cout << "New health values: " << entity1->health << " | " << entity2->health << std::endl << std::endl;
 }
 
-void Gamestate::Collision(Vehicle* vehicle, PowerUp* powerUp) {
+void Gamestate::Collision(Vehicle* vehicle, PowerUp* powerUp, bool hapticPowerUpCollision) {
 
 	switch (powerUp->type)
 		{
@@ -538,7 +538,10 @@ void Gamestate::Collision(Vehicle* vehicle, PowerUp* powerUp) {
 	default:
 		break;
 		}
-
+	if (hapticPowerUpCollision && updateHapticWheelState) {
+		LogiPlayFrontalCollisionForce(0, (int)(25+50* hapticsOffsetAdjustCoeff));
+	}
+	
 	powerUpType = powerUp->type;
 	this->carPowerUp_sound = true;
 	this->textTime = 3 * 60;
@@ -579,7 +582,7 @@ void Gamestate::Collision(Vehicle* vehicle, Object* staticObject, glm::vec3 impu
 		float damageScaling = 700;		//Smaller number means more damage
 		
 		float damage = totalForce / damageScaling;
-		LogiPlayFrontalCollisionForce(0, (int)(damage * 8));
+		LogiPlayFrontalCollisionForce(0, (int)(damage * 32 + damage*100* hapticsOffsetAdjustCoeff));
 	}
 }
 
@@ -745,6 +748,7 @@ glm::mat4 Gamestate::getRotationMatrix(float xRot, float yRot, float zRot) {
 
 void Gamestate::shoot() {
 	glm::vec3 pos;
+
 	//std::cout << physicsCL.rayCast(pos) << std::endl;
 	//std::cout << "pos: x:" << pos.x << " y:" << pos.y << " z:" << pos.z << std::endl;
 	if (physics_Controller->rayCast(pos)) {

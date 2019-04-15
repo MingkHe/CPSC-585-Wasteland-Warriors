@@ -264,7 +264,7 @@ void Program::start() {
 		}
 
 		glfwSwapBuffers(window);
-		if (gameState->UIMode != "Game" && !gameState->controller) {
+		if (gameState->UIMode != "Game" && !gameState->controller && !gameState->hapticWheel) {
 			glfwWaitEvents();
 		}
 		glfwPollEvents();

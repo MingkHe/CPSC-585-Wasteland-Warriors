@@ -346,25 +346,23 @@ bool Logic::payloadCollected(Gamestate *gameState) {
 		int checkpoints = 0;
 		int payloads = 0;
 
-		if (gameState->checkpointCollected) {
-			collected++;
-		}
-
 		if (gameState->payloadCollected) {
 			collected++;
 		}
-
-		if (gameState->checkpointCollected && collected < (gameState->wave * 2)) {
-			if (gameState->checkpointsLeft > 0) {
-				gameState->checkpointsLeft--;
-			}
-			gameState->checkpointCollected = false;
-			payload(gameState);
+		else if (gameState->checkpointCollected) {
+			collected++;
 		}
 
 		if (gameState->payloadCollected && collected < (gameState->wave * 2)) {
 			gameState->payloadCollected = false;
 			checkpoint(gameState);
+		}
+		else if (gameState->checkpointCollected && collected < (gameState->wave * 2)) {
+			if (gameState->checkpointsLeft > 0) {
+				gameState->checkpointsLeft--;
+			}
+			gameState->checkpointCollected = false;
+			payload(gameState);
 		}
 
 		if (collected > (gameState->wave * 2)) {

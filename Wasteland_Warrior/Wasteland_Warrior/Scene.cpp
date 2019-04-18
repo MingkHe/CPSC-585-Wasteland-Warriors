@@ -413,9 +413,10 @@ void Scene::displayScene() {
 	glm::mat4 justTransform = identityMatrix;
 	justTransform[3] = newTransform[3];
 	//int s = 0;//-----------------------------------------
+	
 	for (int s = 0; s < allWorldCompObjects[vehicleIndex].subObjectsCount; s++) {
-		
-		/*if (s == playerWheelIndices[0] || s == playerWheelIndices[1]) {
+		/*
+		if (s == playerWheelIndices[0] || s == playerWheelIndices[1]) {
 			justTransform[3] = newTransform[3] - glm::vec4(allWorldCompObjects[vehicleIndex].subObjects[s].center,0);
 			allWorldCompObjects[vehicleIndex].subObjects[s].transform = justTransform * gameState->getRotationMatrix(0, (float)gameState->playerVehicle.wheelAngle, 0)* justRotation;
 		}
@@ -425,7 +426,7 @@ void Scene::displayScene() {
 		}
 		else{*/
 		//std::cout << justTransform[3].x << " " << justTransform[3].y << " " << justTransform[3].z << std::endl;
-		allWorldCompObjects[vehicleIndex].subObjects[s].transform = newTransform;                         
+			allWorldCompObjects[vehicleIndex].subObjects[s].transform = newTransform;                         
 		//}
 
 	}
